@@ -1,14 +1,14 @@
 <template>
   <div class="content">
     <h2>{{ $t("content") }}</h2>
-    <h3 style="margin-top: 40px;">{{ content }}</h3>
+    <h3 style="margin-top: .4rem;">{{ content }}</h3>
 
     <el-button type="primary" @click="m_content">更改Vuex中的内容</el-button>
 
-    <el-row style="margin-top: 40px;" :gutter="10">
+    <el-row style="margin-top: .4rem;" :gutter="10">
       <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="2"></el-col>
       <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="20">
-        <div style="height: 500px" id="echarts"></div>
+        <div style="height: 5rem" id="echarts"></div>
       </el-col>
       <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="2"></el-col>
     </el-row>
@@ -57,7 +57,8 @@ export default {
 <style lang="scss" scoped>
 .content {
   h2 {
-    margin-top: 30px;
+    margin-top: .3rem;
   }
 }
 </style>
+

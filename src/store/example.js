@@ -9,7 +9,7 @@ export default {
     },
     // 提交
     mutations: {
-        m_content(state) {
+        $_set_content(state) {
             state.content = "I'm changed!!!!"
         }
     },

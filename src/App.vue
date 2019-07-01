@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="crm">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
     <router-link to="/">首页</router-link>&nbsp;&nbsp;&nbsp;&nbsp;
     <router-link to="/second">第二个页面</router-link>
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <style>
-#app {
+#crm {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

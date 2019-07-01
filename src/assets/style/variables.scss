@@ -9,7 +9,21 @@ $iworku-color: blue;
 // 将 px 转成 rem    转换公式: 10px = 0.1 rem
 html {
     font-size: 100px;
+    height: 100%;
+    overflow-x: hidden;
 }
 body {
+    padding: 0;
+    margin: 0;
     font-size: 14px;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    li {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
 }

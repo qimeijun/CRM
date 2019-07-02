@@ -8,7 +8,7 @@
 .content {
     h2 {
         margin-top: .3rem;
-        color: $iworku-color;
+        color: $--default-color;
     }
 }
 </style>

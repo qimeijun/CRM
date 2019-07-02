@@ -2,9 +2,8 @@
     定义全局变量，组件，混合器等
 
 **/
-
-$iworku-color: blue;
-
+$--default-border-radius: 8px;
+$--default-color: blue;
 
 // 将 px 转成 rem    转换公式: 10px = 0.1 rem
 html {

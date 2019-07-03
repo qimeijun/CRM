@@ -51,6 +51,9 @@ export default {
       isCollapse: false
     };
   },
+  mounted() {
+    console.log(this.$session);
+  },
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);

@@ -29,7 +29,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 0 .3rem;
-    background-color: #f3f1f1;
+    background-color: #FFFFFF;
     &__title {
         font-size: 0.28rem;
     }

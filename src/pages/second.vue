@@ -35,91 +35,10 @@ export default {
       ]
     };
   },
-  created() {
-    //    this.dateList.start=this.getLocalTime({time:"2019-07-23"});
-    //    this.dateList.end=this.getLocalTime({time:"2019-07-26"});
-  },
   methods: {
     getDate(date) {
       console.log(date);
     },
-    getLocalTime: function(obj) {
-      /** GLOBAL.getLocalTime({ time: '2018-10-10 10:10:10' })
-       *
-       * @param {*} time 当前服务器时间
-       * @param {*} hyphen 连接符号 默认"-"
-       * @param {*} noHour  是否返回小时分秒等时间
-       * @param {*} isHour 只显示小时分
-       * @param {*} isMonth 只显示月份和日期
-       * @param {*} noYear 格式为 05-12 12:00:00
-       * @param {*} timestamp 直接返回时间戳
-       */
-      // 获取浏览器UTC，转换成毫秒
-      if (!obj || !obj.time) {
-        return "";
-      }
-      let offset = -(new Date().getTimezoneOffset() * 60 * 1000);
-      let serverTime = new Date(obj.time.replace(/-/g, "/")).getTime();
-      // 转换成世界时间的时间戳
-      let getUtcTime = new Date(serverTime + offset);
-      let month =
-        getUtcTime.getMonth() + 1 > 9
-          ? getUtcTime.getMonth() + 1
-          : `0${getUtcTime.getMonth() + 1}`;
-      let date =
-        getUtcTime.getDate() > 9
-          ? getUtcTime.getDate()
-          : `0${getUtcTime.getDate()}`;
-      let hours =
-        getUtcTime.getHours() > 9
-          ? getUtcTime.getHours()
-          : `0${getUtcTime.getHours()}`;
-      let minutes =
-        getUtcTime.getMinutes() > 9
-          ? getUtcTime.getMinutes()
-          : `0${getUtcTime.getMinutes()}`;
-      let seconds =
-        getUtcTime.getSeconds() > 9
-          ? getUtcTime.getSeconds()
-          : `0${getUtcTime.getSeconds()}`;
-      let result = ``;
-      if (!obj.hyphen) {
-        obj.hyphen = "-";
-      }
-      if (obj.noHour) {
-        result = `${getUtcTime.getFullYear()}${obj.hyphen}${month}${
-          obj.hyphen
-        }${date}`;
-      } else if (obj.isHour) {
-        result = `${hours}:${minutes}`;
-      } else if (obj.isMonth) {
-        result = `${month}${obj.hyphen}${date}`;
-      } else if (obj.timestamp === true) {
-        result = serverTime;
-      } else if (obj.noYear) {
-        result = `${month}${obj.hyphen}${date} ${hours}:${minutes}:${seconds}`;
-      } else {
-        result = `${getUtcTime.getFullYear()}${obj.hyphen}${month}${
-          obj.hyphen
-        }${date} ${hours}:${minutes}:${seconds}`;
-      }
-      return result;
-    },
-    duibi(a, b) {
-    //   console.log(a,b);
-      var arr = a.split("-");
-      var starttime = new Date(arr[0], arr[1], arr[2]);
-      var starttimes = starttime.getTime();
-
-      var arrs = b.split("-");
-      var lktime = new Date(arrs[0], arrs[1], arrs[2]);
-      var lktimes = lktime.getTime();
-
-      if (starttimes < lktimes) {
-        // alert('开始时间大于离开时间，请检查');
-        return false;
-      } else return true;
-    }
   }
 };
 </script>

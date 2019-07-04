@@ -8,6 +8,7 @@ export default new VueRouter({
  base: __dirname,
  routes: [
      { path: '/', component: () => import('./../pages/index.vue') },
-     { path: '/second', component: () => import('./../pages/second.vue') }
+     { path: '/second', component: () => import('./../pages/second.vue') },
+     { path: '/member', component: () => import('./../pages/members.vue') }
  ]
 });

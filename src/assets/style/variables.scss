@@ -6,6 +6,7 @@ $--default-border-radius: 8px;
 $--default-color: #4937EA;
 $--default-light-gray: #989898;
 $--default-black: #000000;
+$--default-light-gray-2: #F0F0F0;
 
 
 // 将 px 转成 rem    转换公式: 10px = 0.1 rem
@@ -14,6 +15,7 @@ html {
     height: 100%;
     overflow-x: hidden;
 }
+
 body {
     padding: 0;
     margin: 0;
@@ -23,6 +25,7 @@ body {
 ul {
     padding: 0;
     margin: 0;
+
     li {
         padding: 0;
         margin: 0;
@@ -30,6 +33,10 @@ ul {
     }
 }
 
+a {
+    text-decoration: none;
+    color: $--default-light-gray;
+}
 
 /**
 *** 表单样式改造
@@ -37,16 +44,19 @@ ul {
 .iworku-dialog {
     .el-dialog {
         border-radius: $--default-border-radius;
+
         .el-dialog__header {
             background-color: #F0F0F0;
             border-top-left-radius: $--default-border-radius;
             border-top-right-radius: $--default-border-radius;
         }
+
         .el-dialog__title {
             font-size: 14px;
-            font-weight:500;
+            font-weight: 500;
             color: #1E1E1E;
         }
+
         .el-dialog__close {
             border-radius: 50%;
             background-color: $--default-black;
@@ -67,9 +77,60 @@ ul {
         border-top: 0px;
         border-right: 0px;
     }
+
     .el-form-item__label {
-        font-size:14px;
-        font-weight:400;
-        color:$--default-light-gray;
+        font-size: 14px;
+        font-weight: 400;
+        color: $--default-light-gray;
+    }
+}
+
+/**
+***  表格 
+**/
+.iworku-table {
+    .el-table {
+        background-color: $--default-light-gray-2 !important;
+
+        th:first-child {
+            border-top-left-radius: $--default-border-radius;
+            border-bottom-left-radius: $--default-border-radius;
+        }
+
+        th:last-child {
+            border-bottom-right-radius: $--default-border-radius;
+            border-top-right-radius: $--default-border-radius;
+        }
+
+        td {
+            border-bottom: none !important;
+        }
+
+        th>.cell {
+            font-weight: 400;
+            font-size: 16px;
+            color: $--default-black;
+        }
+    }
+
+    .el-table__row {
+        td:first-child {
+            border-top-left-radius: $--default-border-radius;
+            border-bottom-left-radius: $--default-border-radius;
+        }
+
+        td:last-child {
+            border-bottom-right-radius: $--default-border-radius;
+            border-top-right-radius: $--default-border-radius;
+        }
+
+        td {
+            border: none;
+        }
+    }
+
+    .el-table__body {
+        border-collapse: separate;
+        border-spacing: 0 5px;
     }
 }

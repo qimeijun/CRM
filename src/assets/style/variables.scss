@@ -38,34 +38,6 @@ a {
     color: $--default-light-gray;
 }
 
-/**
-*** 表单样式改造
-**/
-.iworku-dialog {
-    .el-dialog {
-        border-radius: $--default-border-radius;
-
-        .el-dialog__header {
-            background-color: #F0F0F0;
-            border-top-left-radius: $--default-border-radius;
-            border-top-right-radius: $--default-border-radius;
-        }
-
-        .el-dialog__title {
-            font-size: 14px;
-            font-weight: 500;
-            color: #1E1E1E;
-        }
-
-        .el-dialog__close {
-            border-radius: 50%;
-            background-color: $--default-black;
-            color: #ffffff !important;
-            font-size: 16px;
-            padding: 2px;
-        }
-    }
-}
 
 /**
 *** 表单样式
@@ -82,55 +54,5 @@ a {
         font-size: 14px;
         font-weight: 400;
         color: $--default-light-gray;
-    }
-}
-
-/**
-***  表格 
-**/
-.iworku-table {
-    .el-table {
-        background-color: $--default-light-gray-2 !important;
-
-        th:first-child {
-            border-top-left-radius: $--default-border-radius;
-            border-bottom-left-radius: $--default-border-radius;
-        }
-
-        th:last-child {
-            border-bottom-right-radius: $--default-border-radius;
-            border-top-right-radius: $--default-border-radius;
-        }
-
-        td {
-            border-bottom: none !important;
-        }
-
-        th>.cell {
-            font-weight: 400;
-            font-size: 16px;
-            color: $--default-black;
-        }
-    }
-
-    .el-table__row {
-        td:first-child {
-            border-top-left-radius: $--default-border-radius;
-            border-bottom-left-radius: $--default-border-radius;
-        }
-
-        td:last-child {
-            border-bottom-right-radius: $--default-border-radius;
-            border-top-right-radius: $--default-border-radius;
-        }
-
-        td {
-            border: none;
-        }
-    }
-
-    .el-table__body {
-        border-collapse: separate;
-        border-spacing: 0 5px;
     }
 }

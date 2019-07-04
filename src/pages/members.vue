@@ -1,13 +1,15 @@
 <template>
     <!-- 成员管理 -->
     <section class="member">
-        <div class="iworku-table">
+        <!-- iworku-table -->
+        <div class="">
             <el-table
+                class="el-table--expend"
                 :data="tableData"
                 style="width: 100%;margin-bottom: 20px;"
                 row-key="id"
-                border
                 default-expand-all
+                :indent="0"
                 :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
                 <el-table-column
                 prop="date"
@@ -66,19 +68,30 @@ export default {
           children: [{
               id: 31,
               date: '2016-05-01',
-              name: '王小虎',
+              name: '王小虎 扩展',
               address: '上海市普陀区金沙江路 1519 弄'
             }, {
               id: 32,
               date: '2016-05-01',
-              name: '王小虎',
+              name: '王小虎  扩展',
               address: '上海市普陀区金沙江路 1519 弄'
           }]
         }, {
           id: 4,
           date: '2016-05-03',
           name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
+          address: '上海市普陀区金沙江路 1516 弄',
+          children: [{
+              id: 31,
+              date: '2016-05-01',
+              name: '王小虎 扩展',
+              address: '上海市普陀区金沙江路 1519 弄'
+            }, {
+              id: 32,
+              date: '2016-05-01',
+              name: '王小虎  扩展',
+              address: '上海市普陀区金沙江路 1519 弄'
+          }]
         }]
       }
     },
@@ -88,6 +101,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .member {
-    background-color: grey;
+    margin: 50px;
 }
 </style>

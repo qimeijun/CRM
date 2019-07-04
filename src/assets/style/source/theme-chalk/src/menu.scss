@@ -15,9 +15,6 @@
   transition: border-color .3s, background-color .3s, color .3s;
   box-sizing: border-box;
   white-space: nowrap;
-  /** iworku **/
-  border-top-left-radius: $--button-border-radius;
-  border-bottom-left-radius: $--button-border-radius;
 
   * {
     vertical-align: middle;

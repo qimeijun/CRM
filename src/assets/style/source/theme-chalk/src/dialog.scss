@@ -7,7 +7,8 @@
   position: relative;
   margin: 0 auto 50px;
   background: $--dialog-background-color;
-  border-radius: $--border-radius-small;
+  // iworku
+  border-radius: $--border-radius-base;
   box-shadow: $--dialog-box-shadow;
   box-sizing: border-box;
   width: 50%;
@@ -33,6 +34,12 @@
   @include e(header) {
     padding: $--dialog-padding-primary;
     padding-bottom: 10px;
+    // iworku
+    background-color: #F0F0F0;
+    // iworku
+    border-top-left-radius: $--border-radius-base;
+    // iworku
+    border-top-right-radius: $--border-radius-base;
   }
 
   @include e(headerbtn) {
@@ -48,6 +55,11 @@
 
     .el-dialog__close {
       color: $--color-info;
+      border-radius: 50%;
+      background-color: $--color-black;
+      color: $--color-white !important;
+      font-size: 16px;
+      padding: 2px;
     }
 
     &:focus, &:hover {

@@ -31,8 +31,3 @@ export default {
   }
 }
 </style>
-<style lang="scss">
-.el-popover {
-  min-width: 60px;
-}
-</style>

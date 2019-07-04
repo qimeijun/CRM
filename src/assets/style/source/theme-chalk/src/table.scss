@@ -11,7 +11,8 @@
   flex: 1;
   width: 100%;
   max-width: 100%;
-  background-color: $--color-white;
+  // iworku
+  background-color: $--border-color-base;
   font-size: 14px;
   color: $--table-font-color;
 
@@ -144,6 +145,17 @@
     }
   }
 
+  // iworku add
+  th:first-child {
+      border-top-left-radius: $--border-radius-base;
+      border-bottom-left-radius: $--border-radius-base;
+  }
+
+  th:nth-last-child(2) {
+      border-bottom-right-radius: $--border-radius-base;
+      border-top-right-radius: $--border-radius-base;
+  }
+
   @include m(medium) {
     th, td {
       padding: 10px 0;
@@ -173,7 +185,7 @@
   }
 
   th.is-leaf, td {
-    border-bottom: $--table-border;
+    // border-bottom: $--table-border;
   }
 
   th.is-sortable {
@@ -205,6 +217,12 @@
       vertical-align: middle;
       width: 100%;
       box-sizing: border-box;
+      // iworku
+      font-weight: 400;
+      // iworku
+      font-size: 16px;
+      // iworku
+      color: $--color-black;
 
       &.highlight {
         color: $--color-primary;
@@ -395,6 +413,19 @@
     border-collapse: separate;
   }
 
+  @include e((body)) {
+    border-spacing: 0 5px;
+    td:first-child {
+        border-top-left-radius: $--border-radius-base;
+        border-bottom-left-radius: $--border-radius-base;
+    }
+
+    td:last-child {
+        border-bottom-right-radius: $--border-radius-base;
+        border-top-right-radius: $--border-radius-base;
+    }
+  }
+
   @include e((header-wrapper, footer-wrapper)) {
     overflow: hidden;
 
@@ -555,6 +586,39 @@
     .el-table__fixed-right {
       bottom: 0;
       overflow: hidden;
+    }
+  }
+
+  // iworku  add   多层级
+  @include m(expend) {
+    @include e((placeholder)) {
+      display: inline-block;
+      width: 0px;
+    }
+    @include e((expand-icon)) {
+      display: none !important;
+    }
+    @include e((body)) {
+      border-spacing: 0px;
+    }
+    .el-table__row.expanded {
+      td {
+        border-top: 4px solid $--border-color-base;;
+      }
+    }
+
+    .el-table__row--level-1 {
+      td {
+        border-radius: 0;
+      }
+    }
+    .el-table__row--level-0 {
+      td:first-child {
+        border-bottom-left-radius: 0px;
+      }
+      td:last-child {
+        border-bottom-right-radius: 0px;
+      }
     }
   }
 

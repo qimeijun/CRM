@@ -3,16 +3,15 @@
     <!-- 菜单 -->
     <el-menu
       class="menu"
-      :style="isCollapse?'padding-left:0;':'width:200px;'"
+      :style="isCollapse?'':'padding-left: 0.23rem;'"
       active-background-color="#ffffff"
       text-color="#FFFFFF"
       :collapse="isCollapse"
+      collapse-transition="true"
       :router="true"
     >
-      <!-- logo -->
       <div
         class="logo"
-        :style="isCollapse?'padding-left:10px;padding-right:10px;':'margin-left:-.23rem;'"
       >
         <img src="@/assets/logo.png" fit="contain" />
       </div>
@@ -39,6 +38,7 @@
         @click="isCollapse=!isCollapse"
       ></el-button>
     </el-menu>
+   
     <div style="width:100%;">
       <Header></Header>
       <router-view></router-view>
@@ -48,7 +48,6 @@
 
 <script>
 import Header from "./components/Header.vue";
-
 export default {
   name: "crm",
   components: {
@@ -62,25 +61,24 @@ export default {
   mounted() {
     console.log(this.$session);
   },
-  methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    }
-  }
+  methods: {}
 };
 </script>
 
 <style lang="scss" scoped>
+  .menu:not(.el-menu--collapse) {
+    width: 2rem;
+    min-height: 4rem;
+  }
 .menu {
   height: calc(100vh);
   background: linear-gradient(0deg, #48296c 20%, #3c447f 80%);
-  padding-left: 0.23rem;
   .logo {
     text-align: center;
     padding: 0.23rem 0;
+    height: .25rem;
+    margin-left:.06rem;
+    margin-right:.06rem;
     img {
       max-height: 0.25rem;
       max-width: 100%;
@@ -116,20 +114,15 @@ export default {
 }
 .menu .el-menu-item {
   font-size: 0.14rem;
-}
-.menu .el-menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  padding-right: .4rem;
   border-top-left-radius: 0.08rem;
   border-bottom-left-radius: 0.08rem;
 }
-.menu .el-menu-item:focus {
-  background-color: white;
-  
+.menu .el-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 .menu .el-menu-item.is-active {
-    background-color:white;
-    color:#4937EA;
-    border-top-left-radius: 0.08rem;
-  border-bottom-left-radius: 0.08rem;
+  background-color: white;
+  color: #4937ea;
 }
 </style>

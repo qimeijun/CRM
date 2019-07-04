@@ -37,7 +37,7 @@
       ></el-button>
     </el-menu>
 
-    <div style="width:100%;">
+    <div style="width:calc(100%);">
       <Header></Header>
       <router-view></router-view>
     </div>

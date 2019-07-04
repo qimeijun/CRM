@@ -1,7 +1,7 @@
 <template>
   <!-- 表格后面的操作部分 -->
   <section class="table-operate">
-    <el-popover placement="left" trigger="hover" v-model="visible">
+    <el-popover placement="left" trigger="hover">
       <div class="table-operate__list">
         <slot></slot>
       </div>
@@ -9,15 +9,6 @@
     </el-popover>
   </section>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      visible: false
-    };
-  }
-};
-</script>
 <style lang="scss" scoped>
 .table-operate {
   .el-icon-more {

@@ -1,5 +1,5 @@
 export default {
-    title: "你好，CRM",
-    content: "我是第一页",
-    second: "我是第二页"
+    head: {
+        title: "全球本地化营销管理系统"
+    }
 }

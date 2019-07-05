@@ -10,7 +10,8 @@
   padding-bottom: 10px;
   vertical-align: middle;
   background-color: $--color-white;
-  border-radius: $--msgbox-border-radius;
+  // iworku
+  border-radius: $--border-radius-base;
   border: 1px solid $--border-color-lighter;
   font-size: $--messagebox-font-size;
   box-shadow: $--box-shadow-light;
@@ -39,6 +40,7 @@
     position: relative;
     padding: $--msgbox-padding-primary;
     padding-bottom: 10px;
+    background-color: #F0F0F0;
   }
 
   @include e(title) {
@@ -62,6 +64,16 @@
 
     .el-message-box__close {
       color: $--color-info;
+      // iworku
+      border-radius: 50%;
+      // iworku
+      background-color: $--color-black;
+      // iworku
+      color: $--color-white !important;
+      // iworku
+      font-size: 16px;
+      // iworku
+      padding: 2px;
     }
 
     &:focus, &:hover {
@@ -157,7 +169,8 @@
     padding-bottom: 30px;
 
     @include e(header) {
-      padding-top: 30px;
+      // iworku
+      padding-top: 10px;
     }
 
     @include e(title) {

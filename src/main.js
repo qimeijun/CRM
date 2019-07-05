@@ -6,6 +6,7 @@ import router from '@/plugins/router.js'
 import store from  '@/store/index.js'
 import './plugins/axios.js'
 import './plugins/session.js'
+import './plugins/global.js'
 
 Vue.config.productionTip = false
 

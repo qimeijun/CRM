@@ -15,10 +15,16 @@
       </li>
       <!-- 站内信 -->
       <li>
-        <el-badge is-dot class="head__right__message">
-          <i class="el-icon-message-solid"></i>
-        </el-badge>
+        <el-popover placement="bottom" width="200" trigger="hover">
+          <div class="content">
+            <h2>我站内信是内容</h2>
+          </div>
+          <el-badge slot="reference" is-dot class="head__right__message">
+            <i class="el-icon-message-solid"></i>
+          </el-badge>
+        </el-popover>
       </li>
+      
       <!-- 头像 -->
       <li class="head__avatar">
         <el-popover placement="bottom" width="200" trigger="hover">
@@ -70,7 +76,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: .05rem 0.3rem;
+  padding: 0.05rem 0.3rem;
   background-color: #ffffff;
   &__title {
     font-size: 0.2rem;
@@ -92,6 +98,7 @@ export default {
     }
     .el-icon-refresh-right,
     .el-icon-message-solid {
+      font-size: 20px;
       cursor: pointer;
     }
     &__lang {

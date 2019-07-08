@@ -5,6 +5,7 @@
 $--default-border-radius: 8px;
 $--default-color: #4937EA;
 $--default-light-gray: #989898;
+$--default-list-gray: #F0F0F0FF;
 $--default-black: #000000;
 
 
@@ -72,4 +73,13 @@ ul {
         font-weight:400;
         color:$--default-light-gray;
     }
+}
+
+/**
+*** 卡片模块背景
+**/
+.iworku-card{
+    background-color: white;
+    border-radius: 8px;
+    padding:10px 21px;
 }

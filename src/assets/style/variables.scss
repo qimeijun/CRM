@@ -38,6 +38,10 @@ a {
     text-decoration: none;
     color: $--default-light-gray;
 }
+p {
+    padding: 0;
+    margin: 0;
+}
 
 
 /**
@@ -56,4 +60,11 @@ a {
         font-weight: 400;
         color: $--default-light-gray;
     }
+}
+
+/**
+***  弹窗  离顶部高度
+**/
+.el-dialog {
+    margin-top: 5vh !important;
 }

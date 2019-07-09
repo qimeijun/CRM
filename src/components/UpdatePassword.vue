@@ -7,9 +7,11 @@
       label-position="top"
       label-width="80px"
     >
+    <!-- 新密码 -->
       <el-form-item :label="`${$t('password.form.new')}`" prop="new">
         <el-input v-model="passwordForm.new" type="password"></el-input>
       </el-form-item>
+      <!-- 确认密码 -->
       <el-form-item :label="`${$t('password.form.confirm')}`" prop="confirm">
         <el-input v-model="passwordForm.confirm" type="password"></el-input>
       </el-form-item>
@@ -34,7 +36,17 @@ export default {
         new: [
           {
             required: true,
-            message: this.$t("password.rules.new"),
+            message: this.$t("password.rules.new[0]"),
+            trigger: "blur"
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (value.length < 8) {
+                callback(new Error(this.$t("password.rules.new[1]")));
+              } else {
+                callback();
+              }
+            },
             trigger: "blur"
           }
         ],
@@ -81,7 +93,6 @@ export default {
   &__btn {
     text-align: right;
     margin-right: 20px;
-    border-top: 1px solid $--default-light-gray-2;
     padding-top: 20px;
   }
 }

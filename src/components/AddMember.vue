@@ -2,7 +2,7 @@
   <!-- 添加新成员 -->
   <section class="add-new-member">
     <el-row>
-      <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20">
+      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <el-form
           class="iworku-form-line"
           :model="memberForm"
@@ -16,8 +16,8 @@
               class="add-new-member__avatar"
               :action="$global.qiniuURL"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
+              :on-success="onUploadAvatarSuccess"
+              :before-upload="onBeforeAvatarUpload"
             >
               <img v-if="memberForm.avatar" :src="memberForm.avatar" class="avatar" />
               <i v-else class="el-icon-plus add-new-member__avatar-upload-icon"></i>
@@ -44,29 +44,44 @@
             <el-input v-model="memberForm.email"></el-input>
           </el-form-item>
           <el-form-item :label="`${$t('member.form.country')}`" prop="country">
-            <el-select v-model="memberForm.country" placeholder>
+            <el-select filterable v-model="memberForm.country" placeholder>
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="`${$t('member.form.city')}`" prop="city">
-            <el-select v-model="memberForm.city" placeholder>
+            <el-select filterable v-model="memberForm.city" placeholder>
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="`${$t('member.form.permission')}`" prop="permission">
-            <el-select v-model="memberForm.permission" placeholder>
+          <el-form-item :label="`${$t('member.form.role')}`" prop="role">
+            <el-select filterable v-model="memberForm.role" placeholder>
+              <el-option label="成员" value="1"></el-option>
+              <el-option label="项目经理" value="2"></el-option>
+              <el-option label="区域经理" value="3"></el-option>
+            </el-select>
+          </el-form-item>
+          <!--  当选择 “成员” 角色时， 成员属于哪个团队 -->
+          <el-form-item v-if="memberForm.role == 1" :label="`${$t('member.form.team')}`" prop="team">
+            <el-select filterable v-model="memberForm.team" placeholder>
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="`${$t('member.form.team')}`" prop="team">
-            <el-select v-model="memberForm.team" placeholder>
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
+          <!-- 当选择 “项目经理”， 这个项目经理属于哪个区域管理 -->
+          <el-form-item  v-if="memberForm.role == 2" :label="`${$t('member.form.region')}`" prop="region">
+            <div style="display:flex; align-items: flex-start; margin-right: 5px;">
+              <template v-for="(item, index) in memberForm.region" >
+                <div class="add-new-member__region" :key="index">
+                  <el-avatar :size="50" :src="item.avatar"></el-avatar>
+                  <span class="add-new-member__region-name">{{ item.name }}</span>
+                </div>
+              </template>
+              <i class="el-icon-circle-plus-outline" @click="selectRegionalManagerDialogVisible=true;"></i>
+            </div>
           </el-form-item>
+
           <el-form-item class="add-new-member__btn">
             <el-button
               type="primary"
@@ -76,10 +91,26 @@
         </el-form>
       </el-col>
     </el-row>
+
+    <!-- 选择区域经理 start -->
+    <el-dialog
+      :title="$t('workDiary.add')"
+      :visible.sync="selectRegionalManagerDialogVisible"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      width="30%">
+        <SelectRegionalManager @regionalManager="getRegionalManager" @cancelSelect="onCloseSelect"></SelectRegionalManager>
+    </el-dialog>
+    <!-- 选择区域经理 end -->
   </section>
 </template>
 <script>
+import SelectRegionalManager from "@/components/SelectRegionalManager.vue"
 export default {
+  components: {
+    SelectRegionalManager
+  },
   data() {
     return {
       memberForm: {
@@ -91,8 +122,14 @@ export default {
         email: "",
         country: "",
         city: "",
-        permission: "",
-        team: ""
+        role: "",
+        team: "",
+        region: [
+          {
+            avatar: "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
+            name: "张三"
+          }
+        ]
       },
       rules: {
         avatar: [
@@ -121,10 +158,10 @@ export default {
             trigger: "blur"
           }
         ],
-        permission: [
+        role: [
           {
             required: true,
-            message: this.$t("member.rules.permission"),
+            message: this.$t("member.rules.role"),
             trigger: "blur"
           }
         ],
@@ -134,8 +171,22 @@ export default {
             message: this.$t("member.rules.team"),
             trigger: "blur"
           }
+        ],
+        region: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (value.length == 0) {
+                callback(new Error(this.$t("member.rules.region")));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
         ]
-      }
+      },
+      selectRegionalManagerDialogVisible: false
     };
   },
   methods: {
@@ -149,10 +200,16 @@ export default {
         }
       });
     },
-    handleAvatarSuccess(res, file) {
+    /**
+     *  图片上传成功之后。。。。
+     */
+    onUploadAvatarSuccess(res, file) {
       this.memberForm.avatar = URL.createObjectURL(file.raw);
     },
-    beforeAvatarUpload(file) {
+    /**
+     * 图片上传之前，进行格式、大小检测
+     */
+    onBeforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
@@ -163,6 +220,19 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
+    },
+    /**
+     *  获取选择好的区域经理的数据
+     */
+    getRegionalManager(data) {
+      this.selectRegionalManagerDialogVisible = false;
+      // console.log(data);
+    },
+    /**
+     * 关闭选择区域经理窗口
+     */
+    onCloseSelect() {
+      this.selectRegionalManagerDialogVisible = false;
     }
   }
 };
@@ -201,6 +271,20 @@ export default {
         color: #989898;
       }
 
+  }
+  &__region {
+    display: flex;
+    flex-direction: column;
+    width: 50px;
+    text-align: center;
+    &-name {
+      margin-top: -10px;
+      font-size: 12px;
+    }
+  }
+  .el-icon-circle-plus-outline {
+    font-size: 50px;
+    cursor: pointer;
   }
 }
 </style>

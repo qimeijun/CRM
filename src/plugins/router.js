@@ -13,7 +13,25 @@ export default new VueRouter({
         { path: '/projectmanage', component: () => import('./../pages/projectManage.vue') },
         { path: '/membermanage', component: () => import('./../pages/memberManage.vue') },
         { path: '/tagmanage', component: () => import('./../pages/tagManage.vue') },
-        { path: '/member', component: () => import('./../pages/members.vue') }
+        { path: '/member', component: () => import('./../pages/members.vue') },
+        {
+            path: '/member/detail', component: () => import('./../pages/membersDetail.vue'),
+            children: [
+                {
+                    path: '/',
+                    alias: "info",
+                    component: () => import('./../components/member/Information.vue')
+                },
+                {
+                    path: 'project',
+                    component: () => import('./../components/member/Project.vue')
+                },
+                {
+                    path: 'team',
+                    component: () => import('./../components/member/Team.vue')
+                }
+            ]
+        }
 
     ]
 });

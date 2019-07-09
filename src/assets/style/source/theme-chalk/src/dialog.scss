@@ -31,6 +31,22 @@
     margin: 0;
   }
 
+  @include e(scroll) {
+    overflow: hidden !important;
+    .el-dialog__body {
+      padding: 0;
+    }
+    .el-scrollbar {
+      height: 80vh;
+      &__view {
+        padding: 30px 20px;
+      }
+      &__wrap {
+        overflow-x: hidden;
+      }
+    }
+  }
+
   @include e(header) {
     padding: $--dialog-padding-primary;
     padding-bottom: 10px;

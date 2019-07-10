@@ -1,5 +1,5 @@
 <template>
-  <div class="iworku-card iworku-calendar">
+  <div class="iworku-card workbench-calendar">
     <div class="calendar_top">
       <h3>日程安排</h3>
     </div>
@@ -14,17 +14,66 @@
               :key="'first'+index"
               :style="data.day>=item.start&&data.day<=item.end?'background-color:'+item.color:''"
               :class="[data.day>=item.start&&data.day<=item.end? 'time--selected ' :firstlist[index+1]&&data.day<firstlist[index+1].start?'time--blank':'',data.day==item.start?'time--start':'',data.day==item.end?'time--end':'']"
-            >{{data.day==item.start?item.title:''}}</span>
+            >
+              <!-- 第一行备注弹出框 start -->
+              <el-popover
+                v-if="data.day==item.start"
+                placement="bottom"
+                width="300"
+                trigger="click"
+              >
+                <p>
+                  <i class="el-icon-date calendar_icon"></i>
+                  <span>{{item.start}}-{{item.end}}</span>
+                </p>
+                <p>
+                  <i class="el-icon-tickets calendar_icon"></i>
+                  <i class="calendar_dot" :style="'background-color:'+item.color"></i>
+                  <span>{{item.title}}</span>
+                </p>
+                <div style="text-align:right;">
+                  <el-button type="text">编辑</el-button>
+                  <el-button type="text">删除</el-button>
+                </div>
+                <span slot="reference">{{item.title}}</span>
+              </el-popover>
+              <!-- 第一行备注弹出框 end -->
+            </span>
             <span
               v-for="(item,index) in secondlist"
               :key="'second'+index"
               :style="data.day>=item.start&&data.day<=item.end?'background-color:'+item.color:''"
               :class="[data.day>=item.start&&data.day<=item.end? 'time--selected ' : '',data.day==item.start?'time--start':'',data.day==item.end?'time--end':'']"
-            >{{data.day==item.start?item.title:''}}</span>
+            >
+              <!-- 第二行备注弹出框 start -->
+              <el-popover
+                v-if="data.day==item.start"
+                placement="bottom"
+                width="300"
+                trigger="click"
+              >
+                <p>
+                  <i class="el-icon-date calendar_icon"></i>
+                  <span>{{item.start}}-{{item.end}}</span>
+                </p>
+                <p>
+                  <i class="el-icon-tickets calendar_icon"></i>
+                  <i class="calendar_dot" :style="'background-color:'+item.color"></i>
+                  <span>{{item.title}}</span>
+                </p>
+                <div style="text-align:right;">
+                  <el-button type="text">编辑</el-button>
+                  <el-button type="text">删除</el-button>
+                </div>
+                <span slot="reference">{{item.title}}</span>
+              </el-popover>
+              <!-- 第二行备注弹出框 end -->
+            </span>
             <!-- 隐藏的提醒按钮弹出框 start -->
             <el-popover
               v-if="getSurplus(data.day).length"
               placement="right"
+              width="200"
               trigger="click"
             >
               <!-- 详情弹出框 start -->
@@ -36,14 +85,12 @@
                 trigger="click"
               >
                 <p>
-                  <i style="margin-right:10px;font-size:16px;" class="el-icon-date"></i>
+                  <i class="el-icon-date calendar_icon"></i>
                   <span>{{item.start}}-{{item.end}}</span>
                 </p>
                 <p>
-                  <i style="margin-right:10px;font-size:16px;" class="el-icon-tickets"></i>
-                  <i
-                    :style="'margin-right:10px;display:inline-block;;width:10px; height:10px;border-radius:50%;background-color:'+item.color"
-                  ></i>
+                  <i class="el-icon-tickets calendar_icon"></i>
+                  <i class="calendar_dot" :style="'background-color:'+item.color"></i>
                   <span>{{item.title}}</span>
                 </p>
                 <div style="text-align:right;">
@@ -51,9 +98,7 @@
                   <el-button type="text">删除</el-button>
                 </div>
                 <p slot="reference">
-                  <i
-                    :style="'margin-right:10px;display:inline-block;;width:10px; height:10px;border-radius:50%;background-color:'+item.color"
-                  ></i>
+                  <i class="calendar_dot" :style="'background-color:'+item.color"></i>
                   <el-button type="text">{{item.title}}</el-button>
                 </p>
               </el-popover>
@@ -151,7 +196,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .iworku-calendar{
+// .workbench-calendar{
 //     height: 400px;
 // }
 .calendar_content {
@@ -188,9 +233,20 @@ export default {
     margin-bottom: 4px;
   }
 }
+.calendar_dot {
+  margin-right: 10px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.calendar_icon {
+  margin-right: 10px;
+  font-size: 16px;
+}
 </style>
 <style>
 .calendar_content .el-calendar-table .el-calendar-day {
-  height: 150px;
+  height: 140px;
 }
 </style>

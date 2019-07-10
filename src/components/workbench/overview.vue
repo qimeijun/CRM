@@ -14,7 +14,7 @@
         <img src alt />
         <p>
           <span>867</span>
-          <br />
+          <br/>
           <span>已拜访目标公司数</span>
         </p>
       </el-col>
@@ -22,7 +22,7 @@
         <img src alt />
         <p>
           <span>78</span>
-          <br />
+          <br/>
           <span>意向目标公司数</span>
         </p>
       </el-col>
@@ -30,7 +30,7 @@
         <img src alt />
         <p>
           <span>0</span>
-          <br />
+          <br/>
           <span>取得订单数量</span>
         </p>
       </el-col>
@@ -46,6 +46,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .workbench-overview {
+  height: 300px;
   .overview-item img {
     width: 45px;
     height: 45px;

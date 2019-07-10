@@ -7,6 +7,8 @@ $--default-color: #4937EA;
 $--default-light-gray: #989898;
 $--default-list-gray: #F0F0F0FF;
 $--default-black: #000000;
+$--default-white: #ffffff;
+$--default-light-gray-2: #F0F0F0;
 
 
 // 将 px 转成 rem    转换公式: 10px = 0.1 rem
@@ -15,6 +17,7 @@ html {
     height: 100%;
     overflow-x: hidden;
 }
+
 body {
     padding: 0;
     margin: 0;
@@ -24,6 +27,7 @@ body {
 ul {
     padding: 0;
     margin: 0;
+
     li {
         padding: 0;
         margin: 0;
@@ -31,32 +35,11 @@ ul {
     }
 }
 
-
-/**
-*** 表单样式改造
-**/
-.iworku-dialog {
-    .el-dialog {
-        border-radius: $--default-border-radius;
-        .el-dialog__header {
-            background-color: #F0F0F0;
-            border-top-left-radius: $--default-border-radius;
-            border-top-right-radius: $--default-border-radius;
-        }
-        .el-dialog__title {
-            font-size: 14px;
-            font-weight:500;
-            color: #1E1E1E;
-        }
-        .el-dialog__close {
-            border-radius: 50%;
-            background-color: $--default-black;
-            color: #ffffff !important;
-            font-size: 16px;
-            padding: 2px;
-        }
-    }
+a {
+    text-decoration: none;
+    color: $--default-light-gray;
 }
+
 
 /**
 *** 表单样式
@@ -68,10 +51,11 @@ ul {
         border-top: 0px;
         border-right: 0px;
     }
+
     .el-form-item__label {
-        font-size:14px;
-        font-weight:400;
-        color:$--default-light-gray;
+        font-size: 14px;
+        font-weight: 400;
+        color: $--default-light-gray;
     }
 }
 

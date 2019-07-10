@@ -8,7 +8,6 @@ export default new VueRouter({
     base: __dirname,
     routes: [
         { path: '/index', component: () => import('./../pages/index.vue') },
-        { path: '/second', component: () => import('./../pages/second.vue') },
         { path: '/workbench', component: () => import('./../pages/workbench.vue') },
         { path: '/projectmanage', component: () => import('./../pages/projectManage.vue') },
         { path: '/membermanage', component: () => import('./../pages/memberManage.vue') },

@@ -19,10 +19,18 @@ export default {
             projectName: "请选择项目",
             type: "请选择日志类型",
             title: "请填写日志标题",
-        }
+        },
+        diarType: {
+            daily: "日报",
+            weekly: "周报",
+            monthly: "月报",
+            order: "订单"
+        },
+        uploadChatLog: "上传图片"
     },
     member: {
         add: "添加新成员",
+        regional: "区域成员",
         form: {
             avatar: "上传工作照",
             username: "姓名",
@@ -47,6 +55,11 @@ export default {
         gender: {
             male: "男",
             female: "女"
+        },
+        btn: {
+            regional: "区域经理管理",
+            addRegional: "添加区域经理",
+            ok: "完成"
         }
     },
     changeAdministration: {
@@ -98,7 +111,8 @@ export default {
             shiftIn: "移入公海",
             shiftOut: "移出",
             modify: "编辑",
-            password: "修改密码"
+            password: "修改密码",
+            addDiary: "添加工作日志"
         },
         priviteShiftInTip: {
             title: "提示",
@@ -113,13 +127,15 @@ export default {
         teamOperate: ["编辑团队", "移交团队", "冻结团队"],
         noTeam: "暂无团队",
         account: "账号",
-        password: "密码"
+        password: "密码",
+        workDiaryMenu: ["全部日志", "项目日志", "目标公司日志"]
     },
 
     public: {
         btn: {
             submit: "提交",
-            cancel: "取消"
+            cancel: "取消",
+            upload: "上传附件"
         }
     }
 }

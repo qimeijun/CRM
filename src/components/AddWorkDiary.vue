@@ -11,17 +11,20 @@
     >
       <!-- 项目 start -->
       <el-form-item :label="`${$t('workDiary.form.projectName')}`" prop="projectName">
-        <el-select v-model="diaryForm.projectName" placeholder>
+        <el-select v-model="diaryForm.projectName" filterable placeholder>
           <el-option label="区域一" value="shanghai"></el-option>
           <el-option label="区域二" value="beijing"></el-option>
         </el-select>
       </el-form-item>
       <!-- 项目 end -->
+
       <!-- 日志类型 start -->
       <el-form-item :label="`${$t('workDiary.form.type')}`" prop="type">
-        <el-select v-model="diaryForm.type" placeholder>
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="diaryForm.type" filterable placeholder>
+          <el-option :label="$t('workDiary.diarType.daily')" value="1"></el-option>
+          <el-option :label="$t('workDiary.diarType.monthly')" value="3"></el-option>
+          <el-option :label="$t('workDiary.diarType.weekly')" value="2"></el-option>
+          <el-option :label="$t('workDiary.diarType.order')" value="4"></el-option>
         </el-select>
       </el-form-item>
       <!-- 日志类型 end -->
@@ -33,7 +36,7 @@
       <!-- 标题 end -->
       <!-- 目标公司 start -->
       <el-form-item :label="`${$t('workDiary.form.targetCompany')}`" prop="targetCompany">
-        <el-select v-model="diaryForm.targetCompany" placeholder>
+        <el-select v-model="diaryForm.targetCompany" filterable placeholder>
           <el-option label="区域一" value="shanghai"></el-option>
           <el-option label="区域二" value="beijing"></el-option>
         </el-select>
@@ -52,11 +55,16 @@
       <el-form-item :label="`${$t('workDiary.form.chatLog')}`" prop="chatLog">
         <el-upload
           :action="$global.qiniuURL"
-          list-type="picture-card"
           :on-preview="onChatLogUploadPreview"
           :on-remove="onChtLogUploadRemove"
+          class="iworku-upload"
         >
-          <i class="el-icon-plus"></i>
+        <div class="content">
+            <i style="font-size: 30px;" class="el-icon-paperclip"></i>
+            <div class="el-upload__text">
+              {{ $t("workDiary.uploadChatLog") }}
+            </div>
+         </div>
         </el-upload>
         <el-dialog :visible.sync="chatLogDialogVisible">
           <img width="100%" :src="diaryForm.chatLog" alt />
@@ -70,12 +78,14 @@
           :on-preview="onAttachmentUploadPreview"
           :on-remove="onAttachmentUploadRemove"
           multiple
+          class="iworku-upload"
         >
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">
-            将文件拖到此处，或
-            <em>点击上传</em>
-          </div>
+         <div class="content">
+            <i style="font-size: 30px;" class="el-icon-paperclip"></i>
+            <div class="el-upload__text">
+              {{ $t("public.btn.upload") }}
+            </div>
+         </div>
         </el-upload>
       </el-form-item>
       <!-- 上传附件 end -->

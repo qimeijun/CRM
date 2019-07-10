@@ -8,6 +8,7 @@ $--default-light-gray: #989898;
 $--default-black: #000000;
 $--default-white: #ffffff;
 $--default-light-gray-2: #F0F0F0;
+$--default-input-inner: #EDEDED;
 
 
 // 将 px 转成 rem    转换公式: 10px = 0.1 rem
@@ -36,8 +37,9 @@ ul {
 
 a {
     text-decoration: none;
-    color: $--default-light-gray;
+    color: $--default-black;
 }
+
 p {
     padding: 0;
     margin: 0;
@@ -67,4 +69,58 @@ p {
 **/
 .el-dialog {
     margin-top: 5vh !important;
+}
+
+
+/**
+***   上传
+**/
+.iworku-upload {
+    border-radius: $--default-border-radius;
+    height: 80px;
+    width: 80px;
+    background-color: $--default-color;
+    color: $--default-white;
+    position: relative;
+
+    .content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -35%);
+        height: 80px;
+        width: 80px;
+        line-height: 20px;
+        font-size: 12px;
+    }
+
+    .el-upload:focus {
+        border-color: $--default-white;
+        color: $--default-white;
+    }
+}
+
+/**
+*** 表格操作
+**/
+.table-operate__list {
+    li {
+        padding: 5px 15px;
+    }
+
+    li:hover {
+        background-color: $--default-color;
+        color: $--default-white;
+        a {
+            color: $--default-white;
+        }
+    }
+    li:first-child:hover {
+        border-top-left-radius: $--default-border-radius;
+        border-top-right-radius: $--default-border-radius;
+    }
+    li:last-child:hover {
+        border-bottom-left-radius: $--default-border-radius;
+        border-bottom-right-radius: $--default-border-radius;
+    }
 }

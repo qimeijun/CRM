@@ -1,7 +1,7 @@
 <template>
   <!-- 表格后面的操作部分 -->
   <section class="table-operate">
-    <el-popover placement="left" trigger="hover">
+    <el-popover class="el-popover-iworku" placement="left" trigger="hover">
       <div class="table-operate__list">
         <slot></slot>
       </div>

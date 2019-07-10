@@ -29,6 +29,10 @@ export default new VueRouter({
                 {
                     path: 'team',
                     component: () => import('./../components/member/Team.vue')
+                },
+                {
+                    path: 'diary',
+                    component: () => import('./../components/member/WorkDiary.vue')
                 }
             ]
         }

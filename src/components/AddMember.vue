@@ -243,7 +243,7 @@ export default {
   &__btn {
     text-align: right;
     margin-right: 20px;
-    border-top: 1px solid $--default-light-gray-2;
+    // border-top: 1px solid $--default-light-gray-2;
     padding-top: 20px;
   }
   &__avatar {

@@ -21,7 +21,7 @@
         <i class="el-icon-share"></i>
         <span slot="title">项目管理</span>
       </el-menu-item>
-      <el-menu-item index="/membermanage" route="/membermanage">
+      <el-menu-item index="/member" route="/member">
         <i class="el-icon-s-custom"></i>
         <span slot="title">成员管理</span>
       </el-menu-item>

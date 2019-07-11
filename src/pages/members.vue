@@ -32,14 +32,14 @@
           </div>
           <i v-if="isUpdateManager" class="el-icon-error" @click="onDeleteManager(index)"></i>
         </div>
-        <!-- 添加区域经理 -->
+        <!-- 添加区域经理 start-->
         <div v-if="isUpdateManager" class="member__regional-content  member__regional-content-add" @click="addManagerDialogVisible=true;">
           {{ $t("member.btn.addRegional") }}
         </div>
-        <!-- 添加区域经理 -->
+        <!-- 添加区域经理 start-->
       </div>
       <!-- 区域经理  end -->
-      <div></div>
+
       <!-- 表格 list  start -->
       <div class="member__table" style="width: 100%;">
         <div class="member__table-tr member__table-th">
@@ -75,8 +75,16 @@
       :modal="false"
       :lock-scroll="true"
       width="30%">
-      <el-scrollbar class="scrollbar">
-        <AddMember></AddMember>
+      <el-scrollbar>
+        <ul class="iworku-dialog-menu">
+          <li v-for="(item, index) in addMemberMenuList" :key="index" 
+             :class="item.value == selectDialogMenu? 'iworku-dialog-menu--selected' : ''"
+             @click="onChangeDialogMenu(item)">
+            {{ item.name }}
+          </li>
+        </ul>
+        <AddAccount v-if="selectDialogMenu == addMemberMenuList[0].value" @accountCreated="selectDialogMenu=addMemberMenuList[1].value"></AddAccount>
+        <AddMember v-else></AddMember>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加成员 dialog end -->
@@ -91,8 +99,8 @@
       :modal="false"
       :lock-scroll="true"
       width="30%">
-      <el-scrollbar class="scrollbar">
-        <ChangeAdministration @getManager="getManager"></ChangeAdministration>
+      <el-scrollbar>
+        <AddAdministrator @getManager="getManager" @addProjectAdministrator="addManagerDialogVisible=false;addMemberDialogVisible=true;" operate="add"></AddAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加区域经理 dialog end -->
@@ -101,9 +109,14 @@
 <script>
 export default {
   components: {
-    AddMember: () => import('@/components/AddMember.vue'),
+    // 完善成员信息
+    AddMember: () => import('@/components/member/AddMember.vue'),
+    // 表格列表
     TableList: () => import('@/components/member/Table.vue'),
-    ChangeAdministration: () => import('@/components/ChangeAdministration.vue')
+    // 添加区域经理
+    AddAdministrator: () => import('@/components/member/ChangeAdministrator.vue'),
+    // 创建成员账号
+    AddAccount: () => import('@/components/member/AddAccount.vue')
   },
   data() {
     return {
@@ -217,7 +230,15 @@ export default {
           name: "JSKFIDKDUSD",
           role: "区域经理"
         }
-      ]
+      ],
+      addMemberMenuList: [{
+        name: this.$t("member.dialogMenu.account"),
+        value: "account"
+      },{
+        name: this.$t("member.dialogMenu.information"),
+        value: "information"
+      }],
+      selectDialogMenu: 'account'
     };
   },
   methods: {
@@ -234,6 +255,12 @@ export default {
       this.addManagerDialogVisible  = false;
       data.role = "区域经理";
       this.managerList.push(data);
+    },
+    /**
+     *  切换添加成员表单中的按钮
+     */
+    onChangeDialogMenu(item) {
+      this.selectDialogMenu = item.value;
     }
   }
 };

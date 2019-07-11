@@ -33,16 +33,18 @@
 
   @include e(scroll) {
     overflow: hidden !important;
+    
     .el-dialog__body {
       padding: 0;
     }
     .el-scrollbar {
-      height: 80vh;
+      height: 100%;
       &__view {
         padding: 30px 20px;
       }
       &__wrap {
         overflow-x: hidden;
+        max-height: 80vh;
       }
     }
   }

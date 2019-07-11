@@ -38,11 +38,10 @@ export default {
             gender: "性别",
             telphone: "手机",
             email: "邮箱",
-            country: "国家",
-            city: "城市",
             role: "角色",
             team: "团队",
-            region: "区域经理"
+            account: "登录账号",
+            password: "登录密码"
         },
         rules: {
             avatar: "请上传工作照",
@@ -50,7 +49,18 @@ export default {
             email: "请输入成员邮箱",
             role: "请选择成员角色",
             team: "请选择团队",
-            region: "请选择区域经理"
+            account: "请输入登录账号",
+            password: ["请输入登录密码", "密码不能少于八位数，且不能有特殊字符"],
+            gender: "请选择成员角色"
+        },
+        placeholder: {
+            account: "请输入邮箱",
+            username: "请输入成员的姓名",
+            usernameEn: "请输入成员的英文名",
+            gender: "请选择成员的性别",
+            email: "请输入成员的电子邮箱",
+            telphone: "请输入成员的手机号码",
+            role: "请选择成员的级别"
         },
         gender: {
             male: "男",
@@ -59,14 +69,22 @@ export default {
         btn: {
             regional: "区域经理管理",
             addRegional: "添加区域经理",
-            ok: "完成"
+            ok: "完成",
+            fillInformation: "填写资料",
+            confirmAdd: "确认添加"
+        },
+        dialogMenu: {
+            account: "账号设置",
+            information: "成员信息"
         }
     },
-    changeAdministration: {
+    changeAdministrator: {
         title: "更改管理员",
         search: "输入管理员名称",
         btn: {
-            change: "更改"
+            handOver: "移交",
+            add: "分配",
+            addMember: "新增项目经理"
         }
     },
     password: {
@@ -130,6 +148,7 @@ export default {
         account: "账号",
         password: "密码",
         workDiaryMenu: ["全部日志", "项目日志", "目标公司日志"],
+        statistics: ["任务概况", "本月业绩"]
     },
 
     public: {

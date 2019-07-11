@@ -134,3 +134,52 @@ p {
     border-radius: 8px;
     padding:10px 21px;
 }
+
+/**
+** 对话框中的顶部表单
+**/
+.iworku-dialog-menu {
+    display: flex;
+    font-size:20px;
+    justify-content: center;
+    li {
+        position: relative;
+        padding: .2rem;
+        font-weight:500;
+        cursor: pointer;
+    }
+    li:hover {
+        color: $--default-color;
+    }
+    &--selected::before {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, 180%);
+        content: "";
+        width: 0;
+        height: 0;
+        border: 5px solid transparent;
+        border-top-color: $--default-color;
+        
+    }
+    &--selected::after {
+        margin-top: 5px;
+        content: "";
+        display: block;
+        width: 100%;
+        height: 5px;
+        border-radius: 2.5px;
+        background-color: $--default-color;
+    }
+}
+
+/** 
+** 下拉菜单
+**/
+.iworku-popper {
+    padding: 10px 0;
+    li {
+        padding: 0 20px;
+    }
+}

@@ -34,6 +34,32 @@ export default new VueRouter({
                     component: () => import('./../components/member/WorkDiary.vue')
                 }
             ]
+        },
+        {
+            path: '/project/detail', component: () => import('./../pages/projectDetail.vue'),
+            children: [
+                {
+                    path: '/',
+                    alias: "info",
+                    component: () => import('./../components/project/Information.vue')
+                },
+                {
+                    path: 'product',
+                    component: () => import('./../components/project/Product.vue')
+                },
+                {
+                    path: 'commonality',
+                    component: () => import('./../components/project/Commonality.vue')
+                },
+                {
+                    path: 'private',
+                    component: () => import('./../components/project/Private.vue')
+                },
+                {
+                    path: 'diary',
+                    component: () => import('./../components/project/Diary.vue')
+                },
+            ]
         }
 
     ]

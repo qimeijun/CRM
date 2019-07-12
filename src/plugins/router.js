@@ -27,11 +27,15 @@ export default new VueRouter({
                 },
                 {
                     path: 'team',
-                    component: () => import('./../components/member/Team.vue')
+                    component: () => import('./../components/team/Team.vue')
                 },
                 {
                     path: 'diary',
                     component: () => import('./../components/member/WorkDiary.vue')
+                },
+                {
+                    path: 'private',
+                    component: () => import('./../components/member/Private.vue')
                 }
             ]
         }

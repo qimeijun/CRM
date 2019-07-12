@@ -122,15 +122,15 @@ export default {
         }
     },
     memberInfo: {
-        menu: ["资料", "团队", "项目", "私海客户", "工作日志"],
+        menu: ["资料", "团队", "跟进项目", "私海客户", "工作日志"],
         priviteTable: ["目标公司", "重要程度", "更新时间", "状态", "创建时间", "操作"],
-        projectTable: ["公司名称", "状态", "管理员", "标签", "进行时间", "添加时间", "操作"],
+        projectTable: ["项目名称", "状态", "管理员", "标签", "进行天数", "添加时间", "操作"],
         btn: {
             shiftIn: "移入公海",
             shiftOut: "移出",
             modify: "编辑",
             password: "修改密码",
-            shiftOutProject: "移出项目",
+            shiftOutProject: "移出",
             addDiary: "添加工作日志"
         },
         priviteShiftInTip: {
@@ -139,18 +139,38 @@ export default {
         },
         memberShiftOutTip: {
             title: "提示",
-            btn: ["确定", "取消", "移交任务"],
+            btn: ["确定", "取消", "移交任务", "移入公海"],
             content: ["你确定要将此成员移出项目吗？", "无法移出!", "此成员尚有目标公司正在跟进，请移交任务在移出!", "此成员为项目经理，移出前必须分配新的项目经理!"]
         },
         operate: "操作",
         teamOperate: ["编辑团队", "移交团队", "冻结团队"],
+        teamMemberOperate: ["查看资料", "移交团队", "删除"],
         noTeam: "暂无团队",
         account: "账号",
         password: "密码",
         workDiaryMenu: ["全部日志", "项目日志", "目标公司日志"],
-        statistics: ["任务概况", "本月业绩"]
+        statistics: ["任务概况", "本月业绩"],
+        joinTime: "加入时间",
+        handOverTeam: "移交",
+        teamStatistics: ["所有成员业绩", '1V1业绩'],
+        teamStatisticsTime: ["月份", "年份"]
     },
-
+    team: {
+        add: "添加团队",
+        modify: "编辑团队",
+        form: {
+            name: "团队名称",
+            country: "国家",
+            color: "颜色"
+        },
+        rules: {
+            name: "请输入团队名称",
+            country: "请选择国家"
+        },
+        btn: {
+            confirm: "确认修改"
+        }
+    },
     public: {
         btn: {
             submit: "提交",

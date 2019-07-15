@@ -1,56 +1,27 @@
 <template>
   <div class="iworku-card workbench-briefreport">
     <div class="briefreport_top">
-      <h3>日程简报</h3>
+      <h3>{{$t("workBench.briefreport.title")}}</h3>
       <div>
-        <el-button type="text">全部日志</el-button>
+        <el-button type="text">{{$t("workBench.briefreport.btn.all")}}</el-button>
       </div>
-      <el-button class="top_button" @click="dialogFormVisible = true">提交日志</el-button>
-      <el-dialog title="添加日志" :visible.sync="dialogFormVisible" width="30%">
-        <el-form :model="dateForm" label-position="left" label-width="80px">
-          <!-- 项目名称 start -->
-          <el-form-item label="项目名称">
-            <el-input v-model="dateForm.title" placeholder="请输入日程内容"></el-input>
-          </el-form-item>
-          <!-- 项目名称 end -->
-          <!-- 类型 start -->
-          <el-form-item label="类型">
-            <el-select v-model="dateForm.remind" placeholder>
-              <el-option
-                v-for="item in remindTypes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <!-- 类型 end -->
-          <!-- 目标公司 start -->
-          <el-form-item label="目标公司">
-            <el-select v-model="dateForm.remind" placeholder="选择目标公司">
-              <el-option
-                v-for="item in remindTypes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <!-- 目标公司 end -->
-          <!-- 日志标题 start -->
-          <el-form-item label="日志标题">
-            <el-input v-model="dateForm.title" placeholder="日志标题"></el-input>
-          </el-form-item>
-          <!-- 日志标题 end -->
-          <!-- 工作描述 start -->
-          <el-form-item label="工作描述">
-            <el-input type="textarea" v-model="dateForm.title" placeholder="请输入日志内容"></el-input>
-          </el-form-item>
-          <!-- 工作描述 end -->
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
-        </div>
+      <el-button
+        class="top_button"
+        @click="addWorkDiaryDialogVisible = true"
+      >{{$t("workBench.briefreport.btn.submit")}}</el-button>
+      <el-dialog
+        class="el-dialog__scroll"
+        :title="$t('workDiary.add')"
+        :visible.sync="addWorkDiaryDialogVisible"
+        top="5vh"
+        :append-to-body="true"
+        :modal="false"
+        :lock-scroll="true"
+        width="30%"
+      >
+        <el-scrollbar class="scrollbar">
+          <AddWorkDiary></AddWorkDiary>
+        </el-scrollbar>
       </el-dialog>
     </div>
     <!-- 日程列表 start-->
@@ -80,7 +51,11 @@
   </div>
 </template>
 <script>
+import AddWorkDiary from "@/components/AddWorkDiary.vue";
 export default {
+  components: {
+    AddWorkDiary
+  },
   data() {
     return {
       list: [
@@ -179,7 +154,7 @@ export default {
           color: "#FFEA00FF"
         }
       ],
-      dialogFormVisible: false,
+      addWorkDiaryDialogVisible: false,
       dateForm: {
         title: "",
         color: "#D50000FF",

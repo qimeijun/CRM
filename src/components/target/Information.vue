@@ -7,47 +7,47 @@
     </el-row>
     <el-row :gutter="10" style="margin-bottom:10px;">
       <!-- 目标公司资料 start -->
-      <el-col span="12">
+      <el-col :span="12">
         <div class="iworku-card">
           <div class="info_div_top">
             <h3>目标公司资料</h3>
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="mini" @click="show=true;showType='company'">编辑</el-button>
           </div>
           <div class="info_div_content">
             <h5>公司名称</h5>
-            <p>Cong ty Nam binh</p>
+            <p>{{companyForm.name}}</p>
             <h5>国家</h5>
-            <p>Vietnam</p>
+            <p>{{companyForm.country}}</p>
             <h5>地址</h5>
-            <p>037 Okuneva Field</p>
+            <p>{{companyForm.site}}</p>
             <h5>网址</h5>
-            <p>www.alexandrea.us</p>
+            <p>{{companyForm.url}}</p>
             <h5>联系电话</h5>
-            <p>0086-510-83898353</p>
+            <p>{{companyForm.phone}}</p>
             <h5>电子邮件</h5>
-            <p>schmitt_kirk@hotmail.com</p>
+            <p>{{companyForm.email}}</p>
           </div>
         </div>
       </el-col>
       <!-- 目标公司资料 end -->
       <!-- 关键人信息 start -->
-      <el-col span="12">
+      <el-col :span="12">
         <div class="iworku-card">
           <div class="info_div_top">
             <h3>关键人信息</h3>
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="mini" @click="show=true;showType='keymen'">编辑</el-button>
           </div>
           <div class="info_div_content">
             <h5>关键人</h5>
-            <p>Cong ty Nam binh</p>
+            <p>{{keymenForm.name}}</p>
             <h5>职位</h5>
-            <p>Vietnam</p>
+            <p>{{keymenForm.position}}</p>
             <h5>联系电话</h5>
-            <p>037 Okuneva Field</p>
+            <p>{{keymenForm.phone}}</p>
             <h5>邮件</h5>
-            <p>www.alexandrea.us</p>
+            <p>{{keymenForm.email}}</p>
             <h5>社交账户</h5>
-            <p>schmitt_kirk@hotmail.com</p>
+            <p>{{keymenForm.social}}</p>
           </div>
         </div>
       </el-col>
@@ -55,85 +55,110 @@
     </el-row>
     <el-row :gutter="10">
       <!-- 其他 start -->
-      <el-col span="12">
+      <el-col :span="12">
         <div class="iworku-card">
           <div class="info_div_top">
             <h3>其他</h3>
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="mini" @click="show=true;showType='other'">编辑</el-button>
           </div>
           <div class="info_div_content">
             <h5>客户来源</h5>
-            <p>Cong ty Nam binh</p>
+            <p>{{otherForm.source}}</p>
             <h5>客户类型</h5>
-            <p>Vietnam</p>
+            <p>{{otherForm.type}}</p>
             <h5>预计采购规模</h5>
-            <p>037 Okuneva Field</p>
+            <p>{{otherForm.scale}}</p>
             <h5>海关编码</h5>
-            <p>www.alexandrea.us</p>
+            <p>{{otherForm.importance}}</p>
             <h5>重要程度</h5>
-            <p>0086-510-83898353</p>
+            <p>{{otherForm.rate}}</p>
           </div>
         </div>
       </el-col>
       <!-- 其他 end -->
       <!-- 介绍 start -->
-      <el-col span="12">
+      <el-col :span="12">
         <div class="iworku-card">
           <div class="info_div_top">
             <h3></h3>
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="mini" @click="show=true;showType='other'">编辑</el-button>
           </div>
           <div class="info_div_content">
             <h5>介绍</h5>
-            <p>
-              I have detailed below the most cost effective forms of internet marketing to advertising your business using your company website. HTPcompany.com provides marketing, Internet advertising, search engine optimization and sales consulting for businesses, web site promotion and lead generation.
-              Brought to you In this day and age, a lot of things have changed from how they used to be, which can be new and exciting for most. Effective internet marketing requires a mix of the right advertising army and approaches to get your web site thoroughly entrenched on the internet! Providing army for web site design, hosting, online shopping, databases, flash, streaming video, web site maintenance, search engine optimization, community internet advertising, and more. Consider the Internet the Cnext step to every ad Web sites serve as a ordinary consumer destination for all outgoing advertising communications. deem the Internet the “next step” to every ad Web sites serve as a ordinary consumer destination for all outgoing advertising communications. A sphere name is the Internet address you will use when advertising your web site. Paypopup.com is a four year old online advertising complex which consists thousands of specialized websites in providing unique intention internet traffic. You will be surfing Auto Hits for authentic free internet advertising and visitors to your website all automatically lacking clicking. We have just reached the tip of the iceberg, as the remainder of this article will help to further your understanding of this complex subject. The mass of websites on the Internet do not have the monetary resources to launch a million dollar advertising campaign. You only have to pay for your internet advertising when you hear potential buyers to your website. Companies are running to recover on their internet advertising expenses and constantly inform their website to keep up with the competition. The next time someone asks you about this topic, you can give a little smile and provide them an informative answer.
-            </p>
+            <p>{{otherForm.introduce}}</p>
             <h5>备注</h5>
-            <p>
-              I have detailed below the most cost effective forms of internet marketing to advertising your business using your company website. HTPcompany.com provides marketing, Internet advertising, search engine optimization and sales consulting for businesses, web site promotion and lead generation.
-              Brought to you In this day and age, a lot of things have changed from how they used to be, which can be new and exciting for most. Effective internet marketing requires a mix of the right advertising army and approaches to get your web site thoroughly entrenched on the internet! Providing army for web site design, hosting, online shopping, databases, flash, streaming video, web site maintenance, search engine optimization, community internet advertising, and more. Consider the Internet the Cnext step to every ad Web sites serve as a ordinary consumer destination for all outgoing advertising communications. deem the Internet the “next step” to every ad Web sites serve as a ordinary consumer destination for all outgoing advertising communications. A sphere name is the Internet address you will use when advertising your web site. Paypopup.com is a four year old online advertising complex which consists thousands of specialized websites in providing unique intention internet traffic. You will be surfing Auto Hits for authentic free internet advertising and visitors to your website all automatically lacking clicking. We have just reached the tip of the iceberg, as the remainder of this article will help to further your understanding of this complex subject. The mass of websites on the Internet do not have the monetary resources to launch a million dollar advertising campaign. You only have to pay for your internet advertising when you hear potential buyers to your website. Companies are running to recover on their internet advertising expenses and constantly inform their website to keep up with the competition. The next time someone asks you about this topic, you can give a little smile and provide them an informative answer.
-            </p>
+            <p>{{otherForm.introduce}}</p>
           </div>
         </div>
       </el-col>
       <!-- 介绍 end -->
     </el-row>
+    <!-- 编辑弹窗 start -->
+    <el-dialog
+      class="el-dialog__scroll"
+      title="编辑"
+      :visible.sync="show"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+        <!-- 编辑公司资料表单 -->
+        <ChangeCompany v-if="showType==='company'" :companyForm="companyForm"></ChangeCompany>
+        <!-- 编辑关键人表单 -->
+        <ChangeKeymen v-if="showType==='keymen'" :keymenForm="keymenForm"></ChangeKeymen>
+        <!-- 编辑其他表单 -->
+        <ChangeOther v-if="showType==='other'" :otherForm="otherForm"></ChangeOther>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 编辑弹窗 end -->
   </div>
 </template>
 <script>
 import Tag from "./../project/Tag";
+import ChangeCompany from "./ChangeCompany.vue";
+import ChangeKeymen from "./ChangeKeymen.vue";
+import ChangeOther from "./ChangeOther.vue";
+
 export default {
   components: {
-    Tag
+    Tag,
+    ChangeCompany,
+    ChangeKeymen,
+    ChangeOther
   },
   data() {
     return {
       companyForm: {
-        name: "",
-        country: "",
-        site: "",
-        url: "",
-        phone: "",
-        email: ""
+        name: "Cong ty Nam binh",
+        country: "Vietnam",
+        site: "037 Okuneva Field",
+        url: "www.alexandrea.us",
+        phone: "0086-510-83898353",
+        email: "schmitt_kirk@hotmail.com"
       },
       keymenForm: {
-          name:"",
-          position:"",
-          phone:"",
-          email:"",
-          social:""
+        name: "Michael Russell",
+        position: "Purchasing manager",
+        phone: "0086-510-832124678",
+        email: "leopold_marvin@hotmail.com",
+        social: "Facebook："
       },
-    otherForm:{
-        source:"",
-        type:"",
-        scale:"",
-        importance:""
-    },
-    notes:{
-        introduce:"",
-        note:""
-    }
+      otherForm: {
+        source: "Michael Russell",
+        type: "采购商",
+        scale: "100，000 万美元",
+        importance: "58042910",
+        rate: "3",
+        introduce:
+          "I have detailed below the most cost effective forms of internet marketing to advertising your business using your company website. HTPcompany.com provides marketing, Internet advertising, search engine optimization and sales consulting for businesses, ",
+        note:
+          "I have detailed below the most cost effective forms of internet marketing to advertising your business using your company website. HTPcompany.com provides marketing, Internet advertising, search engine optimization and sales consulting for businesses, "
+      },
+      show: true,
+      showType: "other"
     };
   }
 };

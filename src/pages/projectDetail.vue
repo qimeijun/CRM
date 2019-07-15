@@ -2,7 +2,11 @@
   <section class="project-details">
     <div class="project-details__top">
       <PageHeader></PageHeader>
-      <div class="project-details__top-name">zhangsan</div>
+      <div class="project-details__top-name">项目详情</div>
+       <el-input class="project-details__top-seek" placeholder="请输入内容" v-model="seek">
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="onClickSeek()"></i>
+      </el-input>
+      <el-button class="project-details__top-endbtn">结束项目</el-button>
     </div>
     <div class="project-details__content">
       <div class="project-details__menu">
@@ -64,7 +68,8 @@ export default {
           value: "diary",
           route: "diary"
         }
-      ]
+      ],
+      seek:""
     };
   },
    computed: {
@@ -93,9 +98,17 @@ export default {
   &__top {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     &-name {
       font-size: 24px;
       margin-left: 0.2rem;
+      flex-grow: 2;
+    }
+    &-seek{
+      width:313px;
+    }
+    &-endbtn{
+      color:$--default-color;
     }
   }
   &__content {

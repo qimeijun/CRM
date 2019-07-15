@@ -1,7 +1,7 @@
 <template>
   <div class="iworku-workbench">
     <div class="workbench_top">
-      <h2>工作台</h2>
+      <h2>{{$t("workBench.title")}}</h2>
       <!-- 项目下拉菜单 start -->
       <div class="top_div">
         <el-select class="workbench_top_select" v-model="value" placeholder="请选择">
@@ -106,8 +106,8 @@ export default {
 .iworku-workbench {
   padding: 0.2rem;
   .workbench_content {
-    width: 1062px;
-    margin: 0 auto;
+    // width: 1062px;
+    // margin: 0 auto;
   }
   .el-col {
     margin-bottom: 10px;

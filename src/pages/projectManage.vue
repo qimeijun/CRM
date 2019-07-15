@@ -128,8 +128,8 @@ export default {
   }
 }
 .projectManage_content {
-  width: 1062px;
-  margin: 0 auto;
+  // width: 1062px;
+  // margin: 0 auto;
 }
 .el-icon-search{
   cursor: pointer;

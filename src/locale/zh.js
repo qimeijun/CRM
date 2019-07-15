@@ -178,5 +178,38 @@ export default {
             cancel: "取消",
             upload: "上传附件"
         }
+    },
+    workBench:{
+        title:"工作台",
+        btn:{
+            addProject:"添加新项目"
+        },
+        briefreport:{
+            title:"日程简报",
+            btn:{
+                all:"全部日志",
+                submit:"提交日志"
+            }
+            
+        },
+        overview:{
+            title:"项目概览",
+            targetNum:"目标公司数",
+            vlinkNum:"已拜访目标公司数",
+            intentionNum:"意向目标公司数",
+            orderNum:"取得订单数量"
+        },
+        variables:{
+            title:"本月工作",
+            dataX: ["第一周", "第二周", "第三周", "第四周"],
+        },
+        calendar:{
+            title:"日程安排",
+            btn:{
+                redact:"编辑",
+                delete:"删除",
+            }
+        }
+
     }
 }

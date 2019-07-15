@@ -61,7 +61,7 @@
           <el-form-item label="企业名称">
             <el-input v-model="infoFrom.name" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="行业" :label-width="formLabelWidth">
+          <el-form-item label="行业">
             <el-select v-model="infoFrom.tmt" placeholder="请选择行业">
               <el-option label="行业1" value="shanghai"></el-option>
               <el-option label="行业2" value="beijing"></el-option>

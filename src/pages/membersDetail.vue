@@ -12,7 +12,7 @@
           :class="activeMenu == item.value ? 'member-details__menu-active' : ''"
           @click="onChangeMenu(item)"
         >
-          <router-link :to="`/member/detail/${item.route}`">{{ item.name }}</router-link>
+          <span>{{ item.name }}</span>
         </li>
       </ul>
     </div>
@@ -63,6 +63,7 @@ export default {
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
+      this.$router.push({ path: `/member/detail/${item.route}`});
     }
   }
 };
@@ -86,6 +87,7 @@ export default {
       background-color: $--default-white;
     }
     li {
+      cursor: pointer;
       padding: 20px;
       font-size: 16px;
       text-align: center;

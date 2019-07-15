@@ -42,7 +42,9 @@ export default {
             city: "城市",
             role: "角色",
             team: "团队",
-            region: "区域经理"
+            region: "区域经理",
+            account: "登录账号",
+            password: "登录密码"
         },
         rules: {
             avatar: "请上传工作照",
@@ -50,7 +52,19 @@ export default {
             email: "请输入成员邮箱",
             role: "请选择成员角色",
             team: "请选择团队",
-            region: "请选择区域经理"
+            region: "请选择区域经理",
+            account: "请输入登录账号",
+            password: ["请输入登录密码", "密码不能少于八位数，且不能有特殊字符"],
+            gender: "请选择成员角色"
+        },
+        placeholder: {
+            account: "请输入邮箱",
+            username: "请输入成员的姓名",
+            usernameEn: "请输入成员的英文名",
+            gender: "请选择成员的性别",
+            email: "请输入成员的电子邮箱",
+            telphone: "请输入成员的手机号码",
+            role: "请选择成员的级别"
         },
         gender: {
             male: "男",
@@ -59,14 +73,22 @@ export default {
         btn: {
             regional: "区域经理管理",
             addRegional: "添加区域经理",
-            ok: "完成"
+            ok: "完成",
+            fillInformation: "填写资料",
+            confirmAdd: "确认添加"
+        },
+        dialogMenu: {
+            account: "账号设置",
+            information: "成员信息"
         }
     },
-    changeAdministration: {
+    changeAdministrator: {
         title: "更改管理员",
         search: "输入管理员名称",
         btn: {
-            change: "更改"
+            handOver: "移交",
+            add: "分配",
+            addMember: "新增项目经理"
         }
     },
     password: {
@@ -104,14 +126,15 @@ export default {
         }
     },
     memberInfo: {
-        menu: ["资料", "团队", "项目", "私海客户", "工作日志"],
+        menu: ["资料", "团队", "跟进项目", "私海客户", "工作日志"],
         priviteTable: ["目标公司", "重要程度", "更新时间", "状态", "创建时间", "操作"],
-        projectTable: ["公司名称", "状态", "管理员", "标签", "进行时间", "添加时间", "操作"],
+        projectTable: ["项目名称", "状态", "管理员", "标签", "进行天数", "添加时间", "操作"],
         btn: {
             shiftIn: "移入公海",
             shiftOut: "移出",
             modify: "编辑",
             password: "修改密码",
+            shiftOutProject: "移出",
             addDiary: "添加工作日志"
         },
         priviteShiftInTip: {
@@ -120,7 +143,7 @@ export default {
         },
         memberShiftOutTip: {
             title: "提示",
-            btn: ["确定", "取消", "移交任务"],
+            btn: ["确定", "取消", "移交任务", "移入公海"],
             content: ["你确定要将此成员移出项目吗？", "无法移出!", "此成员尚有目标公司正在跟进，请移交任务在移出!", "此成员为项目经理，移出前必须分配新的项目经理!"]
         },
         operate: "操作",
@@ -128,9 +151,27 @@ export default {
         noTeam: "暂无团队",
         account: "账号",
         password: "密码",
-        workDiaryMenu: ["全部日志", "项目日志", "目标公司日志"]
+        workDiaryMenu: ["全部日志", "项目日志", "目标公司日志"],
+        statistics: ["任务概况", "本月业绩"],
+        joinTime: "加入时间",
+        handOverTeam: "移交",
+        teamStatistics: ["所有成员业绩", '1V1业绩'],
+        teamStatisticsTime: ["月份", "年份"]
     },
-
+    team: {
+        form: {
+            name: "团队名称",
+            country: "国家",
+            color: "颜色"
+        },
+        rules: {
+            name: "请输入团队名称",
+            country: "请选择国家"
+        },
+        btn: {
+            confirm: "确认修改"
+        }
+    },
     public: {
         btn: {
             submit: "提交",

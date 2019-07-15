@@ -1,56 +1,75 @@
 <template>
-  <div
-    :class="['member-table-list-tr', (!children && item.children && item.children.length > 0) ? 'member-table-list-tr--parent' : '', children ? 'member-table-list-tr--children':'', last ? 'member-table-list-tr--children-last' : '']"
-  >
-    <div class="member-table-list-user">
-        <el-avatar :size="50" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
-        <div class="member-table-list-user-right">
-            <span class="user-name">Jane</span>
-            <span class="el-icon-location">越南</span>
-        </div>
-    </div>
-    <div>{{ item.date }}</div>
-    <div>{{ item.name }}</div>
-    <div>{{ item.address }}</div>
-    <div>{{ item.address }}</div>
-    <div>{{ item.address }}</div>
     <div>
-      <Operate>
-        <ul>
-          <li>
-            <router-link to="/member/detail">{{ $t("memberManagement.operate[0]") }}</router-link>
-          </li>
-          <li>
-            <router-link to="/second">{{ $t("memberManagement.operate[1]") }}</router-link>
-          </li>
-          <li
-            class="member-table-list__delete"
-            @click="onDeleteMember"
-          >{{ $t("memberManagement.operate[2]") }}</li>
-        </ul>
-      </Operate>
+        <div
+            :class="['member-table-list-tr', (!children && item.children && item.children.length > 0) ? 'member-table-list-tr--parent' : '', children ? 'member-table-list-tr--children':'', last ? 'member-table-list-tr--children-last' : '']"
+        >
+            <div class="member-table-list-user">
+                <el-avatar :size="50" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
+                <div class="member-table-list-user-right">
+                    <span class="user-name">Jane</span>
+                    <span class="el-icon-location">越南</span>
+                </div>
+            </div>
+            <div>{{ item.date }}</div>
+            <div>{{ item.name }}</div>
+            <div>{{ item.address }}</div>
+            <div>{{ item.address }}</div>
+            <div>{{ item.address }}</div>
+            <div>
+            <Operate>
+                <ul>
+                <li>
+                    <router-link to="/member/detail">{{ $t("memberManagement.operate[0]") }}</router-link>
+                </li>
+                <li class="member-table-list__click" @click="onHandAdministrator(item)">
+                    {{ $t("memberManagement.operate[1]") }}
+                </li>
+                <li
+                    class="member-table-list__click"
+                    @click="onDeleteMember(item)"
+                >{{ $t("memberManagement.operate[2]") }}</li>
+                </ul>
+            </Operate>
+            </div>
+        </div>
+        <!-- 移交管理员的dialog -->
+        <el-dialog
+            class="el-dialog__scroll"
+            :title="$t('selectRegionalManager.title')"
+            :visible.sync="changeAdministratorDialogVisible"
+            top="5vh"
+            :append-to-body="true"
+            :modal="false"
+            :lock-scroll="true"
+            width="30%">
+            <el-scrollbar class="scrollbar">
+                <ChangeAdministrator @getManager="getManager" :oldAdminstrator="item" operate="handOver"></ChangeAdministrator>
+            </el-scrollbar>
+        </el-dialog>
     </div>
-  </div>
 </template>
 <script>
-import Operate from "@/components/lib/Operate.vue";
 export default {
   components: {
-    Operate
+    Operate: () => import("@/components/lib/Operate.vue"),
+    ChangeAdministrator: () => import('@/components/member/ChangeAdministrator.vue')
   },
   props: {
+    // 需要显示的数据
     item: {
       type: Object,
       default() {
         return {};
       }
     },
+    // 是否是子元素
     children: {
       type: Boolean,
       default() {
         return false;
       }
     },
+    // 是否是子元素的最后一个
     last: {
       type: Boolean,
       default() {
@@ -58,19 +77,24 @@ export default {
       }
     }
   },
+  data() {
+      return {
+          changeAdministratorDialogVisible: false
+      }
+  },
   methods: {
     /**
      *  删除成员
      */
-    onDeleteMember() {
+    onDeleteMember(item) {
       this.$confirm(
-        this.$t("memberManagement.deleteTip.content[0]"),
+        `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t("memberManagement.deleteTip.content[0]")}`,
         this.$t("memberManagement.deleteTip.title"),
         {
           confirmButtonText: this.$t("memberManagement.deleteTip.btn[1]"),
           cancelButtonText: this.$t("memberManagement.deleteTip.btn[0]"),
-          type: "warning",
-          center: true
+          center: true,
+          dangerouslyUseHTMLString: true
         }
       )
         .then(() => {
@@ -82,11 +106,34 @@ export default {
         })
         .catch(() => {
           // 确定删除
-          this.$message({
-            type: "info",
-            message: "确定删除"
-          });
+          this.$confirm(
+                `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t("memberManagement.deleteTip.content[1]")}<br/>${this.$t("memberManagement.deleteTip.content[2]")}`,
+                this.$t("memberManagement.deleteTip.title"),
+                {
+                confirmButtonText: this.$t("memberManagement.deleteTip.btn[1]"),
+                cancelButtonText: this.$t("memberManagement.deleteTip.btn[0]"),
+                center: true,
+                dangerouslyUseHTMLString: true
+                }
+            ).then(() => {
+                // 取消
+            }).catch(() => {
+                // 确定
+            });
         });
+    },
+    /**
+     *  移交管理员
+     */
+    onHandAdministrator(item) {
+        this.changeAdministratorDialogVisible = true;
+    },
+    /**
+     *  获取管理员的信息
+     */
+    getManager(data) {
+        console.log(data);
+        this.changeAdministratorDialogVisible = false;
     }
   }
 };
@@ -122,7 +169,7 @@ export default {
     border-bottom-left-radius: $--default-border-radius !important;
     border-bottom-right-radius: $--default-border-radius !important;
   }
-  &__delete {
+  &__click {
     cursor: pointer;
   }
   &-user {

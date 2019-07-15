@@ -1,20 +1,20 @@
 <template>
-  <section class="project-details">
-    <div class="project-details__top">
+  <section class="target-details">
+    <div class="target-details__top">
       <PageHeader></PageHeader>
-      <div class="project-details__top-name">zhangsan</div>
+      <div class="target-details__top-name">zhangsan</div>
     </div>
-    <div class="project-details__content">
-      <div class="project-details__menu">
+    <div class="target-details__content">
+      <div class="target-details__menu">
         <ul>
           <li
             v-for="(item, index) in menuList"
             :key="index"
-            :class="activeMenu == item.value ? 'project-details__menu-active' : ''"
+            :class="activeMenu == item.value ? 'target-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
 
           >
-            <router-link :to="`/project/detail/${item.route}`">{{ item.name }}</router-link>
+            <router-link :to="`/target/detail/${item.route}`">{{ item.name }}</router-link>
           </li>
         </ul>
       </div>
@@ -23,8 +23,8 @@
           <router-view></router-view>
         </el-col>
         <el-col v-if="activeMenu==='information'||activeMenu==='product'"  :span="8">
-            <Tag></Tag>
-            <Member></Member>
+            <!-- <Tag></Tag>
+            <Member></Member> -->
         </el-col>
       </el-row>
     </div>
@@ -32,36 +32,23 @@
 </template>
 <script>
 import PageHeader from "@/components/lib/PageHeader.vue";
-import Tag from "@/components/project/Tag.vue";
-import Member from "@/components/project/Member.vue";
 export default {
   data() {
     return {
-      // activeMenu: "information",
       menuList: [
         {
           name: "资料",
-          value: "information",
+          value: "target_information",
           route: "info"
         },
         {
-          name: "产品",
-          value: "product",
-          route: "product"
+          name: "调研报告",
+          value: "target_probe",
+          route: "probe"
         },
         {
           name: "公海客户",
-          value: "commonality",
-          route: "commonality"
-        },
-        {
-          name: "成员私海",
-          value: "private",
-          route: "private"
-        },
-        {
-          name: "工作日志",
-          value: "diary",
+          value: "target_diary",
           route: "diary"
         }
       ]
@@ -69,11 +56,12 @@ export default {
   },
    computed: {
     activeMenu() {
+      console.log(this.$route.name)
       return this.$route.name;
     }
   },
   components: {
-    PageHeader,Tag,Member
+    PageHeader
   },
   methods: {
     /**
@@ -82,13 +70,13 @@ export default {
     onChangeMenu(item) {
       console.log(123);
       this.activeMenu = item.value;
-      this.$router.push({path:`/project/detail/${item.route}`});
+      this.$router.push({path:`/target/detail/${item.route}`});
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-.project-details {
+.target-details {
   margin: 20px;
   &__top {
     display: flex;

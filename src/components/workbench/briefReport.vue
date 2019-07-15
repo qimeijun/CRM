@@ -53,11 +53,9 @@
         </div>
       </el-dialog>
     </div>
-    <!-- 日程列表 -->
+    <!-- 日程列表 start-->
     <div class="briefreport_list">
-      <el-scrollbar
-        style="height:100%;"
-      >
+      <el-scrollbar style="height:100%;">
         <div v-infinite-scroll="load" infinite-scroll-disabled="disabled">
           <div class="briefreport_list_item" v-for="(item,index) in list" :key="index">
             <i :style="'background-color:'+item.color">{{item.type}}</i>
@@ -78,6 +76,7 @@
         </div>
       </el-scrollbar>
     </div>
+    <!-- 日程列表 end-->
   </div>
 </template>
 <script>

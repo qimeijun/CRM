@@ -41,26 +41,53 @@ export default new VueRouter({
                 {
                     path: '/',
                     alias: "info",
+                    name: "information",
                     component: () => import('./../components/project/Information.vue')
                 },
                 {
                     path: 'product',
+                    name: "product",
                     component: () => import('./../components/project/Product.vue')
                 },
                 {
                     path: 'commonality',
+                    name: 'commonality',
                     component: () => import('./../components/project/Commonality.vue')
                 },
                 {
                     path: 'private',
+                    name: 'private',
                     component: () => import('./../components/project/Private.vue')
                 },
                 {
                     path: 'diary',
+                    name: 'diary',
                     component: () => import('./../components/project/Diary.vue')
                 },
             ]
+        },
+        {
+            path: '/target/detail', component: () => import('./../pages/targetDetail.vue'),
+            children:[
+                {
+                    path: '/',
+                    alias: "info",
+                    name: "target_information",
+                    component: () => import('./../components/target/Information.vue')
+                },
+                {
+                    path: 'probe',
+                    name: 'target_probe',
+                    component: () => import('./../components/target/Probe.vue')
+                },
+                {
+                    path: 'diary',
+                    name: 'target_diary',
+                    component: () => import('./../components/target/Diary.vue')
+                },
+            ]
         }
+
 
     ]
 });

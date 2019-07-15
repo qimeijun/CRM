@@ -1,9 +1,10 @@
 <template>
   <section class="project-detail-info">
+    <!-- 资料展示 start -->
     <div class="info_top">
       <div class="info_top_div" style="align-items:center">
         <h3>资料</h3>
-        <el-button type="primary">编辑</el-button>
+        <el-button type="primary" @click="show = true;infoFrom=info">编辑</el-button>
       </div>
 
       <div class="info_top_div">
@@ -47,6 +48,38 @@
       <h4>优势</h4>
       <p>{{info.advantage}}</p>
     </div>
+    <!-- 资料展示 end -->
+
+    <!-- 编辑资料弹窗 start -->
+    <div class="info_redact">
+      <el-dialog title="修改资料" :visible.sync="show" width="600px">
+        <h1>项目资料</h1>
+        <el-form :model="infoFrom" label-position="top">
+          <el-form-item label="项目名称">
+            <el-input v-model="infoFrom.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="企业名称">
+            <el-input v-model="infoFrom.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="行业" :label-width="formLabelWidth">
+            <el-select v-model="infoFrom.tmt" placeholder="请选择行业">
+              <el-option label="行业1" value="shanghai"></el-option>
+              <el-option label="行业2" value="beijing"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="地址">
+            <el-input v-model="infoFrom.site" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="网址">
+            <el-input v-model="infoFrom.url" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="show = false">完成</el-button>
+        </div>
+      </el-dialog>
+    </div>
+    <!-- 编辑资料弹窗 end -->
   </section>
 </template>
 <script>
@@ -65,7 +98,19 @@ export default {
           "Wuxi Hariken Electric Tools Co., Ltd. Was founded in 2002. Our company combines the design, development, production and process of hand-held light rotary hammer. Our company sells all products to oversea market and cooperates with the famed international bands to develop the exclusive products, therefore we enjoy a high level of popularity worldwide. Our company owns a complete quality management system, a professional development team full of experience on design and professional employees control the quality of products. Also we hold a perfect function test center, and the test facility such as the hardness metallographic phase.",
         advantage:
           "Wuxi Hariken Electric Tools Co., Ltd. Was founded in 2002. Our company combines the design, development, production and process of hand-held light rotary hammer. Our company sells all products to oversea market and cooperates with the famed international bands to develop the exclusive products, therefore we enjoy a high level of popularity worldwide. Our company owns a complete quality management system, a professional development team full of experience on design and professional employees control the quality of products. Also we hold a perfect function test center, and the test facility such as the hardness metallographic phase."
-      }
+      },
+      show:false,
+      infoFrom:{
+        name:"",
+        tmt:"",
+        site:"",
+        url:"",
+        email:"",
+        contact:"",
+        intro:"",
+        advantage:"",
+      },
+      
     };
   }
 };

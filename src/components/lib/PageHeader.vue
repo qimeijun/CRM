@@ -5,9 +5,17 @@
 </template>
 <script>
 export default {
+    props: {
+        url: {
+            type: String,
+            default() {
+                return "";
+            }
+        }
+    },
     methods: {
         goBack() {
-            this.router.back();
+            this.$router.push({ path: this.url });
         }
     }
 }
@@ -18,7 +26,7 @@ export default {
     width:50px;
     height:50px;
     border-radius: $--default-border-radius;
-    background-color: $--default-color;
+    background-color: #BBBBBB;
     text-align: center;
     .el-icon-back {
         color: $--default-white;

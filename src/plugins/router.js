@@ -19,22 +19,27 @@ export default new VueRouter({
                 {
                     path: '/',
                     alias: "info",
+                    name: 'member-info',
                     component: () => import('./../components/member/Information.vue')
                 },
                 {
                     path: 'project',
+                    name: 'member-project',
                     component: () => import('./../components/member/Project.vue')
                 },
                 {
                     path: 'team',
+                    name: 'member-team',
                     component: () => import('./../components/team/Team.vue')
                 },
                 {
                     path: 'diary',
-                    component: () => import('./../components/member/WorkDiary.vue')
+                    name: 'member-diary',
+                    component: () => import('./../components/work/WorkDiary.vue')
                 },
                 {
                     path: 'private',
+                    name: 'member-private',
                     component: () => import('./../components/member/Private.vue')
                 }
             ]

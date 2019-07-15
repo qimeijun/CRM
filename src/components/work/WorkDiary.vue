@@ -1,24 +1,34 @@
 <template>
-    <section class="team-work-diary">
-        <div class="team-work-diary__left">
-            <div class="team-work-diary__left-top">
-                <ul class="team-work-diary__menu">
+    <section class="work-diary">
+        <div class="work-diary__left">
+            <div class="work-diary__left-top">
+                <ul class="work-diary__menu">
                     <li v-for="(item, index) in menuList" :class="activeMenu == item.value ? 'active' : ''" :key="index" @click="onChangeMenu(item)">{{ item.name }}</li>
                 </ul>
                 <div style="margin-right: .1rem; display:flex; align-items: center;">
-                    <i class="el-icon-date"></i>
+                    
                     <el-button type="primary" @click="onAddDiary" icon="el-icon-plus">{{ $t("memberInfo.btn.addDiary") }}</el-button>
                 </div>
             </div>
+            <!-- 工作日志模块 -->
+            <div style="margin-top: 20px;">
+                <DiaryModule></DiaryModule>
+                <DiaryModule></DiaryModule>
+                <DiaryModule></DiaryModule>
+            </div>
         </div>
-        <div class="team-work-diary__right">
-            <el-calendar class="team-work-diary__right-calendar" v-model="calendarValue">
+        <div class="work-diary__right">
+            <el-calendar class="work-diary__right-calendar" v-model="calendarValue">
                 <template
                     slot="dateCell"
                     slot-scope="{date, data}">
-                    <p :class="(isHaveLog.includes(data.day.split('-')[2]) && data.type == 'current-month') ? 'have-log': ''">
-                        {{ data.day.split('-')[2] }}
-                    </p>
+                    <div @click="onnChangeDiary" :class="(logMap.has(data.day.split('-')[2]) && data.type == 'current-month') ? 'have-log' : ''">
+                        <el-badge :is-dot="logMap.get(data.day.split('-')[2]) && data.type == 'current-month'" class="item">
+                            <span>
+                                {{ data.day.split('-')[2] }}
+                            </span>
+                        </el-badge>
+                    </div>
                 </template>
             </el-calendar>
         </div>
@@ -41,10 +51,10 @@
     </section>
 </template>
 <script>
-import AddWorkDiary from "@/components/AddWorkDiary.vue"
 export default {
     components: {
-        AddWorkDiary
+        AddWorkDiary: () => import("@/components/work/AddWorkDiary.vue"),
+        DiaryModule: () => import("@/components/work/DiaryModule.vue"), 
     },
     data() {
         return {
@@ -65,8 +75,25 @@ export default {
                     value: "target",
                 }
             ],
-            isHaveLog: ['01', '03', '10', '20']
+            isHaveLog: [
+                {
+                    date: '02',
+                    isRead: true
+                },
+                {
+                    date: '12',
+                    isRead: true
+                },
+                {
+                    date: '22',
+                    isRead: true
+                }
+            ],
+            logMap: new Map()
         }
+    },
+    created() {
+        this.dataProcessiong();
     },
     methods: {
         /**
@@ -80,6 +107,20 @@ export default {
          */
         onAddDiary() {
             this.addWorkDiaryDialogVisible = true;
+        },
+        /**
+         *  处理返回来的日历数据
+         */
+        dataProcessiong() {
+            this.isHaveLog.map((val) => {
+                this.logMap.set(val.date, val.isRead);
+            });
+        },
+        /**
+         *  点击日历，切换工作日志日期
+         */
+        onnChangeDiary() {
+            console.log(this.calendarValue);
         }
     },
     watch: {
@@ -94,11 +135,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.team-work-diary {
+.work-diary {
     display: flex;
+    align-items: flex-start;
     margin-top: 20px;
     &__left {
-        flex: 1;
+        flex: 2;
         margin-right: .1rem;
         &-top {
             display: flex;
@@ -135,15 +177,35 @@ export default {
             border-radius: $--default-border-radius;
         }
         .have-log {
-            border-radius: 50%;
-            height: 50px;
-            width: 50px;
-            background-color: $--default-color;
-            color: $--default-white;
+            margin: auto;
+            height: 100%;
+            width: 100%;
             text-align: center;
-            line-height: 50px;
+            line-height: 24px;
+            span {
+                display: inline-block;
+                height: 24px;
+                width: 24px;
+                background-color: $--default-color;
+                color: $--default-white;
+                border-radius: 50%;
+            }
         }
     }
     
+}
+</style>
+<style lang="scss">
+.work-diary__right-calendar {
+    .el-calendar-table  {
+        td {
+            border: none !important;
+            text-align: center;
+        }
+        .el-calendar-day {
+            height: 50px;
+            line-height: 35px;
+        }
+    }
 }
 </style>

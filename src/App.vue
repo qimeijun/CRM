@@ -25,7 +25,7 @@
         <i class="el-icon-s-custom"></i>
         <span slot="title">成员管理</span>
       </el-menu-item>
-      <el-menu-item index="/tagmanage" route="/tagmanage">
+      <el-menu-item index="/tag" route="/tag">
         <i class="el-icon-s-flag"></i>
         <span slot="title">标签管理</span>
       </el-menu-item>

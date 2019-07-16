@@ -11,7 +11,7 @@ export default new VueRouter({
         { path: '/workbench', component: () => import('./../pages/workbench.vue') },
         { path: '/projectmanage', component: () => import('./../pages/projectManage.vue') },
         { path: '/membermanage', component: () => import('./../pages/memberManage.vue') },
-        { path: '/tagmanage', component: () => import('./../pages/tagManage.vue') },
+        { path: '/tag', component: () => import('./../pages/tag.vue') },
         { path: '/member', component: () => import('./../pages/members.vue') },
         {
             path: '/member/detail', component: () => import('./../pages/membersDetail.vue'),

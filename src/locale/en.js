@@ -232,6 +232,12 @@ export default {
             title:"本月工作",
             dataX: ["1st Week", "2st Week", "3st Week", "4st Week"],
         }
-
+    },
+    tag: {
+        add: "添加标签",
+        btn: {
+            add: "新增标签",
+            confirm: "确定"
+        }
     }
 }

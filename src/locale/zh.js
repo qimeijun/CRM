@@ -234,6 +234,12 @@ export default {
                 delete: "删除",
             }
         }
-
+    },
+    tag: {
+        add: "添加标签",
+        btn: {
+            add: "新增标签",
+            confirm: "确定"
+        }
     }
 }

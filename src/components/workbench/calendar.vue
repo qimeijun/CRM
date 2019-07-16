@@ -1,9 +1,8 @@
 <template>
   <div class="iworku-card workbench-calendar">
     <div class="calendar_top">
-      <h3>日程安排</h3>
+      <h3>{{$t("workBench.calendar.title")}}</h3>
     </div>
-
     <div class="calendar_content">
       <el-calendar :first-day-of-week="7">
         <template #dateCell="{date, data}">
@@ -32,8 +31,8 @@
                   <span>{{item.title}}</span>
                 </p>
                 <div style="text-align:right;">
-                  <el-button type="text">编辑</el-button>
-                  <el-button type="text">删除</el-button>
+                  <el-button type="text">{{$t("workBench.calendar.btn.redact")}}</el-button>
+                  <el-button type="text">{{$t("workBench.calendar.btn.delete")}}</el-button>
                 </div>
                 <span slot="reference">{{item.title}}</span>
               </el-popover>
@@ -62,8 +61,8 @@
                   <span>{{item.title}}</span>
                 </p>
                 <div style="text-align:right;">
-                  <el-button type="text">编辑</el-button>
-                  <el-button type="text">删除</el-button>
+                  <el-button type="text">{{$t("workBench.calendar.btn.redact")}}</el-button>
+                  <el-button type="text">{{$t("workBench.calendar.btn.delete")}}</el-button>
                 </div>
                 <span slot="reference">{{item.title}}</span>
               </el-popover>
@@ -94,8 +93,8 @@
                   <span>{{item.title}}</span>
                 </p>
                 <div style="text-align:right;">
-                  <el-button type="text">编辑</el-button>
-                  <el-button type="text">删除</el-button>
+                  <el-button type="text">{{$t("workBench.calendar.btn.redact")}}</el-button>
+                  <el-button type="text">{{$t("workBench.calendar.btn.delete")}}</el-button>
                 </div>
                 <p slot="reference">
                   <i class="calendar_dot" :style="'background-color:'+item.color"></i>

@@ -1,7 +1,7 @@
 <template>
   <div class="iworku-card workbench-variables">
     <div class="variables-top">
-      <h3>本月工作</h3>
+      <h3>{{$t("workBench.variables.title")}}</h3>
       <p>
         {{year}}/
         <span>{{month}}</span>
@@ -48,7 +48,7 @@ export default {
       xAxis: [
         {
           type: "category",
-          data: ["1st Week", "2st Week", "3st Week", "4st Week"],
+          data: this.$t("workBench.variables.dataX"),
           axisTick: {
             alignWithLabel: true
           }

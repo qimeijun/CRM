@@ -236,10 +236,53 @@ export default {
         }
     },
     tag: {
+        title: "标签管理",
+        groupTitle: "分组管理",
+        project: "项目标签",
+        target: "目标公司标签",
         add: "添加标签",
         btn: {
             add: "新增标签",
-            confirm: "确定"
+            confirm: "确定",
+            groupMange: "分组管理",
+            delete: "删除",
+            addGroup: "新增分组",
+            deleteOk: "完成"
+        },
+        deleteTagTip: {
+            title: "提示",
+            content: "您确定要删除此标签吗?",
+            btn: {
+                ok: "确定",
+                cancel: "取消"
+            }
+        },
+        operate: "操作",
+        operateList: ["移动至分组", "重命名", "删除"],
+        addGroupTip: {
+            title: "提示",
+            content: ["无法新增", "目前您的分组已到达最多数量，请点击管理分组进行管理！"]
+        },
+        deleteTips: "已有标签分组将无法删除，请将标签删除或移至其他分组再删除",
+        nextPage: "下一页",
+        addTagPlaceholder: "添加新标签"
+    },
+    setting: {
+        title: ["个人资料", "修改密码"],
+        form: {
+            companyName: "公司名称",
+            companyShortName: "公司简称",
+            telphone: "联系电话",
+            email: "邮箱",
+            country: "国家",
+            account: ["账号", "暂时无法修改"]
+        },
+        rules: {
+            companyName: "请输入公司名称",
+            companyShortName: "请输入公司简称"
+        },
+        btn: {
+            save: "保存"
         }
     }
 }

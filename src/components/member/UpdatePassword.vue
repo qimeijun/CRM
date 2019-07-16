@@ -7,14 +7,25 @@
       label-position="top"
       label-width="80px"
     >
-    <!-- 新密码 -->
+      <!-- 设置页面引用时，显示账号 start -->
+      <div v-if="type=='setting'">
+        <div>
+          {{ $t('setting.form.account[0]') }}
+          <span>({{ $t('setting.form.account[1]') }})</span>
+        </div>
+        <div style="line-height: 40px;">{{ passwordForm.account }}</div>
+      </div>
+      <!-- 设置页面引用时，显示账号 start -->
+      <!-- 新密码 start-->
       <el-form-item :label="`${$t('password.form.new')}`" prop="new">
         <el-input v-model="passwordForm.new" type="password"></el-input>
       </el-form-item>
-      <!-- 确认密码 -->
+      <!-- 新密码 end-->
+      <!-- 确认密码 start-->
       <el-form-item :label="`${$t('password.form.confirm')}`" prop="confirm">
         <el-input v-model="passwordForm.confirm" type="password"></el-input>
       </el-form-item>
+      <!-- 确认密码 end-->
       <el-form-item class="update-password__btn">
         <el-button
           type="primary"
@@ -26,9 +37,21 @@
 </template>
 <script>
 export default {
+  props: {
+    /**
+     *  是否在设置页面中引用， type="setting"
+     */
+    type: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
+  },
   data() {
     return {
       passwordForm: {
+        account: "123456@qq.com",
         new: "",
         confirm: ""
       },

@@ -266,7 +266,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .member {
-  margin: 20px;
+  margin: .2rem;
   &__top {
     display: flex;
     justify-content: space-between;

@@ -1,32 +1,94 @@
 <template>
-    <div>
-        <!-- 添加成员 dialog start -->
-      <el-dialog
-        class="el-dialog__scroll"
-        :title="$t('selectRegionalManager.title')"
-        :visible.sync="addMemberDialogVisible"
-        top="5vh"
-        :append-to-body="true"
-        :modal="false"
-        :lock-scroll="true"
-        width="30%"
-      >
-        <el-scrollbar>
-          <AddTag></AddTag>
-        </el-scrollbar>
-      </el-dialog>
-      <!-- 添加成员 dialog end -->
+  <section class="tag">
+    <div class="tag__title">
+      <h1>{{ $t("tag.title") }}</h1>
     </div>
+    <div class="tag__menu">
+      <ul>
+        <li
+          v-for="(item, index) in menuList"
+          :key="index"
+          :class="activeMenu == item.value ? 'tag__menu-active' : ''"
+          @click="onChangeMenu(item)"
+        >
+          <span>{{ item.name }}</span>
+        </li>
+      </ul>
+    </div>
+    <el-scrollbar style="height: calc(100vh - 2.37rem);">
+      <router-view></router-view>
+    </el-scrollbar>
+    
+  </section>
 </template>
 <script>
 export default {
-    components: {
-        AddTag: () => import('@/components/tag/AddTagForTarget.vue')
-    },
-    data() {
-        return {
-            addMemberDialogVisible:true
+  data() {
+    return {
+      activeMenu: "tag-project"
+    };
+  },
+  computed: {
+    menuList() {
+      return [
+        {
+          name: this.$t("tag.project"),
+          value: "tag-project",
+          route: "project"
+        },
+        {
+          name: this.$t("tag.target"),
+          value: "tag-target",
+          route: "target"
         }
-    },
-}
+      ];
+    }
+  },
+  created() {
+    this.activeMenu = this.$route.name;  
+  },
+  methods: {
+    /**
+     *  切换菜单
+     */
+    onChangeMenu(item) {
+      this.activeMenu = item.value;
+      this.$router.push({ path: `/tag/${item.route}` });
+    }
+  },
+  watch: {
+      '$route'(to, from) {
+          this.activeMenu = to.name;
+      }
+  }
+};
 </script>
+<style lang="scss" scoped>
+.tag {
+  margin: 0.2rem;
+  &__menu {
+    margin-top: 20px;
+    ul {
+      display: flex;
+      border-radius: $--default-border-radius;
+      background-color: $--default-white;
+    }
+    li {
+      cursor: pointer;
+      padding: 20px;
+      font-size: 16px;
+      text-align: center;
+    }
+    &-active::after {
+      content: "";
+      display: block;
+      margin-top: 5px;
+      height: 4px;
+      width: 100%;
+      border-radius: $--default-border-radius;
+      background-color: $--default-color;
+      transition: 1s 1s height ease;
+    }
+  }
+}
+</style>

@@ -145,7 +145,7 @@ export default {
             cursor: pointer;
         }
         .selected {
-            background-color: $--default-color;
+            background-color: #8D43FF;
         }
     }
     &__bottom {

@@ -58,7 +58,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <AddMember></AddMember>
+        <UpdateMemberInfo></UpdateMemberInfo>
       </el-scrollbar>
     </el-dialog>
     <!-- 修改成员信息 dialog end -->
@@ -83,7 +83,7 @@
 import echarts from "echarts";
 export default {
   components: {
-    AddMember: () => import("@/components/member/AddMember.vue"),
+    UpdateMemberInfo: () => import("@/components/member/ImproveMemeberInfo.vue"),
     UpdatePassword: () => import("@/components/member/UpdatePassword.vue")
   },
   data() {

@@ -6,17 +6,25 @@
     </div>
     <div class="member-details__menu">
       <ul>
+        
         <li
           v-for="(item, index) in menuList"
           :key="index"
           :class="activeMenu == item.value ? 'member-details__menu-active' : ''"
           @click="onChangeMenu(item)"
         >
+        <el-badge v-if="item.value == 'member-diary'" :value="5" class="member-details__badge">
           <span>{{ item.name }}</span>
+        </el-badge>
+        <span v-else>
+          <span>{{ item.name }}</span>
+        </span>
         </li>
       </ul>
     </div>
-    <router-view></router-view>
+    <el-scrollbar style="height: calc(100vh - 2.37rem);">
+      <router-view></router-view>
+    </el-scrollbar>
   </section>
 </template>
 <script>
@@ -24,31 +32,31 @@ import PageHeader from "@/components/lib/PageHeader.vue";
 export default {
   data() {
     return {
-      activeMenu: "information",
+      activeMenu: "member-info",
       menuList: [
         {
           name: this.$t("memberInfo.menu[0]"),
-          value: "information",
+          value: "member-info",
           route: "info"
         },
         {
           name: this.$t("memberInfo.menu[1]"),
-          value: "team",
+          value: "member-team",
           route: "team"
         },
         {
           name: this.$t("memberInfo.menu[2]"),
-          value: "project",
+          value: "member-project",
           route: "project"
         },
         {
           name: this.$t("memberInfo.menu[3]"),
-          value: "private",
+          value: "member-private",
           route: "private"
         },
         {
           name: this.$t("memberInfo.menu[4]"),
-          value: "diary",
+          value: "member-diary",
           route: "diary"
         }
       ]
@@ -57,8 +65,8 @@ export default {
   components: {
     PageHeader
   },
-  mounted() {
-    console.log(this.$route);
+  created() {
+    this.activeMenu = this.$route.name;
   },
   methods: {
     /**
@@ -67,6 +75,11 @@ export default {
     onChangeMenu(item) {
       this.activeMenu = item.value;
       this.$router.push({ path: `/member/detail/${item.route}`});
+    }
+  },
+  watch: {
+    '$route'(to, from){
+      this.activeMenu = to.name;
     }
   }
 };
@@ -110,3 +123,11 @@ export default {
 }
 </style>
 
+<style lang="scss">
+.member-details__badge {
+  .is-fixed {
+    top: 5px !important;
+    right: -2px !important;
+  }
+}
+</style>

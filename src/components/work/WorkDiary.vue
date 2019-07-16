@@ -1,5 +1,11 @@
 <template>
     <section class="work-diary">
+        <!-- 顶部按钮 start -->
+        <div style="position: fixed; top: 1rem; right: .2rem;">
+            <el-button type="primary" @click="onAddDiary">{{ $t("memberInfo.btn.addDiary") }}</el-button>
+        </div>
+        
+        <!-- 顶部按钮 end -->
         <div class="work-diary__left">
             <div class="work-diary__left-top">
                 <ul class="work-diary__menu">

@@ -85,7 +85,8 @@ export default {
             gender: "请选择成员的性别",
             email: "请输入成员的电子邮箱",
             telphone: "请输入成员的手机号码",
-            role: "请选择成员的级别"
+            role: "请选择成员的级别",
+            search: "搜索目标公司名称、ID、地址、关键人"
         },
         gender: {
             male: "男",

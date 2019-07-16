@@ -1,6 +1,13 @@
 <template>
   <!-- 成员私海 -->
   <section class="member-private">
+    <!-- 顶部搜索 start -->
+    <div class="member-private__search" style="width: 20%; position: fixed; top: 1rem; right: .2rem;" >
+      <el-input :placeholder="$t('member.placeholder.search')">
+        <i slot="suffix" class="el-input__icon el-icon-search"></i>
+      </el-input>
+    </div>
+    <!-- 顶部搜索 end -->
     <!-- 顶部筛选 start -->
     <div class="member-private__top">
       <el-select
@@ -63,9 +70,11 @@
       <el-table-column prop="name" :label="$t('memberInfo.priviteTable[4]')"></el-table-column>
       <el-table-column prop="address" :label="$t('memberInfo.priviteTable[5]')"></el-table-column>
       <el-table-column :label="$t('memberInfo.priviteTable[6]')">
-        <Operate >
+        <Operate>
           <ul class="member-private__operate">
-            <li><router-link to="">{{ $t("memberInfo.privateOperate")[0] }}</router-link></li>
+            <li>
+              <router-link to>{{ $t("memberInfo.privateOperate")[0] }}</router-link>
+            </li>
             <li @click="onShiftInPublic">{{ $t("memberInfo.privateOperate")[1] }}</li>
             <li @click="onHandOver">{{ $t("memberInfo.privateOperate")[2] }}</li>
           </ul>
@@ -89,7 +98,8 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
-      width="30%">
+      width="30%"
+    >
       <el-scrollbar>
         <HandOverAdministrator @getManager="getManager" :oldAdminstrator="{}" operate="handOver"></HandOverAdministrator>
       </el-scrollbar>
@@ -102,7 +112,8 @@ export default {
   components: {
     Operate: () => import("@/components/lib/Operate.vue"),
     // 管理人移交
-    HandOverAdministrator: () => import('@/components/member/ChangeAdministrator.vue'),
+    HandOverAdministrator: () =>
+      import("@/components/member/ChangeAdministrator.vue")
   },
   data() {
     return {
@@ -252,8 +263,10 @@ export default {
      *  将目标公司移入公海
      */
     onShiftInPublic() {
-        this.$confirm(
-        `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t("memberInfo.priviteShiftInTip.content[0]")}`,
+      this.$confirm(
+        `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t(
+          "memberInfo.priviteShiftInTip.content[0]"
+        )}`,
         this.$t("memberInfo.priviteShiftInTip.title"),
         {
           confirmButtonText: this.$t("memberInfo.priviteShiftInTip.btn[1]"),
@@ -271,33 +284,32 @@ export default {
         })
         .catch(() => {
           // 确定移入
-          
         });
     },
     /**
      *  将目标公司移交给指定的人
      */
     onHandOver() {
-        this.handOverManagerDialogVisible = true;
+      this.handOverManagerDialogVisible = true;
     },
     /**
      *  获取移交后的用户信息
      */
     getManager(data) {
-        this.handOverManagerDialogVisible = false;
+      this.handOverManagerDialogVisible = false;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 .member-private {
+  position: relative;
   &__top {
     margin-top: 10px;
   }
   &__table {
     margin-top: 20px;
   }
-  
 }
 </style>
 

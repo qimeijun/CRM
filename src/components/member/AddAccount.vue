@@ -1,5 +1,5 @@
 <template>
-  <!-- 账号创建  邮箱和密码  -->
+  <!-- 添加新成员之账号创建  邮箱和密码  -->
   <section class="add-account">
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">

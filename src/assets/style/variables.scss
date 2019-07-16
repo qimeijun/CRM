@@ -17,6 +17,7 @@ html {
     font-size: 100px;
     height: 100%;
     overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 body {
@@ -183,3 +184,8 @@ p {
         padding: 0 20px;
     }
 }
+
+
+.el-select-dropdown__item {
+    padding: 0 20px !important;
+  }

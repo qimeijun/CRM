@@ -1,8 +1,8 @@
 <template>
   <section class="member-details">
     <div class="member-details__top">
-      <PageHeader></PageHeader>
-      <div class="member-details__top-name">zhangsan</div>
+        <PageHeader url="/member"></PageHeader>
+        <div class="member-details__top-name">zhangsan</div>
     </div>
     <div class="member-details__menu">
       <ul>
@@ -57,6 +57,9 @@ export default {
   components: {
     PageHeader
   },
+  mounted() {
+    console.log(this.$route);
+  },
   methods: {
     /**
      *  切换菜单
@@ -74,6 +77,7 @@ export default {
   &__top {
     display: flex;
     align-items: center;
+    // justify-content: space-between;
     &-name {
       font-size: 24px;
       margin-left: 0.2rem;

@@ -13,12 +13,20 @@ export default {
             title: "标题",
             description: "工作描述",
             chatLog: "聊天记录",
-            attachment: "附件"
+            attachment: "附件",
+            leaveMessage: "留言内容",
+            orderNo: "订单编号",
+            orderName: "产品名称",
+            orderNum: "数量",
+            orderPrice: "金额",
+            orderDescription: "订单描述"
         },
         rules: {
             projectName: "请选择项目",
             type: "请选择日志类型",
             title: "请填写日志标题",
+            leaveMessage: "请输入留言内容",
+            orderDescription: "请输入订单描述"
         },
         diarType: {
             daily: "日报",
@@ -26,7 +34,24 @@ export default {
             monthly: "月报",
             order: "订单"
         },
-        uploadChatLog: "上传图片"
+        uploadChatLog: "上传图片",
+        attachment: "附件(产品目录)",
+        chatLog: "聊天记录",
+        operate: "操作",
+        btn: {
+            translate: "翻译",
+            leaveMessage: "留言",
+            modifyDiary: "编辑日志",
+            leaveMessageNow: "立即留言",
+            delete: "删除日志",
+            reply: "回复"
+        },
+        order: {
+            no: "订单编号",
+            total: "订单总量",
+            price: "订单金额",
+            description: "订单描述"
+        }
     },
     member: {
         add: "添加新成员",
@@ -123,11 +148,12 @@ export default {
     },
     memberInfo: {
         menu: ["资料", "团队", "跟进项目", "私海客户", "工作日志"],
-        priviteTable: ["目标公司", "重要程度", "更新时间", "状态", "创建时间", "操作"],
+        priviteTable: ["目标公司", "重要程度", "更新时间", "状态", "创建时间", "资料完整度", "操作"],
         projectTable: ["项目名称", "状态", "管理员", "标签", "进行天数", "添加时间", "操作"],
         btn: {
             shiftIn: "移入公海",
             shiftOut: "移出",
+            handOver: "移交",
             modify: "编辑",
             password: "修改密码",
             shiftOutProject: "移出",
@@ -135,7 +161,8 @@ export default {
         },
         priviteShiftInTip: {
             title: "提示",
-            content: ["您确定要将目标公司移入公海吗？", "该目标公司正在跟进中，您确定要移入公海吗？"]
+            content: ["该目标公司正在跟进中，您确定要移入公海吗？"],
+            btn: ["确定", "取消"]
         },
         memberShiftOutTip: {
             title: "提示",
@@ -153,7 +180,8 @@ export default {
         joinTime: "加入时间",
         handOverTeam: "移交",
         teamStatistics: ["所有成员业绩", '1V1业绩'],
-        teamStatisticsTime: ["月份", "年份"]
+        teamStatisticsTime: ["月份", "年份"],
+        privateOperate: ["查看详情", "移入公海", "移交"]
     },
     team: {
         add: "添加团队",
@@ -176,7 +204,8 @@ export default {
             submit: "提交",
             cancel: "取消",
             upload: "上传附件"
-        }
+        },
+        dollar: "美元"
     },
     workBench:{
         title:"工作台",

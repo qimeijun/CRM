@@ -51,7 +51,7 @@
   </div>
 </template>
 <script>
-import AddWorkDiary from "@/components/AddWorkDiary.vue";
+import AddWorkDiary from "@/components/work/AddWorkDiary.vue";
 export default {
   components: {
     AddWorkDiary

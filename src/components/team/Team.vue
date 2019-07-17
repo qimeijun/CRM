@@ -1,5 +1,10 @@
 <template>
   <section class="member-team">
+    <!-- 顶部按钮 start -->
+    <div style="position: fixed; top: 1rem; right: .2rem;">
+        <el-button type="primary" @click="addMemberDialogVisible=true;">{{ $t("memberManagement.btn.addMember") }}</el-button>
+    </div>
+    <!-- 顶部按钮 start -->
     <div class="member-team__list">
       <div class="member-team__list-name">
         <div
@@ -169,6 +174,23 @@
       </el-scrollbar>
     </el-dialog>
     <!-- 移交管理员 dialog end -->
+
+    <!-- 添加新成员 dialog start -->
+    <el-dialog
+        class="el-dialog__scroll"
+        :title="$t('selectRegionalManager.title')"
+        :visible.sync="addMemberDialogVisible"
+        top="5vh"
+        :append-to-body="true"
+        :modal="false"
+        :lock-scroll="true"
+        width="30%"
+      >
+        <el-scrollbar>
+          <AddMember></AddMember>
+        </el-scrollbar>
+      </el-dialog>
+    <!-- 添加新成员 dialog end -->
   </section>
 </template>
 <script>
@@ -178,12 +200,15 @@ export default {
     UpdateTeam: () => import("@/components/team/UpdateTeam.vue"),
     HandOverAdministrator: () =>
       import("@/components/member/ChangeAdministrator.vue"),
-    Statistics: () => import("@/components/team/Statistics.vue")
+    Statistics: () => import("@/components/team/Statistics.vue"),
+    // 添加新成员
+    AddMember: () => import("@/components/member/AddMember.vue")
   },
   data() {
     return {
       updateTeamDialogVisible: false,
       handOverAdministratorDialogVisible: false,
+      addMemberDialogVisible: false,
       teamInfo: {
         id: "sdjfskdjf",
         teamName: "Zhangsan Team",

@@ -29,7 +29,12 @@
           <span class="member-project__delete" @click="onDelete">{{ $t("memberInfo.btn.shiftOutProject") }}</span>
       </el-table-column>
     </el-table>
-
+    <el-pagination
+      style="text-align: center; margin-top: 20px;"
+      :background="true"
+      layout="prev, pager, next"
+      :total="1000"
+    ></el-pagination>
 
     <!-- 重新分配项目经理 dialog start -->
     <el-dialog
@@ -42,11 +47,27 @@
       :lock-scroll="true"
       width="30%">
       <el-scrollbar>
-        <!-- @addProjectAdministrator="addManagerDialogVisible=false;addMemberDialogVisible=true;" -->
-        <AddAdministrator @getManager="getManager"  operate="add"></AddAdministrator>
+        <!--  -->
+        <AddAdministrator @getManager="getManager" @addProjectAdministrator="handOverAdministratorDialogVisible=false;addMemberDialogVisible=true;" operate="add"></AddAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加区域经理 dialog end -->
+    <!-- 添加新的项目经理 dialog start -->
+    <el-dialog
+        class="el-dialog__scroll"
+        :title="$t('selectRegionalManager.title')"
+        :visible.sync="addMemberDialogVisible"
+        top="5vh"
+        :append-to-body="true"
+        :modal="false"
+        :lock-scroll="true"
+        width="30%"
+      >
+        <el-scrollbar>
+          <AddMember></AddMember>
+        </el-scrollbar>
+      </el-dialog>
+    <!-- 添加新的项目经理 dialog end -->
   </section>
 </template>
 <script>
@@ -54,6 +75,8 @@ export default {
     components: {
         Operate: () => import("@/components/lib/Operate.vue"),
         AddAdministrator: () => import('@/components/member/ChangeAdministrator.vue'),
+        // 添加新成员
+        AddMember: () => import("@/components/member/AddMember.vue"),
     },
   data() {
     return {
@@ -79,7 +102,8 @@ export default {
           address: "上海市普陀区金沙江路 1516 弄"
         }
       ],
-      handOverAdministratorDialogVisible: false
+      handOverAdministratorDialogVisible: false,
+      addMemberDialogVisible: false
     };
   },
   methods: {

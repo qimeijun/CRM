@@ -1,122 +1,135 @@
 <template>
-  <!-- 成员管理 -->
-  <section class="member">
-    <!-- 头部检索 start -->
-    <div class="member__top">
-      <h1>{{ $t("memberManagement.title") }}</h1>
-      <div class="member__top-search">
-        <el-input type="text" v-model="searchMember" :placeholder="$t('memberManagement.searchInput')" suffix-icon="el-icon-search"></el-input>
-        <el-button class="member__top-search-btn" type="primary" icon="el-icon-plus" @click="addMemberDialogVisible=true">{{ $t("memberManagement.btn.addMember") }}</el-button>
+  <el-scrollbar style="height: calc(100vh - .75rem);">
+    <!-- 成员管理 -->
+    <section class="member">
+      <!-- 头部检索 start -->
+      <div class="member__top">
+        <h1>{{ $t("memberManagement.title") }}</h1>
+        <div class="member__top-search">
+          <el-input
+            type="text"
+            v-model="searchMember"
+            :placeholder="$t('memberManagement.searchInput')"
+            suffix-icon="el-icon-search"
+          ></el-input>
+          <el-button
+            class="member__top-search-btn"
+            type="primary"
+            icon="el-icon-plus"
+            @click="addMemberDialogVisible=true"
+          >{{ $t("memberManagement.btn.addMember") }}</el-button>
+        </div>
       </div>
-    </div>
-    <!-- 头部检索 end -->
-    <div class="member__content">
-      <div class="member__content-top">
-        <span>{{ $t("member.regional") }}</span>
-        <el-button type="primary" size="mini" @click="isUpdateManager=!isUpdateManager;">
-          <template v-if="isUpdateManager">
-            {{ $t("member.btn.ok") }}
-          </template>
-          <template v-else>
-            {{ $t("member.btn.regional") }}
-          </template>
-        </el-button>
-      </div>
-      <!-- 区域经理 start -->
-      <div class="member__regional">
-        <div v-for="(item, index) in managerList" :key="index" class="member__regional-content">
-          <el-avatar :size="50" :src="item.avatar"></el-avatar>
-          <div class="member__regional-content-right">
-            <span>{{ item.name }}</span>
-            <span>{{ item.role }}</span>
+      <!-- 头部检索 end -->
+      <div class="member__content">
+        <div class="member__content-top">
+          <span>{{ $t("member.regional") }}</span>
+          <el-button type="primary" size="mini" @click="isUpdateManager=!isUpdateManager;">
+            <template v-if="isUpdateManager">{{ $t("member.btn.ok") }}</template>
+            <template v-else>{{ $t("member.btn.regional") }}</template>
+          </el-button>
+        </div>
+        <!-- 区域经理 start -->
+        <div class="member__regional">
+          <div v-for="(item, index) in managerList" :key="index" class="member__regional-content">
+            <el-avatar :size="50" :src="item.avatar"></el-avatar>
+            <div class="member__regional-content-right">
+              <span>{{ item.name }}</span>
+              <span>{{ item.role }}</span>
+            </div>
+            <i v-if="isUpdateManager" class="el-icon-error" @click="onDeleteManager(index)"></i>
           </div>
-          <i v-if="isUpdateManager" class="el-icon-error" @click="onDeleteManager(index)"></i>
+          <!-- 添加区域经理 start-->
+          <div
+            v-if="isUpdateManager"
+            class="member__regional-content member__regional-content-add"
+            @click="addManagerDialogVisible=true;"
+          >{{ $t("member.btn.addRegional") }}</div>
+          <!-- 添加区域经理 start-->
         </div>
-        <!-- 添加区域经理 start-->
-        <div v-if="isUpdateManager" class="member__regional-content  member__regional-content-add" @click="addManagerDialogVisible=true;">
-          {{ $t("member.btn.addRegional") }}
-        </div>
-        <!-- 添加区域经理 start-->
-      </div>
-      <!-- 区域经理  end -->
+        <!-- 区域经理  end -->
 
-      <!-- 表格 list  start -->
-      <div class="member__table" style="width: 100%;">
-        <div class="member__table-tr member__table-th">
-          <div>{{ $t('memberManagement.table[0]') }}</div>
-          <div>{{ $t('memberManagement.table[1]') }}</div>
-          <div>{{ $t('memberManagement.table[2]') }}</div>
-          <div>{{ $t('memberManagement.table[3]') }}</div>
-          <div>{{ $t('memberManagement.table[4]') }}</div>
-          <div>{{ $t('memberManagement.table[5]') }}</div>
-          <div>{{ $t('memberManagement.table[6]') }}</div>
-        </div>
-        <template v-if="tableData && tableData.length > 0" >
-          <template v-for="(item, index) in tableData">
-            <TableList :key="index + 1" :item="item"></TableList>
-            <!-- 子成员 start -->
-            <template v-if="item.children && item.children.length > 0">
-              <TableList v-for="(cItem, cIndex) in item.children" :key="`${cIndex}-${cItem.id}`" :children="true" :last="cIndex+1 == item.children.length ? true : false" :item="cItem"></TableList>
+        <!-- 表格 list  start -->
+        <div class="member__table" style="width: 100%;">
+          <div class="member__table-tr member__table-th">
+            <div>{{ $t('memberManagement.table[0]') }}</div>
+            <div>{{ $t('memberManagement.table[1]') }}</div>
+            <div>{{ $t('memberManagement.table[2]') }}</div>
+            <div>{{ $t('memberManagement.table[3]') }}</div>
+            <div>{{ $t('memberManagement.table[4]') }}</div>
+            <div>{{ $t('memberManagement.table[5]') }}</div>
+            <div>{{ $t('memberManagement.table[6]') }}</div>
+          </div>
+          <template v-if="tableData && tableData.length > 0">
+            <template v-for="(item, index) in tableData">
+              <TableList :key="index + 1" :item="item"></TableList>
+              <!-- 子成员 start -->
+              <template v-if="item.children && item.children.length > 0">
+                <TableList
+                  v-for="(cItem, cIndex) in item.children"
+                  :key="`${cIndex}-${cItem.id}`"
+                  :children="true"
+                  :last="cIndex+1 == item.children.length ? true : false"
+                  :item="cItem"
+                ></TableList>
+              </template>
+              <!-- 子成员 end -->
             </template>
-            <!-- 子成员 end -->
           </template>
-        </template>
+        </div>
+        <!-- 表格 list  end -->
       </div>
-      <!-- 表格 list  end -->
-    </div>
 
-    <!-- 添加成员 dialog start -->
-    <el-dialog
-      class="el-dialog__scroll"
-      :title="$t('selectRegionalManager.title')"
-      :visible.sync="addMemberDialogVisible"
-      top="5vh"
-      :append-to-body="true"
-      :modal="false"
-      :lock-scroll="true"
-      width="30%">
-      <el-scrollbar>
-        <ul class="iworku-dialog-menu">
-          <li v-for="(item, index) in addMemberMenuList" :key="index" 
-             :class="item.value == selectDialogMenu? 'iworku-dialog-menu--selected' : ''"
-             @click="onChangeDialogMenu(item)">
-            {{ item.name }}
-          </li>
-        </ul>
-        <AddAccount v-if="selectDialogMenu == addMemberMenuList[0].value" @accountCreated="selectDialogMenu=addMemberMenuList[1].value"></AddAccount>
-        <AddMember v-else></AddMember>
-      </el-scrollbar>
-    </el-dialog>
-    <!-- 添加成员 dialog end -->
+      <!-- 添加成员 dialog start -->
+      <el-dialog
+        class="el-dialog__scroll"
+        :title="$t('selectRegionalManager.title')"
+        :visible.sync="addMemberDialogVisible"
+        top="5vh"
+        :append-to-body="true"
+        :modal="false"
+        :lock-scroll="true"
+        width="30%"
+      >
+        <el-scrollbar>
+          <AddMember></AddMember>
+        </el-scrollbar>
+      </el-dialog>
+      <!-- 添加成员 dialog end -->
 
-    <!-- 添加区域经理 dialog start -->
-    <el-dialog
-      class="el-dialog__scroll"
-      :title="$t('selectRegionalManager.title')"
-      :visible.sync="addManagerDialogVisible"
-      top="5vh"
-      :append-to-body="true"
-      :modal="false"
-      :lock-scroll="true"
-      width="30%">
-      <el-scrollbar>
-        <AddAdministrator @getManager="getManager" @addProjectAdministrator="addManagerDialogVisible=false;addMemberDialogVisible=true;" operate="add"></AddAdministrator>
-      </el-scrollbar>
-    </el-dialog>
-    <!-- 添加区域经理 dialog end -->
-  </section>
+      <!-- 添加区域经理 dialog start -->
+      <el-dialog
+        class="el-dialog__scroll"
+        :title="$t('selectRegionalManager.title')"
+        :visible.sync="addManagerDialogVisible"
+        top="5vh"
+        :append-to-body="true"
+        :modal="false"
+        :lock-scroll="true"
+        width="30%"
+      >
+        <el-scrollbar>
+          <AddAdministrator
+            @getManager="getManager"
+            @addProjectAdministrator="addManagerDialogVisible=false;addMemberDialogVisible=true;"
+            operate="add"
+          ></AddAdministrator>
+        </el-scrollbar>
+      </el-dialog>
+      <!-- 添加区域经理 dialog end -->
+    </section>
+  </el-scrollbar>
 </template>
 <script>
 export default {
   components: {
-    // 完善成员信息
-    AddMember: () => import('@/components/member/AddMember.vue'),
+    // 添加新成员
+    AddMember: () => import("@/components/member/AddMember.vue"),
     // 表格列表
-    TableList: () => import('@/components/member/Table.vue'),
+    TableList: () => import("@/components/member/Table.vue"),
     // 添加区域经理
-    AddAdministrator: () => import('@/components/member/ChangeAdministrator.vue'),
-    // 创建成员账号
-    AddAccount: () => import('@/components/member/AddAccount.vue')
+    AddAdministrator: () =>
+      import("@/components/member/ChangeAdministrator.vue"),
   },
   data() {
     return {
@@ -230,15 +243,7 @@ export default {
           name: "JSKFIDKDUSD",
           role: "区域经理"
         }
-      ],
-      addMemberMenuList: [{
-        name: this.$t("member.dialogMenu.account"),
-        value: "account"
-      },{
-        name: this.$t("member.dialogMenu.information"),
-        value: "information"
-      }],
-      selectDialogMenu: 'account'
+      ]
     };
   },
   methods: {
@@ -252,22 +257,16 @@ export default {
      *  获取选择的经理信息
      */
     getManager(data) {
-      this.addManagerDialogVisible  = false;
+      this.addManagerDialogVisible = false;
       data.role = "区域经理";
       this.managerList.push(data);
-    },
-    /**
-     *  切换添加成员表单中的按钮
-     */
-    onChangeDialogMenu(item) {
-      this.selectDialogMenu = item.value;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 .member {
-  margin: 20px;
+  margin: .2rem;
   &__top {
     display: flex;
     justify-content: space-between;
@@ -276,19 +275,19 @@ export default {
       display: flex;
     }
     &-search-btn {
-      margin-left: .2rem;
+      margin-left: 0.2rem;
     }
   }
 
   &__content {
-    padding: .2rem;
+    padding: 0.2rem;
     background-color: $--default-white;
     border-radius: $--default-border-radius;
     &-top {
       display: flex;
       justify-content: space-between;
       padding: 10px;
-      font-size:16px;
+      font-size: 16px;
       font-weight: 600;
     }
     .el-table--expend {
@@ -304,27 +303,26 @@ export default {
       width: 100%;
       display: flex;
       justify-content: space-between;
-      font-size:14px;
+      font-size: 14px;
       font-weight: 700;
       align-items: center;
       background-color: $--default-light-gray-2;
       border-radius: $--default-border-radius;
       div {
         flex: 1;
-        padding: .1rem;
+        padding: 0.1rem;
       }
     }
   }
 
-
   &__regional {
     display: flex;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
     &-content {
       position: relative;
-      padding: .15rem 1%;
+      padding: 0.15rem 1%;
       margin-bottom: 15px;
-      margin-right: .8%;
+      margin-right: 0.8%;
       width: 22%;
       display: flex;
       align-items: center;
@@ -332,21 +330,21 @@ export default {
       border-radius: $--default-border-radius;
     }
     &-content-right {
-      margin-left: .1rem;
-      color: #7B7B7B;
+      margin-left: 0.1rem;
+      color: #7b7b7b;
       line-height: 25px;
       span {
         display: block;
       }
       span:first-child {
-        font-size:16px;
+        font-size: 16px;
         color: $--default-black;
       }
     }
     &-content-add {
-      background-color: #F8F8F8;
-      border:1px solid #EBEAEE;
-      font-size:16px;
+      background-color: #f8f8f8;
+      border: 1px solid #ebeaee;
+      font-size: 16px;
       color: $--default-color;
       height: 48px;
       cursor: pointer;

@@ -71,7 +71,7 @@ export default new VueRouter({
                 {
                     path: 'diary',
                     name: 'diary',
-                    component: () => import('./../components/project/Diary.vue')
+                    component: () => import('./../components/work/WorkDiary.vue')
                 },
             ]
         },
@@ -92,7 +92,7 @@ export default new VueRouter({
                 {
                     path: 'diary',
                     name: 'target_diary',
-                    component: () => import('./../components/target/Diary.vue')
+                    component: () => import('./../components/work/WorkDiary.vue')
                 },
             ]
         }

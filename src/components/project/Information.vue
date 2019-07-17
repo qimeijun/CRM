@@ -4,7 +4,10 @@
     <div class="info_top">
       <div class="info_top_div" style="align-items:center">
         <h3>资料</h3>
-        <el-button type="primary" @click="show = true;infoFrom=info">编辑</el-button>
+        <div>
+          <el-button type="text">修改密码</el-button>
+          <el-button type="primary" size="small" @click="show = true;infoFrom=info">编辑</el-button>
+        </div>
       </div>
 
       <div class="info_top_div">
@@ -99,18 +102,17 @@ export default {
         advantage:
           "Wuxi Hariken Electric Tools Co., Ltd. Was founded in 2002. Our company combines the design, development, production and process of hand-held light rotary hammer. Our company sells all products to oversea market and cooperates with the famed international bands to develop the exclusive products, therefore we enjoy a high level of popularity worldwide. Our company owns a complete quality management system, a professional development team full of experience on design and professional employees control the quality of products. Also we hold a perfect function test center, and the test facility such as the hardness metallographic phase."
       },
-      show:false,
-      infoFrom:{
-        name:"",
-        tmt:"",
-        site:"",
-        url:"",
-        email:"",
-        contact:"",
-        intro:"",
-        advantage:"",
-      },
-      
+      show: false,
+      infoFrom: {
+        name: "",
+        tmt: "",
+        site: "",
+        url: "",
+        email: "",
+        contact: "",
+        intro: "",
+        advantage: ""
+      }
     };
   }
 };

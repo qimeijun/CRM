@@ -51,7 +51,7 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link to="/project/detail">查看详情</router-link>
+                  <router-link to="/target/detail">查看详情</router-link>
                 </li>
                 <li class="table_operation" @click="onDeleteMember(scope.row.id)">分配</li>
                 <li class="table_operation" @click="onCancel(scope.row.id)">作废</li>

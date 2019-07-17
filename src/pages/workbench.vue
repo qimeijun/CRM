@@ -63,7 +63,7 @@ import Calendar from "@/components/workbench/calendar.vue";
 import Overview from "@/components/workbench/overview.vue";
 import Remind from "@/components/workbench/remind.vue";
 import Statistics from "@/components/workbench/statistics.vue";
-import AddProject from "@/components/workbench/addProject.vue";
+import AddProject from "@/components/project/addProject.vue";
 export default {
   components: {
     BriefReport,

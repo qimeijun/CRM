@@ -1,11 +1,15 @@
 <template>
   <div class="workbench-addProject">
-    <el-button class="addProject_button" @click="show = true">添加新项目</el-button>
-    <el-dialog title="添加项目" :visible.sync="show" width="610px">
+    <el-button class="addProject_button" @click="show = true">{{$t("project.add")}}</el-button>
+    <el-dialog :title="$t('project.add')" :visible.sync="show" width="610px">
       <ul class="addProject_ul">
-        <li :class="activeName===1?'addProject_ul_li--current':''">添加项目</li>
-        <li :class="activeName===2?'addProject_ul_li--current':''">项目资料</li>
-        <li :class="activeName===3?'addProject_ul_li--current':''">产品资料</li>
+        <li :class="activeName===1?'addProject_ul_li--current':''">{{$t("project.from.firstTitle")}}</li>
+        <li
+          :class="activeName===2?'addProject_ul_li--current':''"
+        >{{$t("project.from.secondTitle")}}</li>
+        <li
+          :class="activeName===3?'addProject_ul_li--current':''"
+        >{{$t("project.from.thirdlyTitle")}}</li>
       </ul>
       <!-- 第一步添加账号 start -->
       <el-form
@@ -17,10 +21,12 @@
         ref="firstForm"
         :rules="firstRules"
       >
-        <el-form-item label="登录账号" prop="username">
+        <!-- 账号 -->
+        <el-form-item :label="$t('project.from.account')" prop="username">
           <el-input v-model="firstForm.username" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="登录密码" prop="password">
+        <!-- 密码 -->
+        <el-form-item :label="$t('project.from.password')" prop="password">
           <el-input v-model="firstForm.password" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -35,14 +41,25 @@
         ref="secondForm"
         :rules="secondRules"
       >
-        <el-form-item label="项目名称" prop="projectTitle">
-          <el-input v-model="secondForm.projectTitle" autocomplete="off" placeholder="请输入项目名称"></el-input>
+        <!-- 项目名 -->
+        <el-form-item :label="$t('project.from.projectTitle')" prop="projectTitle">
+          <el-input
+            v-model="secondForm.projectTitle"
+            autocomplete="off"
+            :placeholder="$t('project.placeholder.projectTitle')"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="企业名称" prop="companyName">
-          <el-input v-model="secondForm.companyName" autocomplete="off" placeholder="请输入企业名称"></el-input>
+        <!-- 公司名 -->
+        <el-form-item :label="$t('project.from.companyName')" prop="companyName">
+          <el-input
+            v-model="secondForm.companyName"
+            autocomplete="off"
+            :placeholder="$t('project.placeholder.companyName')"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="行业" prop="tmt">
-          <el-select v-model="secondForm.tmt" placeholder="请选择行业">
+        <!-- 行业 -->
+        <el-form-item :label="$t('project.from.tmt')" prop="tmt">
+          <el-select v-model="secondForm.tmt" :placeholder="$t('project.placeholder.tmt')">
             <el-option
               v-for="item in tmts"
               :key="item.value"
@@ -51,20 +68,36 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="地址" prop="site">
-          <el-input v-model="secondForm.site" autocomplete="off" placeholder="请输入地址"></el-input>
+        <!-- 地址 -->
+        <el-form-item :label="$t('project.from.site')" prop="site">
+          <el-input
+            v-model="secondForm.site"
+            autocomplete="off"
+            :placeholder="$t('project.placeholder.site')"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="网址" prop="url">
-          <el-input v-model="secondForm.url" autocomplete="off" placeholder="Https://"></el-input>
+        <!-- 网址 -->
+        <el-form-item :label="$t('project.from.url')" prop="url">
+          <el-input
+            v-model="secondForm.url"
+            autocomplete="off"
+            :placeholder="$t('project.placeholder.url')"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="电子邮箱" prop="email">
-          <el-input v-model="secondForm.email" autocomplete="off" placeholder="请输入电子邮箱"></el-input>
+        <!-- 电子邮箱 -->
+        <el-form-item :label="$t('project.from.email')" prop="email">
+          <el-input
+            v-model="secondForm.email"
+            autocomplete="off"
+            :placeholder="$t('project.placeholder.email')"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="优势" prop="strength">
+        <!-- 优势 -->
+        <el-form-item :label="$t('project.from.strength')" prop="strength">
           <el-input
             v-model="secondForm.strength"
             autocomplete="off"
-            placeholder="请说明优势"
+            :placeholder="$t('project.placeholder.strength')"
             type="textarea"
             :rows="4"
           ></el-input>
@@ -82,11 +115,15 @@
         :rules="thirdlyRules"
       >
         <!-- 产品名称 -->
-        <el-form-item label="产品名称" prop="productName">
-          <el-input v-model="thirdlyForm.productName" autocomplete="off" placeholder="请输入产品名称"></el-input>
+        <el-form-item :label="$t('project.from.productName')" prop="productName">
+          <el-input
+            v-model="thirdlyForm.productName"
+            autocomplete="off"
+            :placeholder="$t('project.placeholder.productName')"
+          ></el-input>
         </el-form-item>
         <!-- 产品图片 start -->
-        <el-form-item label="产品图片">
+        <el-form-item :label="$t('project.from.productImg')">
           <el-row>
             <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
               <!-- 上传图片 start -->
@@ -98,7 +135,7 @@
                 class="addProject-thirdly_upload"
               >
                 <i class="el-icon-upload"></i>
-                <p>上传图片</p>
+                <p>{{$t("project.btn.uploadImg")}}</p>
               </el-upload>
               <el-dialog :visible.sync="dialogVisible">
                 <img width="80px" :src="thirdlyForm.imageUrl" alt />
@@ -106,13 +143,17 @@
               <!-- 上传图片 end -->
             </el-col>
             <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20">
-              <el-input v-model="thirdlyForm.password" autocomplete="off" placeholder="请输入产品描述"></el-input>
+              <el-input
+                v-model="thirdlyForm.password"
+                autocomplete="off"
+                :placeholder="$t('project.placeholder.describe')"
+              ></el-input>
             </el-col>
           </el-row>
         </el-form-item>
         <!-- 产品图片 end -->
         <!-- 产品视频 start -->
-        <el-form-item label="产品视频">
+        <el-form-item :label="$t('project.from.productVideo')">
           <el-row>
             <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
               <el-upload
@@ -123,20 +164,24 @@
                 class="addProject-thirdly_upload"
               >
                 <i class="el-icon-video-camera-solid"></i>
-                <p>上传视频</p>
+                <p>{{$t("project.btn.uploadVideo")}}</p>
               </el-upload>
               <el-dialog :visible.sync="dialogVisible">
                 <img width="100%" :src="thirdlyForm.videoUrl" alt />
               </el-dialog>
             </el-col>
             <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20">
-              <el-input v-model="thirdlyForm.password" autocomplete="off" placeholder="请输入产品描述"></el-input>
+              <el-input
+                v-model="thirdlyForm.password"
+                autocomplete="off"
+                :placeholder="$t('project.placeholder.describe')"
+              ></el-input>
             </el-col>
           </el-row>
         </el-form-item>
         <!-- 产品视频 end -->
         <!-- 附件（产品目录） start -->
-        <el-form-item label="附件(产品目录)">
+        <el-form-item :label="$t('project.from.accessory')">
           <el-row>
             <el-col>
               <el-upload
@@ -147,7 +192,7 @@
                 class="addProject-thirdly_upload"
               >
                 <i class="el-icon-paperclip"></i>
-                <p>上传附件</p>
+                <p>{{$t("project.btn.uploadAccessory")}}</p>
               </el-upload>
               <el-dialog :visible.sync="dialogVisible">
                 <img width="100%" :src="thirdlyForm.attachmentUrl" alt />
@@ -157,7 +202,7 @@
         </el-form-item>
         <!-- 附件（产品目录） end -->
         <!-- 学习资料 start -->
-        <el-form-item label="学习资料">
+        <el-form-item :label="$t('project.from.study')">
           <el-row>
             <el-col>
               <el-upload
@@ -168,7 +213,7 @@
                 class="addProject-thirdly_upload"
               >
                 <i class="el-icon-paperclip"></i>
-                <p>上传附件</p>
+                <p>{{$t("project.btn.uploadAccessory")}}</p>
               </el-upload>
               <el-dialog :visible.sync="dialogVisible">
                 <img width="80px" :src="thirdlyForm.learnUrl" alt />
@@ -180,17 +225,21 @@
       </el-form>
       <!-- 第三步产品资料 end -->
       <div slot="footer" class="dialog-footer">
-        <el-button v-if="activeName===1" type="primary" @click="onSubmitForm('firstForm',2)">完善资料</el-button>
+        <el-button
+          v-if="activeName===1"
+          type="primary"
+          @click="onSubmitForm('firstForm',2)"
+        >{{$t("project.btn.perfect")}}</el-button>
         <el-button
           v-else-if="activeName===2"
           type="primary"
           @click="onSubmitForm('secondForm',3)"
-        >继续完善</el-button>
+        >{{$t("project.btn.continue")}}</el-button>
         <el-button
           v-else-if="activeName===3"
           type="primary"
           @click="onSubmitForm('thirdlyForm',4)"
-        >完成</el-button>
+        >{{$t("project.btn.ok")}}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -248,65 +297,65 @@ export default {
         username: [
           {
             required: true,
-            message:"请输入账号",
+            message: "请输入账号",
             trigger: "blur"
           }
         ],
         password: [
           {
             required: true,
-            message:"请输入密码",
+            message: "请输入密码",
             trigger: "blur"
           }
         ]
       },
       secondRules: {
-           projectTitle: [
+        projectTitle: [
           {
             required: true,
-            message:"请输入项目名称",
+            message: "请输入项目名称",
             trigger: "blur"
           }
         ],
         companyName: [
           {
             required: true,
-            message:"请输入企业名称",
+            message: "请输入企业名称",
             trigger: "blur"
           }
         ],
         tmt: [
           {
             required: true,
-            message:"请输入行业",
+            message: "请输入行业",
             trigger: "blur"
           }
         ],
-        site:[
+        site: [
           {
             required: true,
-            message:"请输入地址",
+            message: "请输入地址",
             trigger: "blur"
           }
         ],
         url: [
           {
             required: true,
-            message:"请输入网址",
+            message: "请输入网址",
             trigger: "blur"
           }
         ],
         email: [
           {
             required: true,
-            message:"请输入邮箱",
+            message: "请输入邮箱",
             trigger: "blur"
           }
         ],
         strength: [
           {
             required: true,
-            message:"请输入优势",
+            message: "请输入优势",
             trigger: "blur"
           }
         ]
@@ -315,11 +364,11 @@ export default {
         productName: [
           {
             required: true,
-            message:"请输入产品名称",
+            message: "请输入产品名称",
             trigger: "blur"
           }
         ]
-      },
+      }
     };
   },
   methods: {

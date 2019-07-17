@@ -51,6 +51,11 @@ export default {
           name: "工作日志",
           value: "target_diary",
           route: "diary"
+        },
+        { 
+          name: "所在项目",
+          value: "target_loca",
+          route: "loca"
         }
       ]
     };

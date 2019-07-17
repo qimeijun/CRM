@@ -7,10 +7,20 @@
     <div class="product_content">
       <h4>{{product.name}}</h4>
       <h4>附件(产品目录)</h4>
+      <div>
+        <Attachment name="asdfs.psd"></Attachment>
+        <Attachment name="asdfs.xsd"></Attachment>
+        <Attachment name="asdfs.wsd"></Attachment>
+      </div>
       <h4>学习资料</h4>
+      <div>
+        <Attachment name="asdfs.psd"></Attachment>
+        <Attachment name="asdfs.xsd"></Attachment>
+        <Attachment name="asdfs.wsd"></Attachment>
+      </div>
     </div>
     <div class="product_redact">
-       <el-dialog title="修改资料" :visible.sync="show" width="600px">
+      <el-dialog title="修改资料" :visible.sync="show" width="600px">
         <h1>产品资料</h1>
         <el-form :model="productFrom" label-position="top">
           <el-form-item label="产品名称">
@@ -35,6 +45,9 @@
 </template>
 <script>
 export default {
+  components: {
+    Attachment: () => import("@/components/lib/Attachment.vue")
+  },
   data() {
     return {
       product: {
@@ -51,7 +64,7 @@ export default {
         attachment: [],
         study: []
       },
-      show:false,
+      show: false
     };
   }
 };
@@ -63,8 +76,8 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-     h3{
-        margin:0;
+    h3 {
+      margin: 0;
     }
   }
 }

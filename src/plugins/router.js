@@ -111,12 +111,22 @@ export default new VueRouter({
                             name: 'target_diary',
                             component: () => import('./../components/work/WorkDiary.vue')
                         },
+                        {
+                            path: 'loca',
+                            name: 'target_loca',
+                            component: () => import('./../components/target/Loca.vue')
+                        },
                     ]
                 },
                 {
                     path: '/setting',
                     name: 'setting',
                     component: () => import('./../pages/setting.vue')
+                },
+                {
+                    path: '/highseas',
+                    name: 'highseas',
+                    component: () => import('./../pages/highseas.vue')
                 }
             ]
         }

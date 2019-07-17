@@ -1,12 +1,12 @@
 <template>
   <div class="iworku-projectManage">
     <div class="projectManage_top">
-      <h2>项目管理</h2>
-      <el-input class="top_seek" placeholder="请输入内容" v-model="seek">
+      <h2>{{$t('project.title')}}</h2>
+      <el-input class="top_seek" :placeholder="$t('project.placeholder.seek')" v-model="seek">
         <i slot="suffix" class="el-input__icon el-icon-search" @click="onClickSeek()"></i>
       </el-input>
       <!-- 标签选择 start -->
-      <el-cascader class="top_select"  v-model="tag" :options="taglist" :show-all-levels="false" :props="{ expandTrigger: 'hover' }" @change="onClickTag"></el-cascader>
+      <el-cascader class="top_select"  v-model="tag" :options="taglist" :show-all-levels="false" :props="{ expandTrigger: 'hover' }" @change="onClickTag" :placeholder="$t('project.placeholder.tag')"></el-cascader>
       <!-- <el-select  v-model="tag" placeholder="请选择">
         <el-option
           v-for="item in taglist"
@@ -29,7 +29,7 @@
   </div>
 </template>
 <script>
-import AddProject from "@/components/workbench/addProject.vue";
+import AddProject from "@/components/project/addProject.vue";
 import Table from "@/components/project/Table.vue";
 export default {
   components: {

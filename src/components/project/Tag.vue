@@ -15,28 +15,48 @@
         :color="closable?tagColor:''"
         @close="closeTag(index)"
       >{{ item }}</el-tag>
-      <el-button size="medium" class="tag_p_button" circle icon="el-icon-circle-plus" type="text"></el-button>
+      <el-button size="medium" class="tag_p_button" circle icon="el-icon-circle-plus" type="text" @click="show=true"></el-button>
     </p>
+    <!-- 添加标签弹窗 start -->
+    <el-dialog
+      class="el-dialog__scroll"
+      title="添加标签"
+      :visible.sync="show"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+      <AddTagForTarget></AddTagForTarget>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 添加标签弹窗 end -->
+    
   </div>
 </template>
 <script>
 export default {
-  props: {},
+  components: {
+    AddTagForTarget: () => import("@/components/tag/AddTagForTarget.vue")
+  },
   data() {
     return {
       taglist: ["标签1", "标签2", "标签3", "标签4", "标签5"],
       closable: false,
-      tagColor: "#EBEAEE"
+      tagColor: "#EBEAEE",
+      show:false
     };
   },
   methods: {
-    closeTag(index){
+    closeTag(index) {
       this.taglist.splice(index, 1);
     },
-    submitTag(){
+    submitTag() {
       console.log(this.taglist);
     }
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>

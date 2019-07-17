@@ -117,8 +117,15 @@ export default new VueRouter({
                     path: '/setting',
                     name: 'setting',
                     component: () => import('./../pages/setting.vue')
+                },{
+                    path: '/notice',
+                    name: 'notice',
+                    component: () => import('./../pages/notice.vue')
                 }
             ]
+        }, {
+            path: '/login',
+            component: () => import('./../pages/login.vue')
         }
     ]
 });

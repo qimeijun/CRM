@@ -8,29 +8,37 @@
       label-width="80px"
     >
       <!-- 设置页面引用时，显示账号 start -->
-      <div v-if="type=='setting'">
+      <div v-if="referenceSource=='setting'">
         <div>
+          <span style="color:#D50000;">*</span>
           {{ $t('setting.form.account[0]') }}
-          <span>({{ $t('setting.form.account[1]') }})</span>
+          <span style="margin-left: .1rem; color: #7B7B7B; font-size: 12px;">({{ $t('setting.form.account[1]') }})</span>
         </div>
-        <div style="line-height: 40px;">{{ passwordForm.account }}</div>
+        <div style="line-height: 40px; font-size: 18px;">{{ passwordForm.account }}</div>
       </div>
       <!-- 设置页面引用时，显示账号 start -->
       <!-- 新密码 start-->
       <el-form-item :label="`${$t('password.form.new')}`" prop="new">
-        <el-input v-model="passwordForm.new" type="password"></el-input>
+        <el-input v-model="passwordForm.new" type="password" :placeholder="$t('password.placeholder.new')"></el-input>
       </el-form-item>
       <!-- 新密码 end-->
       <!-- 确认密码 start-->
       <el-form-item :label="`${$t('password.form.confirm')}`" prop="confirm">
-        <el-input v-model="passwordForm.confirm" type="password"></el-input>
+        <el-input v-model="passwordForm.confirm" type="password" :placeholder="$t('password.placeholder.confirm')"></el-input>
       </el-form-item>
       <!-- 确认密码 end-->
       <el-form-item class="update-password__btn">
         <el-button
           type="primary"
           @click="onSubmitForm('passwordForm')"
-        >{{ $t("password.btn.cancel") }}</el-button>
+        >
+        <template v-if="passwordForm.id">
+          {{ $t("public.btn.save") }}
+        </template>
+        <template v-else>
+          {{ $t("password.btn.cancel") }}
+        </template>
+        </el-button>
       </el-form-item>
     </el-form>
   </section>
@@ -41,7 +49,7 @@ export default {
     /**
      *  是否在设置页面中引用， type="setting"
      */
-    type: {
+    referenceSource: {
       type: String,
       default() {
         return "";
@@ -51,6 +59,7 @@ export default {
   data() {
     return {
       passwordForm: {
+        id: "748578457",
         account: "123456@qq.com",
         new: "",
         confirm: ""

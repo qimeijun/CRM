@@ -3,16 +3,18 @@
         <ul class="setting__menu">
             <li v-for="(item, index) in menuList" :key="index" :class="activeMenu == item.name ? 'selected' : ''" @click="onChangeMenu(item)">{{ item.value }}</li>
         </ul>
+        <el-scrollbar style="height: calc(100vh - 3rem);">
         <div class="setting__content">
-            <MemberInfo v-if="activeMenu == 'data'"></MemberInfo>
-            <UpdatePassword v-else-if="activeMenu == 'password'" type="setting"></UpdatePassword>
+            <UpdateMemberInfo referenceSource="setting" v-if="activeMenu == 'data'"></UpdateMemberInfo>
+            <UpdatePassword v-else-if="activeMenu == 'password'" referenceSource="setting"></UpdatePassword>
         </div>
+        </el-scrollbar>
     </section>
 </template>
 <script>
 export default {
     components: {
-        MemberInfo: () => import("@/components/setting/MemberInfo.vue"),
+        UpdateMemberInfo: () => import("@/components/member/ImproveMemeberInfo.vue"),
         UpdatePassword: () => import("@/components/member/UpdatePassword.vue")
     },
     data() {
@@ -61,7 +63,7 @@ export default {
         
         li {
             flex: 1;
-            padding: 20px 0;
+            padding: 13px 0;
             text-align: center;
             font-size: 16px;
             background-color: white;
@@ -73,7 +75,7 @@ export default {
         }
 
         .selected {
-            background-color: $--default-color;
+            background-color: #8D43FF;
             color: $--default-white;
         }
     }

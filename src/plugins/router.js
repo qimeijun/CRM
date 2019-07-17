@@ -127,8 +127,15 @@ export default new VueRouter({
                     path: '/highseas',
                     name: 'highseas',
                     component: () => import('./../pages/highseas.vue')
+                },{
+                    path: '/notice',
+                    name: 'notice',
+                    component: () => import('./../pages/notice.vue')
                 }
             ]
+        }, {
+            path: '/login',
+            component: () => import('./../pages/login.vue')
         }
     ]
 });

@@ -1,7 +1,6 @@
 <template>
   <section class="layout">
     <!-- 菜单 -->
-    <template v-if="currentPathName != 'setting'">
       <el-menu
       class="iworku-menu"
       :style="isCollapse?'':'padding-left: 0.23rem;'"
@@ -41,7 +40,6 @@
         @click="isCollapse=!isCollapse"
       ></el-button>
     </el-menu>
-    </template>
     <div style="width:calc(100%);">
       <Header></Header>
       <router-view></router-view>
@@ -58,24 +56,12 @@ export default {
   },
   data() {
     return {
-      isCollapse: true,
-      currentPathName: 'setting'
+      isCollapse: true
     };
   },
   computed: {
     path() {
       return this.$route.path;
-    }
-  },
-  created() {
-    this.currentPathName = this.$route.name;
-  },
-  watch: {
-    "$route": {
-      handler(to) {
-        this.currentPathName = to.name;
-      },
-      immediate: true
     }
   }
 };

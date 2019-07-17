@@ -7,14 +7,14 @@
           :model="memberForm"
           :rules="rules"
           ref="memberForm"
-          label-position="top"
+          :label-position="referenceSource == 'setting' ? 'left' : 'top'"
           label-width="80px"
         >
           <!-- 头像 start -->
           <el-form-item
+            label=""
             class="add-new-member__avatar-item"
             prop="avatar"
-            style="text-align: center;"
           >
             <el-upload
               class="add-new-member__avatar"
@@ -23,10 +23,20 @@
               :on-success="onUploadAvatarSuccess"
               :before-upload="onBeforeAvatarUpload"
             >
-              <img v-if="memberForm.avatar" :src="memberForm.avatar" class="avatar" />
-              <span v-else class="add-new-member__avatar-upload-icon">{{ $t("member.form.avatar") }}</span>
+              <div v-if="memberForm.avatar" style="position: relative;">
+                <el-avatar :size="100" :src="memberForm.avatar"></el-avatar>
+                <el-button class="add-new-member__re-upload" type="primary" size="mini">{{ $t('member.btn.reUpload') }}</el-button>
+              </div>
+              <span v-else class="add-new-member__avatar-upload-icon">{{ $t("member.form.avatar[0]") }}</span>
             </el-upload>
-            <span class="add-new-member__avatar-label">{{ $t("member.form.avatar") }}</span>
+            <span class="add-new-member__avatar-label">
+              <template v-if="memberForm.avatar">
+                {{ $t("member.form.avatar[1]") }}
+              </template>
+              <template v-else>
+                {{ $t("member.form.avatar[0]") }}
+              </template>
+            </span>
           </el-form-item>
           <!-- 头像 end -->
           <!-- 用户名称 start-->
@@ -46,7 +56,7 @@
           </el-form-item>
           <!-- 英文名称 end -->
           <!-- 性别 start -->
-          <el-form-item :label="`${$t('member.form.gender')}`" prop="gender">
+          <el-form-item :label="`${$t('member.form.gender')}`" prop="gender" style="width: 50%;">
             <el-select
               filterable
               v-model="memberForm.gender"
@@ -70,36 +80,57 @@
             <el-input v-model="memberForm.email" :placeholder="$t('member.placeholder.email')"></el-input>
           </el-form-item>
           <!-- 电子邮件 end -->
-          <!-- 角色 start -->
-          <el-form-item :label="`${$t('member.form.role')}`" prop="role">
+          <!-- 国家 start -->
+          <el-form-item :label="`${$t('member.form.country')}`" prop="country">
             <el-select
               filterable
-              v-model="memberForm.role"
-              :placeholder="$t('member.placeholder.role')"
+              v-model="memberForm.country"
+              :placeholder="$t('member.placeholder.country')"
             >
-              <el-option label="成员" value="1"></el-option>
-              <el-option label="项目经理" value="2"></el-option>
-              <el-option label="区域经理" value="3"></el-option>
+              <el-option :label="$t('member.gender.female')" :value="1"></el-option>
+              <el-option :label="$t('member.gender.male')" :value="2"></el-option>
             </el-select>
           </el-form-item>
-          <!-- 角色 end -->
-          <!--  当选择 “成员” 角色时， 成员属于哪个团队 -->
-          <el-form-item
-            v-if="memberForm.role == 1"
-            :label="`${$t('member.form.team')}`"
-            prop="team"
-          >
-            <el-select filterable v-model="memberForm.team" placeholder>
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-
+          <!-- 国家 end -->
+          <template v-if="referenceSource != 'setting'">
+            <!-- 角色 start -->
+            <el-form-item :label="`${$t('member.form.role')}`" prop="role">
+              <el-select
+                filterable
+                v-model="memberForm.role"
+                :placeholder="$t('member.placeholder.role')"
+              >
+                <el-option label="成员" value="1"></el-option>
+                <el-option label="项目经理" value="2"></el-option>
+                <el-option label="区域经理" value="3"></el-option>
+              </el-select>
+            </el-form-item>
+            <!-- 角色 end -->
+            <!--  当选择 “成员” 角色时， 成员属于哪个团队 -->
+            <el-form-item
+              v-if="memberForm.role == 1"
+              :label="`${$t('member.form.team')}`"
+              prop="team"
+            >
+              <el-select filterable v-model="memberForm.team" placeholder>
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+          </template>
+          <!-- 按钮 -->
           <el-form-item class="add-new-member__btn">
             <el-button
               type="primary"
               @click="onSubmitForm('memberForm')"
-            >{{ $t("member.btn.confirmAdd") }}</el-button>
+            >
+            <template v-if="memberForm.id">
+              {{ $t("public.btn.save") }}
+            </template>
+            <template v-else>
+              {{ $t("member.btn.confirmAdd") }}
+            </template>
+            </el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -108,17 +139,30 @@
 </template>
 <script>
 export default {
+  props: {
+    /**
+     *  如果值为 setting 那么就表示在设置页面中引入，不显示角色
+     */
+    referenceSource: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
+  },
   data() {
     return {
       memberForm: {
-        avatar: "",
+        id: "sdfjskdjfksd",
+        avatar: "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
         username: "",
         usernameEn: "",
         gender: 1,
         telphone: "",
         email: "",
         role: "",
-        team: ""
+        team: "",
+        country: ""
       },
       rules: {
         avatar: [
@@ -151,6 +195,13 @@ export default {
           {
             required: true,
             message: this.$t("member.rules.email"),
+            trigger: "blur"
+          }
+        ],
+        country: [
+          {
+            required: true,
+            message: this.$t("member.rules.country"),
             trigger: "blur"
           }
         ],
@@ -255,6 +306,12 @@ export default {
       font-size: 12px;
     }
   }
+  &__re-upload {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
   .el-icon-circle-plus-outline {
     font-size: 50px;
     cursor: pointer;
@@ -263,6 +320,10 @@ export default {
 </style>
 <style lang="scss">
 .add-new-member__avatar-item {
+  text-align: center;
+  .el-form-item__content {
+    margin-left: 0 !important;
+  }
   .el-form-item__error {
     left: 50%;
     transform: translate(-50%, 0);

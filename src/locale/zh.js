@@ -51,7 +51,7 @@ export default {
         add: "添加新成员",
         regional: "区域成员",
         form: {
-            avatar: "上传工作照",
+            avatar: ["上传工作照", "工作照"],
             username: "姓名",
             usernameEn: "英文名",
             gender: "性别",
@@ -95,7 +95,8 @@ export default {
             addRegional: "添加区域经理",
             ok: "完成",
             fillInformation: "填写资料",
-            confirmAdd: "确认添加"
+            confirmAdd: "确认添加",
+            reUpload: "重新上传"
         },
         dialogMenu: {
             account: "账号设置",
@@ -120,6 +121,10 @@ export default {
         rules: {
             new: ["请输入新密码", "输入的密码不能低于8位数"],
             confirm: ["请输入确认密码", "两次密码不一致，请重新输入"]
+        },
+        placeholder: {
+            new: "密码不得少于8位字符，且不能有特殊符号",
+            confirm: "密码不得少于8位字符，且不能有特殊符号"
         },
         btn: {
             cancel: "完成修改"
@@ -199,7 +204,8 @@ export default {
         btn: {
             submit: "提交",
             cancel: "取消",
-            upload: "上传附件"
+            upload: "上传附件",
+            save: "保存"
         },
         dollar: "美元"
     },
@@ -285,69 +291,89 @@ export default {
             save: "保存"
         }
     },
-    highseas:{
-        title:"公海管理",
-        placeholder:{
-            seek:"搜索目标公司名称、ID、地址、关键人",
-            country:"请选择国家",
-            sort:"请选择分类",
-            tag:"请选择标签"
+    highseas: {
+        title: "公海管理",
+        placeholder: {
+            seek: "搜索目标公司名称、ID、地址、关键人",
+            country: "请选择国家",
+            sort: "请选择分类",
+            tag: "请选择标签"
         },
-        table:{
-            target:"目标公司",
-            importance:"重要程度",
-            updatedate:"更新时间",
-            projectNum:"已分项目数",
-            whenCreated:"创建时间",
-            orderNum:"成单量",
-            operate:"操作",
-            details:"查看详情"
+        table: {
+            target: "目标公司",
+            importance: "重要程度",
+            updatedate: "更新时间",
+            projectNum: "已分项目数",
+            whenCreated: "创建时间",
+            orderNum: "成单量",
+            operate: "操作",
+            details: "查看详情"
         }
     },
-    project:{
-        title:"项目管理",
-        placeholder:{
-            seek:"搜索项目名称、地址",
-            tag:"选择标签",
-            projectTitle:"请输入项目名称",
-            companyName:"请输入企业名称",
-            tmt:"请选择行业",
-            site:"请输入地址",
-            url:"Https://",
-            email:"请输入电子邮箱",
-            strength:"请说明优势",
-            productName:"请输入产品名称",
-            describe:"请输入产品描述",
+    project: {
+        title: "项目管理",
+        placeholder: {
+            seek: "搜索项目名称、地址",
+            tag: "选择标签",
+            projectTitle: "请输入项目名称",
+            companyName: "请输入企业名称",
+            tmt: "请选择行业",
+            site: "请输入地址",
+            url: "Https://",
+            email: "请输入电子邮箱",
+            strength: "请说明优势",
+            productName: "请输入产品名称",
+            describe: "请输入产品描述",
         },
-        add:"添加新项目",
-        from:{
-            firstTitle:"添加项目",
-            secondTitle:"项目资料",
-            thirdlyTitle:"产品资料",
-            account:"登录账号",
-            password:"登录密码",
-            projectTitle:"项目名称",
-            companyName:"企业名称",
-            tmt:"行业",
-            site:"地址",
-            url:"网址",
-            email:"电子邮箱",
-            strength:"优势",
-            productName:"产品名称",
-            productImg:"产品图片",
-            productVideo:"产品视频",
-            accessory:"附件(产品目录)",
-            study:"学习资料"
+        add: "添加新项目",
+        from: {
+            firstTitle: "添加项目",
+            secondTitle: "项目资料",
+            thirdlyTitle: "产品资料",
+            account: "登录账号",
+            password: "登录密码",
+            projectTitle: "项目名称",
+            companyName: "企业名称",
+            tmt: "行业",
+            site: "地址",
+            url: "网址",
+            email: "电子邮箱",
+            strength: "优势",
+            productName: "产品名称",
+            productImg: "产品图片",
+            productVideo: "产品视频",
+            accessory: "附件(产品目录)",
+            study: "学习资料"
         },
-        btn:{
-            uploadImg:"上传图片",
-            uploadVideo:"上传视频",
-            uploadAccessory:"上传附件",
-            perfect:"完善资料",
-            continue:"继续完善",
-            ok:"完成"
+        btn: {
+            uploadImg: "上传图片",
+            uploadVideo: "上传视频",
+            uploadAccessory: "上传附件",
+            perfect: "完善资料",
+            continue: "继续完善",
+            ok: "完成"
 
         }
-
+    },
+    notice: {
+        menu: ["全部通知", "项目公司", "目标公司", "成员", "日志", "系统"],
+        box: "消息盒子",
+        read: "全部已读",
+        checkAll: "查看全部"
+    },
+    login: {
+        title: "登录",
+        placeholder: {
+            email: "请输入邮箱账号",
+            password: "请输入您的密码"
+        },
+        rules: {
+            email: "请输入邮箱账号",
+            password: "请输入您的密码"
+        },
+        autoLogin: "7天内自动登录",
+        link: ["联系我们", "关于我们"],
+        ownership: "© 2019 IWORKU CO., LTD，保留所有权利",
+        btn: "登录"
     }
 }

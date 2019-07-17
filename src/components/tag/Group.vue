@@ -19,7 +19,7 @@
               <span style="color:#D50000; font-size: 12px;">* {{ $t("tag.deleteTips") }}</span>
           </div>
           <el-form-item class="group__btn">
-              <el-button type="primary" @click="onConfirmGroup">{{ $t("tag.btn.deleteOk") }}</el-button>
+              <el-button type="primary" @click="onConfirmGroup">{{ $t("tag.btn.ok") }}</el-button>
           </el-form-item>
         </el-form>
     </section>

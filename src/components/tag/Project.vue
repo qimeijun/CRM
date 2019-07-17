@@ -1,6 +1,6 @@
 <template>
   <!-- 项目标签管理 -->
-  <Main></Main>
+  <Main type="project"></Main>
 </template>
 <script>
 export default {

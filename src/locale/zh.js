@@ -247,7 +247,7 @@ export default {
             groupMange: "分组管理",
             delete: "删除",
             addGroup: "新增分组",
-            deleteOk: "完成"
+            ok: "完成"
         },
         deleteTagTip: {
             title: "提示",

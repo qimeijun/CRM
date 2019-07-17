@@ -1,6 +1,6 @@
 <template>
   <!-- 目标公司标签管理 -->
-  <Main></Main>
+  <Main type="target"></Main>
 </template>
 <script>
 export default {

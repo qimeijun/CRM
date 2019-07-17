@@ -15,7 +15,7 @@
         </li>
       </ul>
     </div>
-    <el-scrollbar style="height: calc(100vh - 2.37rem);">
+    <el-scrollbar style="height: calc(100vh - 2.1rem);">
       <router-view></router-view>
     </el-scrollbar>
     

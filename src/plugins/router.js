@@ -88,13 +88,13 @@ export default new VueRouter({
                         {
                             path: 'diary',
                             name: 'diary',
-                            component: () => import('./../components/project/Diary.vue')
+                            component: () => import('./../components/work/WorkDiary.vue')
                         },
                     ]
                 },
                 {
                     path: '/target/detail', component: () => import('./../pages/targetDetail.vue'),
-                    children: [
+                    children:[
                         {
                             path: '/',
                             alias: "info",
@@ -109,7 +109,7 @@ export default new VueRouter({
                         {
                             path: 'diary',
                             name: 'target_diary',
-                            component: () => import('./../components/target/Diary.vue')
+                            component: () => import('./../components/work/WorkDiary.vue')
                         },
                     ]
                 },

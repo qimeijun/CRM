@@ -35,6 +35,7 @@ import PageHeader from "@/components/lib/PageHeader.vue";
 export default {
   data() {
     return {
+      activeMenu:"target_information",
       menuList: [
         {
           name: "资料",
@@ -47,18 +48,15 @@ export default {
           route: "probe"
         },
         {
-          name: "公海客户",
+          name: "工作日志",
           value: "target_diary",
           route: "diary"
         }
       ]
     };
   },
-   computed: {
-    activeMenu() {
-      console.log(this.$route.name)
-      return this.$route.name;
-    }
+  created() {
+    this.activeMenu=this.$route.name;
   },
   components: {
     PageHeader
@@ -68,7 +66,6 @@ export default {
      *  切换菜单
      */
     onChangeMenu(item) {
-      console.log(123);
       this.activeMenu = item.value;
       this.$router.push({path:`/target/detail/${item.route}`});
     }
@@ -87,8 +84,8 @@ export default {
     }
   }
   &__content {
-    width: 1062px;
-    margin: 0 auto;
+    // width: 1062px;
+    // margin: 0 auto;
   }
   &__menu {
     margin-top: 20px;

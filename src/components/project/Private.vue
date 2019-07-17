@@ -54,20 +54,36 @@
                   <router-link to="/target/detail">查看详情</router-link>
                 </li>
                 <li class="table_operation" @click="onDeleteMember(scope.row.id)">移入公海</li>
-                <li class="table_operation" @click="onDeleteMember(scope.row.id)">移交</li>
+                <li class="table_operation" @click="changeAdministratorDialogVisible=true">移交</li>
               </ul>
             </Operate>
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <!-- 移交管理员的dialog -->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('selectRegionalManager.title')"
+      :visible.sync="changeAdministratorDialogVisible"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+        <ChangeAdministrator  operate="handOver"></ChangeAdministrator>
+      </el-scrollbar>
+    </el-dialog>
   </section>
 </template>
 <script>
-import Operate from "@/components/lib/Operate.vue";
 export default {
   components: {
-    Operate
+    Operate: () => import("@/components/lib/Operate.vue"),
+    ChangeAdministrator: () =>
+      import("@/components/member/ChangeAdministrator.vue")
   },
   data() {
     return {
@@ -154,48 +170,49 @@ export default {
           date: "2016-05-03",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-02",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-04",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-01",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-08",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-06",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-07",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         }
       ],
       multipleSelection: [],
       tag: "",
-      value: ""
+      value: "",
+      changeAdministratorDialogVisible:false,
     };
   },
   methods: {
@@ -224,7 +241,9 @@ export default {
             message: "确定删除"
           });
         });
-    }
+    },
+    onClickTag(){},
+    handleSelectionChange(){}
   }
 };
 </script>
@@ -241,7 +260,7 @@ export default {
     color: $--default-color;
   }
 }
-.table_operation{
+.table_operation {
   cursor: pointer;
 }
 </style>

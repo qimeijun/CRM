@@ -54,7 +54,7 @@
                   <router-link to="/project/detail">查看详情</router-link>
                 </li>
                 <li class="table_operation" @click="onDeleteMember(scope.row.id)">分配</li>
-                <li class="table_operation" @click="onDeleteMember(scope.row.id)">作废</li>
+                <li class="table_operation" @click="onCancel(scope.row.id)">作废</li>
               </ul>
             </Operate>
           </template>
@@ -154,43 +154,43 @@ export default {
           date: "2016-05-03",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-02",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-04",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-01",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-08",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-06",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         },
         {
           date: "2016-05-07",
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
-          rate: "4"
+          rate: 4
         }
       ],
       multipleSelection: [],
@@ -224,6 +224,12 @@ export default {
             message: "确定删除"
           });
         });
+    },
+    handleSelectionChange(){
+
+    },
+    onClickTag(){
+      
     }
   }
 };

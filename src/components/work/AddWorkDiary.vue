@@ -209,13 +209,11 @@ export default {
       this.$refs[formName].resetFields();
     },
     /**
-     *  聊天记录： 删除上传
+     *  聊天记录：上传
      */
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
+    onChatLogUploadPreview(){},
     /**
-     *  聊天记录 开始上传文件
+     *  聊天记录 删除
      */
     onChtLogUploadRemove(file) {
       this.diaryForm.chatLog = file.url;

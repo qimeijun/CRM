@@ -1,10 +1,15 @@
 <template>
     <section class="attachment">
         <div class="logo" :title="name" 
-             :style="`background-color: ${colors[suffixFirstLetter][0]}`">
+             :style="`background-color: ${suffixFirstLetter && colors.get(suffixFirstLetter) && colors.get(suffixFirstLetter)[0]}`">
             <span class="white"></span>
-            <span class="angle" :style="`border-bottom: 12px solid ${colors[suffixFirstLetter][1]}`"></span>
-            {{ suffixFirstLetter }}
+            <span class="angle" :style="`border-bottom: 12px solid ${suffixFirstLetter && colors.get(suffixFirstLetter) && colors.get(suffixFirstLetter)[1]}`"></span>
+            <template v-if="colors.has(suffixFirstLetter)">
+                {{ suffixFirstLetter }}
+            </template>
+            <template v-else>
+                <i class="el-icon-paperclip"></i>
+            </template>
             <i v-if="isDelete" class="el-icon-error" @click.stop="onDelete"></i>
         </div>
         <p class="name">{{ name }}</p>
@@ -31,11 +36,7 @@ export default {
     data() {
         return {
             suffixFirstLetter: "",
-            colors: {
-                "P": ["#F39470", "#D07159"],
-                "W": ["#2B79E7", "#0A4EAF"],
-                "X": ["#59CC9A", "#209562"]
-            },
+            colors: new Map([["P", ["#F39470", "#D07159"]], ["W",[ "#2B79E7", "#0A4EAF"]], ["X", ["#59CC9A", "#209562"]]])
         }
     },
     methods: {
@@ -72,6 +73,7 @@ export default {
         color: white;
         text-align: center;
         line-height: 55px;
+        background-color: #59cc6b;
         .el-icon-error {
             position: absolute;
             color: black;
@@ -96,7 +98,7 @@ export default {
         display: inline-block;
         width: 0;
         height: 0;
-        border-bottom: 12px solid #D07159;
+        border-bottom: 12px solid #1b982e;
         border-right: 12px solid transparent;  
     }
     .name {

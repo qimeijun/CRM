@@ -62,6 +62,7 @@
                         <Attachment name="asdfs.psd"></Attachment>
                         <Attachment name="asdfs.xsd"></Attachment>
                         <Attachment name="asdfs.wsd"></Attachment>
+                        <Attachment name="asdfs.ysd"></Attachment>
                     </div>
                 </div>
                 <el-button type="primary" size="mini" style="margin-top: 20px;">{{ $t("workDiary.btn.leaveMessage") }}</el-button>

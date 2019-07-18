@@ -17,7 +17,7 @@
                         <el-input type="password" show-password v-model="loginForm.password" :placeholder="$t('login.placeholder.password')"></el-input>
                     </el-form-item>
                     <el-form-item label="">
-                        <el-checkbox v-model="loginForm.isAuto">{{ $t("login.autoLogin") }}</el-checkbox>
+                        <el-checkbox v-model="loginForm.isSave">{{ $t("login.autoLogin") }}</el-checkbox>
                     </el-form-item>
                     <el-form-item label="">
                         <el-button round class="login__btn" @click="onSubmitForm('loginForm')">{{ $t("login.btn") }}</el-button>
@@ -48,13 +48,14 @@
     </section>
 </template>
 <script>
+import CryptoJS from "crypto-js"
 export default {
     data() {
         return {
             loginForm: {
                 email: "",
                 password: "",
-                isAuto: false
+                isSave: false
             },
             rules: {
                 email: [{
@@ -71,12 +72,22 @@ export default {
          *  表单提交
          */
         onSubmitForm(formName) {
-            this.$router.push({ path: '/' });
-            // this.$refs[formName].validate(valid => {
-            //     if (valid) {
-            //         alert("submit!");
-            //     }
-            // });
+            
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    // 是保存用户信息
+                    if (this.loginForm.isSave) {
+                        let password = "";
+                        this.loginForm.password ? password = CryptoJS.AES.encrypt(this.loginForm.password, "iworku").toString() : null;
+                        let date = new Date();
+                        date.setDate(date.getDate() + this.$global.userSaveTime);
+                        document.cookie = `password=${password};path=/; expires=${date.toGMTString()}`;
+                        document.cookie = `username=${this.loginForm.email};path=/; expires=${date.toGMTString()}`
+                    }
+                    this.$router.push({ path: '/' });
+                    // alert("submit!");
+                }
+            });
         }
     }
 }

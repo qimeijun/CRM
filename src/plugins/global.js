@@ -6,5 +6,6 @@ Vue.prototype.$global = {
     lang: {
         en: 'en',
         zh: 'zh'
-    }
+    },
+    userSaveTime: 7
 }

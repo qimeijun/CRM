@@ -1,295 +1,295 @@
 export default {
     head: {
-        title: "全球本地化营销管理系统"
+        title: "Global Localization Marketing Management System"
     },
     workDiary: {
-        title: "日志",
-        modify: "编辑日志",
-        add: "添加日志",
+        title: "Work Log",
+        modify: "Edit Log",
+        add: "Add Log",
         form: {
-            projectName: "项目名称",
-            type: "类型",
-            targetCompany: "目标公司",
-            title: "标题",
-            description: "工作描述",
-            chatLog: "聊天记录",
-            attachment: "附件",
-            leaveMessage: "留言内容",
-            orderNo: "订单编号",
-            orderName: "产品名称",
-            orderNum: "数量",
-            orderPrice: "金额",
-            orderDescription: "订单描述"
+            projectName: "Project",
+            type: "Type",
+            targetCompany: "Target",
+            title: "Title",
+            description: "Work Description",
+            chatLog: "Chat Record",
+            attachment: "Attachment",
+            leaveMessage: "Message Content",
+            orderNo: "Order No",
+            orderName: "Product Name",
+            orderNum: "Number",
+            orderPrice: "Price",
+            orderDescription: "Order Description"
         },
         rules: {
-            projectName: "请选择项目",
-            type: "请选择日志类型",
-            title: "请填写日志标题",
-            leaveMessage: "请输入留言内容",
-            orderDescription: "请输入订单描述"
+            projectName: "Please select a project",
+            type: "Please select the work log type",
+            title: "Please input the title",
+            leaveMessage: "Please input the message content",
+            orderDescription: "Please input the order description"
         },
         diarType: {
-            daily: "日报",
-            weekly: "周报",
-            monthly: "月报",
-            order: "订单"
+            daily: "Daily",
+            weekly: "Weekly",
+            monthly: "Monthly",
+            order: "Order"
         },
-        uploadChatLog: "上传图片",
-        attachment: "附件(产品目录)",
-        chatLog: "聊天记录",
-        operate: "操作",
+        uploadChatLog: "Upload",
+        attachment: "Attachment(Product List)",
+        chatLog: "Chat Record",
+        operate: "Operate",
         btn: {
-            translate: "翻译",
-            leaveMessage: "留言",
-            modifyDiary: "编辑日志",
-            leaveMessageNow: "立即留言",
-            delete: "删除日志",
-            reply: "回复"
+            translate: "Translate",
+            leaveMessage: "Leave a Message",
+            modifyDiary: "Edit Log",
+            leaveMessageNow: "Leave a Message Now",
+            delete: "Delete Log",
+            reply: "Reply"
         },
         order: {
-            no: "订单编号",
-            total: "订单总量",
-            price: "订单金额",
-            description: "订单描述"
+            no: "Order No",
+            total: "Total Order",
+            price: "Order Price",
+            description: "Order Description"
         }
     },
     member: {
-        add: "添加新成员",
-        regional: "区域成员",
+        add: "Add New Member",
+        regional: "Regional Member",
         form: {
-            avatar: ["上传工作照", "工作照"],
-            username: "姓名",
-            usernameEn: "英文名",
-            gender: "性别",
-            telphone: "手机",
-            email: "邮箱",
-            role: "角色",
-            team: "团队",
-            account: "登录账号",
-            password: "登录密码",
-            country: "国家"
+            avatar: ["Upload Work Photo", "Work Photo"],
+            username: "Name",
+            usernameEn: "English Name",
+            gender: "Gender",
+            telphone: "Mobile Phone",
+            email: "Email",
+            role: "Role",
+            team: "Team",
+            account: "Login Account",
+            password: "Login Password",
+            country: "Country"
         },
         rules: {
-            avatar: "请上传工作照",
-            username: "请输入成员名称",
-            email: "请输入成员邮箱",
-            role: "请选择成员角色",
-            team: "请选择团队",
-            account: "请输入登录账号",
-            password: ["请输入登录密码", "密码不能少于八位数，且不能有特殊字符"],
-            gender: "请选择成员角色",
-            country: "请选择国家"
+            avatar: "Please upload the work photo",
+            username: "Please input a member name",
+            email: "Please input a member email",
+            role: "Please select a member role",
+            team: "Please select a team",
+            account: "Please input a login account",
+            password: ["Please input a login password", "Password cannot be less than eight digits and cannot have special characters"],
+            gender: "Please select a member gender",
+            country: "Please select a country"
         },
         placeholder: {
-            account: "请输入邮箱",
-            username: "请输入成员的姓名",
-            usernameEn: "请输入成员的英文名",
-            gender: "请选择成员的性别",
-            email: "请输入成员的电子邮箱",
-            telphone: "请输入成员的手机号码",
-            role: "请选择成员的级别",
-            search: "搜索目标公司名称、ID、地址、关键人",
-            country: "请选择国家"
+            account: "Please input a email",
+            username: "Please input a member name",
+            usernameEn: "Please input a member English name",
+            gender: "Please select a member gender",
+            email: "Please input a member email",
+            telphone: "Please enter the member's mobile number",
+            role: "Please select the level of the member",
+            search: "Search target company name, ID, address, key person",
+            country: "Please select a country"
         },
         gender: {
-            male: "男",
-            female: "女"
+            male: "Male",
+            female: "Female"
         },
         btn: {
-            regional: "区域经理管理",
-            addRegional: "添加区域经理",
-            ok: "完成",
-            fillInformation: "填写资料",
-            confirmAdd: "确认添加",
-            reUpload: "重新上传"
+            regional: "Regional Manager Management",
+            addRegional: "Add Regional Manager",
+            ok: "OK",
+            fillInformation: "Fill In The Information",
+            confirmAdd: "Confirm Add",
+            reUpload: "Re-upload"
         },
         dialogMenu: {
-            account: "账号设置",
-            information: "成员信息"
+            account: "Account Settings",
+            information: "Member Information"
         }
     },
     changeAdministrator: {
-        title: "更改管理员",
-        search: "输入管理员名称",
+        title: "Change Manager",
+        search: "Input the administrator name",
         btn: {
-            handOver: "移交",
-            add: "分配",
-            addMember: "新增项目经理"
+            handOver: "Hand Over",
+            add: "Assign",
+            addMember: "New Project Manager"
         }
     },
     password: {
-        modify: "修改密码",
+        modify: "Change Password",
         form: {
-            new: "新密码",
-            confirm: "再次输入"
+            new: "New Pasword",
+            confirm: "Re-enter"
         },
         rules: {
-            new: ["请输入新密码", "输入的密码不能低于8位数"],
-            confirm: ["请输入确认密码", "两次密码不一致，请重新输入"]
+            new: ["Please input a new password", "The entered password cannot be lower than 8 digits"],
+            confirm: ["Please input a confirmation password", "The passwords are inconsistent twice, please re-enter"]
         },
         placeholder: {
-            new: "密码不得少于8位字符，且不能有特殊符号",
-            confirm: "密码不得少于8位字符，且不能有特殊符号"
+            new: "Password must be at least 8 characters and cannot have special symbols",
+            confirm: "Password must be at least 8 characters and cannot have special symbols"
         },
         btn: {
-            cancel: "完成修改"
+            cancel: "OK"
         }
     },
     selectRegionalManager: {
-        title: "添加区域经理",
-        placeholder: "请选择区域经理"
+        title: "Add Regional Manager",
+        placeholder: "Please select a regional manager"
     },
     memberManagement: {
-        title: "成员管理",
-        table: ["成员", "身份", "团队名称", "跟进项目", "目标公司", "添加时间", "操作"],
-        operate: ["查看信息", "移交管理员", "删除"],
+        title: "Member Management",
+        table: ["Member", "Role", "Team Name", "Follow Up Project", "Target Company", "Add Time", "Operate"],
+        operate: ["View", "Handover Administrator ", "Delete"],
         btn: {
-            addMember: "添加新成员",
-            ok: "完成"
+            addMember: "Add New Member",
+            ok: "OK"
         },
-        searchInput: "搜索成员、团队名称",
-        regionalManagement: "区域经理管理",
+        searchInput: "Search for members, team names",
+        regionalManagement: "Regional Manager Management",
         deleteTip: {
-            title: "提示",
-            content: ["您确定要删除该成员吗？", "无法删除", "此成员尚有目标公司正在跟进，请移交任务再删除！"],
-            btn: ["确定", "取消"]
+            title: "Tip",
+            content: ["Are you sure you want to delete this member?", "Unable to Delete", "This member still has the target company to follow up, please hand in the task and delete it!"],
+            btn: ["OK", "Cancel"]
         }
     },
     memberInfo: {
-        menu: ["资料", "团队", "跟进项目", "私海客户", "工作日志"],
-        priviteTable: ["目标公司", "重要程度", "更新时间", "状态", "创建时间", "资料完整度", "操作"],
-        projectTable: ["项目名称", "状态", "管理员", "标签", "进行天数", "添加时间", "操作"],
+        menu: ["Information", "Team", "Follow Up Project", "Private customer", "Work Log"],
+        priviteTable: ["Tartget Company", "Importance", "Update Time", "Status", "Create Time", "Information Integrity", "Operate"],
+        projectTable: ["Project Name", "Status", "Administrator", "Tag", "Number of days", "Add Time", "Operate"],
         btn: {
-            shiftIn: "移入公海",
-            shiftOut: "移出",
-            handOver: "移交",
-            modify: "编辑",
-            password: "修改密码",
-            shiftOutProject: "移出",
-            addDiary: "添加工作日志"
+            shiftIn: "Move into the public",
+            shiftOut: "Out",
+            handOver: "Hand Over",
+            modify: "Edit",
+            password: "Edit Password",
+            shiftOutProject: "Out",
+            addDiary: "Add Work Log"
         },
         priviteShiftInTip: {
-            title: "提示",
-            content: ["该目标公司正在跟进中，您确定要移入公海吗？"],
-            btn: ["确定", "取消"]
+            title: "Tip",
+            content: ["The target company is following up, are you sure you want to move to the public?"],
+            btn: ["Ok", "Cancel"]
         },
         memberShiftOutTip: {
-            title: "提示",
-            btn: ["确定", "取消", "移交任务", "移入公海"],
-            content: ["你确定要将此成员移出项目吗？", "无法移出!", "此成员尚有目标公司正在跟进，请移交任务在移出!", "此成员为项目经理，移出前必须分配新的项目经理!"]
+            title: "Tip",
+            btn: ["Ok", "Cancel", "Handover Task", "Moved into the public"],
+            content: ["Are you sure you want to move this member out of the project?", "Can't move out!", "This member still has the target company to follow up, please hand over the task and remove it.!", "This member is the project manager and must be assigned a new project manager before moving out.!"]
         },
-        operate: "操作",
-        teamOperate: ["编辑团队", "移交团队", "冻结团队"],
-        teamMemberOperate: ["查看资料", "移交团队", "删除"],
-        noTeam: "暂无团队",
-        account: "账号",
-        password: "密码",
-        workDiaryMenu: ["全部日志", "项目日志", "目标公司日志"],
-        statistics: ["任务概况", "本月业绩"],
-        joinTime: "加入时间",
-        handOverTeam: "移交",
-        teamStatistics: ["所有成员业绩", '1V1业绩'],
-        teamStatisticsTime: ["月份", "年份"],
-        privateOperate: ["查看详情", "移入公海", "移交"]
+        operate: "Operate",
+        teamOperate: ["Edit Team", "Handover Team", "Freeze Team"],
+        teamMemberOperate: ["View", "Handover Team", "Delete"],
+        noTeam: "No Team",
+        account: "Account",
+        password: "Password",
+        workDiaryMenu: ["All", "Project", "Target Company"],
+        statistics: ["Task Overview", "This month's performance"],
+        joinTime: "Join Time",
+        handOverTeam: "Hand Over",
+        teamStatistics: ["All Member Performance", '1V1 Performance'],
+        teamStatisticsTime: ["Month", "Year"],
+        privateOperate: ["View", "Move into the public", "Hand Over"]
     },
     team: {
-        add: "添加团队",
-        modify: "编辑团队",
+        add: "Add Team",
+        modify: "Edit Team",
         form: {
-            name: "团队名称",
-            country: "国家",
-            color: "颜色"
+            name: "Team Name",
+            country: "Country",
+            color: "Color"
         },
         rules: {
-            name: "请输入团队名称",
-            country: "请选择国家"
+            name: "Please input the team name",
+            country: "Please select the country of the team"
         },
         btn: {
-            confirm: "确认修改"
+            confirm: "Confirm Modification"
         }
     },
     public: {
         btn: {
-            submit: "提交",
-            cancel: "取消",
-            upload: "上传附件",
-            save: "保存"
+            submit: "Submit",
+            cancel: "Cancel",
+            upload: "Upload Attachment",
+            save: "Save"
         },
-        dollar: "美元"
+        dollar: "Dollar"
     },
     workBench:{
         title:"工作台",
         btn:{
-            addProject:"添加新项目"
+            addProject:"Add New Project"
         },
         briefreport:{
-            title:"日程简报",
+            title:"Briefing Schedule",
             btn:{
-                all:"全部日志",
-                submit:"提交日志"
+                all:"All Logs",
+                submit:"Submit Log"
             }
             
         },
         overview:{
-            title:"项目概览",
-            targetNum:"目标公司数",
-            vlinkNum:"已拜访目标公司数",
-            intentionNum:"意向目标公司数",
-            orderNum:"取得订单数量"
+            title:"Project Overview",
+            targetNum:"Target Company",
+            vlinkNum:"Number of Target Companies Visited",
+            intentionNum:"Intention Target Company",
+            orderNum:"Get order quantity"
         },
         variables:{
-            title:"本月工作",
+            title:"Work This Month",
             dataX: ["1st Week", "2st Week", "3st Week", "4st Week"],
         }
     },
     tag: {
-        title: "标签管理",
-        groupTitle: "分组管理",
-        project: "项目标签",
-        target: "目标公司标签",
-        add: "添加标签",
+        title: "Tag Management",
+        groupTitle: "Group Management",
+        project: "Project",
+        target: "Target Company",
+        add: "Add Tag",
         btn: {
-            add: "新增标签",
-            confirm: "确定",
-            groupMange: "分组管理",
-            delete: "删除",
-            addGroup: "新增分组",
-            ok: "完成"
+            add: "Add Tag",
+            confirm: "Ok",
+            groupMange: "Group Management",
+            delete: "Delete",
+            addGroup: "Add Group",
+            ok: "Ok"
         },
         deleteTagTip: {
-            title: "提示",
-            content: "您确定要删除此标签吗?",
+            title: "Tip",
+            content: "Are you sure you want to delete this tag??",
             btn: {
-                ok: "确定",
-                cancel: "取消"
+                ok: "Ok",
+                cancel: "Cancel"
             }
         },
-        operate: "操作",
-        operateList: ["移动至分组", "重命名", "删除"],
+        operate: "Operate",
+        operateList: ["Move To Group", "Re-name", "Delete"],
         addGroupTip: {
-            title: "提示",
-            content: ["无法新增", "目前您的分组已到达最多数量，请点击管理分组进行管理！"]
+            title: "Tip",
+            content: ["Can't add", "Currently your group has reached the maximum number, please click Manage Group to manage!"]
         },
-        deleteTips: "已有标签分组将无法删除，请将标签删除或移至其他分组再删除",
-        nextPage: "下一页",
-        addTagPlaceholder: "添加新标签"
+        deleteTips: "Existing tag groupings cannot be deleted. Please delete or move tags to other groups and delete them.",
+        nextPage: "Next Page",
+        addTagPlaceholder: "Add New Tag"
     },
     setting: {
-        title: ["个人资料", "修改密码"],
+        title: ["Information", "Change Password"],
         form: {
-            companyName: "公司名称",
-            companyShortName: "公司简称",
-            telphone: "联系电话",
-            email: "邮箱",
-            country: "国家",
-            account: ["账号", "暂时无法修改"]
+            companyName: "Company Name",
+            companyShortName: "Company Short Name",
+            telphone: "Contact Number",
+            email: "Email",
+            country: "Country",
+            account: ["Account", "Temporarily unable to modify"]
         },
         rules: {
-            companyName: "请输入公司名称",
-            companyShortName: "请输入公司简称"
+            companyName: "Please input the company name",
+            companyShortName: "Please input the company short name"
         },
         btn: {
-            save: "保存"
+            save: "Save"
         }
     },
     highseas:{
@@ -357,24 +357,24 @@ export default {
         }
     },
     notice: {
-        menu: ["全部通知", "项目公司", "目标公司", "成员", "日志", "系统"],
-        box: "消息盒子",
-        read: "全部已读",
-        checkAll: "查看全部"
+        menu: ["All Notice", "Project", "Target", "Member", "Log", "System"],
+        box: "Message Box",
+        read: "All Read",
+        checkAll: "View All"
     },
     login: {
-        title: "登录",
+        title: "Log In",
         placeholder: {
-            email: "请输入邮箱账号",
-            password: "请输入您的密码"
+            email: "Please input your login email address",
+            password: "Please input your login password"
         },
         rules: {
-            email: "请输入邮箱账号",
-            password: "请输入您的密码"
+            email: "Please input your login email address",
+            password: "Please input your login password"
         },
-        autoLogin: "7天内自动登录",
-        link: ["联系我们", "关于我们"],
+        autoLogin: "Automatic login within 7 days",
+        link: ["Contact Us", "About Us"],
         ownership: "© 2019 IWORKU CO., LTD，保留所有权利",
-        btn: "登录"
+        btn: "Log In"
     }
 }

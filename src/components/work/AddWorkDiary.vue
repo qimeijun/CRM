@@ -262,6 +262,9 @@ export default {
     }
   }
   &__upload {
+    .el-form-item__label {
+      width: 100% !important;
+    }
     .el-form-item__content {
       margin-left: 0 !important;
       margin-top: 40px;

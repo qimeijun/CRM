@@ -1,7 +1,7 @@
 <template>
   <section class="target-details">
     <div class="target-details__top">
-      <PageHeader></PageHeader>
+      <PageHeader url="/project/detail/private"></PageHeader>
       <div class="target-details__top-name">目标公司详情</div>
     </div>
     <div class="target-details__content">

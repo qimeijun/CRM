@@ -2,19 +2,19 @@
   <!-- 项目概览 -->
   <div class="iworku-card workbench-overview">
     <h3>{{$t("workBench.overview.title")}}</h3>
-    <el-row class="overview-item">
+    <el-row >
       <!-- 目标公司数 -->
-      <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-        <img src alt />
+      <el-col class="overview-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+        <img src="@/assets/img/home_img_01.png" alt />
         <p>
           <span>{{targetNum}}</span>
-          <br />
+          <br/>
           <span>{{$t("workBench.overview.targetNum")}}</span>
         </p>
       </el-col>
       <!-- 已拜访 -->
-      <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-        <img src alt />
+      <el-col class="overview-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+        <img src="@/assets/img/home_img_02.png" alt />
         <p>
           <span>{{vlinkNum}}</span>
           <br />
@@ -22,8 +22,8 @@
         </p>
       </el-col>
       <!-- 意向 -->
-      <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-        <img src alt />
+      <el-col class="overview-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+        <img src="@/assets/img/home_img_03.png" alt />
         <p>
           <span>{{intentionNum}}</span>
           <br />
@@ -31,8 +31,8 @@
         </p>
       </el-col>
       <!-- 订单 -->
-      <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-        <img src alt />
+      <el-col class="overview-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+        <img src="@/assets/img/home_img_04.png" alt />
         <p>
           <span>{{orderNum}}</span>
           <br />
@@ -57,21 +57,27 @@ export default {
 <style lang="scss" scoped>
 .workbench-overview {
   height: 300px;
+ .overview-item{
+   display: flex;
+   align-items: center;
+   margin:25px 0;
+ }
   .overview-item img {
     width: 45px;
     height: 45px;
-    background: rgba(238, 226, 255, 1);
+    margin-right: 10px;
+
   }
   .overview-item p {
     :first-of-type {
       font-size: 30px;
       font-weight: 500;
       color: $--default-color;
-      line-height: 42px;
+      line-height: 36px;
     }
     :last-of-type {
       font-size: 12px;
-      font-weight: 450;
+      font-weight: 450; 
       color: rgba(30, 30, 30, 1);
       line-height: 17px;
     }

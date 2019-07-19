@@ -62,10 +62,10 @@
             <h3>目标公司概览</h3>
           </div>
           <div class="info_div_content">
-            <el-row class="content-item">
+            <el-row>
               <!-- 目标公司数 -->
-              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-                <img src alt />
+              <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <img src="@/assets/img/img_log.png" alt />
                 <p>
                   <span>{{overview.targetNum}}</span>
                   <br />
@@ -73,8 +73,8 @@
                 </p>
               </el-col>
               <!-- 已拜访 -->
-              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-                <img src alt />
+              <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <img src="@/assets/img/img_month.png" alt />
                 <p>
                   <span>{{overview.vlinkNum}}</span>
                   <br />
@@ -82,8 +82,8 @@
                 </p>
               </el-col>
               <!-- 意向 -->
-              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-                <img src alt />
+              <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <img src="@/assets/img/img_order.png" alt />
                 <p>
                   <span>{{overview.intentionNum}}</span>
                   <br />
@@ -91,8 +91,8 @@
                 </p>
               </el-col>
               <!-- 订单 -->
-              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-                <img src alt />
+              <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <img src="@/assets/img/img_week.png" alt />
                 <p>
                   <span>{{overview.orderNum}}</span>
                   <br />
@@ -229,12 +229,23 @@ export default {
       max-height: 100px;
       overflow: hidden;
     }
+    .content-item {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+    }
+    .content-item img {
+      width: 45px;
+      height: 45px;
+      margin-right: 10px;
+    }
     .content-item p {
+      margin: 0;
       :first-of-type {
         font-size: 30px;
         font-weight: 500;
         color: $--default-color;
-        line-height: 42px;
+        line-height: 36px;
       }
       :last-of-type {
         font-size: 12px;

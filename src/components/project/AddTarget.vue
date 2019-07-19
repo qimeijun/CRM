@@ -2,9 +2,9 @@
   <!-- 修改公司资料 -->
   <section>
     <ul class="addTarget_ul">
-      <li :class="activeName===1?'addTarget_ul_li--current':''">公司信息</li>
-      <li :class="activeName===2?'addTarget_ul_li--current':''">关键人</li>
-      <li :class="activeName===3?'addTarget_ul_li--current':''">其他</li>
+      <li :class="activeName===1?'addTarget_ul_li--current':''">{{$t("target.form.companyTitle")}}</li>
+      <li :class="activeName===2?'addTarget_ul_li--current':''">{{$t("target.form.keymenTitle")}}</li>
+      <li :class="activeName===3?'addTarget_ul_li--current':''">{{$t("target.form.otherTitle")}}</li>
     </ul>
     <div>
       <!-- 第一步公司信息 start -->
@@ -16,10 +16,10 @@
         label-position="top"
         label-width="80px"
       >
-        <el-form-item label="公司名称" prop="name">
+        <el-form-item :label="$t('target.form.companyName')" prop="name">
           <el-input v-model="companyForm.name" placeholder="请输入公司名称"></el-input>
         </el-form-item>
-        <el-form-item style="width:250px;" label="国家" prop="country">
+        <el-form-item style="width:250px;" :label="$t('target.form.country')" prop="country">
           <el-select v-model="companyForm.country">
             <el-option
               v-for="(item,index) in countryList"
@@ -29,17 +29,17 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="地址">
+        <el-form-item :label="$t('target.form.site')">
           <el-input v-model="companyForm.site"></el-input>
         </el-form-item>
-        <el-form-item label="网址">
+        <el-form-item :label="$t('target.form.url')">
           <el-input v-model="companyForm.url"></el-input>
         </el-form-item>
-        <el-form-item label="电话">
+        <el-form-item :label="$t('target.form.phone')">
           <el-input v-model="companyForm.phone"></el-input>
         </el-form-item>
         <el-form-item class="addTarget__btn">
-          <el-button type="primary" @click="onSubmitForm('companyForm',2)">{{"下一步"}}</el-button>
+          <el-button type="primary" @click="onSubmitForm('companyForm',2)">{{$t("target.next")}}</el-button>
         </el-form-item>
       </el-form>
       <!-- 第一步公司信息 end -->
@@ -52,10 +52,10 @@
         label-position="top"
         label-width="80px"
       >
-        <el-form-item label="姓名">
+        <el-form-item :label="$t('target.form.keymenName')">
           <el-input v-model="keymenForm.name" placeholder="请输入公司名称"></el-input>
         </el-form-item>
-        <el-form-item label="职位">
+        <el-form-item :label="$t('target.form.position')">
           <el-select v-model="keymenForm.position">
             <el-option
               v-for="(item,index) in positionList"
@@ -64,17 +64,17 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="电话">
+        <el-form-item :label="$t('target.form.keymenPhone')">
           <el-input v-model="keymenForm.phone"></el-input>
         </el-form-item>
-        <el-form-item label="电子邮件">
+        <el-form-item :label="$t('target.form.email')">
           <el-input v-model="keymenForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="社交账户">
+        <el-form-item :label="$t('target.form.social')">
           <el-input v-model="keymenForm.social"></el-input>
         </el-form-item>
         <el-form-item class="addTarget__btn">
-          <el-button type="primary" @click="onSubmitForm('keymenForm',3)">{{"下一步"}}</el-button>
+          <el-button type="primary" @click="onSubmitForm('keymenForm',3)">{{$t("target.next")}}</el-button>
         </el-form-item>
       </el-form>
       <!-- 第二步关键人 end -->
@@ -87,10 +87,10 @@
         label-position="top"
         label-width="80px"
       >
-        <el-form-item label="客户来源">
+        <el-form-item :label="$t('target.form.source')">
           <el-input v-model="otherForm.source" placeholder="请输入"></el-input>
         </el-form-item>
-        <el-form-item label="客户类型">
+        <el-form-item :label="$t('target.form.clientType')">
           <el-select v-model="otherForm.type">
             <el-option
               v-for="(item,index) in countryList"
@@ -99,23 +99,23 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="预计采购">
+        <el-form-item :label="$t('target.form.purchaseScale')">
           <el-input v-model="otherForm.scale"></el-input>
         </el-form-item>
-        <el-form-item label="海关编码">
+        <el-form-item :label="$t('target.form.hsCode')">
           <el-input v-model="otherForm.importance"></el-input>
         </el-form-item>
-        <el-form-item label="重要程度">
+        <el-form-item :label="$t('target.form.importance')">
           <el-input v-model="otherForm.rate"></el-input>
         </el-form-item>
-        <el-form-item label="介绍">
+        <el-form-item :label="$t('target.form.introduce')">
           <el-input type="textarea" :rows="4" v-model="otherForm.introduce"></el-input>
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item :label="$t('target.form.remark')">
           <el-input type="textarea" :rows="4" v-model="otherForm.note"></el-input>
         </el-form-item>
         <el-form-item class="addTarget__btn">
-          <el-button type="primary" @click="onSubmitForm('otherForm',4)">{{"完成添加"}}</el-button>
+          <el-button type="primary" @click="onSubmitForm('otherForm',4)">{{$t("target.finish")}}</el-button>
         </el-form-item>
       </el-form>
       <!-- 第三步其他 end -->

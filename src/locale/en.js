@@ -217,29 +217,66 @@ export default {
         },
         dollar: "Dollar"
     },
-    workBench:{
-        title:"工作台",
-        btn:{
-            addProject:"Add New Project"
+    workBench: {
+        title: "工作台",
+        btn: {
+            addProject: "Add New Project"
         },
-        briefreport:{
-            title:"Briefing Schedule",
-            btn:{
-                all:"All Logs",
-                submit:"Submit Log"
+        briefreport: {
+            title: "Briefing Schedule",
+            loading: "加载中...",
+            noMore: "没有更多了",
+            btn: {
+                all: "All Logs",
+                submit: "Submit Log"
             }
-            
+
         },
-        overview:{
-            title:"Project Overview",
-            targetNum:"Target Company",
-            vlinkNum:"Number of Target Companies Visited",
-            intentionNum:"Intention Target Company",
-            orderNum:"Get order quantity"
+        overview: {
+            title: "Project Overview",
+            targetNum: "Target Company",
+            vlinkNum: "Number of Target Companies Visited",
+            intentionNum: "Intention Target Company",
+            orderNum: "Get order quantity"
         },
-        variables:{
-            title:"Work This Month",
+        variables: {
+            title: "Work This Month",
             dataX: ["1st Week", "2st Week", "3st Week", "4st Week"],
+        },
+        calendar: {
+            title: "日程安排",
+            btn: {
+                redact: "编辑",
+                delete: "删除",
+            }
+        },
+        remind: {
+            title: "日程提醒",
+            add: "添加提醒",
+            loading: "加载中...",
+            noMore: "没有更多了",
+            dialogTitle: "添加日程提醒",
+            addPeople: "添加人"
+        },
+        addremind: {
+            form: {
+                date: "起止日期",
+                remindTime: "提醒时间",
+                email: "邮箱",
+                target: "目标公司",
+                people: "参与人员",
+
+            },
+            placeholder: {
+                content: "请输入日程内容",
+                startDate: "开始日期",
+                endDate: "结束日期",
+                remindTime: "是否提醒",
+                email: "提醒内容和时间将发送至本邮箱",
+                target: "请输入日程内容",
+                people: "请输入日程内容",
+            },
+            save: "保存",
         }
     },
     tag: {
@@ -292,67 +329,69 @@ export default {
             save: "Save"
         }
     },
-    highseas:{
-        title:"公海管理",
-        placeholder:{
-            seek:"搜索目标公司名称、ID、地址、关键人",
-            country:"请选择国家",
-            sort:"请选择分类",
-            tag:"请选择标签"
+    highseas: {
+        title: "公海管理",
+        placeholder: {
+            seek: "搜索目标公司名称、ID、地址、关键人",
+            country: "请选择国家",
+            sort: "请选择分类",
+            tag: "请选择标签"
         },
-        table:{
-            target:"目标公司",
-            importance:"重要程度",
-            updatedate:"更新时间",
-            projectNum:"已分项目数",
-            whenCreated:"创建时间",
-            orderNum:"成单量",
-            operate:"操作",
-            details:"查看详情"
+        table: {
+            target: "目标公司",
+            importance: "重要程度",
+            updatedate: "更新时间",
+            projectNum: "已分项目数",
+            whenCreated: "创建时间",
+            orderNum: "成单量",
+            operate: "操作",
+            details: "查看详情"
         }
     },
-    project:{
-        title:"项目管理",
-        placeholder:{
-            seek:"搜索项目名称、地址",
-            tag:"选择标签",
-            projectTitle:"请输入项目名称",
-            companyName:"请输入企业名称",
-            tmt:"请选择行业",
-            site:"请输入地址",
-            url:"Https://",
-            email:"请输入电子邮箱",
-            strength:"请说明优势",
-            productName:"请输入产品名称",
-            describe:"请输入产品描述",
+    project: {
+        title: "项目管理",
+        placeholder: {
+            seek: "搜索项目名称、地址",
+            tag: "选择标签",
+            projectTitle: "请输入项目名称",
+            companyName: "请输入企业名称",
+            tmt: "请选择行业",
+            site: "请输入地址",
+            url: "Https://",
+            email: "请输入电子邮箱",
+            intro: "请输入公司简介",
+            strength: "请说明优势",
+            productName: "请输入产品名称",
+            describe: "请输入产品描述",
         },
-        add:"添加新项目",
-        from:{
-            firstTitle:"添加项目",
-            secondTitle:"项目资料",
-            thirdlyTitle:"产品资料",
-            account:"登录账号",
-            password:"登录密码",
-            projectTitle:"项目名称",
-            companyName:"企业名称",
-            tmt:"行业",
-            site:"地址",
-            url:"网址",
-            email:"电子邮箱",
-            strength:"优势",
-            productName:"产品名称",
-            productImg:"产品图片",
-            productVideo:"产品视频",
-            accessory:"附件(产品目录)",
-            study:"学习资料"
+        add: "添加新项目",
+        from: {
+            firstTitle: "添加项目",
+            secondTitle: "项目资料",
+            thirdlyTitle: "产品资料",
+            account: "登录账号",
+            password: "登录密码",
+            projectTitle: "项目名称",
+            companyName: "企业名称",
+            tmt: "行业",
+            site: "地址",
+            url: "网址",
+            email: "电子邮箱",
+            intro: "公司简介",
+            strength: "优势",
+            productName: "产品名称",
+            productImg: "产品图片",
+            productVideo: "产品视频",
+            accessory: "附件(产品目录)",
+            study: "学习资料"
         },
-        btn:{
-            uploadImg:"上传图片",
-            uploadVideo:"上传视频",
-            uploadAccessory:"上传附件",
-            perfect:"完善资料",
-            continue:"继续完善",
-            ok:"完成"
+        btn: {
+            uploadImg: "上传图片",
+            uploadVideo: "上传视频",
+            uploadAccessory: "上传附件",
+            perfect: "完善资料",
+            continue: "继续完善",
+            ok: "完成"
 
         }
     },
@@ -376,5 +415,31 @@ export default {
         link: ["Contact Us", "About Us"],
         ownership: "© 2019 IWORKU CO., LTD，保留所有权利",
         btn: "Log In"
+    },
+    target: {
+        form: {
+            companyTitle: "公司信息",
+            keymenTitle: "关键人",
+            otherTitle: "其他",
+            companyName: "公司名称",
+            country: "国家",
+            site: "地址",
+            url: "网址",
+            phone: "电话",
+            keymenName: "姓名",
+            position: "职位",
+            keymenPhone: "关键人电话",
+            email: "电子邮件",
+            social: "社交账户",
+            source: "客户来源",
+            clientType: "客户类型",
+            purchaseScale: "预计采购",
+            hsCode: "海关编码",
+            importance: "重要程度",
+            introduce: "介绍",
+            remark: "备注"
+        },
+        next: "下一步",
+        finish: "完成添加"
     }
 }

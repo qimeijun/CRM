@@ -1,83 +1,12 @@
 <template>
+<!-- 日程提醒 -->
   <div class="iworku-card workbench-remind">
     <div class="remind_top">
-      <h3>日程提醒</h3>
-      <el-button class="top_button" @click="dialogFormVisible = true">添加提醒</el-button>
+      <h3>{{$t("workBench.remind.title")}}</h3>
+      <el-button class="top_button" @click="dialogFormVisible = true">{{$t("workBench.remind.add")}}</el-button>
       <!-- 添加表单 -->
-      <el-dialog title="添加日程提醒" :visible.sync="dialogFormVisible" width="30%">
-        <el-form :model="dateForm" label-position="left" label-width="80px">
-          <!-- 提醒内容 start -->
-          <el-form-item label-width="0px">
-            <el-input v-model="dateForm.title" placeholder="请输入日程内容"></el-input>
-          </el-form-item>
-          <!-- 提醒内容 end -->
-          <!-- 标记颜色 start -->
-          <el-form-item label-width="0px">
-            <el-radio-group v-model="dateForm.color">
-              <el-tooltip
-                v-for="item in colorTypes"
-                :key="item.value"
-                class="item"
-                effect="dark"
-                :content="item.label"
-                placement="top"
-              >
-                <el-radio-button
-                  :label="item.value"
-                  :style="'background-color:'+item.value"
-                  class="top_form_color"
-                >
-                  <i v-if="dateForm.color===item.value" class="el-icon-check"></i>
-                  <span v-else>&nbsp;</span>
-                </el-radio-button>
-              </el-tooltip>
-            </el-radio-group>
-          </el-form-item>
-          <!-- 标记颜色 end -->
-          <!-- 起止日期 start -->
-          <el-form-item label="起止日期">
-            <el-date-picker
-              v-model="dateForm.time"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              format="yyyy 年 MM 月 dd 日"
-              value-format="yyyy-MM-dd"
-            ></el-date-picker>
-          </el-form-item>
-          <!-- 起止日期 end -->
-          <!-- 提醒方式 start -->
-          <el-form-item label="提醒时间">
-            <el-select v-model="dateForm.remind" placeholder="是否提醒">
-              <el-option
-                v-for="item in remindTypes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <!-- 提醒方式 end -->
-          <!-- 邮箱 start -->
-          <el-form-item label="邮箱">
-            <el-input v-model="dateForm.email" placeholder="提醒内容和时间将发送至本邮箱"></el-input>
-          </el-form-item>
-          <!-- 邮箱 end -->
-          <!-- 目标公司 start -->
-          <el-form-item label="目标公司">
-            <el-input v-model="dateForm.title" placeholder="请输入日程内容"></el-input>
-          </el-form-item>
-          <!-- 目标公司 end -->
-          <!-- 参与人员 start -->
-          <el-form-item label="参与人员">
-            <el-input v-model="dateForm.title" placeholder="请输入日程内容"></el-input>
-          </el-form-item>
-          <!-- 参与人员 end -->
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
-        </div>
+      <el-dialog :title="$t('workBench.remind.dialogTitle')" :visible.sync="dialogFormVisible" width="30%">
+        <AddRemind></AddRemind>
       </el-dialog>
     </div>
     <!-- 日程列表 -->
@@ -95,11 +24,11 @@
             <p class="item_p">
               <span>{{item.title}}</span>
               <br />
-              <span>{{item.time.start}}-{{item.time.end}},添加人:{{item.people}}</span>
+              <span>{{item.time.start}}-{{item.time.end}}，{{$t("workBench.remind.addPeople")}}：{{item.people}}</span>
             </p>
           </div>
-          <p v-if="loading">加载中...</p>
-          <p v-if="noMore">没有更多了</p>
+          <p v-if="loading">{{$t("workBench.remind.loading")}}</p>
+          <p v-if="noMore">{{$t("workBench.remind.noMore")}}</p>
         </div>
       </el-scrollbar>
     </div>
@@ -107,6 +36,9 @@
 </template>
 <script>
 export default {
+  components:{
+    AddRemind:()=>import("@/components/workbench/AddRemind.vue")
+  },
   data() {
     return {
       list: [
@@ -203,7 +135,6 @@ export default {
           color: "#00C853FF"
         }
       ],
-
       dialogFormVisible: false,
       dateForm: {
         title: "",
@@ -255,16 +186,7 @@ export default {
       background-color: $--default-color;
       color: white;
     }
-    .top_form_color {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      margin: 0 10px;
-      text-align: center;
-      i {
-        line-height: 30px;
-      }
-    }
+   
   }
   .remind_list {
     height: 370px;
@@ -312,17 +234,5 @@ export default {
       }
     }
   }
-}
-</style>
-<style>
-.workbench-remind .el-radio-button__inner {
-  background-color: transparent !important;
-  border: 0 !important;
-  border-radius: 50% !important;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  box-shadow: none !important;
-  font-size: 20px;
 }
 </style>

@@ -21,7 +21,7 @@
         @change="onClickTag"
       ></el-cascader>
       <!-- 标签 end -->
-      <el-button type="primary">分配</el-button>
+      <el-button type="primary" @click="allocationShow=true">分配</el-button>
       <el-button class="top_button" @click="onCancel()">作废</el-button>
     </div>
     <div class="commonality_table">
@@ -53,7 +53,7 @@
                 <li>
                   <router-link to="/target/detail">查看详情</router-link>
                 </li>
-                <li class="table_operation" @click="onDeleteMember(scope.row.id)">分配</li>
+                <li class="table_operation" @click="allocationShow=true">分配</li>
                 <li class="table_operation" @click="onCancel(scope.row.id)">作废</li>
               </ul>
             </Operate>
@@ -61,13 +61,30 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 分配 start -->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="'分配'"
+      :visible.sync="allocationShow"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+        <ChangeAdministrator operate="add"></ChangeAdministrator>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 分配 end -->
   </section>
 </template>
 <script>
-import Operate from "@/components/lib/Operate.vue";
 export default {
   components: {
-    Operate
+    Operate: () => import("@/components/lib/Operate.vue"),
+    ChangeAdministrator: () =>
+      import("@/components/member/ChangeAdministrator.vue")
   },
   data() {
     return {
@@ -195,7 +212,8 @@ export default {
       ],
       multipleSelection: [],
       tag: "",
-      value: ""
+      value: "",
+      allocationShow:false
     };
   },
   methods: {
@@ -225,12 +243,8 @@ export default {
           });
         });
     },
-    handleSelectionChange(){
-
-    },
-    onClickTag(){
-      
-    }
+    handleSelectionChange() {},
+    onClickTag() {}
   }
 };
 </script>
@@ -247,7 +261,7 @@ export default {
     color: $--default-color;
   }
 }
-.table_operation{
+.table_operation {
   cursor: pointer;
 }
 </style>

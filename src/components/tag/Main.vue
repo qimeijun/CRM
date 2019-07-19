@@ -366,7 +366,7 @@ export default {
         cursor: pointer;
       }
       .add-input {
-        width: 80%;
+        width: 70%;
       }
     }
   }

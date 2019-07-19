@@ -92,6 +92,16 @@
             :placeholder="$t('project.placeholder.email')"
           ></el-input>
         </el-form-item>
+        <!-- 公司简介 -->
+        <el-form-item :label="$t('project.from.intro')" prop="intro">
+          <el-input
+            v-model="secondForm.intro"
+            autocomplete="off"
+            :placeholder="$t('project.placeholder.intro')"
+            type="textarea"
+            :rows="4"
+          ></el-input>
+        </el-form-item>
         <!-- 优势 -->
         <el-form-item :label="$t('project.from.strength')" prop="strength">
           <el-input
@@ -284,6 +294,7 @@ export default {
         site: "",
         url: "",
         email: "",
+        intro:"",
         strength: ""
       },
       thirdlyForm: {
@@ -346,6 +357,13 @@ export default {
           }
         ],
         email: [
+          {
+            required: true,
+            message: "请输入邮箱",
+            trigger: "blur"
+          }
+        ],
+        intro: [
           {
             required: true,
             message: "请输入邮箱",

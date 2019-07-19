@@ -3,6 +3,7 @@
     <div class="member_top">
       <h3>工作成员</h3>
       <span>共{{memberlist.length}}人</span>
+      <el-button type="primary" size="small" @click="addMemberDialogVisible=true">添加成员</el-button>
     </div>
     <div class="member_list" v-for="(item, index) in memberlist" :key="'member'+index">
       <i :style="'background-color:'+item.color">{{item.type}}</i>
@@ -24,10 +25,30 @@
         </p>
       </div>
     </div>
+    <!-- 添加成员 dialog start -->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('selectRegionalManager.title')"
+      :visible.sync="addMemberDialogVisible"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar>
+        <AddMember></AddMember>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 添加成员 dialog end -->
   </div>
 </template>
 <script>
 export default {
+  components:{
+     // 添加新成员
+    AddMember: () => import("@/components/member/AddMember.vue"),
+  },
   data() {
     return {
       memberlist: [
@@ -54,8 +75,9 @@ export default {
           type: "普通成员",
           number: "123",
           day: "321"
-        },
-      ]
+        }
+      ],
+      addMemberDialogVisible:false,
     };
   }
 };
@@ -66,14 +88,16 @@ export default {
   .member_top {
     display: flex;
     align-items: center;
-    margin-bottom:15px;
+    justify-content: space-between;
+    margin-bottom: 15px;
     h3 {
       margin: 0;
     }
-    span{
+    span {
       margin-left: 10px;
       color: rgba(123, 123, 123, 1);
       font-size: 12px;
+      flex-grow: 2;
     }
   }
   .member_list {
@@ -83,7 +107,7 @@ export default {
     border-radius: 8px;
     overflow: hidden;
     background-color: $--default-list-gray;
-    margin-bottom:5px;
+    margin-bottom: 5px;
     i {
       height: 100%;
       writing-mode: tb-rl;

@@ -1,4 +1,5 @@
 <template>
+<!-- 日志简报 -->
   <div class="iworku-card workbench-briefreport">
     <div class="briefreport_top">
       <h3>{{$t("workBench.briefreport.title")}}</h3>
@@ -39,11 +40,11 @@
             <p class="item_p">
               <span>{{item.title}}</span>
               <br />
-              <span>{{item.time.start}}-{{item.time.end}},添加人:{{item.people}}</span>
+              <span>{{item.time.start}}-{{item.time.end}}</span>
             </p>
           </div>
-          <p v-if="loading">加载中...</p>
-          <p v-if="noMore">没有更多了</p>
+          <p v-if="loading">{{$t("workBench.briefreport.loading")}}</p>
+          <p v-if="noMore">{{$t("workBench.briefreport.noMore")}}</p>
         </div>
       </el-scrollbar>
     </div>

@@ -217,29 +217,66 @@ export default {
         },
         dollar: "美元"
     },
-    workBench:{
-        title:"工作台",
-        btn:{
-            addProject:"添加新项目"
+    workBench: {
+        title: "工作台",
+        btn: {
+            addProject: "添加新项目"
         },
-        briefreport:{
-            title:"日程简报",
-            btn:{
-                all:"全部日志",
-                submit:"提交日志"
+        briefreport: {
+            title: "日程简报",
+            loading:"加载中...",
+            noMore:"没有更多了",
+            btn: {
+                all: "全部日志",
+                submit: "提交日志"
             }
-            
+
         },
-        overview:{
-            title:"项目概览",
-            targetNum:"目标公司数",
-            vlinkNum:"已拜访目标公司数",
-            intentionNum:"意向目标公司数",
-            orderNum:"取得订单数量"
+        overview: {
+            title: "项目概览",
+            targetNum: "目标公司数",
+            vlinkNum: "已拜访目标公司数",
+            intentionNum: "意向目标公司数",
+            orderNum: "取得订单数量"
         },
-        variables:{
-            title:"本月工作",
-            dataX: ["1st Week", "2st Week", "3st Week", "4st Week"],
+        variables: {
+            title: "本月工作",
+            dataX: ["第一周", "第二周", "第三周", "第四周"],
+        },
+        calendar: {
+            title: "日程安排",
+            btn: {
+                redact: "编辑",
+                delete: "删除",
+            }
+        },
+        remind:{
+            title:"日程提醒",
+           add:"添加提醒",
+           loading:"加载中...",
+           noMore:"没有更多了",
+           dialogTitle:"添加日程提醒",
+           addPeople:"添加人"
+        },
+        addremind:{
+            form:{
+                date:"起止日期",
+                remindTime:"提醒时间",
+                email:"邮箱",
+                target:"目标公司",
+                people:"参与人员",
+
+            },
+            placeholder:{
+                content:"请输入日程内容",
+                startDate:"开始日期",
+                endDate:"结束日期",
+                remindTime:"是否提醒",
+                email:"提醒内容和时间将发送至本邮箱",
+                target:"请输入日程内容",
+                people:"请输入日程内容",
+            },
+           save:"保存",
         }
     },
     tag: {
@@ -322,6 +359,7 @@ export default {
             site:"请输入地址",
             url:"Https://",
             email:"请输入电子邮箱",
+            intro:"请输入公司简介",
             strength:"请说明优势",
             productName:"请输入产品名称",
             describe:"请输入产品描述",
@@ -339,6 +377,7 @@ export default {
             site:"地址",
             url:"网址",
             email:"电子邮箱",
+            intro:"公司简介",
             strength:"优势",
             productName:"产品名称",
             productImg:"产品图片",
@@ -376,5 +415,31 @@ export default {
         link: ["联系我们", "关于我们"],
         ownership: "© 2019 IWORKU CO., LTD，保留所有权利",
         btn: "登录"
+    },
+    target:{
+        form:{
+            companyTitle:"公司信息",
+            keymenTitle:"关键人",
+            otherTitle:"其他",
+            companyName:"公司名称",
+            country:"国家",
+            site:"地址",
+            url:"网址",
+            phone:"电话",
+            keymenName:"姓名",
+            position:"职位",
+            keymenPhone:"关键人电话",
+            email:"电子邮件",
+            social:"社交账户",
+            source:"客户来源",
+            clientType:"客户类型",
+            purchaseScale:"预计采购",
+            hsCode:"海关编码",
+            importance:"重要程度",
+            introduce:"介绍",
+            remark:"备注"
+        },
+        next:"下一步",
+        finish:"完成添加"
     }
 }

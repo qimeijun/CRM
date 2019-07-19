@@ -3,7 +3,7 @@
     <div class="tag_top">
       <h3>标签</h3>
       <el-button v-if="!closable" type="text" @click="closable=true">删除标签</el-button>
-      <el-button v-else type="primary" @click="submitTag">完成</el-button>
+      <el-button v-else type="primary" @click="closable=false">完成</el-button>
     </div>
     <p class="tag_p">
       <!-- <span v-for="(item, index) in taglist" :key="'tag'+index">{{item}}</span> -->

@@ -14,23 +14,24 @@
         <img src="@/assets/logo.png" fit="contain" />
       </div>
       <el-menu-item index="/" route="/">
-        <i class="el-icon-s-home"></i>
+        <!-- <i class="el-icon-s-home"></i> -->
+        <i class="iconfont">&#xe627;</i>
         <span slot="title">工作台</span>
       </el-menu-item>
       <el-menu-item index="/projectmanage" route="/projectmanage">
-        <i class="el-icon-share"></i>
+        <i class="iconfont">&#xe604;</i>
         <span slot="title">项目管理</span>
       </el-menu-item>
       <el-menu-item index="/highseas" route="/highseas">
-        <i class="el-icon-s-flag"></i>
+        <i class="iconfont">&#xe600;</i>
         <span slot="title">公海管理</span>
       </el-menu-item>
       <el-menu-item index="/member" route="/member">
-        <i class="el-icon-s-custom"></i>
+        <i class="iconfont">&#xe63f;</i>
         <span slot="title">成员管理</span>
       </el-menu-item>
       <el-menu-item index="/tag" route="/tag">
-        <i class="el-icon-s-flag"></i>
+        <i class="iconfont">&#xe61e;</i>
         <span slot="title">标签管理</span>
       </el-menu-item>
       <el-button
@@ -130,6 +131,9 @@ export default {
 }
 .iworku-menu .el-menu-item.is-active {
   background-color: white;
-  color: #4937ea;
+  color: #4937EA;
+}
+.iworku-menu .el-menu-item.is-active i{
+  color: #4937EA;
 }
 </style>

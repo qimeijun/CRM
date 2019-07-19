@@ -6,6 +6,9 @@
     </div>
     <div class="product_content">
       <h4>{{product.name}}</h4>
+      <div>
+        <PhotosView></PhotosView>
+      </div>
       <h4>附件(产品目录)</h4>
       <div>
         <Attachment name="asdfs.psd"></Attachment>
@@ -41,12 +44,15 @@
         </div>
       </el-dialog>
     </div>
+      
+    
   </section>
 </template>
 <script>
 export default {
   components: {
-    Attachment: () => import("@/components/lib/Attachment.vue")
+    Attachment: () => import("@/components/lib/Attachment.vue"),
+    PhotosView:()=>import("@/components/project/PhotosView.vue")
   },
   data() {
     return {
@@ -64,9 +70,11 @@ export default {
         attachment: [],
         study: []
       },
-      show: false
+      show: false,
     };
-  }
+  },
+  methods: {
+  },
 };
 </script>
 <style lang="scss" scoped>

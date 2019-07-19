@@ -5,7 +5,7 @@
       <div class="info_top_div" style="align-items:center">
         <h3>资料</h3>
         <div>
-          <el-button type="text">修改密码</el-button>
+          <el-button type="text" @click="passwordshow=true">修改密码</el-button>
           <el-button type="primary" size="small" @click="show = true;infoFrom=info">编辑</el-button>
         </div>
       </div>
@@ -47,15 +47,16 @@
       <h4>公司简介</h4>
       <p>{{info.intro}}</p>
     </div>
-    <div class="info_advantage">
+    <div class="info_strength">
       <h4>优势</h4>
-      <p>{{info.advantage}}</p>
+      <p>{{info.strength}}</p>
     </div>
     <!-- 资料展示 end -->
 
-    <!-- 编辑资料弹窗 start -->
     <div class="info_redact">
-      <el-dialog title="修改资料" :visible.sync="show" width="600px">
+      <!-- 编辑资料弹窗 start -->
+      <el-dialog class="el-dialog__scroll" title="修改资料" :visible.sync="show" width="600px">
+        <el-scrollbar class="scrollbar">
         <h1>项目资料</h1>
         <el-form :model="infoFrom" label-position="top">
           <el-form-item label="项目名称">
@@ -76,17 +77,52 @@
           <el-form-item label="网址">
             <el-input v-model="infoFrom.url" autocomplete="off"></el-input>
           </el-form-item>
+          <!-- 电子邮箱 -->
+          <el-form-item :label="$t('project.from.email')">
+            <el-input
+              v-model="infoFrom.email"
+              autocomplete="off"
+              :placeholder="$t('project.placeholder.email')"
+            ></el-input>
+          </el-form-item>
+          <!-- 公司简介 -->
+          <el-form-item :label="$t('project.from.intro')">
+            <el-input
+              v-model="infoFrom.intro"
+              autocomplete="off"
+              :placeholder="$t('project.placeholder.intro')"
+              type="textarea"
+              :rows="4"
+            ></el-input>
+          </el-form-item>
+          <!-- 优势 -->
+          <el-form-item :label="$t('project.from.strength')">
+            <el-input
+              v-model="infoFrom.strength"
+              autocomplete="off"
+              :placeholder="$t('project.placeholder.strength')"
+              type="textarea"
+              :rows="4"
+            ></el-input>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="show = false">完成</el-button>
         </div>
+        </el-scrollbar>
+      </el-dialog>
+      <!-- 编辑资料弹窗 end -->
+      <el-dialog title="修改密码" :visible.sync="passwordshow" width="600px">
+        <UpdatePassword></UpdatePassword>
       </el-dialog>
     </div>
-    <!-- 编辑资料弹窗 end -->
   </section>
 </template>
 <script>
 export default {
+  components: {
+    UpdatePassword: () => import("@/components/member/UpdatePassword.vue")
+  },
   data() {
     return {
       info: {
@@ -99,10 +135,11 @@ export default {
         contact: "0086-510-83898353",
         intro:
           "Wuxi Hariken Electric Tools Co., Ltd. Was founded in 2002. Our company combines the design, development, production and process of hand-held light rotary hammer. Our company sells all products to oversea market and cooperates with the famed international bands to develop the exclusive products, therefore we enjoy a high level of popularity worldwide. Our company owns a complete quality management system, a professional development team full of experience on design and professional employees control the quality of products. Also we hold a perfect function test center, and the test facility such as the hardness metallographic phase.",
-        advantage:
+        strength:
           "Wuxi Hariken Electric Tools Co., Ltd. Was founded in 2002. Our company combines the design, development, production and process of hand-held light rotary hammer. Our company sells all products to oversea market and cooperates with the famed international bands to develop the exclusive products, therefore we enjoy a high level of popularity worldwide. Our company owns a complete quality management system, a professional development team full of experience on design and professional employees control the quality of products. Also we hold a perfect function test center, and the test facility such as the hardness metallographic phase."
       },
       show: false,
+      passwordshow: false,
       infoFrom: {
         name: "",
         tmt: "",
@@ -111,7 +148,9 @@ export default {
         email: "",
         contact: "",
         intro: "",
-        advantage: ""
+        email: "",
+        intro: "",
+        strength: ""
       }
     };
   }
@@ -123,7 +162,7 @@ export default {
   overflow: hidden;
   .info_top,
   .info_intro,
-  .info_advantage {
+  .info_strength {
     background-color: white;
     padding: 1px 22px 20px;
     margin-bottom: 5px;
@@ -149,7 +188,7 @@ export default {
     }
   }
   .info_intro,
-  .info_advantage {
+  .info_strength {
     h4 {
       font-size: 12px;
       font-weight: normal;

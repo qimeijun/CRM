@@ -1,4 +1,5 @@
 <template>
+<el-scrollbar style="height: calc(100vh - .75rem);">
   <div class="iworku-projectManage">
     <div class="projectManage_top">
       <h2>{{$t('project.title')}}</h2>
@@ -27,6 +28,7 @@
       <!-- 表格 end -->
     </div>
   </div>
+  </el-scrollbar>
 </template>
 <script>
 import AddProject from "@/components/project/addProject.vue";

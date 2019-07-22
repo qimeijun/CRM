@@ -1,21 +1,21 @@
 <template>
   <section class="iworku-card project-detail-product">
     <div class="product_top">
-      <h3>产品</h3>
-      <el-button type="primary" @click="show = true;productFrom=product">编辑</el-button>
+      <h3>{{$t("projectInfo.menu[1]")}}</h3>
+      <el-button type="primary" @click="show = true;productFrom=product">{{$t("projectInfo.product.view")}}</el-button>
     </div>
     <div class="product_content">
       <h4>{{product.name}}</h4>
       <div>
         <PhotosView></PhotosView>
       </div>
-      <h4>附件(产品目录)</h4>
+      <h4>{{$t("projectInfo.product.accessory")}}</h4>
       <div>
         <Attachment name="asdfs.psd"></Attachment>
         <Attachment name="asdfs.xsd"></Attachment>
         <Attachment name="asdfs.wsd"></Attachment>
       </div>
-      <h4>学习资料</h4>
+      <h4>{{$t("projectInfo.product.study")}}</h4>
       <div>
         <Attachment name="asdfs.psd"></Attachment>
         <Attachment name="asdfs.xsd"></Attachment>
@@ -24,23 +24,23 @@
     </div>
     <div class="product_redact">
       <el-dialog title="修改资料" :visible.sync="show" width="600px">
-        <h1>产品资料</h1>
+        <h1>{{$t("project.from.thirdlyTitle")}}</h1>
         <el-form :model="productFrom" label-position="top">
-          <el-form-item label="产品名称">
+          <el-form-item :label="$t('project.from.productName')">
             <el-input v-model="productFrom.name" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="产品图片">
+          <el-form-item :label="$t('project.from.productImg')">
             <el-input v-model="productFrom.name" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="产品视频">
+          <el-form-item :label="$t('project.from.productVideo')">
             <el-input v-model="productFrom.site" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="附件（产品目录）">
+          <el-form-item :label="$t('project.from.accessory')">
             <el-input v-model="productFrom.url" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="show = false">完成</el-button>
+          <el-button type="primary" @click="show = false">{{$t("project.btn.ok")}}</el-button>
         </div>
       </el-dialog>
     </div>

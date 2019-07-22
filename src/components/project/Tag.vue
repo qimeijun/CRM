@@ -1,9 +1,9 @@
 <template>
   <div class="iworku-card project-detail-tag">
     <div class="tag_top">
-      <h3>标签</h3>
-      <el-button v-if="!closable" type="text" @click="closable=true">删除标签</el-button>
-      <el-button v-else type="primary" @click="closable=false">完成</el-button>
+      <h3>{{$t("projectInfo.tag.title")}}</h3>
+      <el-button v-if="!closable" type="text" @click="closable=true">{{$t("projectInfo.tag.detele")}}</el-button>
+      <el-button v-else type="primary" @click="closable=false">{{$t("projectInfo.tag.ok")}}</el-button>
     </div>
     <p class="tag_p">
       <!-- <span v-for="(item, index) in taglist" :key="'tag'+index">{{item}}</span> -->
@@ -20,7 +20,7 @@
     <!-- 添加标签弹窗 start -->
     <el-dialog
       class="el-dialog__scroll"
-      title="添加标签"
+      :title="$t('projectInfo.tag.dialogTitle')"
       :visible.sync="show"
       top="5vh"
       :append-to-body="true"

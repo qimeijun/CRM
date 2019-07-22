@@ -1,9 +1,9 @@
 <template>
   <div class="iworku-card project-detail-member">
     <div class="member_top">
-      <h3>工作成员</h3>
+      <h3>{{$t("projectInfo.member.title")}}</h3>
       <span>共{{memberlist.length}}人</span>
-      <el-button type="primary" size="small" @click="addMemberDialogVisible=true">添加成员</el-button>
+      <el-button type="primary" size="small" @click="addMemberDialogVisible=true">{{$t("projectInfo.member.add")}}</el-button>
     </div>
     <div class="member_list" v-for="(item, index) in memberlist" :key="'member'+index">
       <i :style="'background-color:'+item.color">{{item.type}}</i>
@@ -14,14 +14,14 @@
       </p>
       <div class="list_div">
         <p>
-          <span>{{item.number}}</span> 家
+          <span>{{item.number}}</span> {{$t("projectInfo.member.target[1]")}}
           <br />
-          <span>目标公司</span>
+          <span>{{$t("projectInfo.member.target[0]")}}</span>
         </p>
         <p>
-          <span>{{item.day}}</span> 天
+          <span>{{item.day}}</span> {{$t("projectInfo.member.time[1]")}}
           <br />
-          <span>进行时间</span>
+          <span>{{$t("projectInfo.member.time[0]")}}</span>
         </p>
       </div>
     </div>

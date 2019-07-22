@@ -2,7 +2,7 @@
   <section class="target-details">
     <div class="target-details__top">
       <PageHeader url="/project/detail/private"></PageHeader>
-      <div class="target-details__top-name">目标公司详情</div>
+      <div class="target-details__top-name">{{$t("target.title")}}</div>
     </div>
     <div class="target-details__content">
       <div class="target-details__menu">
@@ -12,21 +12,22 @@
             :key="index"
             :class="activeMenu == item.value ? 'target-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
-
           >
             <router-link :to="`/target/detail/${item.route}`">{{ item.name }}</router-link>
           </li>
         </ul>
       </div>
-      <el-row :gutter="10">
-        <el-col :span="activeMenu!=='information'&&activeMenu!=='product'?24:16">
-          <router-view></router-view>
-        </el-col>
-        <el-col v-if="activeMenu==='information'||activeMenu==='product'"  :span="8">
+      <el-scrollbar style="height: calc(100vh - 2.5rem);">
+        <el-row :gutter="10">
+          <el-col :span="activeMenu!=='information'&&activeMenu!=='product'?24:16">
+            <router-view></router-view>
+          </el-col>
+          <el-col v-if="activeMenu==='information'||activeMenu==='product'" :span="8">
             <!-- <Tag></Tag>
-            <Member></Member> -->
-        </el-col>
-      </el-row>
+            <Member></Member>-->
+          </el-col>
+        </el-row>
+      </el-scrollbar>
     </div>
   </section>
 </template>
@@ -35,25 +36,25 @@ import PageHeader from "@/components/lib/PageHeader.vue";
 export default {
   data() {
     return {
-      activeMenu:"target_information",
+      activeMenu: "target_information",
       menuList: [
         {
-          name: "资料",
+          name: this.$t("target.menu[0]"),
           value: "target_information",
           route: "info"
         },
         {
-          name: "调研报告",
+          name: this.$t("target.menu[1]"),
           value: "target_probe",
           route: "probe"
         },
         {
-          name: "工作日志",
+          name: this.$t("target.menu[2]"),
           value: "target_diary",
           route: "diary"
         },
-        { 
-          name: "所在项目",
+        {
+          name: this.$t("target.menu[3]"),
           value: "target_loca",
           route: "loca"
         }
@@ -61,7 +62,7 @@ export default {
     };
   },
   created() {
-    this.activeMenu=this.$route.name;
+    this.activeMenu = this.$route.name;
   },
   components: {
     PageHeader
@@ -72,7 +73,7 @@ export default {
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
-      this.$router.push({path:`/target/detail/${item.route}`});
+      this.$router.push({ path: `/target/detail/${item.route}` });
     }
   }
 };

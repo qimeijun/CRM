@@ -21,8 +21,8 @@
         @change="onClickTag"
       ></el-cascader>
       <!-- 标签 end -->
-      <el-button type="primary" @click="allocationShow=true">分配</el-button>
-      <el-button class="top_button" @click="onCancel()">作废</el-button>
+      <el-button type="primary" @click="allocationShow=true">{{$t("project.allot")}}</el-button>
+      <el-button class="top_button" @click="onCancel()">{{$t("project.invalid")}}</el-button>
     </div>
     <div class="commonality_table">
       <el-table
@@ -33,28 +33,28 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="35"></el-table-column>
-        <el-table-column prop="name" label="目标公司" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="rate" label="重要程度" width="150">
+        <el-table-column prop="name" :label="$t('projectInfo.commonality.tableHeader[0]')" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="rate" :label="$t('projectInfo.commonality.tableHeader[1]')" width="150">
           <template slot-scope="scope">
             <el-rate v-model="scope.row.rate" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
             <p>重点跟进客户</p>
           </template>
         </el-table-column>
-        <el-table-column label="更新时间" width="120">
+        <el-table-column :label="$t('projectInfo.commonality.tableHeader[2]')" width="120">
           <template slot-scope="scope">{{ scope.row.date }}</template>
         </el-table-column>
-        <el-table-column prop="name" label="状态" width="120"></el-table-column>
-        <el-table-column prop="date" label="创建时间" width="120"></el-table-column>
-        <el-table-column prop="name" label="资料完整度" width="120"></el-table-column>
-        <el-table-column label="操作" width="60">
+        <el-table-column prop="name" :label="$t('projectInfo.commonality.tableHeader[3]')" width="120"></el-table-column>
+        <el-table-column prop="date" :label="$t('projectInfo.commonality.tableHeader[4]')" width="120"></el-table-column>
+        <el-table-column prop="name" :label="$t('projectInfo.commonality.tableHeader[5]')" width="120"></el-table-column>
+        <el-table-column :label="$t('projectInfo.commonality.tableHeader[6]')" width="60">
           <template slot-scope="scope">
             <Operate>
               <ul>
                 <li>
-                  <router-link to="/target/detail">查看详情</router-link>
+                  <router-link to="/target/detail">{{$t("project.view")}}</router-link>
                 </li>
-                <li class="table_operation" @click="allocationShow=true">分配</li>
-                <li class="table_operation" @click="onCancel(scope.row.id)">作废</li>
+                <li class="table_operation" @click="allocationShow=true">{{$t("project.allot")}}</li>
+                <li class="table_operation" @click="onCancel(scope.row.id)">{{$t("project.invalid")}}</li>
               </ul>
             </Operate>
           </template>
@@ -64,7 +64,7 @@
     <!-- 分配 start -->
     <el-dialog
       class="el-dialog__scroll"
-      :title="'分配'"
+      :title="$t('project.allot')"
       :visible.sync="allocationShow"
       top="5vh"
       :append-to-body="true"

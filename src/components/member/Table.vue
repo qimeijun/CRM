@@ -6,15 +6,15 @@
             <div class="member-table-list-user">
                 <el-avatar :size="50" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
                 <div class="member-table-list-user-right">
-                    <span class="user-name">Jane</span>
-                    <span class="el-icon-location">越南</span>
+                    <span class="user-name">{{ $lang == $global.en ? item.userNameEn : item.userNameZh }}</span>
+                    <span class="el-icon-location">{{ $lang == $global.en ? item.userCountryEn : item.userCountryZh }}</span>
                 </div>
             </div>
-            <div>{{ item.date }}</div>
-            <div>{{ item.name }}</div>
-            <div>{{ item.address }}</div>
-            <div>{{ item.address }}</div>
-            <div>{{ item.address }}</div>
+            <div>{{ $lang == $global.en ? item.roleName : item.roleName }}</div>
+            <div>{{ item.team }}</div>
+            <div>{{ item.targetCompanyCount }}</div>
+            <div>{{ item.targetCompanyCount }}</div>
+            <div>{{ item.addTimeStr }}</div>
             <div>
             <Operate>
                 <ul>

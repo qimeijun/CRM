@@ -11,7 +11,7 @@
           label-width="80px"
         >
           <el-form-item :label="`${$t('member.form.account')}`" prop="account">
-            <el-input v-model="accountForm.account" :placeholder="$t('member.placeholder.account')"></el-input>
+            <el-input v-model="accountForm.account" type="email" :placeholder="$t('member.placeholder.account')"></el-input>
           </el-form-item>
           <el-form-item :label="`${$t('member.form.password')}`" prop="password">
             <el-input v-model="accountForm.password" type="password" :placeholder="$t('member.rules.password[1]')"></el-input>
@@ -32,15 +32,23 @@ export default {
   data() {
     return {
       accountForm: {
-        account: "",
-        password: ""
+        account: this.$store.getters['members/account'],
+        password: this.$store.getters['members/password']
       },
       rules: {
         account: [
           {
             required: true,
-            message: this.$t("member.rules.account"),
+            message: this.$t("member.rules.account[0]"),
             trigger: "blur"
+          },{
+            validator: (rule, value, callback) => {
+              if (!/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(value)) {
+                callback(new Error(this.$t("member.rules.account[1]")));
+              } else {
+                callback();
+              }
+            }
           }
         ],
         password: [
@@ -68,10 +76,11 @@ export default {
      * 创建账号
      */
     onSubmitForm(formName) {
-        this.$emit("accountCreated");
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          this.$store.commit('members/$_set_account', this.accountForm.account);
+          this.$store.commit('members/$_set_password', this.accountForm.password);
+          this.$emit("accountCreated");
         }
       });
     }

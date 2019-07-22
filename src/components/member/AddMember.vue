@@ -4,7 +4,7 @@
       <li
         v-for="(item, index) in addMemberMenuList"
         :key="index"
-        :class="item.value == selectDialogMenu? 'iworku-dialog-menu--selected' : ''"
+        :class="[item.value == selectDialogMenu? 'iworku-dialog-menu--selected' : '', !item.isClick ? 'not-click-able' : '']"
         @click="onChangeDialogMenu(item)"
       >{{ item.name }}</li>
     </ul>
@@ -16,6 +16,7 @@
   </section>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 export default {
   components: {
     // 创建成员账号
@@ -26,30 +27,43 @@ export default {
   },
   data() {
     return {
-      addMemberMenuList: [
+      selectDialogMenu: "account"
+    };
+  },
+  computed: {
+    ...mapGetters('members', [
+      'account',
+      'password'
+    ]),
+    addMemberMenuList() {
+      return [
         {
           name: this.$t("member.dialogMenu.account"),
-          value: "account"
+          value: "account",
+          isClick: true
         },
         {
           name: this.$t("member.dialogMenu.information"),
-          value: "information"
+          value: "information",
+          isClick: (this.account && this.password) ? true : false
         }
-      ],
-      selectDialogMenu: "account"
-    };
+      ]
+    },
   },
   methods: {
     /**
      *  切换添加成员表单中的按钮
      */
     onChangeDialogMenu(item) {
-      this.selectDialogMenu = item.value;
+      item.isClick ? this.selectDialogMenu = item.value : null;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 .add-member {
+  .not-click-able {
+    cursor: not-allowed;
+  }
 }
 </style>

@@ -4,17 +4,17 @@
     <!-- 移交表格 -->
     <div v-if="operate == 'handOver'" class="change-administrator__hand-over">
       <div class="change-administrator__hand-over-administrator">
-        <el-avatar :size="50" :src="oldAdminstrator.avatar"></el-avatar>
+        <el-avatar :size="50" :src="`${$global.avatarURI}${oldAdminstrator.userProfileImage}`"></el-avatar>
         <div class="right">
-          <span>{{ oldAdminstrator.name }}</span>
-          <span class="el-icon-location">{{ oldAdminstrator.location || '越南' }}</span>
+          <span>{{ $lang == $global.en ? oldAdminstrator.userNameEn : oldAdminstrator.userNameZh }}</span>
+          <span class="el-icon-location">{{ $lang == $global.en ? oldAdminstrator.userCountryEn : oldAdminstrator.userCountryZh }}</span>
         </div>
       </div>
       <div class="change-administrator__hand-over-administrator">
-        <el-avatar :size="50" :src="selectAdminstratorInfo.avatar"></el-avatar>
+        <el-avatar :size="50" :src="`${$global.avatarURI}${selectAdminstratorInfo.userProfileImage}`"></el-avatar>
         <div class="right">
-          <span>{{ selectAdminstratorInfo.name }}</span>
-          <span v-if="selectAdminstratorInfo.location" class="el-icon-location">{{ selectAdminstratorInfo.location }}</span>
+          <span>{{ $lang == $global.en ? selectAdminstratorInfo.userNameEn : selectAdminstratorInfo.userNameZh }}</span>
+          <span v-if="selectAdminstratorInfo.userCountryEn" class="el-icon-location">{{ $lang == $global.en ? selectAdminstratorInfo.userCountryEn : selectAdminstratorInfo.userCountryZh }}</span>
         </div>
       </div>
     </div>
@@ -28,13 +28,13 @@
       <li v-for="(item, index) in adminstratorList" :key="index" @click="onSelect(item, index)">
         <div :class="['inner', selectAdminstrator == index ? 'selected': '']">
           <div class="change-administrator__list-left">
-            <el-avatar :size="50" :src="item.avatar"></el-avatar>
+            <el-avatar :size="50" :src="`${$global.avatarURI}${item.userProfileImage}`"></el-avatar>
             <div class="change-administrator__list-left-user">
-              <div class="change-administrator__list-name">{{ item.name }}</div>
-              <div class="el-icon-location">{{ item.location }}</div>
+              <div class="change-administrator__list-name">{{ $lang == $global.en ? item.userNameEn : item.userNameZh }}</div>
+              <div class="el-icon-location">{{ $lang == $global.en ? item.userCountryEn : item.userCountryZh }}</div>
             </div>
           </div>
-          <span class="change-administrator__list-time">{{ item.time }}</span>
+          <span class="change-administrator__list-time">{{ item.addTimeStr }}</span>
         </div>
         <i v-if="selectAdminstrator == index" class="el-icon-success"></i>
       </li>
@@ -54,7 +54,6 @@
   </section>
 </template>
  <script>
- 
 export default {
   props: {
     // 什么操作，add 表示添加区域管理员， handOver 表示移交区域管理员
@@ -70,43 +69,24 @@ export default {
       default() {
         return {}
       }
+    },
+    /**
+     *  {
+     *    id: 查询的id,
+     *    type: 类型  => addRegionalManager 添加区域经理
+     *  }
+     */
+    typeId: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
   data() {
     return {
       searchName: "",
-      adminstratorList: [
-        {
-          avatar: "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
-          name: "Zhangsan",
-          location: "越南",
-          time: "2019/09/06"
-        },
-        {
-          avatar: "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
-          name: "Zhangsan",
-          location: "越南",
-          time: "2019/09/06"
-        },
-        {
-          avatar: "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
-          name: "Zhangsan",
-          location: "越南",
-          time: "2019/09/06"
-        },
-        {
-          avatar: "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
-          name: "Zhangsan",
-          location: "越南",
-          time: "2019/09/06"
-        },
-        {
-          avatar: "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
-          name: "Zhangsan",
-          location: "越南",
-          time: "2019/09/06"
-        }
-      ],
+      adminstratorList: [],
       selectAdminstrator: -1,
       selectAdminstratorInfo: {},
       newAdminstrator: {}
@@ -122,6 +102,26 @@ export default {
     },
     onConfirm() {
       this.$emit("getManager", this.selectAdminstratorInfo);
+    },
+    getUserData(obj) {
+      // 添加区域经理
+      if (obj.type == 'addRegionalManager') {
+        this.$http.post('/user/info/find/role', { userRole: obj.id }).then(res => {
+          if (res.iworkuCode == '200') {
+            this.adminstratorList = res.datas;
+          }
+        });
+      }
+    }
+  },
+  watch: {
+    typeId: {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.getUserData(newVal);
+        }
+      },
+      immediate: true
     }
   }
 };

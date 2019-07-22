@@ -87,8 +87,8 @@
               v-model="memberForm.country"
               :placeholder="$t('member.placeholder.country')"
             >
-              <el-option :label="$t('member.gender.female')" :value="1"></el-option>
-              <el-option :label="$t('member.gender.male')" :value="2"></el-option>
+              <el-option :label="$t('member.gender.female')" value="country44"></el-option>
+              <el-option :label="$t('member.gender.male')" value="country44"></el-option>
             </el-select>
           </el-form-item>
           <!-- 国家 end -->
@@ -100,15 +100,15 @@
                 v-model="memberForm.role"
                 :placeholder="$t('member.placeholder.role')"
               >
-                <el-option label="成员" value="1"></el-option>
-                <el-option label="项目经理" value="2"></el-option>
-                <el-option label="区域经理" value="3"></el-option>
+                <el-option :label="$t('public.role.regionalManager')" :value="$global.userRole.regionalManager"></el-option>
+                <el-option :label="$t('public.role.projectManager')" :value="$global.userRole.projectManager"></el-option>
+                <el-option :label="$t('public.role.member')" :value="$global.userRole.member"></el-option>
               </el-select>
             </el-form-item>
             <!-- 角色 end -->
             <!--  当选择 “成员” 角色时， 成员属于哪个团队 -->
             <el-form-item
-              v-if="memberForm.role == 1"
+              v-if="memberForm.role == $global.userRole.member"
               :label="`${$t('member.form.team')}`"
               prop="team"
             >
@@ -122,6 +122,7 @@
           <el-form-item class="add-new-member__btn">
             <el-button
               type="primary"
+              :loading="submitBtnLoading"
               @click="onSubmitForm('memberForm')"
             >
             <template v-if="memberForm.id">
@@ -138,6 +139,7 @@
   </section>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: {
     /**
@@ -219,8 +221,18 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      submitBtnLoading: false
     };
+  },
+  computed: {
+    ...mapGetters('members', [
+      'account',
+      'password'
+    ]),
+  },
+  created() {
+    this.memberForm.email = this.account;
   },
   methods: {
     /**
@@ -229,9 +241,41 @@ export default {
     onSubmitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          let params = {
+            userNameZh: this.memberForm.username,
+            userNameEn: this.memberForm.usernameEn,
+            userProfileImage: this.memberForm.avatar,
+            userPassword: this.password,
+            userEmail: this.memberForm.email,
+            userAccount: this.account,
+            userRole: this.memberForm.role,
+            userGender: this.memberForm.gender,
+            userPhone: this.memberForm.telphone,
+            userCountry: this.memberForm.country,
+          };
+          // 如果是成员，需要选择team
+          if (this.memberForm.role == this.$global.userRole.member) {
+            params.teamId = this.memberForm.team;
+          }
+          this.submitBtnLoading = true;
+          this.$http.post("/user/info/save", params).then(res => {
+            if (res.iworkuCode == 200) {
+              this.$store.commit('members/$_set_account', "");
+              this.$store.commit('members/$_set_password', "");
+              this.onResetForm(formName);
+            } else {
+
+            }
+            this.submitBtnLoading = false;
+          });
         }
       });
+    },
+    /**
+     *  表单重置
+     */
+    onResetForm(formName) {
+        this.$refs[formName].resetFields();
     },
     /**
      *  图片上传成功之后。。。。

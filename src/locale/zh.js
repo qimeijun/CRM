@@ -229,7 +229,8 @@ export default {
             targetNum: "目标公司数",
             vlinkNum: "已拜访目标公司数",
             intentionNum: "意向目标公司数",
-            orderNum: "取得订单数量"
+            orderNum: "取得订单数量",
+            btn:"编辑"
         },
         variables: {
             title: "本月工作",
@@ -342,6 +343,12 @@ export default {
     },
     project: {
         title: "项目管理",
+        add: "添加新项目",
+        allot:"分配",
+        invalid:"作废",
+        transfer:"移交",
+        intoSea:"移入公海",
+        view:"查看详情",
         placeholder: {
             seek: "搜索项目名称、地址",
             tag: "选择标签",
@@ -356,7 +363,6 @@ export default {
             productName: "请输入产品名称",
             describe: "请输入产品描述",
         },
-        add: "添加新项目",
         from: {
             firstTitle: "添加项目",
             secondTitle: "项目资料",
@@ -383,8 +389,43 @@ export default {
             uploadAccessory: "上传附件",
             perfect: "完善资料",
             continue: "继续完善",
-            ok: "完成"
-
+            ok: "完成",
+            edit:"编辑"
+        },
+        tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"]
+    },
+    projectInfo:{
+        title:"项目详情",
+        endProject:"结束项目",
+        menu:["资料","产品","公海客户","成员私海","工作日志"],
+        member:{
+            title:"工作成员",
+            add:"添加成员",
+            target:["目标公司","家"],
+            time:["进行时间","天"]
+        },
+        commonality:{
+            tableHeader:["目标公司","重要程度","更新时间","状态","创建时间","资料完整度","操作"]
+        },
+        importTarget:{
+            add:"新增目标公司",
+            import:"导入目标公司",
+            textTip:["按导入模板，填写表格","表格大小控制在 5M 以内","目标公司正在导入中，请耐心等待···"],
+            uploadBtn:["点击上传","重新上传","一键导入"],
+            dialogTitle:"提示",
+            noimport:"不导入",
+            coverage:"覆盖"
+        },
+        tag:{
+            title:"标签",
+            detele:"删除",
+            ok:"完成",
+            dialogTitle:"添加标签"
+        },
+        product:{
+            accessory:"附件(产品目录)",
+            study:"学习资料",
+            view:"编辑"
         }
     },
     notice: {
@@ -409,6 +450,8 @@ export default {
         btn: "登录"
     },
     target:{
+        title:"目标公司详情",
+        menu:["资料","调研报告","工作日志","所在项目"],
         form:{
             companyTitle:"公司信息",
             keymenTitle:"关键人",
@@ -429,9 +472,47 @@ export default {
             hsCode:"海关编码",
             importance:"重要程度",
             introduce:"介绍",
-            remark:"备注"
+            remark:"备注",
+            btn:"完成"
+        },
+        info:{
+            companyTitle:"目标公司资料",
+            keymenTitle:"关键人信息",
+            otherTitle:"其他",
+            overviewTitle:"目标公司概览",
+            companyName:"公司名称",
+            country:"国家",
+            site:"地址",
+            url:"网址",
+            phone:"联系电话",
+            keymenName:"关键人",
+            position:"职位",
+            keymenPhone:"联系电话",
+            email:"邮件",
+            social:"社交账户",
+            source:"客户来源",
+            clientType:"客户类型",
+            purchaseScale:"预计采购规模",
+            hsCode:"海关编码",
+            importance:"重要程度",
+            introduce:"介绍",
+            remark:"备注",
+            btn:"编辑",
         },
         next:"下一步",
-        finish:"完成添加"
+        finish:"完成添加",
+        probe:{
+            upload:"上传报告",
+            update:"修改报告",
+            delete:"删除",
+            title:"调研报告",
+            textTip:["按上传模板，填写表格","表格大小控制在 5M 以内","目标公司正在导入中，请耐心等待···"],
+            uploadBtn:["点击上传","重新上传","开始上传"],
+            dialogTitle:"提示"  
+        },
+        loca:{
+            tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"],
+            view:"查看详情"
+        }
     }
 }

@@ -131,9 +131,7 @@ export default {
 }
 </style>
 <style>
-.iworku-workbench .el-scrollbar .el-scrollbar__wrap {
-  overflow-x: hidden;
-}
+
 .iworku-workbench .workbench_top_select .el-input__inner {
   background-color: #31376dff;
   color: white;

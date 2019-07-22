@@ -206,3 +206,9 @@ p {
     color: #606266 !important;
     outline: none;
 }
+/** 
+去掉el-scrollbar的横向滚动条
+*/ 
+.el-scrollbar .el-scrollbar__wrap {
+    overflow-x: hidden;
+  }

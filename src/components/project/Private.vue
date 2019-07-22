@@ -21,8 +21,8 @@
         @change="onClickTag"
       ></el-cascader>
       <!-- 标签 end -->
-      <el-button type="primary">移入公海</el-button>
-      <el-button class="top_button" @click="onCancel()">移交</el-button>
+      <el-button class="top_button" @click="onCancel()">{{$t("project.intoSea")}}</el-button>
+      <el-button type="primary" @click="changeAdministratorDialogVisible=true">{{$t("project.transfer")}}</el-button>
     </div>
     <div class="private_table">
       <el-table
@@ -33,28 +33,28 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="35"></el-table-column>
-        <el-table-column prop="name" label="目标公司" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="rate" label="重要程度" width="150">
+        <el-table-column prop="name" :label="$t('projectInfo.commonality.tableHeader[0]')" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="rate" :label="$t('projectInfo.commonality.tableHeader[1]')" width="150">
           <template slot-scope="scope">
             <el-rate v-model="scope.row.rate" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
             <p>重点跟进客户</p>
           </template>
         </el-table-column>
-        <el-table-column label="更新时间" width="120">
+        <el-table-column :label="$t('projectInfo.commonality.tableHeader[2]')" width="120">
           <template slot-scope="scope">{{ scope.row.date }}</template>
         </el-table-column>
-        <el-table-column prop="name" label="状态" width="120"></el-table-column>
-        <el-table-column prop="date" label="创建时间" width="120"></el-table-column>
-        <el-table-column prop="name" label="资料完整度" width="120"></el-table-column>
-        <el-table-column label="操作" width="60">
+        <el-table-column prop="name" :label="$t('projectInfo.commonality.tableHeader[3]')" width="120"></el-table-column>
+        <el-table-column prop="date" :label="$t('projectInfo.commonality.tableHeader[4]')" width="120"></el-table-column>
+        <el-table-column prop="name" :label="$t('projectInfo.commonality.tableHeader[5]')" width="120"></el-table-column>
+        <el-table-column :label="$t('projectInfo.commonality.tableHeader[6]')" width="60">
           <template slot-scope="scope">
             <Operate>
               <ul>
                 <li>
-                  <router-link to="/target/detail">查看详情</router-link>
+                  <router-link to="/target/detail">{{$t("project.view")}}</router-link>
                 </li>
-                <li class="table_operation" @click="onDeleteMember(scope.row.id)">移入公海</li>
-                <li class="table_operation" @click="changeAdministratorDialogVisible=true">移交</li>
+                <li class="table_operation" @click="onCancel()">{{$t("project.intoSea")}}</li>
+                <li class="table_operation" @click="changeAdministratorDialogVisible=true">{{$t("project.transfer")}}</li>
               </ul>
             </Operate>
           </template>
@@ -220,7 +220,7 @@ export default {
       this.$msgbox({
         title: "提示",
         message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要将选中的目标公司作废吗？</p>",
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>目标公司正在跟进中，您确定要移入公海吗？</p>",
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         showCancelButton: true,
@@ -231,14 +231,14 @@ export default {
           // 取消删除
           this.$message({
             type: "success",
-            message: "取消删除"
+            message: "取消移入公海"
           });
         })
         .catch(() => {
           // 确定删除
           this.$message({
             type: "info",
-            message: "确定删除"
+            message: "确定移入公海"
           });
         });
     },

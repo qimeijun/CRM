@@ -1,5 +1,10 @@
 <template>
+<!-- 资料 -->
   <div class="target-info">
+    <div style="position: fixed; top: 1rem; right: .2rem;">
+      <el-button type="primary" @click="onCancel()">移入公海</el-button>
+      <el-button type="primary" @click="changeAdministratorDialogVisible=true">移交</el-button>
+    </div>
     <el-row>
       <el-col>
         <Tag></Tag>
@@ -10,45 +15,51 @@
         <!-- 目标公司资料 start -->
         <div class="iworku-card">
           <div class="info_div_top">
-            <h3>目标公司资料</h3>
-            <el-button type="primary" size="mini" @click="show=true;showType='company'">编辑</el-button>
+            <h3>{{$t("target.info.companyTitle")}}</h3>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="show=true;showType='company'"
+            >{{$t("workBench.overview.btn")}}</el-button>
           </div>
           <div class="info_div_content">
-            <h5>公司名称</h5>
+            <h5>{{$t("target.info.companyName")}}</h5>
             <p>{{companyForm.name}}</p>
-            <h5>国家</h5>
+            <h5>{{$t("target.info.country")}}</h5>
             <p>{{companyForm.country}}</p>
-            <h5>地址</h5>
+            <h5>{{$t("target.info.site")}}</h5>
             <p>{{companyForm.site}}</p>
-            <h5>网址</h5>
+            <h5>{{$t("target.info.url")}}</h5>
             <p>{{companyForm.url}}</p>
-            <h5>联系电话</h5>
+            <h5>{{$t("target.info.phone")}}</h5>
             <p>{{companyForm.phone}}</p>
-            <h5>电子邮件</h5>
-            <p>{{companyForm.email}}</p>
           </div>
         </div>
         <!-- 目标公司资料 end -->
         <!-- 其他 start -->
         <div class="iworku-card">
           <div class="info_div_top">
-            <h3>其他</h3>
-            <el-button type="primary" size="mini" @click="show=true;showType='other'">编辑</el-button>
+            <h3>{{$t("target.info.otherTitle")}}</h3>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="show=true;showType='other'"
+            >{{$t("workBench.overview.btn")}}</el-button>
           </div>
           <div class="info_div_content">
-            <h5>客户来源</h5>
+            <h5>{{$t("target.info.source")}}</h5>
             <p>{{otherForm.source}}</p>
-            <h5>客户类型</h5>
+            <h5>{{$t("target.info.clientType")}}</h5>
             <p>{{otherForm.type}}</p>
-            <h5>预计采购规模</h5>
+            <h5>{{$t("target.info.purchaseScale")}}</h5>
             <p>{{otherForm.scale}}</p>
-            <h5>海关编码</h5>
+            <h5>{{$t("target.info.hsCode")}}</h5>
             <p>{{otherForm.importance}}</p>
-            <h5>重要程度</h5>
+            <h5>{{$t("target.info.importance")}}</h5>
             <p>{{otherForm.rate}}</p>
-            <h5>介绍</h5>
+            <h5>{{$t("target.info.introduce")}}</h5>
             <p>{{otherForm.introduce}}</p>
-            <h5>备注</h5>
+            <h5>{{$t("target.info.remark")}}</h5>
             <p>{{otherForm.introduce}}</p>
           </div>
         </div>
@@ -59,7 +70,7 @@
         <!-- 目标公司概览 start -->
         <div class="iworku-card">
           <div class="info_div_top">
-            <h3>目标公司概览</h3>
+            <h3>{{$t("target.info.overviewTitle")}}</h3>
           </div>
           <div class="info_div_content">
             <el-row>
@@ -107,19 +118,23 @@
         <!-- 关键人信息 start -->
         <div class="iworku-card">
           <div class="info_div_top">
-            <h3>关键人信息</h3>
-            <el-button type="primary" size="mini" @click="show=true;showType='keymen'">编辑</el-button>
+            <h3>{{$t("target.info.keymenTitle")}}</h3>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="show=true;showType='keymen'"
+            >{{$t("workBench.overview.btn")}}</el-button>
           </div>
           <div class="info_div_content">
-            <h5>关键人</h5>
+            <h5>{{$t("target.info.keymenName")}}</h5>
             <p>{{keymenForm.name}}</p>
-            <h5>职位</h5>
+            <h5>{{$t("target.info.position")}}</h5>
             <p>{{keymenForm.position}}</p>
-            <h5>联系电话</h5>
+            <h5>{{$t("target.info.keymenPhone")}}</h5>
             <p>{{keymenForm.phone}}</p>
-            <h5>邮件</h5>
+            <h5>{{$t("target.info.email")}}</h5>
             <p>{{keymenForm.email}}</p>
-            <h5>社交账户</h5>
+            <h5>{{$t("target.info.social")}}</h5>
             <p>{{keymenForm.social}}</p>
           </div>
         </div>
@@ -148,20 +163,38 @@
       </el-scrollbar>
     </el-dialog>
     <!-- 编辑弹窗 end -->
+     <!-- 移交管理员的dialog start-->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('selectRegionalManager.title')"
+      :visible.sync="changeAdministratorDialogVisible"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+        <ChangeAdministrator  operate="handOver"></ChangeAdministrator>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 移交管理员的dialog end-->
   </div>
 </template>
 <script>
-import Tag from "./../project/Tag";
-import ChangeCompany from "./ChangeCompany.vue";
-import ChangeKeymen from "./ChangeKeymen.vue";
-import ChangeOther from "./ChangeOther.vue";
-
 export default {
   components: {
-    Tag,
-    ChangeCompany,
-    ChangeKeymen,
-    ChangeOther
+    // 标签组件
+    Tag: () => import("@/components/project/Tag"),
+    // 编辑目标公司表单
+    ChangeCompany: () => import("@/components/target/ChangeCompany.vue"),
+    // 编辑关键人表单
+    ChangeKeymen: () => import("@/components/target/ChangeKeymen.vue"),
+    // 编辑其他信息表单
+    ChangeOther: () => import("@/components/target/ChangeOther.vue"),
+    // 移交组件
+    ChangeAdministrator: () =>
+      import("@/components/member/ChangeAdministrator.vue")
   },
   data() {
     return {
@@ -198,9 +231,38 @@ export default {
           "I have detailed below the most cost effective forms of internet marketing to advertising your business using your company website. HTPcompany.com provides marketing, Internet advertising, search engine optimization and sales consulting for businesses, "
       },
       show: false,
+      changeAdministratorDialogVisible:false,
       showType: ""
     };
-  }
+  },
+  methods: {
+     onCancel() {
+      this.$msgbox({
+        title: "提示",
+        message:
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>目标公司正在跟进中，您确定要移入公海吗？</p>",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 取消删除
+          this.$message({
+            type: "success",
+            message: "取消移入公海"
+          });
+        })
+        .catch(() => {
+          // 确定删除
+          this.$message({
+            type: "info",
+            message: "确定移入公海"
+          });
+        });
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

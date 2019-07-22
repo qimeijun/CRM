@@ -1,30 +1,30 @@
 <template>
   <!-- 修改关键人信息 -->
   <div>
-    <h1>关键人</h1>
+    <h1>{{$t("target.form.keymenTitle")}}</h1>
     <el-form :model="form" :rules="rules" ref="form" label-position="top" label-width="80px">
-      <el-form-item label="姓名" prop="name">
-        <el-input v-model="form.name" placeholder="请输入公司名称"></el-input>
+      <el-form-item :label="$t('target.form.keymenName')" prop="name">
+        <el-input v-model="form.name" ></el-input>
       </el-form-item>
-      <el-form-item label="职位" prop="country">
+      <el-form-item :label="$t('target.form.position')" prop="country">
         <el-select v-model="form.position">
           <el-option v-for="(item,index) in positionList" :key="'position'+index" :label="item.nameZh"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="电话" prop="phone">
+      <el-form-item :label="$t('target.form.keymenPhone')" prop="phone">
         <el-input v-model="form.phone"></el-input>
       </el-form-item>
-      <el-form-item label="电子邮件" prop="email">
+      <el-form-item :label="$t('target.form.email')" prop="email">
         <el-input v-model="form.email"></el-input>
       </el-form-item>
-      <el-form-item label="社交账户" prop="social">
+      <el-form-item :label="$t('target.form.social')" prop="social">
         <el-input v-model="form.social"></el-input>
       </el-form-item>
       <el-form-item class="change-keymen__btn">
             <el-button
               type="primary"
               @click="onSubmitForm('form')" 
-            >{{"完成"}}</el-button>
+            >{{$t("target.form.btn")}}</el-button>
           </el-form-item>
     </el-form>
   </div>

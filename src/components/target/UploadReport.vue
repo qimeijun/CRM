@@ -1,18 +1,19 @@
 <template>
-  <div class="project-importTarget">
+<!-- 上传调研报告 -->
+  <div class="target-upload-report">
     <!-- 一 -->
-    <div class="importTarget_div">
+    <div class="upload-report_div">
       <h3>1</h3>
-      <span class="importTarget-margin">{{$t("projectInfo.importTarget.textTip[0]")}}</span>
+      <span class="upload-report-margin">{{$t("target.probe.textTip[0]")}}</span>
       <i class="el-icon-paperclip"></i>
-      <a href target="_blank">导入客户模板.xls</a>
+      <a href target="_blank">调研报告模板.xls</a>
     </div>
     <!-- 二 -->
-    <div class="importTarget_div">
+    <div class="upload-report_div">
       <h3>2</h3>
       <div>
         <el-upload
-          class="importTarget-margin importTarget_upload"
+          class="upload-report-margin upload-report_upload"
           action="https://jsonplaceholder.typicode.com/posts/"
           :on-preview="handlePreview"
           :on-progress="getfileProgress"
@@ -26,46 +27,38 @@
           :show-file-list="false"
         >
           <div v-if="btnShow">
-            <el-button size="small" type="primary">{{$t("projectInfo.importTarget.uploadBtn[0]")}}</el-button>
-            <span slot="tip" class="el-upload__tip">&nbsp;&nbsp;{{$t("projectInfo.importTarget.textTip[1]")}}</span>
+            <el-button size="small" type="primary">{{$t("target.probe.uploadBtn[0]")}}</el-button>
+            <span slot="tip" class="el-upload__tip">&nbsp;&nbsp;{{$t("target.probe.textTip[1]")}}</span>
           </div>
           <div v-else>
             <p>
               <span>{{fileName}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-              <el-button type="text">{{$t("projectInfo.importTarget.uploadBtn[1]")}}</el-button>
+              <el-button type="text">{{$t("target.probe.uploadBtn[1]")}}</el-button>
             </p>
           </div>
         </el-upload>
         <el-progress v-if="!btnShow" :percentage="fileProgress" color="#E50054"></el-progress>
       </div>
     </div>
-    <!-- 三 -->
-    <div class="importTarget_div">
-      <h3>3</h3>
-      <el-radio-group v-model="radio">
-        <el-radio :label="3">{{$t("projectInfo.importTarget.noimport")}}</el-radio>
-        <el-radio :label="6">{{$t("projectInfo.importTarget.coverage")}}</el-radio>
-      </el-radio-group>
-    </div>
-    <div class="importTarget_button">
+    <div class="upload-report_button">
       <el-button
         :disabled="btnDisabled"
         size="small"
         type="primary"
         @click="dialogVisible=true;submitFile()"
-      >{{$t("projectInfo.importTarget.uploadBtn[2]")}}</el-button>
+      >{{$t("target.probe.uploadBtn[2]")}}</el-button>
     </div>
     <!-- 导入进度弹框 -->
     <el-dialog
-      :title="$t('projectInfo.importTarget.dialogTitle')"
+      :title="$t('target.probe.dialogTitle')"
       :visible.sync="dialogVisible"
       width="30%"
       append-to-body
       :show-close="false"
       center
     >
-      <div class="importTarget_dialog">
-        <p>{{$t("projectInfo.importTarget.textTip[2]")}}</p>
+      <div class="upload-report_dialog">
+        <p>{{$t("target.probe.textTip[2]")}}</p>
         <el-progress :percentage="fileImport" color="#E50054"></el-progress>
       </div>
     </el-dialog>
@@ -75,7 +68,6 @@
 export default {
   data() {
     return {
-      radio: 3,
       btnShow: true,
       btnDisabled: false,
       fileProgress: 0,
@@ -129,8 +121,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.project-importTarget {
-  .importTarget_div {
+.target-upload-report {
+  .upload-report_div {
     margin-left: 0.75rem;
     display: flex;
     align-items: baseline;
@@ -151,15 +143,15 @@ export default {
     margin-right: 4px;
   }
 }
-.importTarget-margin {
+.upload-report-margin {
   margin-right: 20px;
 }
-.importTarget_button {
+.upload-report_button {
   padding-top: 15px;
   border-top: 1px solid $--default-list-gray;
   text-align: right;
 }
-.importTarget_dialog {
+.upload-report_dialog {
   padding: 0.3rem 0.7rem;
   text-align: center;
   p {

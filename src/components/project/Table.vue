@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column fixed prop="id" label="ID" width="50"></el-table-column>
-      <el-table-column prop="name" label="项目名称" min-width="100"></el-table-column>
-      <el-table-column prop="province" label="状态" width="100"></el-table-column>
-      <el-table-column prop="city" label="管理员" width="120">
+      <el-table-column fixed prop="id" :label="$t('project.tableHeader[0]')" width="50"></el-table-column>
+      <el-table-column prop="name" :label="$t('project.tableHeader[1]')" min-width="100"></el-table-column>
+      <el-table-column prop="province" :label="$t('project.tableHeader[2]')" width="100"></el-table-column>
+      <el-table-column prop="city" :label="$t('project.tableHeader[3]')" width="120">
         <template slot-scope="scope">
           <p>
             <el-avatar
@@ -17,7 +17,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column prop="address" label="标签" max-width="200">
+      <el-table-column prop="address" :label="$t('project.tableHeader[4]')" max-width="200">
         <template slot-scope="scope">
           <el-tag
             class="table_tag"
@@ -27,16 +27,16 @@
           >{{item }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="zip" label="进行天数" width="120"></el-table-column>
-      <el-table-column prop="date" label="添加时间" width="120"></el-table-column>
-      <el-table-column label="操作" width="60">
+      <el-table-column prop="zip" :label="$t('project.tableHeader[5]')" width="120"></el-table-column>
+      <el-table-column prop="date" :label="$t('project.tableHeader[6]')" width="120"></el-table-column>
+      <el-table-column :label="$t('project.tableHeader[7]')" width="60">
         <template slot-scope="scope">
           <Operate>
             <ul>
               <li>
-                <router-link to="/project/detail">查看详情</router-link>
+                <router-link to="/project/detail">{{$t("project.view")}}</router-link>
               </li>
-              <li class="table_delete" @click="onDeleteMember(scope.row.id)">结束项目</li>
+              <li class="table_delete" @click="onDeleteMember(scope.row.id)">{{$t("projectInfo.endProject")}}</li>
             </ul>
           </Operate>
         </template>

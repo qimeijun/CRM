@@ -2,13 +2,21 @@
   <section class="project-details">
     <div class="project-details__top">
       <PageHeader url="/projectmanage"></PageHeader>
-      <div class="project-details__top-name">项目详情</div>
-       <el-input class="project-details__top-seek" placeholder="请输入内容" v-model="seek">
-        <i slot="suffix" class="el-input__icon el-icon-search" @click="onClickSeek()"></i>
-      </el-input>
-      <el-button type="primary" @click="addShow=true">新增目标公司</el-button>
-      <el-button type="primary" @click="importShow=true">导入目标公司</el-button>
-      <el-button class="project-details__top-endbtn">结束项目</el-button>
+      <div class="project-details__top-name">{{$t("projectInfo.title")}}</div>
+      <template v-if="activeMenu!=='diary'">
+        <template v-if="activeMenu!=='product'">
+          <el-input class="project-details__top-seek" placeholder="请输入内容" v-model="seek">
+            <i slot="suffix" class="el-input__icon el-icon-search" @click="onClickSeek()"></i>
+          </el-input>
+          <el-button type="primary" @click="addShow=true">{{$t("projectInfo.importTarget.add")}}</el-button>
+          <el-button
+            type="primary"
+            @click="importShow=true"
+          >{{$t("projectInfo.importTarget.import")}}</el-button>
+        </template>
+
+        <el-button class="project-details__top-endbtn">{{$t("projectInfo.endProject")}}</el-button>
+      </template>
     </div>
     <div class="project-details__content">
       <div class="project-details__menu">
@@ -18,26 +26,27 @@
             :key="index"
             :class="activeMenu == item.value ? 'project-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
-
           >
             <router-link :to="`/project/detail/${item.route}`">{{ item.name }}</router-link>
           </li>
         </ul>
       </div>
-      <el-row :gutter="10">
-        <el-col :span="activeMenu!=='information'&&activeMenu!=='product'?24:16">
-          <router-view></router-view>
-        </el-col>
-        <el-col v-if="activeMenu==='information'||activeMenu==='product'"  :span="8">
+      <el-scrollbar style="height: calc(100vh - 2.5rem);">
+        <el-row :gutter="10">
+          <el-col :span="activeMenu!=='information'&&activeMenu!=='product'?24:16">
+            <router-view></router-view>
+          </el-col>
+          <el-col v-if="activeMenu==='information'||activeMenu==='product'" :span="8">
             <Tag></Tag>
             <Member></Member>
-        </el-col>
-      </el-row>
+          </el-col>
+        </el-row>
+      </el-scrollbar>
     </div>
     <!-- 新增目标公司 start -->
     <el-dialog
       class="el-dialog__scroll"
-      title="新增目标公司"
+      :title="$t('projectInfo.importTarget.add')"
       :visible.sync="addShow"
       top="5vh"
       :append-to-body="true"
@@ -53,7 +62,7 @@
     <!-- 导入目标公司 start-->
     <el-dialog
       class="el-dialog__scroll"
-      title="导入目标公司"
+      :title="$t('projectInfo.importTarget.import')"
       :visible.sync="importShow"
       top="5vh"
       :append-to-body="true"
@@ -80,41 +89,45 @@ export default {
       activeMenu: "information",
       menuList: [
         {
-          name: "资料",
+          name: this.$t("projectInfo.menu[0]"),
           value: "information",
           route: "info"
         },
         {
-          name: "产品",
+          name: this.$t("projectInfo.menu[1]"),
           value: "product",
           route: "product"
         },
         {
-          name: "公海客户",
+          name: this.$t("projectInfo.menu[2]"),
           value: "commonality",
           route: "commonality"
         },
         {
-          name: "成员私海",
+          name: this.$t("projectInfo.menu[3]"),
           value: "private",
           route: "private"
         },
         {
-          name: "工作日志",
+          name: this.$t("projectInfo.menu[4]"),
           value: "diary",
           route: "diary"
         }
       ],
-      seek:"",
-      addShow:false,
-      importShow:false
+      seek: "",
+      addShow: false,
+      importShow: false
     };
   },
-   created() {
-     this.activeMenu=this.$route.name;
-   },
+  created() {
+    this.activeMenu = this.$route.name;
+  },
   components: {
-    PageHeader,Tag,Member,AddTarget,ImportTarget
+    PageHeader,
+    Tag,
+    Member,
+    AddTarget,
+    ImportTarget
   },
   methods: {
     /**
@@ -122,7 +135,7 @@ export default {
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
-      this.$router.push({path:`/project/detail/${item.route}`});
+      this.$router.push({ path: `/project/detail/${item.route}` });
     }
   }
 };
@@ -139,12 +152,12 @@ export default {
       margin-left: 0.2rem;
       flex-grow: 2;
     }
-    &-seek{
-      width:313px;
-      margin-right: .1rem;
+    &-seek {
+      width: 313px;
+      margin-right: 0.1rem;
     }
-    &-endbtn{
-      color:$--default-color;
+    &-endbtn {
+      color: $--default-color;
     }
   }
   &__content {

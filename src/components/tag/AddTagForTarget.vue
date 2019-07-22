@@ -104,7 +104,8 @@ export default {
          *  添加标签
          */
         onAddTag() {
-            this.$emit('onAddTag');
+            // this.$emit('onAddTag');
+            this.$router.push({ path: '/tag' });
         },
         /**
          * 确定所选的标签

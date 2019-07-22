@@ -246,6 +246,12 @@ export default {
       ]
     };
   },
+  created() {
+    console.log(process.env.VUE_APP_API_ROOT);
+    this.$http.post("/user/info/withpaginglist").then(res => {
+      console.log(res);
+    });
+  },
   methods: {
     /**
      *  删除经理

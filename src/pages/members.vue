@@ -21,8 +21,14 @@
         </div>
       </div>
       <!-- 头部检索 end -->
+      <template v-if="dataList.length > 0">
       <Region v-for="(item, index) in dataList" :key="index" :data="item" @getRegionId="getRegionId"></Region>
+      </template>
+      <template v-else>
+        暂无数据
+      </template>
       <el-pagination
+        v-if="pagination.total > pagination.pageSize * pagination.pageNum"
         style="text-align: center; margin-top: 20px;"
         :background="true"
         layout="prev, pager, next"
@@ -89,7 +95,7 @@ export default {
       pagination: {
         pageSize: 10,
         pageNum: 1,
-        total: 20
+        total: 0
       },
       // 当前操作的区域
       currentRegionId: null

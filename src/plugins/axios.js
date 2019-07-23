@@ -17,7 +17,10 @@ return config;
 axios.interceptors.response.use((response) => {
     return response.data;
 }, (error) => {
-    console.log(error);
+    return Promise.resolve({
+        iworkuCode: '200',
+        datas: []
+    });
 });
 
 Vue.prototype.$http = axios;

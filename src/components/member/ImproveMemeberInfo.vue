@@ -18,13 +18,15 @@
           >
             <el-upload
               class="add-new-member__avatar"
+              accept="image/jpeg, image/gif, image/png, image/bmp"
               :action="$global.qiniuURL"
-              :show-file-list="false"
+              :show-file-list="true"
               :on-success="onUploadAvatarSuccess"
               :before-upload="onBeforeAvatarUpload"
+              :data="uploadData"
             >
               <div v-if="memberForm.avatar" style="position: relative;">
-                <el-avatar :size="100" :src="memberForm.avatar"></el-avatar>
+                <el-avatar :size="100" :src="`${$global.avatarURI}${memberForm.avatar}`"></el-avatar>
                 <el-button class="add-new-member__re-upload" type="primary" size="mini">{{ $t('member.btn.reUpload') }}</el-button>
               </div>
               <span v-else class="add-new-member__avatar-upload-icon">{{ $t("member.form.avatar[0]") }}</span>
@@ -87,8 +89,9 @@
               v-model="memberForm.country"
               :placeholder="$t('member.placeholder.country')"
             >
-              <el-option :label="$t('member.gender.female')" value="country44"></el-option>
-              <el-option :label="$t('member.gender.male')" value="country44"></el-option>
+            <template v-if="countryList.length > 0">
+              <el-option v-for="(item, index) in countryList" :key="index" :label="$lang == $global.lang.en ? item.areaNameEn : item.areaNameZh" :value="item.id"></el-option>
+            </template>
             </el-select>
           </el-form-item>
           <!-- 国家 end -->
@@ -113,8 +116,11 @@
               prop="team"
             >
               <el-select filterable v-model="memberForm.team" placeholder>
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+                <template v-if="teamList.length > 0">
+                  <template v-for="(item, index) in teamList">
+                    <el-option v-if="item.teamSatus == 1" :key="index" :label="item.teamName" :value="item.id"></el-option>
+                  </template>
+                </template>
               </el-select>
             </el-form-item>
           </template>
@@ -140,6 +146,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { getCountry, getQiniuToken, rename } from "@/plugins/configuration.js"
 export default {
   props: {
     /**
@@ -156,7 +163,7 @@ export default {
     return {
       memberForm: {
         id: "sdfjskdjfksd",
-        avatar: "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
+        avatar: "th_1563849081132.jpg",
         username: "",
         usernameEn: "",
         gender: 1,
@@ -222,7 +229,10 @@ export default {
           }
         ]
       },
-      submitBtnLoading: false
+      submitBtnLoading: false,
+      countryList: [],
+      uploadData: {},
+      teamList: []
     };
   },
   computed: {
@@ -231,10 +241,25 @@ export default {
       'password'
     ]),
   },
-  created() {
+  async created() {
     this.memberForm.email = this.account;
+    // 获取所有的国家
+    this.countryList = await getCountry(this);
+    this.getTeam();
   },
   methods: {
+    getTeam() {
+      this.$http.post('/user/team/withoutpaginglist').then(res => {
+        if (res.iworkuCode == 200) {
+          this.teamList = res.datas;
+        } else {
+          this.$imessage({
+            content: res.iworkuErrorMsg,
+            type: "error"
+          });
+        }
+      });
+    },
     /**
      *  提交表单
      */
@@ -263,8 +288,16 @@ export default {
               this.$store.commit('members/$_set_account', "");
               this.$store.commit('members/$_set_password', "");
               this.onResetForm(formName);
+              this.$imessage({
+                content: this.$t("public.tips.success"),
+                type: "success"
+              });
+              this.$emit("onOperateSuccess");
             } else {
-
+              this.$imessage({
+                content: res.iworkuErrorMsg,
+                type: "error"
+              });
             }
             this.submitBtnLoading = false;
           });
@@ -280,23 +313,22 @@ export default {
     /**
      *  图片上传成功之后。。。。
      */
-    onUploadAvatarSuccess(res, file) {
-      this.memberForm.avatar = URL.createObjectURL(file.raw);
+    onUploadAvatarSuccess(response) {
+      this.memberForm.avatar = response.key;
     },
     /**
      * 图片上传之前，进行格式、大小检测
      */
-    onBeforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
+    async onBeforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
-      return isJPG && isLt2M;
+      // 获取七牛token
+      this.uploadData.token = await getQiniuToken(this);
+      this.uploadData.key = rename(file.name);
+
+      return isLt2M;
     }
   }
 };

@@ -42,7 +42,7 @@
     </ul>
     <div class="change-administrator__btn">
       <span v-if="operate == 'add'" style="cursor: pointer;" @click="$emit('addProjectAdministrator')">{{ $t("changeAdministrator.btn.addMember") }}</span>
-      <el-button type="primary" @click="onConfirm" style="margin-left: auto;">
+      <el-button :disabled="selectAdminstratorInfo.id ? false : true" type="primary" @click="onConfirm" style="margin-left: auto;">
         <template v-if="operate == 'add'">
           {{ $t("changeAdministrator.btn.add") }}
         </template>
@@ -102,6 +102,8 @@ export default {
     },
     onConfirm() {
       this.$emit("getManager", this.selectAdminstratorInfo);
+      this.selectAdminstrator = -1;
+      this.selectAdminstratorInfo = {};
     },
     getUserData(obj) {
       // 添加区域经理

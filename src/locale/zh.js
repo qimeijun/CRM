@@ -214,6 +214,10 @@ export default {
             projectManager: "项目经理",
             member: "成员",
             customer: "客户"
+        },
+        tips: {
+            success: "操作成功!",
+            error: "操作失败，请稍后再试!"
         }
     },
     workBench: {

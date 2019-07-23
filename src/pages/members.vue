@@ -47,7 +47,7 @@
         width="30%"
       >
         <el-scrollbar>
-          <AddMember></AddMember>
+          <AddMember @onOperateSuccess="addMemberDialogVisible=false;"></AddMember>
         </el-scrollbar>
       </el-dialog>
       <!-- 添加成员 dialog end -->
@@ -74,6 +74,8 @@
       </el-dialog>
       <!-- 添加区域经理 dialog end -->
     </section>
+
+    <!-- <i-message></i-message> -->
   </el-scrollbar>
 </template>
 <script>
@@ -119,12 +121,6 @@ export default {
           this.pagination.total = res.total;
         }
       });
-    },
-    /**
-     *  删除经理
-     */
-    onDeleteManager(index) {
-      this.managerList.splice(index, 1);
     },
     /**
      *  获取选择的经理信息

@@ -12,7 +12,7 @@
       v-if="selectDialogMenu == addMemberMenuList[0].value"
       @accountCreated="selectDialogMenu=addMemberMenuList[1].value"
     ></AddAccount>
-    <ImproveMemeberInfo v-else></ImproveMemeberInfo>
+    <ImproveMemeberInfo v-else @onOperateSuccess="onOperateSuccess"></ImproveMemeberInfo>
   </section>
 </template>
 <script>
@@ -56,6 +56,12 @@ export default {
      */
     onChangeDialogMenu(item) {
       item.isClick ? this.selectDialogMenu = item.value : null;
+    },
+    /**
+     * 获取子组件的成功信息
+     */
+    onOperateSuccess() {
+      this.$emit("onOperateSuccess");
     }
   }
 };

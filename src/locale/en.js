@@ -222,6 +222,10 @@ export default {
             projectManager: "Project Manager",
             member: "Member",
             customer: "Customer"
+        },
+        tips: {
+            success: "Successful!",
+            error: "The operation failed, please try again later!"
         }
     },
     workBench: {

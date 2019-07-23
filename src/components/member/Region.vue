@@ -9,20 +9,28 @@
     </div>
     <!-- 区域经理 start -->
     <div class="member__regional">
-      <div v-for="(item, index) in regionalData.regionalManager" :key="index" class="member__regional-content">
+      <div
+        v-for="(item, index) in regionalData.regionalManager"
+        :key="index"
+        class="member__regional-content"
+      >
         <el-avatar :size="50" :src="`${$global.avatarURI}${item.userProfileImage}`"></el-avatar>
         <div class="member__regional-content-right">
           <span>{{ $lang == $global.en ? item.userNameEn : item.userNameZh }}</span>
           <span>{{ $t("public.role.regionalManager") }}</span>
         </div>
-        <i v-if="isUpdateManager" class="el-icon-error" @click="onDeleteManager(index)"></i>
+        <i v-if="isUpdateManager" class="el-icon-error" @click="onDeleteManager(item, index)"></i>
       </div>
       <!-- 添加区域经理 start -->
-      <div
-        v-if="isUpdateManager"
-        class="member__regional-content member__regional-content-add"
-        @click="onAddManager"
-      >{{ $t("member.btn.addRegional") }}</div>
+      <template
+        v-if="regionalData && regionalData.regionalManager && regionalData.regionalManager.length < 4"
+      >
+        <div
+          v-if="isUpdateManager"
+          class="member__regional-content member__regional-content-add"
+          @click="onAddManager"
+        >{{ $t("member.btn.addRegional") }}</div>
+      </template>
       <!-- 添加区域经理 start-->
     </div>
     <!-- 区域经理  end -->
@@ -59,7 +67,6 @@
   </div>
 </template>
 <script>
-import getRoleNameById from '@/plugins/role.js'
 export default {
   props: {
     data: {
@@ -76,104 +83,42 @@ export default {
   data() {
     return {
       isUpdateManager: false,
-      tableData: [
-        {
-          id: 1,
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          id: 2,
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          id: 3,
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-          children: [
-            {
-              id: 6,
-              date: "2016-05-01",
-              name: "王小虎 扩展",
-              address: "上海市普陀区金沙江路 1519 弄"
-            },
-            {
-              id: 5,
-              date: "2016-05-01",
-              name: "王小虎  扩展",
-              address: "上海市普陀区金沙江路 1519 弄"
-            }
-          ]
-        },
-        {
-          id: 4,
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-          children: [
-            {
-              id: 31,
-              date: "2016-05-01",
-              name: "王小虎 扩展",
-              address: "上海市普陀区金沙江路 1519 弄"
-            },
-            {
-              id: 32,
-              date: "2016-05-01",
-              name: "王小虎  扩展",
-              address: "上海市普陀区金沙江路 1519 弄"
-            }
-          ]
-        },
-        {
-          id: 6,
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-          children: [
-            {
-              id: 56,
-              date: "2016-05-01",
-              name: "王小虎 扩展",
-              address: "上海市普陀区金沙江路 1519 弄"
-            },
-            {
-              id: 78,
-              date: "2016-05-01",
-              name: "王小虎  扩展",
-              address: "上海市普陀区金沙江路 1519 弄"
-            },
-            {
-              id: 784,
-              date: "2016-05-01",
-              name: "王小虎  扩展",
-              address: "上海市普陀区金沙江路 1519 弄"
-            }
-          ]
-        }
-      ],
       regionalData: {},
       memberList: []
     };
   },
   methods: {
-      onAddManager() {
-        this.$parent.$parent.addManagerDialogVisible = true;
-        this.$emit("getRegionId", this.regionalData.id);
-      }
+    /**
+     *  点击添加区域经理，调用父级的弹窗
+     */
+    onAddManager() {
+      this.$parent.$parent.addManagerDialogVisible = true;
+      this.$emit("getRegionId", this.regionalData.id);
+    },
+    /**
+     *  删除经理
+     */
+    onDeleteManager(params, index) {
+      this.$http
+        .post("/user/team/user/rel/regional/manager/delete", {
+          teamId: this.regionalData.id,
+          userId: params.id
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.regionalData.regionalManager.splice(index, 1);
+          }
+        });
+    }
   },
   watch: {
     data: {
       handler(newVal, oldVal) {
-          if (!newVal) return false;
-          this.regionalData = {...newVal};
-          // 显示 list 数据处理
-          newVal.projectManager.children = newVal.userInfoList;
-          this.memberList = [newVal.projectManager];
+        if (!newVal) return false;
+        this.regionalData = { ...newVal };
+        // 显示 list 数据处理
+        newVal.projectManager.children = newVal.userInfoList;
+        this.memberList = [newVal.projectManager];
       },
       immediate: true
     }

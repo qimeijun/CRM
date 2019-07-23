@@ -22,12 +22,12 @@
         :rules="firstRules"
       >
         <!-- 账号 -->
-        <el-form-item :label="$t('project.from.account')" prop="username">
-          <el-input v-model="firstForm.username" autocomplete="off"></el-input>
+        <el-form-item :label="$t('project.from.account')" prop="account">
+          <el-input v-model="firstForm.account" autocomplete="off"></el-input>
         </el-form-item>
         <!-- 密码 -->
-        <el-form-item :label="$t('project.from.password')" prop="password">
-          <el-input v-model="firstForm.password" autocomplete="off"></el-input>
+        <el-form-item :label="$t('project.from.password')" prop="accountPassword">
+          <el-input v-model="firstForm.accountPassword" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <!-- 第一步添加账号 end -->
@@ -92,6 +92,14 @@
             :placeholder="$t('project.placeholder.email')"
           ></el-input>
         </el-form-item>
+        <!-- 公司电话 -->
+        <el-form-item :label="'公司电话'" prop="tel">
+          <el-input
+            v-model="secondForm.tel"
+            autocomplete="off"
+            :placeholder="'公司电话'"
+          ></el-input>
+        </el-form-item>
         <!-- 公司简介 -->
         <el-form-item :label="$t('project.from.intro')" prop="intro">
           <el-input
@@ -138,11 +146,13 @@
             <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
               <!-- 上传图片 start -->
               <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="$global.qiniuURL"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
                 class="addProject-thirdly_upload"
+                :on-success="onUploadAvatarSuccess"
+              :before-upload="onBeforeAvatarUpload"
               >
                 <i class="el-icon-upload"></i>
                 <p>{{$t("project.btn.uploadImg")}}</p>
@@ -167,7 +177,7 @@
           <el-row>
             <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
               <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="$global.qiniuURL"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
@@ -195,7 +205,7 @@
           <el-row>
             <el-col>
               <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
+               :action="$global.qiniuURL"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
@@ -216,7 +226,7 @@
           <el-row>
             <el-col>
               <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="$global.qiniuURL"
                 list-type="picture-card"
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
@@ -255,6 +265,7 @@
   </div>
 </template>
 <script>
+import { addNewProjectApi } from "@/plugins/axios.js";
 export default {
   data() {
     return {
@@ -284,8 +295,8 @@ export default {
         }
       ],
       firstForm: {
-        username: "",
-        password: ""
+        account: "",
+        accountPassword: ""
       },
       secondForm: {
         projectTitle: "",
@@ -294,7 +305,8 @@ export default {
         site: "",
         url: "",
         email: "",
-        intro:"",
+        tel: "",
+        intro: "",
         strength: ""
       },
       thirdlyForm: {
@@ -305,14 +317,14 @@ export default {
         learnUrl: ""
       },
       firstRules: {
-        username: [
+        account: [
           {
             required: true,
             message: "请输入账号",
             trigger: "blur"
           }
         ],
-        password: [
+        accountPassword: [
           {
             required: true,
             message: "请输入密码",
@@ -363,10 +375,17 @@ export default {
             trigger: "blur"
           }
         ],
+        tel: [
+          {
+            required: true,
+            message: "请输入电话",
+            trigger: "blur"
+          }
+        ],
         intro: [
           {
             required: true,
-            message: "请输入邮箱",
+            message: "请输入简介",
             trigger: "blur"
           }
         ],
@@ -405,6 +424,35 @@ export default {
         if (valid) {
           alert("submit!");
           this.activeName = number;
+          if (this.activeName == 4) {
+            let params = {
+              account: this.firstForm.account,
+              accountPassword:this.firstForm.accountPassword,
+              itemName:this.secondForm.projectTitle,
+              companyName:this.secondForm.companyName,
+              // companyNickName 客户公司简称
+              companyIndustry:this.secondForm.tmt,
+              companyAddress:this.secondForm.site,
+              companyWebsite:this.secondForm.url,
+              companyEmail:this.secondForm.email,
+              companyTel:this.secondForm.tel,
+              companyProfile:this.secondForm.intro,
+              companyStrength:this.secondForm.strength,
+              productName:this.thirdlyForm.productName,
+              productNodeList:[
+                {
+                  nodeFiles: "地址",
+                  nodeDescription: "描述",
+                  nodeType: " 资料类型 1图片 2视频 3学习 4附件"
+                }
+              ]
+            };
+            console.log(params);
+            this.activeName=1;
+            // addNewProjectApi(params).then(res => {
+            //   console.log("添加新项目", res);
+            // });
+          }
         }
       });
     }

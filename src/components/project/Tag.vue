@@ -2,7 +2,11 @@
   <div class="iworku-card project-detail-tag">
     <div class="tag_top">
       <h3>{{$t("projectInfo.tag.title")}}</h3>
-      <el-button v-if="!closable" type="text" @click="closable=true">{{$t("projectInfo.tag.detele")}}</el-button>
+      <el-button
+        v-if="!closable"
+        type="text"
+        @click="closable=true"
+      >{{$t("projectInfo.tag.detele")}}</el-button>
       <el-button v-else type="primary" @click="closable=false">{{$t("projectInfo.tag.ok")}}</el-button>
     </div>
     <p class="tag_p">
@@ -14,8 +18,15 @@
         :closable="closable"
         :color="closable?tagColor:''"
         @close="closeTag(index)"
-      >{{ item }}</el-tag>
-      <el-button size="medium" class="tag_p_button" circle icon="el-icon-circle-plus" type="text" @click="show=true"></el-button>
+      >{{ item.labelNameZh}}</el-tag>
+      <el-button
+        size="medium"
+        class="tag_p_button"
+        circle
+        icon="el-icon-circle-plus"
+        type="text"
+        @click="show=true"
+      ></el-button>
     </p>
     <!-- 添加标签弹窗 start -->
     <el-dialog
@@ -29,25 +40,33 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-      <AddTagForTarget></AddTagForTarget>
+        <AddTagForTarget></AddTagForTarget>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加标签弹窗 end -->
-    
   </div>
 </template>
 <script>
+import { getProjectTagApi } from "@/plugins/axios.js";
 export default {
   components: {
     AddTagForTarget: () => import("@/components/tag/AddTagForTarget.vue")
   },
   data() {
     return {
-      taglist: ["标签1", "标签2", "标签3", "标签4", "标签5"],
+      taglist: [],
       closable: false,
       tagColor: "#EBEAEE",
-      show:false
+      show: false
     };
+  },
+  computed: {
+    itemid() {
+      return this.$route.query.itemid;
+    }
+  },
+  created() {
+    this.getTagList();
   },
   methods: {
     closeTag(index) {
@@ -55,6 +74,15 @@ export default {
     },
     submitTag() {
       console.log(this.taglist);
+    },
+    // 获取项目标签
+    getTagList() {
+      getProjectTagApi({ itemId:this.itemid}).then(res => {
+        console.log("项目标签", res);
+        if(res.iworkuCode==200){
+          this.taglist=res.datas
+        }
+      });
     }
   }
 };
@@ -77,12 +105,13 @@ export default {
       padding: 5px 10px;
       font-size: 14px;
       font-weight: 500;
-      line-height: 20px;
+      line-height: 24px;
       margin-right: 10px;
       margin-bottom: 10px;
       border-radius: 20px;
       background-color: #8d43ff;
       color: white;
+      border: 0;
     }
   }
   .tag_p_button {

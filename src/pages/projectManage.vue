@@ -31,6 +31,7 @@
   </el-scrollbar>
 </template>
 <script>
+import {getTagGroupApi,getTagApi} from "@/plugins/axios.js";
 import AddProject from "@/components/project/addProject.vue";
 import Table from "@/components/project/Table.vue";
 export default {
@@ -100,12 +101,24 @@ export default {
       seek: ""
     };
   },
+  created() {
+    this.getTaglist();
+  },
   methods: {
     onClickSeek(){
       console.log("seek",this.seek);
     },
      onClickTag(){
       console.log("tag",this.tag);
+    },
+    getTaglist(){
+      getTagGroupApi().then(res=>{
+        console.log('分组标签',res)
+      });
+      getTagApi().then(res=>{
+        console.log('标签',res)
+        
+      })
     }
   },
 };

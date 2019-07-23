@@ -1,4 +1,5 @@
 <template>
+<!-- 项目详情 -->
   <section class="project-details">
     <div class="project-details__top">
       <PageHeader url="/projectmanage"></PageHeader>
@@ -27,7 +28,7 @@
             :class="activeMenu == item.value ? 'project-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
           >
-            <router-link :to="`/project/detail/${item.route}`">{{ item.name }}</router-link>
+            <router-link :to="`/project/detail/${item.route}?itemid=${itemid}`">{{ item.name }}</router-link>
           </li>
         </ul>
       </div>
@@ -88,26 +89,31 @@ export default {
     return {
       activeMenu: "information",
       menuList: [
+        // 资料
         {
           name: this.$t("projectInfo.menu[0]"),
           value: "information",
           route: "info"
         },
+        // 产品
         {
           name: this.$t("projectInfo.menu[1]"),
           value: "product",
           route: "product"
         },
+        // 项目公海
         {
           name: this.$t("projectInfo.menu[2]"),
           value: "commonality",
           route: "commonality"
         },
+        // 私海
         {
           name: this.$t("projectInfo.menu[3]"),
           value: "private",
           route: "private"
         },
+        // 日志
         {
           name: this.$t("projectInfo.menu[4]"),
           value: "diary",
@@ -122,6 +128,11 @@ export default {
   created() {
     this.activeMenu = this.$route.name;
   },
+  computed: {
+    itemid(){
+      return this.$route.query.itemid
+    }
+  },
   components: {
     PageHeader,
     Tag,
@@ -135,7 +146,7 @@ export default {
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
-      this.$router.push({ path: `/project/detail/${item.route}` });
+      this.$router.push({ path: `/project/detail/${item.route}?itemid=${this.itemid}` });
     }
   }
 };

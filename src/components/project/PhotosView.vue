@@ -1,42 +1,36 @@
 <template>
   <section class="iworku-photosview">
     <p class="photosview_img" @click="photosShow=true">
-      <img :src="'https://vodcn.iworku.com/'+'FufyNI07_QLDRxAj1IAVbf2rrKp5'" alt />
-      <span>1/2 &nbsp;</span>
+      <img :src="'https://vodcn.iworku.com/'+imgList.length>0?imgList[0].nodeFiles:''" alt />
+      <span>1/{{imgList.length}} &nbsp;</span>
     </p>
     <div v-if="photosShow" class="photosview_mask">
       <i class="el-icon-close" @click="photosShow=false"></i>
       <div class="mask_content">
         <i class="el-icon-back" @click="imgIndex>0?imgIndex--:''"></i>
         <p>
-          <img :src="'https://vodcn.iworku.com/'+imgList[imgIndex].img" alt />
+          <img :src="'https://vodcn.iworku.com/'+imgList[imgIndex].nodeFiles" alt />
         </p>
         <i class="el-icon-right" @click="imgIndex<imgList.length-1?imgIndex++:''"></i>
       </div>
-      <p class="mask_text">{{imgList[imgIndex].text+'&nbsp;&nbsp;('+(imgIndex+1)+'/'+imgList.length+')'}}</p>
+      <p class="mask_text">{{imgList[imgIndex].nodeDescription+'&nbsp;&nbsp;('+(imgIndex+1)+'/'+imgList.length+')'}}</p>
     </div>
   </section>
 </template>
 <script>
 export default {
+  props:{
+  imgList: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
   data() {
     return {
       photosShow: false,
       imgIndex: 0,
-      imgList: [
-        {
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          text: "11111111"
-        },
-        {
-          img: "default-user-img.png",
-          text: "2222222222"
-        },
-        {
-          img: "1859渐变_dancer.jpg",
-          text: "33333"
-        }
-      ]
     };
   },
   methods: {}
@@ -73,7 +67,7 @@ export default {
   width: 100%;
   top: 0;
   left: 0;
-  background-color: rgba(94, 94, 94, 0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 10000;
   .el-icon-close {
     color: white;
@@ -85,8 +79,8 @@ export default {
   }
   .mask_content {
     height: 70vh;
-    border-top: 15vh solid rgba(0, 0, 0, 0.5);
-    border-bottom: 15vh solid rgba(0, 0, 0, 0.5);
+    // border-top: 15vh solid rgba(0, 0, 0, 0.5);
+    // border-bottom: 15vh solid rgba(0, 0, 0, 0.5);
     text-align: center;
     display: flex;
     justify-content: space-around;

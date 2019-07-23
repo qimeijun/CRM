@@ -6,44 +6,53 @@
         <h3>{{$t("projectInfo.menu[0]")}}</h3>
         <div>
           <el-button type="text" @click="passwordshow=true">{{$t("password.modify")}}</el-button>
-          <el-button type="primary" size="small" @click="show = true;infoFrom=info">{{$t("project.btn.edit")}}</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="show = true;infoFrom=info"
+          >{{$t("project.btn.edit")}}</el-button>
         </div>
       </div>
       <div class="info_top_div">
         <p>
           <span>{{$t("project.from.companyName")}}</span>
           <br />
-          <span>{{info.name}}</span>
+          <span>{{info.companyName}}</span>
         </p>
         <p>
           <span>{{$t("project.from.tmt")}}</span>
           <br />
-          <span>{{info.tmt}}</span>
+          <span>{{info.companyIndustry}}</span>
         </p>
         <p>
           <span>{{$t("project.from.site")}}</span>
           <br />
-          <span>{{info.site}}</span>
+          <span>{{info.companyAddress}}</span>
         </p>
         <p>
           <span>{{$t("project.from.url")}}</span>
           <br />
-          <span>{{info.url}}</span>
+          <span>{{info.companyWebsite}}</span>
         </p>
         <p>
           <span>{{$t("project.from.email")}}</span>
           <br />
-          <span>{{info.email}}</span>
+          <span>{{info.companyEmail}}</span>
+        </p>
+        <p>
+          <span>{{'公司电话'}}</span>
+          <br />
+          <span>{{info.companyTel}}</span>
         </p>
       </div>
     </div>
     <div class="info_intro">
       <h4>{{$t("project.from.intro")}}</h4>
-      <p>{{info.intro}}</p>
+      <p>{{info.companyProfile}}</p>
     </div>
     <div class="info_strength">
       <h4>{{$t("project.from.strength")}}</h4>
-      <p>{{info.strength}}</p>
+      <p>{{info.companyStrength}}</p>
     </div>
     <!-- 资料展示 end -->
 
@@ -51,58 +60,65 @@
       <!-- 编辑资料弹窗 start -->
       <el-dialog class="el-dialog__scroll" title="修改资料" :visible.sync="show" width="600px">
         <el-scrollbar class="scrollbar">
-        <h1>{{$t("project.from.secondTitle")}}</h1>
-        <el-form :model="infoFrom" label-position="top">
-          <el-form-item :label="$t('project.from.projectTitle')">
-            <el-input v-model="infoFrom.name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.companyName')">
-            <el-input v-model="infoFrom.name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.tmt')">
-            <el-select v-model="infoFrom.tmt" placeholder="请选择行业">
-              <el-option label="行业1" value="shanghai"></el-option>
-              <el-option label="行业2" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.site')">
-            <el-input v-model="infoFrom.site" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.url')">
-            <el-input v-model="infoFrom.url" autocomplete="off"></el-input>
-          </el-form-item>
-          <!-- 电子邮箱 -->
-          <el-form-item :label="$t('project.from.email')">
-            <el-input
-              v-model="infoFrom.email"
-              autocomplete="off"
-              :placeholder="$t('project.placeholder.email')"
-            ></el-input>
-          </el-form-item>
-          <!-- 公司简介 -->
-          <el-form-item :label="$t('project.from.intro')">
-            <el-input
-              v-model="infoFrom.intro"
-              autocomplete="off"
-              :placeholder="$t('project.placeholder.intro')"
-              type="textarea"
-              :rows="4"
-            ></el-input>
-          </el-form-item>
-          <!-- 优势 -->
-          <el-form-item :label="$t('project.from.strength')">
-            <el-input
-              v-model="infoFrom.strength"
-              autocomplete="off"
-              :placeholder="$t('project.placeholder.strength')"
-              type="textarea"
-              :rows="4"
-            ></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="show = false">{{$t("project.btn.ok")}}</el-button>
-        </div>
+          <h1>{{$t("project.from.secondTitle")}}</h1>
+          <el-form :model="infoFrom" ref="infoFrom" :rules="infoRules" label-position="top">
+            <el-form-item :label="$t('project.from.projectTitle')">
+              <el-input v-model="infoFrom.name" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('project.from.companyName')">
+              <el-input v-model="infoFrom.companyName" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('project.from.tmt')">
+              <el-select v-model="infoFrom.companyIndustry" placeholder="请选择行业">
+                <el-option label="行业1" value="shanghai"></el-option>
+                <el-option label="行业2" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('project.from.site')">
+              <el-input v-model="infoFrom.companyAddress" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('project.from.url')">
+              <el-input v-model="infoFrom.companyWebsite" autocomplete="off"></el-input>
+            </el-form-item>
+            <!-- 电子邮箱 -->
+            <el-form-item :label="$t('project.from.email')">
+              <el-input
+                v-model="infoFrom.companyEmail"
+                autocomplete="off"
+                :placeholder="$t('project.placeholder.email')"
+              ></el-input>
+            </el-form-item>
+            <!-- 公司电话 -->
+            <el-form-item :label="'公司电话'">
+              <el-input v-model="infoFrom.companyTel" autocomplete="off" :placeholder="'请输入公司电话'"></el-input>
+            </el-form-item>
+            <!-- 公司简介 -->
+            <el-form-item :label="$t('project.from.intro')">
+              <el-input
+                v-model="infoFrom.companyProfile"
+                autocomplete="off"
+                :placeholder="$t('project.placeholder.intro')"
+                type="textarea"
+                :rows="4"
+              ></el-input>
+            </el-form-item>
+            <!-- 优势 -->
+            <el-form-item :label="$t('project.from.strength')">
+              <el-input
+                v-model="infoFrom.companyStrength"
+                autocomplete="off"
+                :placeholder="$t('project.placeholder.strength')"
+                type="textarea"
+                :rows="4"
+              ></el-input>
+            </el-form-item>
+            <el-form-item class="update_info_btn">
+              <el-button
+                type="primary"
+                @click="show = false;updateInfo('infoFrom')"
+              >{{$t("project.btn.ok")}}</el-button>
+            </el-form-item>
+          </el-form>
         </el-scrollbar>
       </el-dialog>
       <!-- 编辑资料弹窗 end -->
@@ -113,38 +129,117 @@
   </section>
 </template>
 <script>
+import { getCompanyInfoApi, updateCompanyInfoApi } from "@/plugins/axios.js";
 export default {
   components: {
     UpdatePassword: () => import("@/components/member/UpdatePassword.vue")
   },
   data() {
     return {
-      info: {
-        name: "Wuxi Hariken Electric Tools Co., Ltd.",
-        tmt: "电子设备及配件",
-        site:
-          "Qibei Road,Industrial Zone,Yuqi Town,Huishan District,Wuxi,Jiangsu Province P.R China",
-        url: "www.harikentools.com",
-        email: "jordan@harikentools.com",
-        intro:
-          "Wuxi Hariken Electric Tools Co., Ltd. Was founded in 2002. Our company combines the design, development, production and process of hand-held light rotary hammer. Our company sells all products to oversea market and cooperates with the famed international bands to develop the exclusive products, therefore we enjoy a high level of popularity worldwide. Our company owns a complete quality management system, a professional development team full of experience on design and professional employees control the quality of products. Also we hold a perfect function test center, and the test facility such as the hardness metallographic phase.",
-        strength:
-          "Wuxi Hariken Electric Tools Co., Ltd. Was founded in 2002. Our company combines the design, development, production and process of hand-held light rotary hammer. Our company sells all products to oversea market and cooperates with the famed international bands to develop the exclusive products, therefore we enjoy a high level of popularity worldwide. Our company owns a complete quality management system, a professional development team full of experience on design and professional employees control the quality of products. Also we hold a perfect function test center, and the test facility such as the hardness metallographic phase."
-      },
+      info: {},
       show: false,
       passwordshow: false,
       infoFrom: {
-        name: "",
-        tmt: "",
-        site: "",
-        url: "",
-        email: "",
-        intro: "",
-        email: "",
-        intro: "",
-        strength: ""
+        companyName: "",
+        companyIndustry: "",
+        companyAddress: "",
+        companyWebsite: "",
+        companyEmail: "",
+        companyTel: "",
+        companyProfile: "",
+        companyStrength: ""
+      },
+      infoRules: {
+        companyName: [
+          {
+            required: true,
+            message: "请输入公司名称",
+            trigger: "blur"
+          }
+        ],
+        companyIndustry: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyAddress: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyWebsite: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyEmail: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyTel: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyProfile: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyStrength: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ]
       }
     };
+  },
+  computed: {
+    itemid() {
+      return this.$route.query.itemid;
+    }
+  },
+  created() {
+    if (this.itemid) {
+      this.getInfo(this.itemid);
+    }
+  },
+  methods: {
+    // 获取项目公司资料
+    getInfo(id) {
+      getCompanyInfoApi(id).then(res => {
+        console.log("资料", res.datas);
+        if (res.iworkuCode == 200) {
+          this.info = res.datas;
+        }
+      });
+    },
+    // 编辑公司资料提交
+    updateInfo(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log(this[formName]);
+          updateCompanyInfoApi(params).then(res => {
+            console.log("修改公司资料", res);
+          });
+        }
+      });
+    }
   }
 };
 </script>
@@ -190,6 +285,9 @@ export default {
       font-size: 12px;
       line-height: 17px;
     }
+  }
+  .update_info_btn {
+    text-align: right;
   }
 }
 </style>

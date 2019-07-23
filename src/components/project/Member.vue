@@ -6,15 +6,15 @@
       <el-button type="primary" size="small" @click="addMemberDialogVisible=true">{{$t("projectInfo.member.add")}}</el-button>
     </div>
     <div class="member_list" v-for="(item, index) in memberlist" :key="'member'+index">
-      <i :style="'background-color:'+item.color">{{item.type}}</i>
+      <i :style="'background-color:'+item.color">{{item.roleName}}</i>
       <p class="list_img">
-        <el-avatar size="medium" :src="'https://vodcn.iworku.com/'+item.img"></el-avatar>
+        <el-avatar size="medium" :src="'https://vodcn.iworku.com/'+item.userProfileImage"></el-avatar>
         <br />
-        <span>{{item.name}}</span>
+        <span>{{item.userNameZh}}</span>
       </p>
       <div class="list_div">
         <p>
-          <span>{{item.number}}</span> {{$t("projectInfo.member.target[1]")}}
+          <span>{{item.targetCompanyCount}}</span> {{$t("projectInfo.member.target[1]")}}
           <br />
           <span>{{$t("projectInfo.member.target[0]")}}</span>
         </p>
@@ -44,6 +44,7 @@
   </div>
 </template>
 <script>
+import {getProjectUserApi} from "@/plugins/axios.js"
 export default {
   components:{
      // 添加新成员
@@ -79,7 +80,25 @@ export default {
       ],
       addMemberDialogVisible:false,
     };
-  }
+  },
+  computed: {
+    itemid() {
+      return this.$route.query.itemid;
+    }
+  },
+  created() {
+    this.getMemberList()
+  },
+  methods: {
+    getMemberList(){
+    getProjectUserApi({itemId:this.itemid}).then(res=>{
+      console.log('项目成员',res)
+      if(res.iworkuCode==200){
+        this.memberlist=res.datas;
+      }
+    })
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -118,6 +137,7 @@ export default {
       font-weight: 500;
       padding: 0 7px;
       letter-spacing: 2px;
+      min-width: 20px;
     }
     .list_img {
       text-align: center;

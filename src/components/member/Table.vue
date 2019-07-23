@@ -119,12 +119,16 @@ export default {
                 // 确定
             });
           } else {
-            this.isDelete = true;
-            // this.$http.post('/user/info/remove', { userStatus: 2 }).then(res => {
-            //   if (res.iworkuCode == 200) {
-                
-            //   }
-            // });
+            // , id: item.id
+            this.$http.post('/user/info/remove', { userStatus: 2 }).then(res => {
+              if (res.iworkuCode == 200) {
+                this.isDelete = true;
+                this.$imessage({
+                  content: this.$t('public.tips.success'),
+                  type: "success"
+                });
+              }
+            });
           }
         });
     },

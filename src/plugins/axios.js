@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Vue from 'vue'
 import Qs from 'qs'
+import Message from './message.js'
 // 请求拦截器
 axios.interceptors.request.use((config) => {
     config.url = `${process.env.VUE_APP_API_ROOT}${config.url}`;
@@ -15,6 +16,12 @@ return config;
 
 // 响应拦截器
 axios.interceptors.response.use((response) => {
+    if (response.data.iworkuCode != '200') {
+        Message({
+            content: response.data.iworkuErrorMsg,
+            type: 'error'
+        });
+    }
     return response.data;
 }, (error) => {
     return Promise.resolve({

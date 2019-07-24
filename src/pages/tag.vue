@@ -1,7 +1,7 @@
 <template>
   <section class="tag">
     <div class="tag__title">
-      <h1>{{ $t("tag.title") }}</h1>
+      <h1 style="font-size: .2rem;">{{ $t("tag.title") }}</h1>
     </div>
     <div class="tag__menu">
       <ul>

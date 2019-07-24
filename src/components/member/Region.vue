@@ -22,18 +22,15 @@
         <i v-if="isUpdateManager" class="el-icon-error" @click="onDeleteManager(item, index)"></i>
       </div>
       <!-- 添加区域经理 start -->
-      <template
+      <!-- 最多只能添加4个区域经理 -->
+      <div 
         v-if="regionalData && regionalData.regionalManager && regionalData.regionalManager.length < 4"
-      >
-        <div
-          v-if="isUpdateManager"
-          class="member__regional-content member__regional-content-add"
-          @click="onAddManager"
-        >{{ $t("member.btn.addRegional") }}</div>
-      </template>
+        class="member__regional-content member__regional-content-add"
+        @click="onAddManager"
+      >{{ $t("member.btn.addRegional") }}</div>
       <!-- 添加区域经理 start-->
     </div>
-    <!-- 区域经理  end -->
+    <!-- 区域经理 end -->
 
     <!-- 表格 list  start -->
     <div class="member__table" style="width: 100%;">
@@ -48,19 +45,23 @@
       </div>
       <template v-if="memberList && memberList.length > 0">
         <template v-for="(item, index) in memberList">
-          <TableList :key="index + 1" :item="{...item, ...{team: regionalData.teamName}}"></TableList>
+          <TableList v-if="item" :key="index + 1" :item="{...item, ...{team: regionalData.teamName, teamId: regionalData.id}}"></TableList>
           <!-- 子成员 start -->
-          <template v-if="item.children && item.children.length > 0">
+          <template v-if="item && item.children && item.children.length > 0">
             <TableList
               v-for="(cItem, cIndex) in item.children"
               :key="`${cIndex}-${cItem.id}`"
               :children="true"
               :last="cIndex+1 == item.children.length ? true : false"
-              :item="{...cItem, ...{team: regionalData.teamName}}"
+              :item="{...cItem, ...{team: regionalData.teamName, teamId: regionalData.id}}"
             ></TableList>
           </template>
           <!-- 子成员 end -->
         </template>
+      </template>
+      <!-- 团队没有成员时 -->
+      <template v-else>
+        <div style="margin-top: 10px;height:290px; background:#F0F0F0; border-radius:8px;"></div>
       </template>
     </div>
     <!-- 表格 list  end -->
@@ -117,8 +118,10 @@ export default {
         if (!newVal) return false;
         this.regionalData = { ...newVal };
         // 显示 list 数据处理
-        newVal.projectManager.children = newVal.userInfoList;
-        this.memberList = [newVal.projectManager];
+        if (newVal.projectManager) {
+           newVal.projectManager.children = newVal.userInfoList;
+           this.memberList = [newVal.projectManager];
+        } 
       },
       immediate: true
     }

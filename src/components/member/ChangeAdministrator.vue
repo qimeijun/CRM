@@ -11,7 +11,8 @@
         </div>
       </div>
       <div class="change-administrator__hand-over-administrator">
-        <el-avatar :size="50" :src="`${$global.avatarURI}${selectAdminstratorInfo.userProfileImage}`"></el-avatar>
+        <img v-if="selectAdminstratorInfo.userProfileImage" style="width: 50px; height: 50px; border-radius: 50%;" :src="`${$global.avatarURI}${selectAdminstratorInfo.userProfileImage}`" alt="" srcset="">
+        <el-avatar v-else :size="50" :src="`${$global.avatarURI}${selectAdminstratorInfo.userProfileImage}`"></el-avatar>
         <div class="right">
           <span>{{ $lang == $global.en ? selectAdminstratorInfo.userNameEn : selectAdminstratorInfo.userNameZh }}</span>
           <span v-if="selectAdminstratorInfo.userCountryEn" class="el-icon-location">{{ $lang == $global.en ? selectAdminstratorInfo.userCountryEn : selectAdminstratorInfo.userCountryZh }}</span>
@@ -72,11 +73,14 @@ export default {
     },
     /**
      *  {
-     *    id: 查询的id,
-     *    type: 类型  => addRegionalManager 添加区域经理
+     *    id: 查询的id, 可选参数
+     *    type: 类型  => addRegionalManager 添加区域经理 
+     *                   handoverProjectManger 移交项目经理 成员管理列表页面
+     *                   handOverTeamManger 移交团队经理 成员管理-团队管理页面
+     *    data: 需要传入的其他数据 可选参数
      *  }
      */
-    typeId: {
+    params: {
       type: Object,
       default() {
         return {}
@@ -113,15 +117,30 @@ export default {
             this.adminstratorList = res.datas;
           }
         });
+      } else if (obj.type == 'handoverProjectManger'){
+        this.$http.post('/user/item/user/rel/project/manager/init/withoutpaginglist').then(res => {
+          if (res.iworkuCode == 200) {
+            this.adminstratorList = res.datas;
+          }
+        });
+      } else if (obj.type == 'handOverTeamManger') {
+        if (obj.data.length <= 1) {
+          return false;
+        }
+        let temp = [...obj.data];
+        // 删除第一个, 列表中第一个是管理员
+        temp.shift();
+        this.adminstratorList = temp;
       }
     }
   },
   watch: {
-    typeId: {
+    params: {
       handler(newVal, oldVal) {
         if (newVal) {
           this.getUserData(newVal);
         }
+        
       },
       immediate: true
     }

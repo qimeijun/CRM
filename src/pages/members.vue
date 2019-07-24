@@ -4,7 +4,7 @@
     <section class="member">
       <!-- 头部检索 start -->
       <div class="member__top">
-        <h1>{{ $t("memberManagement.title") }}</h1>
+        <h1 style="font-size: 20px;">{{ $t("memberManagement.title") }}</h1>
         <div class="member__top-search">
           <el-input
             type="text"
@@ -44,10 +44,11 @@
         :append-to-body="true"
         :modal="false"
         :lock-scroll="true"
+        :close-on-click-modal="false"
         width="30%"
       >
         <el-scrollbar>
-          <AddMember @onOperateSuccess="addMemberDialogVisible=false;"></AddMember>
+          <AddMember :params="isAddProjectManager ? {userRole: $global.userRole.projectManager} : {}" @onOperateSuccess="addMemberDialogVisible=false; isAddProjectManager=false; getTeamData();"></AddMember>
         </el-scrollbar>
       </el-dialog>
       <!-- 添加成员 dialog end -->
@@ -61,14 +62,15 @@
         :append-to-body="true"
         :modal="false"
         :lock-scroll="true"
+        :close-on-click-modal="false"
         width="30%"
       >
         <el-scrollbar>
           <AddAdministrator
             @getManager="getManager"
-            @addProjectAdministrator="addManagerDialogVisible=false;addMemberDialogVisible=true;"
+            @addProjectAdministrator="addManagerDialogVisible=false;addMemberDialogVisible=true;isAddProjectManager=true;"
             operate="add"
-            :typeId="{id: $global.userRole.regionalManager, type: 'addRegionalManager'}"
+            :params="{id: $global.userRole.regionalManager, type: 'addRegionalManager'}"
           ></AddAdministrator>
         </el-scrollbar>
       </el-dialog>
@@ -100,7 +102,8 @@ export default {
         total: 0
       },
       // 当前操作的区域
-      currentRegionId: null
+      currentRegionId: null,
+      isAddProjectManager: false
     };
   },
   created() {
@@ -132,9 +135,7 @@ export default {
         this.$http.post('/user/team/user/rel/regional/manager', { teamId: this.currentRegionId, userId: data.id }).then(res => {
           if (res.iworkuCode == 200) {
             currentRegion ? currentRegion.regionalManager.push(data) : null;
-          } else {
-
-          }
+          } 
         });
       }
     },

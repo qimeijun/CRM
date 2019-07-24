@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from './../store/index.js'
 
 Vue.use(VueRouter);
 
-export default new VueRouter({
+const router = new VueRouter({
     mode: 'history',
     base: __dirname,
     routes: [
@@ -34,28 +35,28 @@ export default new VueRouter({
                     path: '/member/detail', component: () => import('./../pages/membersDetail.vue'),
                     children: [
                         {
-                            path: '/',
+                            path: 'info/:id',
                             alias: "info",
                             name: 'member-info',
                             component: () => import('./../components/member/Information.vue')
                         },
                         {
-                            path: 'project',
+                            path: 'project/:id',
                             name: 'member-project',
                             component: () => import('./../components/member/Project.vue')
                         },
                         {
-                            path: 'team',
+                            path: 'team/:id',
                             name: 'member-team',
                             component: () => import('./../components/team/Team.vue')
                         },
                         {
-                            path: 'diary',
+                            path: 'diary/:id',
                             name: 'member-diary',
                             component: () => import('./../components/work/WorkDiary.vue')
                         },
                         {
-                            path: 'private',
+                            path: 'private/:id',
                             name: 'member-private',
                             component: () => import('./../components/member/Private.vue')
                         }
@@ -135,7 +136,19 @@ export default new VueRouter({
             ]
         }, {
             path: '/login',
+            name: 'login',
             component: () => import('./../pages/login.vue')
         }
     ]
 });
+
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+    let userInfo = store.getters['ipublic/userInfo'];
+    if (to.name == 'login') {
+        (userInfo && userInfo.jwtValue && userInfo.id) ? next({path: '/'}) : next(); 
+    } else {
+        next();
+    }
+});
+export default router;

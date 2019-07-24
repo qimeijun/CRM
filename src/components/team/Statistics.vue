@@ -181,7 +181,7 @@ export default {
           show: true,
           position: "right",
           formatter: params => {
-            return params.name + ":" + params.data;
+            return params.data;
           }
         },
         series: [

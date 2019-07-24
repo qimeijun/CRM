@@ -205,7 +205,8 @@ export default {
             country: "Please select the country of the team"
         },
         btn: {
-            confirm: "Confirm Modification"
+            confirm: "Confirm Modification",
+            add: "Add"
         }
     },
     public: {
@@ -225,7 +226,12 @@ export default {
         },
         tips: {
             success: "Successful!",
-            error: "The operation failed, please try again later!"
+            error: "The operation failed, please try again later!",
+            noData: "No Datas"
+        },
+        page: {
+            prePage: "Previous Page",
+            nextPage: "Next Page"
         }
     },
     workBench: {

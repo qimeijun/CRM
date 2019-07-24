@@ -4,7 +4,7 @@
             :class="['member-table-list-tr', (!children && item.children && item.children.length > 0) ? 'member-table-list-tr--parent' : '', children ? 'member-table-list-tr--children':'', last ? 'member-table-list-tr--children-last' : '']"
         >
             <div class="member-table-list-user">
-                <el-avatar :size="50" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
+                <el-avatar :size="50" :src="`${$global.avatarURI}${item.userProfileImage}`"></el-avatar>
                 <div class="member-table-list-user-right">
                     <span class="user-name">{{ $lang == $global.en ? item.userNameEn : item.userNameZh }}</span>
                     <span class="el-icon-location">{{ $lang == $global.en ? item.userCountryEn : item.userCountryZh }}</span>
@@ -18,16 +18,16 @@
             <div>
             <Operate>
                 <ul>
-                <li>
-                    <router-link to="/member/detail">{{ $t("memberManagement.operate[0]") }}</router-link>
-                </li>
-                <li v-if="item.userRole == $global.userRole.projectManager" class="member-table-list__click" @click="onHandAdministrator(item)">
-                    {{ $t("memberManagement.operate[1]") }}
-                </li>
-                <li
-                    class="member-table-list__click"
-                    @click="onDeleteMember(item)"
-                >{{ $t("memberManagement.operate[2]") }}</li>
+                  <li class="member-table-list__click" @click="onRoute">
+                    {{ $t("memberManagement.operate[0]") }}
+                  </li>
+                  <li v-if="item.userRole == $global.userRole.projectManager" class="member-table-list__click" @click="onHandAdministrator(item)">
+                      {{ $t("memberManagement.operate[1]") }}
+                  </li>
+                  <li v-if="item.userRole == $global.userRole.member"
+                      class="member-table-list__click"
+                      @click="onDeleteMember(item)"
+                  >{{ $t("memberManagement.operate[2]") }}</li>
                 </ul>
             </Operate>
             </div>
@@ -43,7 +43,7 @@
             :lock-scroll="true"
             width="30%">
             <el-scrollbar class="scrollbar">
-                <ChangeAdministrator @getManager="getManager" :oldAdminstrator="item" operate="handOver"></ChangeAdministrator>
+                <ChangeAdministrator @getManager="getManager" :oldAdminstrator="item" operate="handOver" :params="{type: 'handoverProjectManger'}"></ChangeAdministrator>
             </el-scrollbar>
         </el-dialog>
     </div>
@@ -114,13 +114,12 @@ export default {
                 dangerouslyUseHTMLString: true
                 }
             ).then(() => {
-                // 取消
-            }).catch(() => {
                 // 确定
+            }).catch(() => {
+                // 取消
             });
           } else {
-            // , id: item.id
-            this.$http.post('/user/info/remove', { userStatus: 2 }).then(res => {
+            this.$http.post('/user/info/remove', { userStatus: 2, id: item.id}).then(res => {
               if (res.iworkuCode == 200) {
                 this.isDelete = true;
                 this.$imessage({
@@ -130,7 +129,7 @@ export default {
               }
             });
           }
-        });
+        }).catch(() => {});
     },
     /**
      *  移交管理员
@@ -142,8 +141,29 @@ export default {
      *  获取管理员的信息
      */
     getManager(data) {
-        console.log(data);
         this.changeAdministratorDialogVisible = false;
+        // 修改这个团队的管理员
+        this.$http.post('/user/team/user/rel/update/admin/user', { id: this.item.teamId, teamAdminUserId: data.id }).then(res => {
+          if (res.iworkuCode == 200) {
+            this.$imessage({
+              content: this.$t('public.tips.success'),
+              type: "success"
+            });
+            this.$parent.$parent.$parent.getTeamData();
+          }
+        });
+    },
+    /**
+     *  页面跳转
+     */
+    onRoute() {
+      // 存储团队ID
+      this.$store.commit('members/$_set_memberInfo', {
+        teamId: this.item.teamId, 
+        userId: this.item.id, 
+        username: this.item.userNameZh
+      });
+      this.$router.push({ path: `/member/detail/info/${this.item.id}` });
     }
   }
 };

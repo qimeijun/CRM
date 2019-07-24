@@ -20,7 +20,7 @@
                         <el-checkbox v-model="loginForm.isSave">{{ $t("login.autoLogin") }}</el-checkbox>
                     </el-form-item>
                     <el-form-item label="">
-                        <el-button round class="login__btn" @click="onSubmitForm('loginForm')">{{ $t("login.btn") }}</el-button>
+                        <el-button :loading="submitBtnLoading" round class="login__btn" @click="onSubmitForm('loginForm')">{{ $t("login.btn") }}</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -64,7 +64,8 @@ export default {
                 password: [{
                     required: true, message: this.$t("login.rules.password"), trigger: 'blur'
                 }]
-            }
+            },
+            submitBtnLoading: false
         }
     },
     methods: {
@@ -72,7 +73,6 @@ export default {
          *  表单提交
          */
         onSubmitForm(formName) {
-            
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     // 是保存用户信息
@@ -84,8 +84,17 @@ export default {
                         document.cookie = `password=${password};path=/; expires=${date.toGMTString()}`;
                         document.cookie = `username=${this.loginForm.email};path=/; expires=${date.toGMTString()}`
                     }
-                    this.$router.push({ path: '/' });
-                    // alert("submit!");
+                    this.submitBtnLoading = true;
+                    this.$http.post('/websocket/login', {
+                        account: this.loginForm.email,
+                        password: this.loginForm.password
+                    }).then(res => {
+                        this.submitBtnLoading = false;
+                        if (res.iworkuCode == 200) {
+                            this.$session.set("user", res.datas);
+                            this.$router.push({ path: '/' });
+                        }
+                    });
                 }
             });
         }

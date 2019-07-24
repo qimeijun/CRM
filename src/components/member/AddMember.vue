@@ -12,12 +12,21 @@
       v-if="selectDialogMenu == addMemberMenuList[0].value"
       @accountCreated="selectDialogMenu=addMemberMenuList[1].value"
     ></AddAccount>
-    <ImproveMemeberInfo v-else @onOperateSuccess="onOperateSuccess"></ImproveMemeberInfo>
+    <ImproveMemeberInfo v-else :user="params" @onOperateSuccess="onOperateSuccess"></ImproveMemeberInfo>
   </section>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 export default {
+  props: {
+    // 添加成员时，需要默认的一些参数, 可选
+    params: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
   components: {
     // 创建成员账号
     AddAccount: () => import("@/components/member/AddAccount.vue"),

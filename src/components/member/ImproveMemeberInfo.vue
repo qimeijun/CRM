@@ -95,7 +95,7 @@
             </el-select>
           </el-form-item>
           <!-- 国家 end -->
-          <template v-if="referenceSource != 'setting'">
+          <template v-if="!memberForm.id">
             <!-- 角色 start -->
             <el-form-item :label="`${$t('member.form.role')}`" prop="role">
               <el-select
@@ -157,13 +157,22 @@ export default {
       default() {
         return "";
       }
-    }
+    },
+    /**
+     *  修改用户时，传入的用户信息
+     */
+    user: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
   },
   data() {
     return {
       memberForm: {
-        id: "sdfjskdjfksd",
-        avatar: "th_1563849081132.jpg",
+        id: "",
+        avatar: "",
         username: "",
         usernameEn: "",
         gender: 1,
@@ -236,27 +245,29 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('members', [
-      'account',
-      'password'
-    ]),
+    account() {
+      return this.$store.getters['members/account']
+    },
+    password() {
+      return this.$store.getters['members/password']
+    },
+    userInfo() {
+      return this.$store.getters['ipublic/userInfo'] 
+    }
   },
   async created() {
-    this.memberForm.email = this.account;
+    if (!this.memberForm.id) {
+      this.memberForm.email = this.account;
+      this.getTeam();
+    }
     // 获取所有的国家
     this.countryList = await getCountry(this);
-    this.getTeam();
   },
   methods: {
     getTeam() {
       this.$http.post('/user/team/withoutpaginglist').then(res => {
         if (res.iworkuCode == 200) {
           this.teamList = res.datas;
-        } else {
-          this.$imessage({
-            content: res.iworkuErrorMsg,
-            type: "error"
-          });
         }
       });
     },
@@ -278,29 +289,45 @@ export default {
             userPhone: this.memberForm.telphone,
             userCountry: this.memberForm.country,
           };
-          // 如果是成员，需要选择team
-          if (this.memberForm.role == this.$global.userRole.member) {
-            params.teamId = this.memberForm.team;
-          }
-          this.submitBtnLoading = true;
-          this.$http.post("/user/info/save", params).then(res => {
-            if (res.iworkuCode == 200) {
-              this.$store.commit('members/$_set_account', "");
-              this.$store.commit('members/$_set_password', "");
-              this.onResetForm(formName);
-              this.$imessage({
-                content: this.$t("public.tips.success"),
-                type: "success"
-              });
-              this.$emit("onOperateSuccess");
-            } else {
-              this.$imessage({
-                content: res.iworkuErrorMsg,
-                type: "error"
-              });
+          
+          if (!this.memberForm.id) {
+            // 新增用户
+            // 如果是成员，需要选择team
+            if (this.memberForm.role == this.$global.userRole.member) {
+              params.teamId = this.memberForm.team;
             }
-            this.submitBtnLoading = false;
-          });
+            this.submitBtnLoading = true;
+            this.$http.post("/user/info/save", params).then(res => {
+              if (res.iworkuCode == 200) {
+                this.$store.commit('members/$_set_account', "");
+                this.$store.commit('members/$_set_password', "");
+                this.onResetForm(formName);
+                this.$imessage({
+                  content: this.$t("public.tips.success"),
+                  type: "success"
+                });
+                this.$emit("onOperateSuccess");
+              }
+              this.submitBtnLoading = false;
+            });
+          } else {
+            // 修改用户信息
+            params.id = this.memberForm.id;
+            this.onResetForm(formName);
+            this.submitBtnLoading = true;
+            this.$http.post('/user/info/update', params).then(res => {
+              if (res.iworkuCode == 200) {
+                this.userInfo.id == this.memberForm.id ? this.$store.commit('ipublic/$_set_userInfo', {...params, ...this.userInfo}) : null;
+                this.$imessage({
+                  content: this.$t("public.tips.success"),
+                  type: "success"
+                });
+                this.memberForm.id = "";
+                this.$emit("onOperateSuccess");
+              }
+              this.submitBtnLoading = false;
+            });
+          }
         }
       });
     },
@@ -329,6 +356,25 @@ export default {
       this.uploadData.key = rename(file.name);
 
       return isLt2M;
+    }
+  },
+  watch: {
+    user: {
+      handler(newVal, oldVal) {
+        if (Object.keys(newVal).length > 0) {
+          this.memberForm.id = newVal.id;
+          this.memberForm.avatar = newVal.userProfileImage;
+          this.memberForm.username = newVal.userNameZh;
+          this.memberForm.usernameEn = newVal.userNameEn;
+          this.memberForm.gender = parseInt(newVal.userGender) || 2;
+          this.memberForm.telphone = newVal.userPhone;
+          this.memberForm.email = newVal.userEmail || this.account;
+          this.memberForm.role = newVal.userRole;
+          this.memberForm.team = newVal.orgId;
+          this.memberForm.country = newVal.userCountry;
+        }
+      },
+      immediate: true
     }
   }
 };

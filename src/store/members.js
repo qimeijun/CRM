@@ -1,3 +1,4 @@
+import session from '../plugins/session.js'
 export default {
     /**
      * 使用命名空间，当模块被注册后
@@ -9,6 +10,8 @@ export default {
         account: "",
         // 成员密码
         password: "",
+        // 当前查看信息的用户
+        memberInfo: {}
     },
     // 提交
     mutations: {
@@ -17,6 +20,10 @@ export default {
         },
         $_set_password(state, value) {
             state.password = value;
+        },
+        $_set_memberInfo(state, value) {
+            session.set("memberInfo", value);
+            state.memberInfo = value;
         }
     },
     // 提交到 mutations 中
@@ -32,6 +39,13 @@ export default {
         },
         password: state => {
             return state.password;    
+        },
+        memberInfo: state => {
+            if (Object.keys(state.memberInfo).length > 0) {
+                return state.memberInfo;
+            } else {
+                return session.get("memberInfo") || {};
+            }
         }
     }
 };

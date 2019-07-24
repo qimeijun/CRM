@@ -1,3 +1,4 @@
+import session from '../plugins/session.js'
 export default {
     /**
      *  存储字典相关的、公共的一些信息
@@ -42,7 +43,11 @@ export default {
             return state.qiniuToken;
         },
         userInfo: state => {
-            return state.userInfo;
+            if (Object.keys(state.userInfo).length == 0) {
+                return session.get('user') || {};
+            } else {
+                return state.userInfo;
+            }
         }
     }
 };

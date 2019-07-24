@@ -11,7 +11,9 @@ export default {
         // 国家
         country: [],
         // 七牛token
-        qiniuToken: ""
+        qiniuToken: "",
+        // 登录用户信息
+        userInfo: {}
     },
     // 提交
     mutations: {
@@ -20,6 +22,9 @@ export default {
         },
         $_set_qiniuToken(state, value) {
             state.qiniuToken = value;
+        },
+        $_set_userInfo(state, value) {
+            state.userInfo = value;
         }
     },
     // 提交到 mutations 中
@@ -35,6 +40,9 @@ export default {
         },
         qiniuToken: state => {
             return state.qiniuToken;
+        },
+        userInfo: state => {
+            return state.userInfo;
         }
     }
 };

@@ -72,7 +72,7 @@ export default {
             role: "请选择成员角色",
             team: "请选择团队",
             region: "请选择区域经理",
-            account: "请输入登录账号",
+            account: ["请输入登录账号", "请输入正确的邮箱"],
             password: ["请输入登录密码", "密码不能少于八位数，且不能有特殊字符"],
             gender: "请选择成员角色"
         },
@@ -136,7 +136,7 @@ export default {
     },
     memberManagement: {
         title: "成员管理",
-        table: ["成员", "身份", "团队名称", "跟进项目", "目标公司", "添加时间", "操作"],
+        table: ["成员", "身份", "团队名称", "跟进项目", "私海客户", "添加时间", "操作"],
         operate: ["查看信息", "移交管理员", "删除"],
         btn: {
             addMember: "添加新成员",
@@ -207,7 +207,18 @@ export default {
             upload: "上传附件",
             save: "保存"
         },
-        dollar: "美元"
+        dollar: "美元",
+        role: {
+            superAdministrator: "超级管理员",
+            regionalManager: "区域经理",
+            projectManager: "项目经理",
+            member: "成员",
+            customer: "客户"
+        },
+        tips: {
+            success: "操作成功!",
+            error: "操作失败，请稍后再试!"
+        }
     },
     workBench: {
         title: "工作台",

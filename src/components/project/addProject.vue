@@ -13,7 +13,6 @@
       </ul>
       <!-- 第一步添加账号 start -->
       <el-form
-        class="addProject_form"
         v-if="activeName===1"
         :model="firstForm"
         label-width="80px"
@@ -41,6 +40,7 @@
         ref="secondForm"
         :rules="secondRules"
       >
+      <el-scrollbar class="scrollbar" style="height:100%;">
         <!-- 项目名 -->
         <el-form-item :label="$t('project.from.projectTitle')" prop="projectTitle">
           <el-input
@@ -61,9 +61,9 @@
         <el-form-item :label="$t('project.from.tmt')" prop="tmt">
           <el-select v-model="secondForm.tmt" :placeholder="$t('project.placeholder.tmt')">
             <el-option
-              v-for="item in tmts"
+              v-for="item in industryList"
               :key="item.value"
-              :label="item.label"
+              :label="$lang==$global.lang.en?item.nameEn:item.nameZh"
               :value="item.value"
             ></el-option>
           </el-select>
@@ -94,11 +94,7 @@
         </el-form-item>
         <!-- 公司电话 -->
         <el-form-item :label="'公司电话'" prop="tel">
-          <el-input
-            v-model="secondForm.tel"
-            autocomplete="off"
-            :placeholder="'公司电话'"
-          ></el-input>
+          <el-input v-model="secondForm.tel" autocomplete="off" :placeholder="'公司电话'"></el-input>
         </el-form-item>
         <!-- 公司简介 -->
         <el-form-item :label="$t('project.from.intro')" prop="intro">
@@ -120,6 +116,7 @@
             :rows="4"
           ></el-input>
         </el-form-item>
+        </el-scrollbar>
       </el-form>
       <!-- 第二步项目资料 end -->
       <!-- 第三步产品资料 start -->
@@ -132,116 +129,125 @@
         ref="thirdlyForm"
         :rules="thirdlyRules"
       >
-        <!-- 产品名称 -->
-        <el-form-item :label="$t('project.from.productName')" prop="productName">
-          <el-input
-            v-model="thirdlyForm.productName"
-            autocomplete="off"
-            :placeholder="$t('project.placeholder.productName')"
-          ></el-input>
-        </el-form-item>
-        <!-- 产品图片 start -->
-        <el-form-item :label="$t('project.from.productImg')">
-          <el-row>
-            <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
-              <!-- 上传图片 start -->
-              <el-upload
-                :action="$global.qiniuURL"
-                list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
-                class="addProject-thirdly_upload"
-                :on-success="onUploadAvatarSuccess"
-              :before-upload="onBeforeAvatarUpload"
-              >
-                <i class="el-icon-upload"></i>
-                <p>{{$t("project.btn.uploadImg")}}</p>
-              </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
-                <img width="80px" :src="thirdlyForm.imageUrl" alt />
-              </el-dialog>
-              <!-- 上传图片 end -->
-            </el-col>
-            <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20">
-              <el-input
-                v-model="thirdlyForm.password"
-                autocomplete="off"
-                :placeholder="$t('project.placeholder.describe')"
-              ></el-input>
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <!-- 产品图片 end -->
-        <!-- 产品视频 start -->
-        <el-form-item :label="$t('project.from.productVideo')">
-          <el-row>
-            <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
-              <el-upload
-                :action="$global.qiniuURL"
-                list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
-                class="addProject-thirdly_upload"
-              >
-                <i class="el-icon-video-camera-solid"></i>
-                <p>{{$t("project.btn.uploadVideo")}}</p>
-              </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="thirdlyForm.videoUrl" alt />
-              </el-dialog>
-            </el-col>
-            <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20">
-              <el-input
-                v-model="thirdlyForm.password"
-                autocomplete="off"
-                :placeholder="$t('project.placeholder.describe')"
-              ></el-input>
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <!-- 产品视频 end -->
-        <!-- 附件（产品目录） start -->
-        <el-form-item :label="$t('project.from.accessory')">
-          <el-row>
-            <el-col>
-              <el-upload
-               :action="$global.qiniuURL"
-                list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
-                class="addProject-thirdly_upload"
-              >
-                <i class="el-icon-paperclip"></i>
-                <p>{{$t("project.btn.uploadAccessory")}}</p>
-              </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="thirdlyForm.attachmentUrl" alt />
-              </el-dialog>
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <!-- 附件（产品目录） end -->
-        <!-- 学习资料 start -->
-        <el-form-item :label="$t('project.from.study')">
-          <el-row>
-            <el-col>
-              <el-upload
-                :action="$global.qiniuURL"
-                list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
-                class="addProject-thirdly_upload"
-              >
-                <i class="el-icon-paperclip"></i>
-                <p>{{$t("project.btn.uploadAccessory")}}</p>
-              </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
-                <img width="80px" :src="thirdlyForm.learnUrl" alt />
-              </el-dialog>
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <!-- 学习资料 end -->
+        <el-scrollbar class="scrollbar" style="height:100%;">
+          <!-- 产品名称 -->
+          <el-form-item :label="$t('project.from.productName')" prop="productName">
+            <el-input
+              v-model="thirdlyForm.productName"
+              autocomplete="off"
+              :placeholder="$t('project.placeholder.productName')"
+            ></el-input>
+          </el-form-item>
+          <!-- 产品图片 start -->
+          <el-form-item :label="$t('project.from.productImg')">
+            <el-row v-for="(item,index) in thirdlyForm.imageList" :key="'img'+index">
+              <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+                <img width="80px" :src="`${$global.avatarURI}${item.nodeFiles}`" alt />
+              </el-col>
+              <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20" style="text-align:right;">
+                <el-input v-model="item.nodeDescription"></el-input>
+                <el-button type="text" @click="imgShow=true">继续上传</el-button>
+              </el-col>
+            </el-row>
+            <el-row v-show="imgShow">
+              <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+                <!-- 上传图片 start -->
+                <el-upload
+                  :action="$global.qiniuURL"
+                  :show-file-list="false"
+                  accept="image/jpeg, image/gif, image/png, image/bmp"
+                  :on-success="onUploadAvatarSuccessImg"
+                  :before-upload="onBeforeAvatarUploadImg"
+                  :data="uploadData"
+                >
+                  <el-button class="addProject_upload_btn">
+                    <i class="el-icon-upload"></i>
+                    <p>{{$t("project.btn.uploadImg")}}</p>
+                  </el-button>
+                </el-upload>
+                <!-- 上传图片 end -->
+              </el-col>
+              <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20">
+                <el-input
+                  v-model="imgDescription"
+                  autocomplete="off"
+                  :placeholder="$t('project.placeholder.describe')"
+                ></el-input>
+              </el-col>
+            </el-row>
+          </el-form-item>
+          <!-- 产品图片 end -->
+          <!-- 产品视频 start -->
+          <el-form-item :label="$t('project.from.productVideo')">
+            <el-row>
+              <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+                <el-upload
+                  :action="$global.qiniuURL"
+                  :show-file-list="false"
+                  accept="video/ogg, video/mp4, video/webm"
+                  :on-success="onUploadAvatarSuccessVideo"
+                  :before-upload="onBeforeAvatarUploadVideo"
+                  :data="uploadData"
+                >
+                  <el-button class="addProject_upload_btn">
+                    <i class="el-icon-video-camera-solid"></i>
+                    <p>{{$t("project.btn.uploadVideo")}}</p>
+                  </el-button>
+                </el-upload>
+              </el-col>
+              <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20">
+                <el-input
+                  v-model="videoDescription"
+                  autocomplete="off"
+                  :placeholder="$t('project.placeholder.describe')"
+                ></el-input>
+              </el-col>
+            </el-row>
+          </el-form-item>
+          <!-- 产品视频 end -->
+          <!-- 附件（产品目录） start -->
+          <el-form-item :label="$t('project.from.accessory')">
+            <el-row>
+              <el-col>
+                <el-upload
+                  :action="$global.qiniuURL"
+                  list-type="picture-card"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove"
+                  class="addProject-thirdly_upload"
+                >
+                  <i class="el-icon-paperclip"></i>
+                  <p>{{$t("project.btn.uploadAccessory")}}</p>
+                </el-upload>
+                <el-dialog :visible.sync="dialogVisible">
+                  <img width="100%" :src="thirdlyForm.attachmentUrl" alt />
+                </el-dialog>
+              </el-col>
+            </el-row>
+          </el-form-item>
+          <!-- 附件（产品目录） end -->
+          <!-- 学习资料 start -->
+          <el-form-item :label="$t('project.from.study')">
+            <el-row>
+              <el-col>
+                <el-upload
+                  :action="$global.qiniuURL"
+                  list-type="picture-card"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove"
+                  class="addProject-thirdly_upload"
+                >
+                  <i class="el-icon-paperclip"></i>
+                  <p>{{$t("project.btn.uploadAccessory")}}</p>
+                </el-upload>
+                <el-dialog :visible.sync="dialogVisible">
+                  <img width="80px" :src="thirdlyForm.learnUrl" alt />
+                </el-dialog>
+              </el-col>
+            </el-row>
+          </el-form-item>
+          <!-- 学习资料 end -->
+        </el-scrollbar>
       </el-form>
       <!-- 第三步产品资料 end -->
       <div slot="footer" class="dialog-footer">
@@ -265,35 +271,19 @@
   </div>
 </template>
 <script>
-import { addNewProjectApi } from "@/plugins/axios.js";
+import { getIndustry, getQiniuToken, rename } from "@/plugins/configuration.js";
 export default {
   data() {
     return {
       activeName: 1,
       show: false,
       dialogVisible: false,
-      tmts: [
-        {
-          value: "选项1",
-          label: "纺织"
-        },
-        {
-          value: "选项2",
-          label: "金融"
-        },
-        {
-          value: "选项3",
-          label: "工业"
-        },
-        {
-          value: "选项4",
-          label: "印刷"
-        },
-        {
-          value: "选项5",
-          label: "餐饮"
-        }
-      ],
+      imgShow: false,
+      isLt2M: false,
+      industryList: [],
+      uploadData: {},
+      imgDescription: "",
+      videoDescription: "",
       firstForm: {
         account: "",
         accountPassword: ""
@@ -311,10 +301,16 @@ export default {
       },
       thirdlyForm: {
         productName: "",
-        ImageUrl: "",
-        videoUrl: "",
-        attachmentUrl: "",
-        learnUrl: ""
+        imageList: [
+          {
+            nodeDescription: "123",
+            nodeFiles: "home_img_02_1563935894204.png",
+            nodeType: 1
+          }
+        ],
+        videoList: [],
+        attachmentList: [],
+        learnList: []
       },
       firstRules: {
         account: [
@@ -388,13 +384,6 @@ export default {
             message: "请输入简介",
             trigger: "blur"
           }
-        ],
-        strength: [
-          {
-            required: true,
-            message: "请输入优势",
-            trigger: "blur"
-          }
         ]
       },
       thirdlyRules: {
@@ -408,14 +397,11 @@ export default {
       }
     };
   },
+  async created() {
+    // 获取行业
+    this.industryList = await getIndustry(this);
+  },
   methods: {
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePictureCardPreview(file) {
-      this.thirdlyForm.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
     /**
      * 保存每一步信息
      */
@@ -427,34 +413,80 @@ export default {
           if (this.activeName == 4) {
             let params = {
               account: this.firstForm.account,
-              accountPassword:this.firstForm.accountPassword,
-              itemName:this.secondForm.projectTitle,
-              companyName:this.secondForm.companyName,
-              // companyNickName 客户公司简称
-              companyIndustry:this.secondForm.tmt,
-              companyAddress:this.secondForm.site,
-              companyWebsite:this.secondForm.url,
-              companyEmail:this.secondForm.email,
-              companyTel:this.secondForm.tel,
-              companyProfile:this.secondForm.intro,
-              companyStrength:this.secondForm.strength,
-              productName:this.thirdlyForm.productName,
-              productNodeList:[
-                {
-                  nodeFiles: "地址",
-                  nodeDescription: "描述",
-                  nodeType: " 资料类型 1图片 2视频 3学习 4附件"
-                }
+              accountPassword: this.firstForm.accountPassword,
+              itemName: this.secondForm.projectTitle,
+              companyName: this.secondForm.companyName,
+              companyIndustry: this.secondForm.tmt,
+              companyAddress: this.secondForm.site,
+              companyWebsite: this.secondForm.url,
+              companyEmail: this.secondForm.email,
+              companyTel: this.secondForm.tel,
+              companyProfile: this.secondForm.intro,
+              companyStrength: this.secondForm.strength,
+              productName: this.thirdlyForm.productName,
+              productNodeList: [
+                ...this.thirdlyForm.imageList,
+                ...this.thirdlyForm.videoList,
+                ...this.thirdlyForm.attachmentList,
+                ...this.thirdlyForm.learnList
               ]
             };
             console.log(params);
-            this.activeName=1;
-            // addNewProjectApi(params).then(res => {
-            //   console.log("添加新项目", res);
-            // });
+            this.activeName = 1;
+            this.$http.post("/customer/company/save", params).then(res => {
+              console.log("添加新项目", res);
+            });
           }
         }
       });
+    },
+    /**
+     *  图片上传成功
+     */
+    onUploadAvatarSuccessImg(response) {
+      this.thirdlyForm.imageList.push({
+        nodeFiles: response.key,
+        nodeDescription: this.imgDescription,
+        nodeType: 1
+      });
+      this.imgDescription = "";
+      this.imgShow = false;
+    },
+    /**
+     *  视频上传成功
+     */
+    onUploadAvatarSuccessVideo(response) {
+      this.thirdlyForm.videoList = [
+        {
+          nodeFiles: response.key,
+          nodeDescription: this.videoDescription,
+          nodeType: 2
+        }
+      ];
+      this.videoDescription = "";
+      this.videoShow = false;
+    },
+    // 图片上传之前
+    async onBeforeAvatarUploadImg(file) {
+      const isLt3M = file.size / 1024 / 1024 < 3;
+      if (!isLt3M) {
+        this.$message.error("上传图片大小不能超过 3MB!");
+      }
+      // 获取七牛token
+      this.uploadData.token = await getQiniuToken(this);
+      this.uploadData.key = rename(file.name);
+      return isLt3M;
+    },
+    // 视频上传之前
+    async onBeforeAvatarUploadVideo(file) {
+      const isLt20M = file.size / 1024 / 1024 < 20;
+      if (!isLt20M) {
+        this.$message.error("上传视频大小不能超过 20MB!");
+      }
+      // 获取七牛token
+      this.uploadData.token = await getQiniuToken(this);
+      this.uploadData.key = rename(file.name);
+      return isLt20M;
     }
   }
 };
@@ -508,8 +540,26 @@ export default {
   }
 }
 .addProject_form {
-  max-height: 450px;
-  overflow-y: scroll;
+  height: 450px;
+  // overflow-y: scroll;
+}
+// 上传按钮样式
+.addProject_upload_btn {
+  width: 80px;
+  height: 80px;
+  background: rgba(73, 55, 234, 1);
+  border-radius: 8px;
+  border: 0;
+  line-height: 26px;
+  padding: 0;
+  color: white;
+  i {
+    font-size: 30px;
+  }
+  p {
+    margin: 0;
+    font-size: 12px;
+  }
 }
 .addProject-thirdly_upload {
   i {

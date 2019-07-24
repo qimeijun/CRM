@@ -2,15 +2,15 @@
 <!-- 单个日志 -->
     <section class="diary-module">
         <div class="diary-module__left">
-            <div class="time">
+            <div class="time" :style="`background-color: ${diaryTypeColors[parseInt(item.type) - 1]}`">
                 <p>2019</p>
                 <p>Jun.6</p>
                 <p>13:32</p>
             </div>
-            <div class="type" :style="`background-color: ${diaryTypeColors.daily}`">{{ $t("workDiary.diarType.daily") }}</div>
+            <div class="type" :style="`background-color: ${diaryTypeColors[parseInt(item.type) - 1]}`">{{ $t("workDiary.diarType.daily") }}</div>
         </div>
         <div class="diary-module__right">
-            <div class="project">
+            <div class="project" :style="`background-color: ${diaryTypeColors[parseInt(item.type) - 1]}`">
                 <span>
                     Taurus Wujiang taide electronics Co.,LTD
                 </span>
@@ -90,7 +90,16 @@
 </template>
 <script>
 export default {
-    props: {},
+    props: {
+        item: {
+            type: Object,
+            default() {
+                return {
+                    type: '1'
+                };
+            }
+        }
+    },
     components: {
         Attachment: () => import('@/components/lib/Attachment.vue'),
         Message: () => import('@/components/work/DiaryMessage.vue'),
@@ -99,12 +108,14 @@ export default {
     data() {
         return {
             modifyWorkDiaryDialogVisible: false,
-            diaryTypeColors: {
-                order: "#E50054",
-                daily: "#31376D",
-                weekly: "#4937EA",
-                monthly: "#8D43FF"
-            }
+            // diaryTypeColors: {
+            //     order: "#E50054",
+            //     daily: "#31376D",
+            //     weekly: "#4937EA",
+            //     monthly: "#8D43FF"
+            // }
+            // 分别是日报、周报、月报、订单
+            diaryTypeColors: ["#31376D", "#4937EA", "#8D43FF", "#E50054"]
         }
     },
     methods: {

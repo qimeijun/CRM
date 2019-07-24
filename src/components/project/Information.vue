@@ -129,7 +129,6 @@
   </section>
 </template>
 <script>
-import { getCompanyInfoApi, updateCompanyInfoApi } from "@/plugins/axios.js";
 export default {
   components: {
     UpdatePassword: () => import("@/components/member/UpdatePassword.vue")
@@ -140,6 +139,7 @@ export default {
       show: false,
       passwordshow: false,
       infoFrom: {
+        id:"",
         companyName: "",
         companyIndustry: "",
         companyAddress: "",
@@ -222,7 +222,7 @@ export default {
   methods: {
     // 获取项目公司资料
     getInfo(id) {
-      getCompanyInfoApi(id).then(res => {
+      this.$http.get(`/customer/company/infobypk/${id}`).then(res => {
         console.log("资料", res.datas);
         if (res.iworkuCode == 200) {
           this.info = res.datas;
@@ -234,7 +234,8 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           console.log(this[formName]);
-          updateCompanyInfoApi(params).then(res => {
+          let params=this[formName];
+          this.$http.post("/customer/company/update",params).then(res => {
             console.log("修改公司资料", res);
           });
         }

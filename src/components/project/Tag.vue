@@ -47,7 +47,6 @@
   </div>
 </template>
 <script>
-import { getProjectTagApi } from "@/plugins/axios.js";
 export default {
   components: {
     AddTagForTarget: () => import("@/components/tag/AddTagForTarget.vue")
@@ -77,7 +76,7 @@ export default {
     },
     // 获取项目标签
     getTagList() {
-      getProjectTagApi({ itemId:this.itemid}).then(res => {
+      this.$http.post('/customer/item/label/rel/withoutpaginglist',{ itemId:this.itemid}).then(res => {
         console.log("项目标签", res);
         if(res.iworkuCode==200){
           this.taglist=res.datas

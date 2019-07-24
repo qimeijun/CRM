@@ -13,14 +13,15 @@
                 </ul>
                 <div style="margin-right: .1rem; display:flex; align-items: center;">
                     
-                    <el-button type="primary" @click="onAddDiary" icon="el-icon-plus">{{ $t("memberInfo.btn.addDiary") }}</el-button>
+                    <!-- <el-button type="primary" @click="onAddDiary" icon="el-icon-plus">{{ $t("memberInfo.btn.addDiary") }}</el-button> -->
                 </div>
             </div>
             <!-- 工作日志模块 -->
             <div style="margin-top: 20px;">
-                <DiaryModule></DiaryModule>
-                <DiaryModule></DiaryModule>
-                <DiaryModule></DiaryModule>
+                <DiaryModule :item="{type: 1}"></DiaryModule>
+                <DiaryModule :item="{type: 2}"></DiaryModule>
+                <DiaryModule :item="{type: 3}"></DiaryModule>
+                <DiaryModule :item="{type: 4}"></DiaryModule>
             </div>
         </div>
         <div class="work-diary__right">
@@ -144,7 +145,7 @@ export default {
 .work-diary {
     display: flex;
     align-items: flex-start;
-    margin-top: 20px;
+    margin-top: 10px;
     &__left {
         flex: 2;
         margin-right: .1rem;
@@ -205,12 +206,23 @@ export default {
 .work-diary__right-calendar {
     .el-calendar-table  {
         td {
+            position: relative;
             border: none !important;
             text-align: center;
         }
         .el-calendar-day {
             height: 50px;
             line-height: 35px;
+        }
+        td.is-today::after {
+            content: "";
+            position: absolute;
+            display: inline-block;
+            border-bottom: 3px solid $--default-color !important;
+            width: 30px;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, 0);
         }
     }
 }

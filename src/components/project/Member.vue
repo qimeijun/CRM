@@ -91,7 +91,7 @@ export default {
   },
   methods: {
     getMemberList(){
-    getProjectUserApi({itemId:this.itemid}).then(res=>{
+    this.$http.post('/user/item/user/rel/withoutpaginglist',{itemId:this.itemid}).then(res=>{
       console.log('项目成员',res)
       if(res.iworkuCode==200){
         this.memberlist=res.datas;

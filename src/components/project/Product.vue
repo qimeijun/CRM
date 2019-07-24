@@ -52,7 +52,6 @@
   </section>
 </template>
 <script>
-import { getProductItemidApi } from "@/plugins/axios.js";
 export default {
   components: {
     Attachment: () => import("@/components/lib/Attachment.vue"),
@@ -90,7 +89,7 @@ export default {
   },
   methods: {
     getProduct(id) {
-      getProductItemidApi({ itemId: id }).then(res => {
+      this.$http.post('/customer/company/product/item/withoutpaginglist',{ itemId: id }).then(res => {
         console.log("产品", res);
         if (res.iworkuCode == 200) {
           this.product.productName = res.datas[0].productName;

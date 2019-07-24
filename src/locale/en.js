@@ -75,7 +75,7 @@ export default {
             email: "Please input a member email",
             role: "Please select a member role",
             team: "Please select a team",
-            account: "Please input a login account",
+            account: ["Please input a login account", "please input your vaild email"],
             password: ["Please input a login password", "Password cannot be less than eight digits and cannot have special characters"],
             gender: "Please select a member gender",
             country: "Please select a country"
@@ -141,7 +141,7 @@ export default {
     },
     memberManagement: {
         title: "Member Management",
-        table: ["Member", "Role", "Team Name", "Follow Up Project", "Target Company", "Add Time", "Operate"],
+        table: ["Member", "Role", "Team Name", "Follow Up Project", "Private", "Add Time", "Operate"],
         operate: ["View", "Handover Administrator ", "Delete"],
         btn: {
             addMember: "Add New Member",
@@ -215,7 +215,18 @@ export default {
             upload: "Upload Attachment",
             save: "Save"
         },
-        dollar: "Dollar"
+        dollar: "Dollar",
+        role: {
+            superAdministrator: "Super Administrator",
+            regionalManager: "Regional Manager",
+            projectManager: "Project Manager",
+            member: "Member",
+            customer: "Customer"
+        },
+        tips: {
+            success: "Successful!",
+            error: "The operation failed, please try again later!"
+        }
     },
     workBench: {
         title: "工作台",

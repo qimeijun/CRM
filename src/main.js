@@ -8,9 +8,11 @@ import './plugins/axios.js'
 import './plugins/session.js'
 import './plugins/global.js'
 import '@/assets/style/iconfont.css'
+import './plugins/message.js'
 
 Vue.config.productionTip = false
 
+// 注册全局组件
 new Vue({
   router,
   store,

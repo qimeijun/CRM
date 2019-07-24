@@ -5,10 +5,10 @@
       <h3>{{$t("workBench.calendar.title")}}</h3>
     </div>
     <div class="calendar_content">
-      <el-calendar :first-day-of-week="7">
+      <el-calendar :first-day-of-week="7" class="">
         <template #dateCell="{date, data}">
           <p @click="getDate(data)">
-            <span style="line-height:20px;">{{ data.day.split('-').slice(1).join('-') }}</span>
+            <span style="line-height:20px;">{{ data.day.split('-').slice(1).join('月')}}日</span>
             <span
               v-for="(item,index) in firstlist"
               :key="'first'+index"
@@ -126,7 +126,7 @@ export default {
         {
           color: "#E50054FF",
           start: "2019-07-24",
-          end: "2019-07-25",
+          end: "2019-07-27",
           title: "拜访2"
         },
         {
@@ -203,29 +203,29 @@ export default {
   .time--selected {
     background-color: #1989fa;
     // width: 100%;
-    width: calc(100% + 17px);
+    width: calc(100% + 24px);
     height: 28px;
     display: block;
     padding: 4px 0;
     color: white;
     text-overflow: ellipsis;
     overflow: hidden;
-    margin-left: -8px;
+    margin-left: -12px;
     box-sizing: border-box;
     margin-bottom: 4px;
   }
   .time--start {
     border-top-left-radius: 14px;
     border-bottom-left-radius: 14px;
-    width: calc(100% + 9px);
+    width: calc(100% + 12px);
     margin-left: 0px;
     padding-left: 10px;
   }
   .time--end {
     border-top-right-radius: 14px;
     border-bottom-right-radius: 14px;
-    margin-right: 8px;
-    width: calc(100% + 8px);
+    margin-right: 10px;
+    width: calc(100% - 10px);
   }
   .time--blank {
     height: 28px;
@@ -248,5 +248,11 @@ export default {
 <style>
 .calendar_content .el-calendar-table .el-calendar-day {
   height: 140px;
+  background-color:#F0F0F0FF;
+  margin:4px;
+  border-radius:8px;
+}
+.calendar_content .el-calendar-table td{
+  border:0 !important;
 }
 </style>

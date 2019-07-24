@@ -18,13 +18,15 @@
           >
             <el-upload
               class="add-new-member__avatar"
+              accept="image/jpeg, image/gif, image/png, image/bmp"
               :action="$global.qiniuURL"
-              :show-file-list="false"
+              :show-file-list="true"
               :on-success="onUploadAvatarSuccess"
               :before-upload="onBeforeAvatarUpload"
+              :data="uploadData"
             >
               <div v-if="memberForm.avatar" style="position: relative;">
-                <el-avatar :size="100" :src="memberForm.avatar"></el-avatar>
+                <el-avatar :size="100" :src="`${$global.avatarURI}${memberForm.avatar}`"></el-avatar>
                 <el-button class="add-new-member__re-upload" type="primary" size="mini">{{ $t('member.btn.reUpload') }}</el-button>
               </div>
               <span v-else class="add-new-member__avatar-upload-icon">{{ $t("member.form.avatar[0]") }}</span>
@@ -87,8 +89,9 @@
               v-model="memberForm.country"
               :placeholder="$t('member.placeholder.country')"
             >
-              <el-option :label="$t('member.gender.female')" :value="1"></el-option>
-              <el-option :label="$t('member.gender.male')" :value="2"></el-option>
+            <template v-if="countryList.length > 0">
+              <el-option v-for="(item, index) in countryList" :key="index" :label="$lang == $global.lang.en ? item.areaNameEn : item.areaNameZh" :value="item.id"></el-option>
+            </template>
             </el-select>
           </el-form-item>
           <!-- 国家 end -->
@@ -100,21 +103,24 @@
                 v-model="memberForm.role"
                 :placeholder="$t('member.placeholder.role')"
               >
-                <el-option label="成员" value="1"></el-option>
-                <el-option label="项目经理" value="2"></el-option>
-                <el-option label="区域经理" value="3"></el-option>
+                <el-option :label="$t('public.role.regionalManager')" :value="$global.userRole.regionalManager"></el-option>
+                <el-option :label="$t('public.role.projectManager')" :value="$global.userRole.projectManager"></el-option>
+                <el-option :label="$t('public.role.member')" :value="$global.userRole.member"></el-option>
               </el-select>
             </el-form-item>
             <!-- 角色 end -->
             <!--  当选择 “成员” 角色时， 成员属于哪个团队 -->
             <el-form-item
-              v-if="memberForm.role == 1"
+              v-if="memberForm.role == $global.userRole.member"
               :label="`${$t('member.form.team')}`"
               prop="team"
             >
               <el-select filterable v-model="memberForm.team" placeholder>
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+                <template v-if="teamList.length > 0">
+                  <template v-for="(item, index) in teamList">
+                    <el-option v-if="item.teamSatus == 1" :key="index" :label="item.teamName" :value="item.id"></el-option>
+                  </template>
+                </template>
               </el-select>
             </el-form-item>
           </template>
@@ -122,6 +128,7 @@
           <el-form-item class="add-new-member__btn">
             <el-button
               type="primary"
+              :loading="submitBtnLoading"
               @click="onSubmitForm('memberForm')"
             >
             <template v-if="memberForm.id">
@@ -138,6 +145,8 @@
   </section>
 </template>
 <script>
+import { mapGetters } from 'vuex'
+import { getCountry, getQiniuToken, rename } from "@/plugins/configuration.js"
 export default {
   props: {
     /**
@@ -154,7 +163,7 @@ export default {
     return {
       memberForm: {
         id: "sdfjskdjfksd",
-        avatar: "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
+        avatar: "th_1563849081132.jpg",
         username: "",
         usernameEn: "",
         gender: 1,
@@ -219,40 +228,107 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      submitBtnLoading: false,
+      countryList: [],
+      uploadData: {},
+      teamList: []
     };
   },
+  computed: {
+    ...mapGetters('members', [
+      'account',
+      'password'
+    ]),
+  },
+  async created() {
+    this.memberForm.email = this.account;
+    // 获取所有的国家
+    this.countryList = await getCountry(this);
+    this.getTeam();
+  },
   methods: {
+    getTeam() {
+      this.$http.post('/user/team/withoutpaginglist').then(res => {
+        if (res.iworkuCode == 200) {
+          this.teamList = res.datas;
+        } else {
+          this.$imessage({
+            content: res.iworkuErrorMsg,
+            type: "error"
+          });
+        }
+      });
+    },
     /**
      *  提交表单
      */
     onSubmitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          let params = {
+            userNameZh: this.memberForm.username,
+            userNameEn: this.memberForm.usernameEn,
+            userProfileImage: this.memberForm.avatar,
+            userPassword: this.password,
+            userEmail: this.memberForm.email,
+            userAccount: this.account,
+            userRole: this.memberForm.role,
+            userGender: this.memberForm.gender,
+            userPhone: this.memberForm.telphone,
+            userCountry: this.memberForm.country,
+          };
+          // 如果是成员，需要选择team
+          if (this.memberForm.role == this.$global.userRole.member) {
+            params.teamId = this.memberForm.team;
+          }
+          this.submitBtnLoading = true;
+          this.$http.post("/user/info/save", params).then(res => {
+            if (res.iworkuCode == 200) {
+              this.$store.commit('members/$_set_account', "");
+              this.$store.commit('members/$_set_password', "");
+              this.onResetForm(formName);
+              this.$imessage({
+                content: this.$t("public.tips.success"),
+                type: "success"
+              });
+              this.$emit("onOperateSuccess");
+            } else {
+              this.$imessage({
+                content: res.iworkuErrorMsg,
+                type: "error"
+              });
+            }
+            this.submitBtnLoading = false;
+          });
         }
       });
     },
     /**
+     *  表单重置
+     */
+    onResetForm(formName) {
+        this.$refs[formName].resetFields();
+    },
+    /**
      *  图片上传成功之后。。。。
      */
-    onUploadAvatarSuccess(res, file) {
-      this.memberForm.avatar = URL.createObjectURL(file.raw);
+    onUploadAvatarSuccess(response) {
+      this.memberForm.avatar = response.key;
     },
     /**
      * 图片上传之前，进行格式、大小检测
      */
-    onBeforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
+    async onBeforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
-      return isJPG && isLt2M;
+      // 获取七牛token
+      this.uploadData.token = await getQiniuToken(this);
+      this.uploadData.key = rename(file.name);
+
+      return isLt2M;
     }
   }
 };

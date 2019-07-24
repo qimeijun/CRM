@@ -74,12 +74,14 @@ export default {
         text-align: center;
         line-height: 55px;
         background-color: #59cc6b;
+        font-weight: 600;
         .el-icon-error {
             position: absolute;
             color: black;
             font-size: 14px;
             top: -5px;
             right: -7px;
+            font-weight: 600;
             cursor: pointer;
         }
     }

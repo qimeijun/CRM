@@ -1,27 +1,27 @@
 <template>
-    <div>
+    <div v-if="isDelete === false">
         <div
             :class="['member-table-list-tr', (!children && item.children && item.children.length > 0) ? 'member-table-list-tr--parent' : '', children ? 'member-table-list-tr--children':'', last ? 'member-table-list-tr--children-last' : '']"
         >
             <div class="member-table-list-user">
                 <el-avatar :size="50" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
                 <div class="member-table-list-user-right">
-                    <span class="user-name">Jane</span>
-                    <span class="el-icon-location">越南</span>
+                    <span class="user-name">{{ $lang == $global.en ? item.userNameEn : item.userNameZh }}</span>
+                    <span class="el-icon-location">{{ $lang == $global.en ? item.userCountryEn : item.userCountryZh }}</span>
                 </div>
             </div>
-            <div>{{ item.date }}</div>
-            <div>{{ item.name }}</div>
-            <div>{{ item.address }}</div>
-            <div>{{ item.address }}</div>
-            <div>{{ item.address }}</div>
+            <div>{{ $lang == $global.en ? item.roleName : item.roleName }}</div>
+            <div>{{ item.team }}</div>
+            <div>{{ item.targetCompanyCount }}</div>
+            <div>{{ item.targetCompanyCount }}</div>
+            <div>{{ item.addTimeStr }}</div>
             <div>
             <Operate>
                 <ul>
                 <li>
                     <router-link to="/member/detail">{{ $t("memberManagement.operate[0]") }}</router-link>
                 </li>
-                <li class="member-table-list__click" @click="onHandAdministrator(item)">
+                <li v-if="item.userRole == $global.userRole.projectManager" class="member-table-list__click" @click="onHandAdministrator(item)">
                     {{ $t("memberManagement.operate[1]") }}
                 </li>
                 <li
@@ -79,7 +79,8 @@ export default {
   },
   data() {
       return {
-          changeAdministratorDialogVisible: false
+          changeAdministratorDialogVisible: false,
+          isDelete: false
       }
   },
   methods: {
@@ -91,27 +92,24 @@ export default {
         `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t("memberManagement.deleteTip.content[0]")}`,
         this.$t("memberManagement.deleteTip.title"),
         {
-          confirmButtonText: this.$t("memberManagement.deleteTip.btn[1]"),
-          cancelButtonText: this.$t("memberManagement.deleteTip.btn[0]"),
+          confirmButtonText: this.$t("memberManagement.deleteTip.btn[0]"),
+          cancelButtonText: this.$t("memberManagement.deleteTip.btn[1]"),
           center: true,
           dangerouslyUseHTMLString: true
         }
-      )
-        .then(() => {
-          // 取消删除
-          this.$message({
-            type: "success",
-            message: "取消删除"
-          });
-        })
-        .catch(() => {
-          // 确定删除
-          this.$confirm(
+      ).then(() => {
+          /**
+           * 确定删除
+           * 如果有正在跟进的目标公司，就给出提示
+           * 如果没有正在跟进的目标公司，就直接删除用户
+           */
+          if (this.item.targetCompanyCount > 0) {
+            this.$confirm(
                 `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t("memberManagement.deleteTip.content[1]")}<br/>${this.$t("memberManagement.deleteTip.content[2]")}`,
                 this.$t("memberManagement.deleteTip.title"),
                 {
-                confirmButtonText: this.$t("memberManagement.deleteTip.btn[1]"),
-                cancelButtonText: this.$t("memberManagement.deleteTip.btn[0]"),
+                confirmButtonText: this.$t("memberManagement.deleteTip.btn[0]"),
+                cancelButtonText: this.$t("memberManagement.deleteTip.btn[1]"),
                 center: true,
                 dangerouslyUseHTMLString: true
                 }
@@ -120,6 +118,18 @@ export default {
             }).catch(() => {
                 // 确定
             });
+          } else {
+            // , id: item.id
+            this.$http.post('/user/info/remove', { userStatus: 2 }).then(res => {
+              if (res.iworkuCode == 200) {
+                this.isDelete = true;
+                this.$imessage({
+                  content: this.$t('public.tips.success'),
+                  type: "success"
+                });
+              }
+            });
+          }
         });
     },
     /**

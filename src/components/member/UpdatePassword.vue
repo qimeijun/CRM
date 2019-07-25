@@ -30,6 +30,7 @@
       <el-form-item class="update-password__btn">
         <el-button
           type="primary"
+          :loading="submitBtnLoading"
           @click="onSubmitForm('passwordForm')"
         >
         <template v-if="passwordForm.id">
@@ -54,13 +55,19 @@ export default {
       default() {
         return "";
       }
-    }
+    },
+    user: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
   },
   data() {
     return {
       passwordForm: {
-        id: "748578457",
-        account: "123456@qq.com",
+        id: "",
+        account: "",
         new: "",
         confirm: ""
       },
@@ -99,7 +106,8 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      submitBtnLoading: false
     };
   },
   methods: {
@@ -107,7 +115,21 @@ export default {
     onSubmitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          this.submitBtnLoading = true;
+          this.$http.post('/user/info/update/password', {
+            id: this.passwordForm.id,
+            userPassword: this.passwordForm.new
+          }).then(res => {
+            if (res.iworkuCode == 200) {
+              this.$imessage({
+                content: this.$t("public.tips.success"),
+                type: "success"
+              });
+              this.onResetForm(formName);
+              this.$emit("onOperateSuccess");
+            }
+            this.submitBtnLoading = false;
+          });
         }
       });
     },
@@ -116,6 +138,17 @@ export default {
      */
     onResetForm(formName) {
       this.$refs[formName].resetFields();
+    }
+  },
+  watch: {
+    user: {
+      handler(newVal, old) {
+        if (newVal) {
+          this.passwordForm.id = newVal.id;
+          this.passwordForm.account = newVal.userEmail;
+        }
+      },
+      immediate: true
     }
   }
 };

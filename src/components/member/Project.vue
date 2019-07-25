@@ -47,7 +47,6 @@
       :lock-scroll="true"
       width="30%">
       <el-scrollbar>
-        <!--  -->
         <AddAdministrator @getManager="getManager" @addProjectAdministrator="handOverAdministratorDialogVisible=false;addMemberDialogVisible=true;" operate="add"></AddAdministrator>
       </el-scrollbar>
     </el-dialog>
@@ -103,10 +102,27 @@ export default {
         }
       ],
       handOverAdministratorDialogVisible: false,
-      addMemberDialogVisible: false
+      addMemberDialogVisible: false,
+      userId: this.$route.params.id,
+      page: {
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
+      }
     };
   },
+  created() {
+    this.getProject();
+  },
   methods: {
+    getProject() {
+      this.$http.post('/customer/item/withpaginglist', {userId: this.userId, pageSize: this.page.pageSize, pageNum: this.page.pageNum}).then(res => {
+        if (res.iworkuCode == 200) {
+          this.tableData = res.datas;
+          this.page.total = res.total;
+        }
+      });
+    },
       /**
        *  移出项目
        */

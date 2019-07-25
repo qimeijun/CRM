@@ -7,7 +7,12 @@
         type="text"
         @click="closable=true"
       >{{$t("projectInfo.tag.detele")}}</el-button>
-      <el-button v-else type="primary" @click="closable=false">{{$t("projectInfo.tag.ok")}}</el-button>
+      <el-button
+        v-else
+        size="small"
+        type="primary"
+        @click="closable=false;"
+      >{{$t("projectInfo.tag.ok")}}</el-button>
     </div>
     <p class="tag_p">
       <!-- <span v-for="(item, index) in taglist" :key="'tag'+index">{{item}}</span> -->
@@ -18,7 +23,7 @@
         :closable="closable"
         :color="closable?tagColor:''"
         @close="closeTag(index)"
-      >{{ item.labelNameZh}}</el-tag>
+      >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh}}</el-tag>
       <el-button
         size="medium"
         class="tag_p_button"
@@ -40,7 +45,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <AddTagForTarget></AddTagForTarget>
+        <AddTagForTarget :type="type" :id="id" :defaultTag="taglist"></AddTagForTarget>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加标签弹窗 end -->
@@ -48,6 +53,25 @@
 </template>
 <script>
 export default {
+  props: {
+    /**
+     *  区分是操作项目公司还是目标公司
+     *  值为： project、target
+     */
+    type: {
+      type: String,
+      default() {
+        return "project";
+      }
+    },
+    // 目标公司ID还是项目公司ID
+    id: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
+  },
   components: {
     AddTagForTarget: () => import("@/components/tag/AddTagForTarget.vue")
   },
@@ -59,29 +83,49 @@ export default {
       show: false
     };
   },
-  computed: {
-    itemid() {
-      return this.$route.query.itemid;
-    }
-  },
   created() {
-    this.getTagList();
+    this.getTagList(this.id);
   },
   methods: {
+    // 删除标签
     closeTag(index) {
-      this.taglist.splice(index, 1);
+      this.$http
+        .post("/customer/item/label/rel/delete", {
+          relId: this.taglist[index].id
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.taglist.splice(index, 1);
+          }
+        });
     },
-    submitTag() {
-      console.log(this.taglist);
-    },
-    // 获取项目标签
-    getTagList() {
-      this.$http.post('/customer/item/label/rel/withoutpaginglist',{ itemId:this.itemid}).then(res => {
-        console.log("项目标签", res);
-        if(res.iworkuCode==200){
-          this.taglist=res.datas
-        }
-      });
+    // 获取项目/目标公司标签
+    getTagList(id) {
+      console.log(id);
+      if (this.type == "project") {
+        // 项目
+        this.$http
+          .post("/customer/item/label/rel/withoutpaginglist", {
+            itemId: id
+          })
+          .then(res => {
+            if (res.iworkuCode == 200) {
+              this.taglist = res.datas;
+              console.log("标签", res.datas);
+            }
+          });
+      } else {
+        // 目标
+        this.$http
+          .post("/target/label/rel/withoutpaginglist", {
+            targetCompanyId: id
+          })
+          .then(res => {
+            if (res.iworkuCode == 200) {
+              this.taglist = res.datas;
+            }
+          });
+      }
     }
   }
 };
@@ -94,6 +138,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 10px;
     h3 {
       margin: 0;
     }

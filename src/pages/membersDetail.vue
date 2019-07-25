@@ -2,7 +2,7 @@
   <section class="member-details">
     <div class="member-details__top">
         <PageHeader url="/member"></PageHeader>
-        <div class="member-details__top-name">zhangsan</div>
+        <div class="member-details__top-name">{{ memberInfo && memberInfo.username }}</div>
     </div>
     <div class="member-details__menu">
       <ul>
@@ -28,7 +28,8 @@
   </section>
 </template>
 <script>
-import PageHeader from "@/components/lib/PageHeader.vue";
+import PageHeader from "@/components/lib/PageHeader.vue"
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -65,6 +66,9 @@ export default {
   components: {
     PageHeader
   },
+  computed: {
+    ...mapGetters("members", ["memberInfo"])
+  },
   created() {
     this.activeMenu = this.$route.name;
   },
@@ -74,7 +78,11 @@ export default {
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
-      this.$router.push({ path: `/member/detail/${item.route}`});
+      if (this.activeMenu == 'member-team') {
+        this.$router.push({ path: `/member/detail/${item.route}/${this.memberInfo.teamId}`});
+      } else {
+        this.$router.push({ path: `/member/detail/${item.route}/${this.memberInfo.userId}`});
+      }
     }
   },
   watch: {

@@ -1,17 +1,19 @@
 <template>
+
+<el-scrollbar class="setting-scrollbar" style="height: calc(100vh - .8rem);">
     <section class="setting">
         <ul class="setting__menu">
             <li v-for="(item, index) in menuList" :key="index" :class="activeMenu == item.name ? 'selected' : ''" @click="onChangeMenu(item)">{{ item.value }}</li>
-        </ul>
-        <el-scrollbar style="height: calc(100vh - 3rem);">
+        </ul>        
         <div class="setting__content">
-            <UpdateMemberInfo referenceSource="setting" v-if="activeMenu == 'data'"></UpdateMemberInfo>
-            <UpdatePassword v-else-if="activeMenu == 'password'" referenceSource="setting"></UpdatePassword>
+            <UpdateMemberInfo referenceSource="setting" :user="userInfo" v-if="activeMenu == 'data'"></UpdateMemberInfo>
+            <UpdatePassword v-else-if="activeMenu == 'password'" :user="userInfo" referenceSource="setting"></UpdatePassword>
         </div>
-        </el-scrollbar>
     </section>
+    </el-scrollbar>
 </template>
 <script>
+import { mapGetters} from 'vuex'
 export default {
     components: {
         UpdateMemberInfo: () => import("@/components/member/ImproveMemeberInfo.vue"),
@@ -34,7 +36,8 @@ export default {
                     name: "password"
                 }
             ]
-        }
+        },
+        ...mapGetters('ipublic', ['userInfo'])
     },
     methods: {
         /**

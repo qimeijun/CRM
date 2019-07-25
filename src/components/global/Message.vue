@@ -59,6 +59,7 @@ export default {
     border-radius:8px;
     transform: translateX(-50%);
     text-align: center;
+    z-index: 9999;
     .cont {
         width: 100%;
     }

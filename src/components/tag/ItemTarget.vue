@@ -1,7 +1,7 @@
 <template>
     <section class="tag-item-target">
-        <div class="tag-item-target__content">
-            <div class="title">Wuxi Hariken Electric Tools Co., Ltd.</div>
+        <div v-if="data.id" class="tag-item-target__content">
+            <div class="title">{{ data.targetCompanyName }}</div>
             <!-- <div class="user">
                 <el-avatar :size="50" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
                 <div style="margin-left: .1rem;">
@@ -70,6 +70,9 @@ export default {
     .rate {
         .el-icon-star-on {
             font-size: 25px;
+        }
+        .el-rate__icon {
+            margin-right: 2px;
         }
     }
 }

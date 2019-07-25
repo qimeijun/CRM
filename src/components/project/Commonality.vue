@@ -13,11 +13,11 @@
       <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
       <!-- 结束项目 -->
       <el-button
-        class="project-details__top-endbtn"
+        class="commonality-endbtn"
         @click="onDeleteMember(itemid,2)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button class="project-details__top-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+      <el-button class="commonality-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
     </div>
     <div class="commonality_top">
       <!-- 分类 start -->
@@ -104,7 +104,7 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link :to="`/target/detail?itemid=${scope.row.id}`">{{$t("project.view")}}</router-link>
+                  <router-link :to="`/target/detail?targetid=${scope.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
                 <li class="table_operation" @click="allocationShow=true">{{$t("project.allot")}}</li>
                 <li
@@ -284,9 +284,9 @@ export default {
           id: id,
           type: 1,
           pageNum: page,
-          clientType: this.tag[1],
-          labelId: this.targetType,
-          keyWord: this.seek
+          clientType: this.targetType,
+          labelId: this.tag[1],
+          keyWord: `${this.seek}`
         })
         .then(res => {
           if (res.iworkuCode == 200) {
@@ -372,6 +372,9 @@ export default {
   width: 313px;
   margin-right: 0.1rem;
 }
+.commonality-endbtn {
+      color: $--default-color;
+    }
 .el-icon-search{
   cursor: pointer;
 }

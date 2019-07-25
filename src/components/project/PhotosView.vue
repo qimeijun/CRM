@@ -79,8 +79,8 @@ export default {
   }
   .mask_content {
     height: 70vh;
-    // border-top: 15vh solid rgba(0, 0, 0, 0.5);
-    // border-bottom: 15vh solid rgba(0, 0, 0, 0.5);
+    border-top: 15vh solid transparent;
+    border-bottom: 15vh solid transparent;
     text-align: center;
     display: flex;
     justify-content: space-around;

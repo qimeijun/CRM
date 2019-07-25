@@ -51,7 +51,7 @@
           <template slot-scope="scope">
             <el-tag
               class="table_tag"
-              v-for="(item,index) in scope.row.itemLabelList"
+              v-for="(item,index) in scope.row.itemLabelList.slice(0,10)"
               :key="index"
               size="medium"
             >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh }}</el-tag>
@@ -85,6 +85,9 @@
                   class="table_delete"
                   @click="onDeleteMember(scope.row.itemId,3)"
                 >重启项目</li>
+                <li @click="allocationShow=true">
+                  分配
+                </li>
               </ul>
             </Operate>
           </template>
@@ -95,13 +98,29 @@
         background
         layout="prev, pager, next,sizes"
         :total="total"
-        :page-sizes="[1, 2,10, 40]"
+        :page-sizes="[10, 20,30, 40]"
         :page-size.sync="size"
         :current-page.sync="currentPage"
         @size-change="getProject(1)"
         @current-change="getProject(currentPage)"
       ></el-pagination>
     </div>
+       <!-- 分配 start -->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('project.allot')"
+      :visible.sync="allocationShow"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+        <ChangeAdministrator operate="add" ></ChangeAdministrator>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 分配 end -->
   </section>
 </template>
 <script>
@@ -109,7 +128,9 @@ import { getItemStatus } from "@/plugins/configuration.js";
 export default {
   components: {
     Operate: () => import("@/components/lib/Operate.vue"),
-    AddProject: () => import("@/components/project/addProject.vue")
+    AddProject: () => import("@/components/project/addProject.vue"),
+     ChangeAdministrator: () =>
+      import("@/components/member/ChangeAdministrator.vue"),
   },
   data() {
     return {
@@ -117,9 +138,10 @@ export default {
       seek: "",
       tableData: [],
       total: 0,
-      size: 1,
+      size: 10,
       currentPage: 1,
       itemStatusList: [],
+      allocationShow:false,
       props: {
         lazy: true,
         lazyLoad: (node, resolve) => {
@@ -134,7 +156,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label:this.$lang==$global.lang.en?o.groupNameEn:o.groupNameZh
+                      label:this.$lang==this.$global.lang.en?o.groupNameEn:o.groupNameZh
                     };
                   });
                   resolve(taglist);
@@ -151,7 +173,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: this.$lang==$global.lang.en?o.groupNameEn:o.labelNameZh,
+                      label: this.$lang==this.$global.lang.en?o.groupNameEn:o.labelNameZh,
                       leaf: true
                     };
                   });

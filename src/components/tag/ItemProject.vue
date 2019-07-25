@@ -1,12 +1,12 @@
 <template>
     <section class="tag-item-project">
-        <div class="tag-item-project__content">
-            <div class="title">Wuxi Hariken Electric Tools Co., Ltd.</div>
+        <div v-if="data.id" class="tag-item-project__content">
+            <div class="title">{{ data.companyName }}</div>
             <div class="user">
-                <el-avatar :size="50" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
+                <el-avatar :size="50" :src="``"></el-avatar>
                 <div style="margin-left: .1rem;">
-                    <p style="font-size:16px;">zhangsan</p>
-                    <i class="el-icon-location">越南</i>
+                    <p style="font-size:16px;">{{ '哪个成员在跟进' }}</p>
+                    <i class="el-icon-location">{{ '成员所在国家' }}</i>
                 </div>
             </div>
             <!-- <div class="tag">

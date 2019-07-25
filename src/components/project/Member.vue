@@ -37,7 +37,7 @@
       width="30%"
     >
       <el-scrollbar>
-        <AddMember></AddMember>
+        <ChangeAdministrator></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加成员 dialog end -->
@@ -48,7 +48,7 @@ import {getProjectUserApi} from "@/plugins/axios.js"
 export default {
   components:{
      // 添加新成员
-    AddMember: () => import("@/components/member/AddMember.vue"),
+    ChangeAdministrator: () => import("@/components/member/ChangeAdministrator.vue"),
   },
   data() {
     return {
@@ -92,7 +92,7 @@ export default {
   methods: {
     getMemberList(){
     this.$http.post('/user/item/user/rel/withoutpaginglist',{itemId:this.itemid}).then(res=>{
-      console.log('项目成员',res)
+      console.log('项目成员',res);
       if(res.iworkuCode==200){
         this.memberlist=res.datas;
       }

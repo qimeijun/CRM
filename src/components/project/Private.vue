@@ -13,19 +13,19 @@
       <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
       <!-- 结束项目 -->
       <el-button
-        class="project-details__top-endbtn"
+        class="private-endbtn"
         @click="onDeleteMember(itemid,2)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button class="project-details__top-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+      <el-button class="private-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
     </div>
     <div class="private_top">
       <!-- 分类 start -->
       <el-select class="top_select" v-model="targetType" placeholder="请选择" @change="getPrivate(itemid, 1)">
         <el-option
-          v-for="item in classifys"
+          v-for="item in targetTypeList"
           :key="item.value"
-          :label="item.label"
+          :label="$lang==$global.lang.en?item.nameEn:item.nameZh"
           :value="item.value"
         ></el-option>
       </el-select>
@@ -34,9 +34,8 @@
       <el-cascader
         class="top_select"
         v-model="tag"
-        :options="taglist"
         :show-all-levels="false"
-        :props="{ expandTrigger: 'hover' }"
+        :props="props"
         @change="getPrivate(itemid, 1)"
       ></el-cascader>
       <!-- 标签 end -->
@@ -70,7 +69,7 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link to="/target/detail">{{$t("project.view")}}</router-link>
+                  <router-link :to="`/target/detail?targetid=${scoped.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
                 <li class="table_operation" @click="onCancel()">{{$t("project.intoSea")}}</li>
                 <li class="table_operation" @click="changeAdministratorDialogVisible=true">{{$t("project.transfer")}}</li>
@@ -142,128 +141,49 @@ export default {
   },
   data() {
     return {
-      classifys: [
-        {
-          value: "选项1",
-          label: "分类1"
-        },
-        {
-          value: "选项2",
-          label: "分类2"
-        },
-        {
-          value: "选项3",
-          label: "分类3"
-        },
-        {
-          value: "选项4",
-          label: "分类4"
-        },
-        {
-          value: "选项5",
-          label: "分类5"
+      targetTypeList: [],
+       props: {
+        lazy: true,
+        lazyLoad: (node, resolve) => {
+          if (node.level == 0) {
+            // 获取项目标签分组
+            this.$http
+              .post("/target/label/group/withoutpaginglist", {
+                groupStatus: 1
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  let taglist = res.datas.map(o => {
+                    return {
+                      value: o.id,
+                      label: o.groupNameZh
+                    };
+                  });
+                  resolve(taglist);
+                }
+              });
+          } else {
+            // 获取项目各组标签
+            this.$http
+              .post(`/target/label/withoutpaginglist`, {
+                labelGroupId: node.value
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  let taglist = res.datas.map(o => {
+                    return {
+                      value: o.id,
+                      label: o.labelNameZh,
+                      leaf: true
+                    };
+                  });
+                  resolve(taglist);
+                }
+              });
+          }
         }
-      ],
-      taglist: [
-        {
-          value: "zuyi",
-          label: "组1",
-          children: [
-            {
-              value: "biaoxian1",
-              label: "标签1"
-            },
-            {
-              value: "biaoxian2",
-              label: "标签2"
-            },
-            {
-              value: "biaoxian3",
-              label: "标签3"
-            }
-          ]
-        },
-        {
-          value: "zuer",
-          label: "组2",
-          children: [
-            {
-              value: "biaoxian1",
-              label: "标签"
-            },
-            {
-              value: "biaoxian2",
-              label: "标签2"
-            },
-            {
-              value: "biaoxian3",
-              label: "标签3"
-            }
-          ]
-        },
-        {
-          value: "zusan",
-          label: "组3",
-          children: [
-            {
-              value: "biaoxian1",
-              label: "标签1"
-            },
-            {
-              value: "biaoxian2",
-              label: "标签2"
-            },
-            {
-              value: "biaoxian3",
-              label: "标签3"
-            }
-          ]
-        }
-      ],
-      tableData: [
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-08",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-06",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-07",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        }
-      ],
+      },
+      tableData: [],
       multipleSelection: [],
       tag: "",
       targetType: "",
@@ -405,6 +325,9 @@ export default {
 .private-seek {
   width: 313px;
   margin-right: 0.1rem;
+}
+.private-endbtn{
+  color: $--default-color;
 }
 .private_top {
   display: flex;

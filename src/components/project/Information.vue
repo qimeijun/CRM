@@ -1,5 +1,14 @@
 <template>
   <section class="project-detail-info">
+    <div style="position:fixed; top: 1rem; right: .2rem;">
+          <!-- 结束项目 -->
+      <el-button
+        class="info-endbtn"
+        @click="onDeleteMember(itemid,2)"
+      >{{$t("projectInfo.endProject")}}</el-button>
+      <!-- 重启项目 -->
+      <el-button class="info-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+    </div>
     <!-- 资料展示 start -->
     <div class="info_top">
       <div class="info_top_div" style="align-items:center">
@@ -274,11 +283,80 @@ export default {
           });
         }
       });
-    }
+    },
+       // 结束项目
+    onDeleteMember(id) {
+      this.$msgbox({
+        title: "提示",
+        message:
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要结束此项目吗？</p>",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 确定
+          this.$http
+            .post("/customer/item/update/status", {
+              itemId: id,
+              itemStatus: 2
+            })
+            .then(res => {});
+          this.$message({
+            type: "success",
+            message: "已结束项目"
+          });
+        })
+        .catch(() => {
+          // 取消
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
+    },
+    // 重启项目
+    onRestartMember(id) {
+      this.$msgbox({
+        title: "提示",
+        message:
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要重启此项目吗？</p>",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 确定
+          this.$http
+            .post("/customer/item/update/status", {
+              itemId: id,
+              itemStatus: 3
+            })
+            .then(res => {});
+          this.$message({
+            type: "success",
+            message: "已重启项目"
+          });
+        })
+        .catch(() => {
+          // 取消
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
+    },
   }
 };
 </script>
 <style lang="scss" scoped>
+.info-endbtn{
+  color: $--default-color;
+}
 .project-detail-info {
   border-radius: 8px;
   overflow: hidden;

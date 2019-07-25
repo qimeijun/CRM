@@ -24,7 +24,7 @@
             <router-view></router-view>
           </el-col>
           <el-col v-if="activeMenu==='information'||activeMenu==='product'" :span="8">
-            <Tag></Tag>
+            <Tag type="project" :id="itemid"></Tag>
             <Member></Member>
           </el-col>
         </el-row>
@@ -111,9 +111,6 @@ export default {
       font-size: 24px;
       margin-left: 0.2rem;
       flex-grow: 2;
-    }
-    &-endbtn {
-      color: $--default-color;
     }
   }
   &__content {

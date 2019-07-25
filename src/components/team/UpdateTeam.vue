@@ -7,14 +7,14 @@
           class="update-team__top"
           :style="`background:linear-gradient(315deg,${teamForm.teamColor.colorStart} 0%,${teamForm.teamColor.colorEnd} 100%);`"
         >
-          <div class="team">{{ team.teamName || 'Team' }}</div>
+          <div class="team">{{ team.teamName || teamForm.teamName || 'Team' }}</div>
           <div
             style="display: flex; justify-content: space-between;align-items: center; margin-top: 5px;"
           >
-            <div>Leader: {{ team.teamAdminUser }}</div>
+            <div>Leader: {{ (team.projectManager && team.projectManager.userNameZh) || userInfo.userNameZh }}</div>
             <div style="display: flex; align-items: center; margin-right: .2rem;">
               <el-avatar :size="20" :src="team.logo"></el-avatar>
-              <span style="margin-left: .1rem;">{{ team.teamCountry }}</span>
+              <span style="margin-left: .1rem;">{{ $lang == $global.lang.en ? (team.teamCountryEn || selectCountry.areaNameEn): (team.teamCountryZh || selectCountry.areaNameZh) }}</span>
             </div>
           </div>
         </div>
@@ -25,11 +25,20 @@
           label-position="left"
           label-width="80px"
         >
-          <el-form-item :label="`${$t('team.form.name')}`" prop="name">
+          <el-form-item :label="`${$t('team.form.name')}`" prop="teamName">
             <el-input v-model="teamForm.teamName"></el-input>
           </el-form-item>
-          <el-form-item :label="`${$t('team.form.country')}`" prop="country">
-            <el-input v-model="teamForm.teamCountry"></el-input>
+          <el-form-item :label="`${$t('team.form.country')}`" prop="teamCountry">
+            <el-select
+              filterable
+              v-model="teamForm.teamCountry"
+              placeholder=""
+              @change="onChangeCountry"
+            >
+            <template v-if="countryList.length > 0">
+              <el-option v-for="(item, index) in countryList" :key="index" :label="$lang == $global.lang.en ? item.areaNameEn : item.areaNameZh" :value="item.id"></el-option>
+            </template>
+            </el-select>
           </el-form-item>
           <el-form-item :label="`${$t('team.form.color')}`" prop="color">
             <div>
@@ -43,7 +52,14 @@
             </div>
           </el-form-item>
           <el-form-item class="update-team__btn">
-            <el-button type="primary" @click="onSubmitForm('teamForm')">{{ $t("team.btn.confirm") }}</el-button>
+            <el-button type="primary" :loading="submitBtnLoading" @click="onSubmitForm('teamForm')">
+              <template v-if="team.id">
+                {{ $t("team.btn.confirm") }}
+              </template>
+              <template>
+                {{ $t("team.btn.add") }}
+              </template>
+            </el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -51,8 +67,11 @@
   </section>
 </template>
 <script>
+import { getCountry } from "@/plugins/configuration.js"
+import { mapGetters } from 'vuex'
 export default {
   props: {
+    // 当编辑团队的时候传入以前的团队信息
     team: {
       type: Object,
       default() {
@@ -68,14 +87,14 @@ export default {
         teamColor: {}
       },
       rules: {
-        name: [
+        teamName: [
           {
             required: true,
             message: this.$t("team.rules.name"),
             trigger: "blur"
           }
         ],
-        country: [
+        teamCountry: [
           {
             required: true,
             message: this.$t("team.rules.country"),
@@ -104,21 +123,64 @@ export default {
           colorStart: "#8C00FF",
           colorEnd: "#D80B1E"
         }
-      ]
+      ],
+      countryList: [],
+      submitBtnLoading: false,
+      selectCountry: {}
     };
   },
-  created() {
-    this.teamForm.teamColor = this.colorsList[0];
+  computed: {
+    ...mapGetters('ipublic', ['userInfo']),
+  },
+  async created() {
+    if (this.team && this.team.teamColor && this.team.teamColor.includes(';')) {
+      this.teamForm.teamColor = {colorStart: this.team.teamColor.split(';')[0], colorEnd: this.team.teamColor.split(';')[1]}
+    }  else {
+      this.teamForm.teamColor = this.colorsList[0];
+    }
+    this.teamForm.teamCountry = this.team.teamCountry;
+    this.countryList = await getCountry(this);
   },
   methods: {
     /**
      *  提交表单
      */
     onSubmitForm(formName) {
-      this.$emit("updateTeam");
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          this.submitBtnLoading = true;
+          let params = {
+            teamName: this.teamForm.teamName,
+            teamCountry: this.teamForm.teamCountry,
+            teamColor: `${this.teamForm.teamColor.colorStart};${this.teamForm.teamColor.colorEnd}`
+          }
+          if (this.team.id) {
+            // 修改团队信息
+            params.id = this.team.id;
+            params.teamSatus = 1;
+            this.$http.post('/user/team/update', params).then(res => {
+              if (res.iworkuCode == 200) {
+                this.$imessage({
+                  content: this.$t("public.tips.success"),
+                  type: "success"
+                });
+                this.$emit("updateTeam");
+              }
+              this.submitBtnLoading = false;
+            });
+          } else {
+            // 添加团队信息
+            this.$http.post('/user/team/save', params).then(res => {
+              if (res.iworkuCode == 200) {
+                this.$imessage({
+                  content: this.$t("public.tips.success"),
+                  type: "success"
+                });
+                this.$emit("updateTeam");
+              }
+              this.submitBtnLoading = false;
+            });
+          }
         }
       });
     },
@@ -126,8 +188,13 @@ export default {
      *  切换颜色
      */
     onChangeColor(item) {
-        console.log(item);
         this.teamForm.teamColor = item;
+    },
+    /**
+     *  国家切换
+     */
+    onChangeCountry(item) {
+      this.selectCountry = this.countryList.find(val => item == val.id);
     }
   }
 };

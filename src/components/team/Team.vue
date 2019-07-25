@@ -15,8 +15,7 @@
         <template v-else>
           <div
             class="member-team__list-name--data"
-            v-if="teamInfo.teamColor && teamInfo.teamColor.includes(';')"
-            :style="`background:linear-gradient(315deg,${teamInfo.teamColor.split(';')[0]} 0%,${teamInfo.teamColor.split(';')[1]} 100%);`"
+            :style="(teamInfo.teamColor && teamInfo.teamColor.includes(';')) ? `background:linear-gradient(315deg,${teamInfo.teamColor.split(';')[0]} 0%,${teamInfo.teamColor.split(';')[1]} 100%);` : `background-color: ${teamInfo.teamColor}`"
           >
             <div class="operate">
               <el-dropdown @command="onHandleCommand" style="color: white;">
@@ -25,69 +24,74 @@
                   <i class="el-icon-caret-bottom el-icon--right"></i>
                 </span>
                 <el-dropdown-menu class="iworku-popper" slot="dropdown">
-                  <el-dropdown-item command="modify">{{ $t("memberInfo.teamOperate[0]") }}</el-dropdown-item>
-                  <el-dropdown-item command="handOver">{{ $t("memberInfo.teamOperate[1]") }}</el-dropdown-item>
-                  <el-dropdown-item command="frozen">{{ $t("memberInfo.teamOperate[2]") }}</el-dropdown-item>
+                  <!-- 只有项目经理才能修改和移交 -->
+                  <template v-if="userInfo.userRole == $global.userRole.projectManager">
+                    <el-dropdown-item command="modify">{{ $t("memberInfo.teamOperate[0]") }}</el-dropdown-item>
+                    <el-dropdown-item command="handOver">{{ $t("memberInfo.teamOperate[1]") }}</el-dropdown-item>
+                  </template>
+                  <!-- 只要是管理员就有权冻结 -->
+                  <el-dropdown-item v-if="userInfo.userRole != $global.userRole.member" command="frozen">{{ $t("memberInfo.teamOperate[2]") }}</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
             <div class="user-name">{{ teamInfo.teamName }}</div>
-            <div class="leader">Leader: {{ teamInfo.teamAdminUser }}</div>
+            <div class="leader">Leader: {{ (teamInfo.projectManager && teamInfo.projectManager.userNameZh) }}</div>
             <div class="location">
-              <el-avatar :size="50" :src="teamInfo.logo" style="margin-right:10px;"></el-avatar>
-              {{ teamInfo.teamCountry }}
+              <el-avatar :size="25" :src="teamInfo.logo" style="margin-right:10px;"></el-avatar>
+              {{ $lang == $global.lang.en ? teamInfo.teamCountryEn : teamInfo.teamCountryZh }}
             </div>
           </div>
         </template>
       </div>
       <div class="member-team__list-member">
         <ul>
-          <template v-if="teamInfo && teamInfo.member && teamInfo.member.length > 0">
+          <template v-if="teamInfo && teamInfo.userInfoList && teamInfo.userInfoList.length > 0">
+            <template v-for="(item, index) in teamInfo.userInfoList">
             <li
-              v-for="(item, index) in teamInfo.member"
+              v-if="item.isDelete !== true"
               :key="index"
               style="background-color: white;"
             >
               <div
                 style="margin: 20px; padding-top: 13px; display: flex; justify-content: space-between; align-items: center;"
               >
-                <div style="display: flex;">
-                  <el-avatar :size="50" :src="item.userProfileImage"></el-avatar>
+                <div style="display: flex; width: 30%;">
+                  <el-avatar :size="50" :src="`${$global.avatarURI}${item.userProfileImage}`"></el-avatar>
                   <div
                     style="margin-right: auto;margin-left: .2rem; font-size: 14px;line-height: 35px;"
                   >
                     <span
                       style="display: block; color: #030303; "
-                    >{{ $lang == $global.en ? item.userNameEn : item.userNameZh }}</span>
+                    >{{ item.userNameZh }}</span>
                     <span
                       class="el-icon-location"
                       style="display: block;color:#909090"
-                    >{{ item.userCountry }}</span>
+                    >{{ $lang == $global.lang.en ? item.userCountryEn : item.userCountryZh }}</span>
                   </div>
                 </div>
-                <span>{{ item.useRoleZh }}</span>
+                <span>{{ item.roleName }}</span>
                 <div style="line-height: 30px;">
                   <span style="display: block;color:#7B7B7B;">{{ $t("memberInfo.joinTime") }}</span>
                   <span>{{ item.addTimeStr }}</span>
                 </div>
                 <Operate>
                   <ul class="member-team__operate">
-                    <li>
-                      <router-link to="/member/detail/">{{ $t("memberInfo.teamMemberOperate[0]") }}</router-link>
+                    <li @click="onRoute(item)">
+                      {{ $t("memberInfo.teamMemberOperate[0]") }}
                     </li>
-                    <li
+                    <!-- 团队移交 对象是项目经理，并且当前登录用户是这个团队的项目经理 -->
+                    <li v-if="item.userRole == $global.userRole.projectManager && userInfo.userRole == item.userRole"
                       @click="handOverAdministratorDialogVisible=true;"
                     >{{ $t("memberInfo.teamMemberOperate[1]") }}</li>
-                    <li>{{ $t("memberInfo.teamMemberOperate[2]") }}</li>
+                    <li v-if="item.userRole == $global.userRole.member" @click="onDeleteMember(item, index)">{{ $t("memberInfo.teamMemberOperate[2]") }}</li>
                   </ul>
                 </Operate>
               </div>
             </li>
+            </template>
           </template>
           <template v-else>
-            <li></li>
-            <li></li>
-            <li></li>
+            <li v-for="(item, index) in 3" :key="index" style="margin-bottom: 10px;"></li>
           </template>
         </ul>
       </div>
@@ -147,6 +151,7 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
+      :close-on-click-modal="false"
       width="30%"
     >
       <el-scrollbar>
@@ -163,13 +168,15 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
+      :close-on-click-modal="false"
       width="30%"
     >
       <el-scrollbar>
         <HandOverAdministrator
-          :oldAdminstrator="{name: teamInfo.member[0].userNameZh, location: teamInfo.member[0].teamCountry, avatar: teamInfo.member[0].userProfileImage}"
+          :oldAdminstrator="teamInfo.projectManager"
           @getManager="getManager"
           operate="handOver"
+          :params="{type: 'handOverTeamManger', data: teamInfo.userInfoList }"
         ></HandOverAdministrator>
       </el-scrollbar>
     </el-dialog>
@@ -184,16 +191,36 @@
         :append-to-body="true"
         :modal="false"
         :lock-scroll="true"
+        :close-on-click-modal="false"
         width="30%"
       >
         <el-scrollbar>
-          <AddMember></AddMember>
+          <AddMember :params="{orgId: teamInfo.id, userRole: $global.userRole.member}"></AddMember>
         </el-scrollbar>
       </el-dialog>
     <!-- 添加新成员 dialog end -->
+
+    <!-- 添加团队 dialog start -->
+    <el-dialog
+        class="el-dialog__scroll"
+        :title="$t('selectRegionalManager.title')"
+        :visible.sync="addTeamDialogVisible"
+        top="5vh"
+        :append-to-body="true"
+        :modal="false"
+        :lock-scroll="true"
+        :close-on-click-modal="false"
+        width="30%"
+      >
+        <el-scrollbar>
+          <AddTeam @updateTeam="addTeamDialogVisible=false; getTeamInfo();"></AddTeam>
+        </el-scrollbar>
+      </el-dialog>
+    <!-- 添加团队 dialog end -->
   </section>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 export default {
   components: {
     Operate: () => import("@/components/lib/Operate.vue"),
@@ -202,59 +229,17 @@ export default {
       import("@/components/member/ChangeAdministrator.vue"),
     Statistics: () => import("@/components/team/Statistics.vue"),
     // 添加新成员
-    AddMember: () => import("@/components/member/AddMember.vue")
+    AddMember: () => import("@/components/member/AddMember.vue"),
+    AddTeam: () => import("@/components/team/UpdateTeam.vue"),
   },
   data() {
     return {
       updateTeamDialogVisible: false,
       handOverAdministratorDialogVisible: false,
       addMemberDialogVisible: false,
-      teamInfo: {
-        id: "sdjfskdjf",
-        teamName: "Zhangsan Team",
-        teamAdminUser: "admin",
-        teamCountry: "越南",
-        teamColor: "#CC208E;#6713D2",
-        logo: "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
-        member: [
-          {
-            userNameZh: "lisi",
-            userCountry: "越南",
-            useRoleZh: "项目经理",
-            useRoleEn: "项目经理",
-            userProfileImage:
-              "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
-            addTimeStr: "2017/01/12"
-          },
-          {
-            userNameZh: "lisi",
-            userCountry: "越南",
-            useRoleZh: "普通成员",
-            useRoleEn: "普通成员",
-            userProfileImage:
-              "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
-            addTimeStr: "2017/01/12"
-          },
-          {
-            userNameZh: "lisi",
-            userCountry: "越南",
-            useRoleZh: "普通成员",
-            useRoleEn: "普通成员",
-            userProfileImage:
-              "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
-            addTimeStr: "2017/01/12"
-          },
-          {
-            userNameZh: "lisi",
-            userCountry: "越南",
-            useRoleZh: "普通成员",
-            useRoleEn: "普通成员",
-            userProfileImage:
-              "https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7",
-            addTimeStr: "2017/01/12"
-          }
-        ]
-      },
+      addTeamDialogVisible: false,
+      teamId: this.$route.params.id,
+      teamInfo: {},
       statisticsSelectParams: {
         type: "performance",
         year: new Date().getFullYear(),
@@ -263,11 +248,31 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters('ipublic', ['userInfo']),
+  },
+  created() {
+    this.getTeamInfo();
+  },
   methods: {
+    // 获取团队信息
+    getTeamInfo() {
+      this.$http.get(`/user/team/infobypk/${this.teamId}`).then(res => {
+        if (res.iworkuCode == 200) {
+          res.datas.userInfoList.unshift(res.datas.projectManager);
+          this.teamInfo = res.datas;
+        }
+      });
+    },
     /**
      *  添加团队
+     *  只有项目经理才能添加
      */
-    addTeam() {},
+    addTeam() {
+      if (this.userInfo.userRole == this.$global.userRole.projectManager) {
+        this.addTeamDialogVisible = true;
+      }
+    },
     /**
      *  团队菜单操作
      */
@@ -299,18 +304,85 @@ export default {
     /**
      *  冻结团队
      */
-    onFrozenTeam() {},
+    onFrozenTeam() {
+      this.$http.post('/user/team/update', {id: this.teamInfo.id, teamSatus: 2}).then(res => {
+        if (res.iworkuCode == 200) {
+          this.$imessage({
+            content: this.$t("public.tips.success"),
+            type: "success"
+          });
+        }
+      });
+    },
     /**
      *  接受子组件的信息，更新信息
      */
-    updateTeamInfo() {
+    updateTeamInfo(data) {
       this.updateTeamDialogVisible = false;
+      this.getTeamInfo();
     },
     /**
      *  获取更改的管理员信息
      */
     getManager(data) {
       this.handOverAdministratorDialogVisible = false;
+      // 团队中移交管理员
+      this.$http.post('/user/team/user/rel/update/admin/user', {id: this.teamInfo.id, teamAdminUserId: data.id}).then(res => {
+        if (res.iworkuCode == 200) {
+          this.$imessage({
+            content: this.$t("public.tips.success"),
+            type: "success"
+          });
+          this.getTeamInfo();
+        }
+      });
+    },
+    /**
+     *  成员删除
+     */
+    onDeleteMember(item, index) {
+      this.$confirm(
+        `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t("memberManagement.deleteTip.content[0]")}`,
+        this.$t("memberManagement.deleteTip.title"),
+        {
+          confirmButtonText: this.$t("memberManagement.deleteTip.btn[0]"),
+          cancelButtonText: this.$t("memberManagement.deleteTip.btn[1]"),
+          center: true,
+          dangerouslyUseHTMLString: true
+        }
+      ).then(() => {
+          /**
+           * 确定删除
+           * 如果有正在跟进的目标公司，就给出提示
+           * 如果没有正在跟进的目标公司，就直接删除用户
+           */
+          if (item.targetCompanyCount > 0) {
+            this.$confirm(
+                `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t("memberManagement.deleteTip.content[1]")}<br/>${this.$t("memberManagement.deleteTip.content[2]")}`,
+                this.$t("memberManagement.deleteTip.title"),
+                {
+                confirmButtonText: this.$t("memberManagement.deleteTip.btn[0]"),
+                cancelButtonText: this.$t("memberManagement.deleteTip.btn[1]"),
+                center: true,
+                dangerouslyUseHTMLString: true
+                }
+            ).then(() => {
+                // 确定
+            }).catch(() => {
+                // 取消
+            });
+          } else {
+            this.$http.post('/user/info/remove', { userStatus: 2, id: item.id}).then(res => {
+              if (res.iworkuCode == 200) {
+                this.teamInfo.userInfoList.splice(index, 1);
+                this.$imessage({
+                  content: this.$t('public.tips.success'),
+                  type: "success"
+                });
+              }
+            });
+          }
+        }).catch(() => {});
     },
     /**
      *  切换统计图类型
@@ -338,6 +410,17 @@ export default {
     minusMonth() {
         this.statisticsSelectParams.month --;
         this.statisticsSelectParams.month < 1 ? this.statisticsSelectParams.month = 1 : null;
+    },
+    /**
+     *  查看人员详情
+     */
+    onRoute(item) {
+      this.$store.commit('members/$_set_memberInfo', {
+        teamId: this.teamInfo.id, 
+        userId: item.id, 
+        username: item.userNameZh
+      });
+      this.$router.push({path: `/member/detail/info/${item.id}`})
     }
   }
 };
@@ -378,17 +461,19 @@ export default {
         cursor: pointer;
       }
       .user-name {
-        margin-left: 10%;
+        margin-left: .35rem;
         text-transform: capitalize;
         font-size: 24px;
         line-height: 50px;
+        font-weight: 600;
       }
       .user-name:first-letter {
         font-size: 40px;
       }
       .leader {
-        margin-left: 10%;
+        margin-left: .35rem;
         font-size: 18px;
+        font-weight: 600;
       }
       .location {
         display: flex;

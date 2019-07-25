@@ -22,6 +22,7 @@
         <div class="tag-main__operate-top">
           <!-- 添加标签 start -->
           <el-input
+            v-if="pagination.total < 20"
             class="add-input"
             :placeholder="$t('tag.addTagPlaceholder')"
             v-model="addTagName"
@@ -30,8 +31,8 @@
           </el-input>
           <!-- 添加标签 end -->
           <!-- 操作选择 start -->
-          <el-button v-if="tagRename && tagRename.id" type="primary" size="mini" @click="onConfirmTagRename">{{ $t("tag.btn.ok") }}</el-button>
-          <div v-else style="display: relative;">
+          <el-button :style="pagination.total >= 20 ? `margin-left: auto`: null" v-if="tagRename && tagRename.id" type="primary" size="mini" @click="onConfirmTagRename">{{ $t("tag.btn.ok") }}</el-button>
+          <div v-else :style="`display: relative; ${pagination.total >= 20 ? `margin-left: auto` : null }`">
             <span style="color: #4937EA; cursor: pointer;" @click="isShowOperateMenu=true;">
               {{ $t('tag.operate') }}
               <i class="el-icon-caret-bottom"></i>
@@ -62,33 +63,40 @@
               >{{ item.labelNameZh }}
             </li>
           </template>
+          <template v-if="tagList.length == 0">
+            <div style="line-height: 100px;">
+              {{ $t("public.tips.noData") }}
+            </div>
+          </template>
         </ul>
         <!-- 标签 list -->
         <!-- 分页 start -->
-        <div v-if="pagination.total > pagination.pageSize * pagination.pageNum" class="tag-main__page">
-          <span >
+        <div v-if="pagination.allPage > 1" class="tag-main__page">
+          <span v-if="pagination.pageNum > 1" @click="onPrePage">
             <i class="el-icon-caret-left"></i>
-            上一页
+            {{ $t("public.page.prePage") }}
           </span>
-          <span>
-            下一页
+          <span v-if="pagination.pageNum < pagination.allPage" @click="onNextPage">
+            {{ $t("public.page.nextPage") }}
             <i class="el-icon-caret-right"></i>
           </span>
         </div>
         <!-- 分页 end -->
       </div>
+      
       <div style="flex: 5">
         <div class="tag-main__items">
-          <template v-for="index in 27">
-            <ItemProject v-if="type == 'project'" :key="index"></ItemProject>
-            <ItemTarget v-else :key="index"></ItemTarget>
+          <template v-for="(item, index) in companyList">
+            <ItemProject v-if="type == 'project'" :data="item" :key="index"></ItemProject>
+            <ItemTarget v-else :data="item" :key="index"></ItemTarget>
           </template>
         </div>
         <el-pagination
+          v-if="companyPage.total > companyPage.pageSize * companyPage.pageNum"
           style="text-align: center; margin-top: 20px;"
           :background="true"
           layout="prev, pager, next"
-          :total="1000"
+          :total="companyPage.total"
         ></el-pagination>
       </div>
     </div>
@@ -102,10 +110,11 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
+      :close-on-click-modal="false"
       width="30%"
     >
       <el-scrollbar>
-        <Group :data="groupList"></Group>
+        <Group :data="groupList" :type="type" @onConfirmGroup="groupManageDialogVisible=false; getGroup()"></Group>
       </el-scrollbar>
     </el-dialog>
     <!-- 分组管理 dialog end -->
@@ -114,97 +123,44 @@
 <script>
 export default {
   props: {
+    /**
+     *  project: 项目公司
+     *  target: 目标公司
+     */
     type: {
       type: String,
       default() {
-        return "";
+        return "project";
       }
     }
   },
   components: {
     Group: () => import("@/components/tag/Group.vue"),
     ItemProject: () => import("@/components/tag/ItemProject.vue"),
-    ItemTarget: () => import("@/components/tag/ItemTarget.vue")
+    ItemTarget: () => import("@/components/tag/ItemTarget.vue"),
+    Add: () => import("@/components/tag/AddTagForTarget.vue"),
   },
   data() {
     return {
       groupManageDialogVisible: false,
-      groupList: [
-        {
-          groupNameEn: "分组一",
-          groupNameZh: "分组一",
-          value: "1",
-          label: "分组一",
-          id: "1"
-        },
-        {
-          groupNameEn: "分组一",
-          groupNameZh: "分组一",
-          id: "2",
-          value: "2",
-          label: "分组二"
-        },
-        {
-          groupNameEn: "分组一",
-          groupNameZh: "分组一",
-          id: "3",
-          value: "3",
-          label: "分组三"
-        },
-        {
-          groupNameEn: "分组一",
-          groupNameZh: "分组一",
-          id: "4",
-          value: "4",
-          label: "分组四"
-        }
-      ],
-      tagList: [
-        {
-          labelNameZh: "标签一",
-          labelNameEn: "标签一",
-          id: 1
-        },
-        {
-          labelNameZh: "标签二",
-          labelNameEn: "标签二",
-          id: 2
-        },
-        {
-          labelNameZh: "标签三",
-          labelNameEn: "标签三",
-          id: 3
-        },
-        {
-          labelNameZh: "标签四",
-          labelNameEn: "标签四",
-          id: 4
-        },
-        {
-          labelNameZh: "标签五",
-          labelNameEn: "标签五",
-          id: 5
-        },
-        {
-          labelNameZh: "标签六",
-          labelNameEn: "标签六",
-          id: 6
-        },
-        {
-          labelNameZh: "标签七",
-          labelNameEn: "标签七",
-          id: 7
-        }
-      ],
-      activeGroup: "1",
-      activeTag: 1,
+      groupList: [],
+      tagList: [],
+      companyList: [],
+      activeGroup: null,
+      activeTag: null,
       addTagName: "",
       isShowOperateMenu: false,
       tagRename: {name: "", id: ""},
       pagination: {
         pageSize: 10,
         pageNum: 1,
-        total: 20
+        total: 0,
+        allPage: 1
+      },
+      companyPage: {
+        pageSize: 25,
+        pageNum: 1,
+        total: 0
       }
     };
   },
@@ -215,7 +171,7 @@ export default {
           {
             value: "move",
             label: this.$t("tag.operateList[0]"),
-            children: this.groupList
+            children: []
           },
           {
             value: "rename",
@@ -234,41 +190,158 @@ export default {
   },
   methods: {
     /**
+     *  获取分组
+     */
+    getGroup() {
+      let uri = '/customer/item/label/group/withoutpaginglist';
+      if(this.type == 'target') {
+        uri = '/target/label/group/withoutpaginglist';
+      }
+      this.$http.post(uri, { groupStatus: 1 }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.groupList = res.datas;
+          // 默认选中第一个
+          this.groupList.length > 0 ? (this.activeGroup ? null : this.activeGroup = this.groupList[0].id) : null;
+          
+          this.appendOperateGroup();
+          // 获取标签
+          this.getTag();
+        } 
+      });
+    },
+    appendOperateGroup() {
+      // 移动分组处理
+      let operateChild = [];
+      this.groupList.map(val => {
+        operateChild.push({
+          value: val.id,
+          label: val.groupNameZh,
+          disabled: this.activeGroup == val.id
+        });
+      });
+      this.operateList[0].children = operateChild;
+    },
+    /**
+     *  根据分组，获取标签
+     */
+    getTag() {
+      let uri = '/customer/item/label/withpaginglist';
+      if (this.type == 'target') {
+        uri = '/target/label/withpaginglist';
+      }
+      this.$http.post(uri, {
+        keyWord: '',
+        labelGroupId: this.activeGroup,
+        pageNum: this.pagination.pageNum,
+        pageSize: this.pagination.pageSize
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.tagList = res.datas;
+          this.pagination.total = res.total;
+          this.pagination.allPage = res.pages;
+          res.datas.length > 0 ? (this.activeTag ? null : this.activeTag = res.datas[0].id) : null;
+          this.getCompany();
+        }
+      });
+    },
+    /**
+     *  根据标签查询哪些公司在使用
+     */
+    getCompany() {
+      if (!this.activeTag) {
+        return false;
+      }
+      let uri = '/customer/item/withpaginglist';
+      let params = {};
+      if (this.type == 'project') {
+        params = {
+          itemLabelId: this.activeTag
+        };
+      } else if (this.type == 'target') {
+        uri = '/target/company/label/withpaginglist';
+        params = {
+          labelId: this.activeTag
+        };
+      }
+      this.$http.post(uri, {...params, ...{pageSize: this.companyPage.pageSize, pageNum: this.companyPage.pageNum}}).then(res => {
+        if (res.iworkuCode == 200) {
+          this.companyList = res.datas;
+          if (this.companyList.length < this.companyPage.pageSize) {
+            let count = this.companyPage.pageSize - this.companyList.length;
+            for (let i = 0; i < count; i++) {
+              this.companyList.push({});
+            }
+          }
+          this.companyPage.total = res.total;
+        }
+      });
+    },
+    /**
      *  切换分组
      */
     onChangeGroup(item) {
       this.activeGroup = item.id;
+      this.activeTag = "";
+      this.pagination.pageNum = 1;
+      this.companyList = [];
+      for (let i = 0; i < this.companyPage.pageSize; i++) {
+        this.companyList.push({});
+      }
+      this.getTag();
+      this.appendOperateGroup();
     },
     /**
      *  切换标签
      */
     onChangeTag(item) {
       this.activeTag = item.id;
+      this.companyPage.pageNum = 1;
+      // 查看引用当前标签的公司
+      this.getCompany();
     },
-    /**
-     *  点击操作
-     */
-    onHandleCommand(command) {},
     /**
      *  添加标签, 不能超过20个
      */
     addTag() {
-      if (this.addTagName) {
-        this.tagList.push({
-          labelNameZh: this.addTagName,
-          labelNameEn: this.addTagName,
-          id: Math.floor(Math.random() * 100)
-        });
-        this.addTagName = "";
+      if (!this.addTagName || this.tagList.length >= 20) {
+        return false;
       }
+      let params = {
+        labelNameZh: this.addTagName,
+        labelNameEn: this.addTagName,
+        labelGroupId: this.activeGroup
+      };
+      let uri = '/customer/item/label/save';
+      if (this.type == 'target') {
+        uri = '/target/label/save';
+      }
+      this.$http.post(uri, params).then(res => {
+        if (res.iworkuCode == 200) {
+          this.tagList.unshift({...params, ...{id: res.datas}});
+          this.activeTag = res.datas;
+          // 如果一页中的标签多于10条，那么就删除最后一条
+          if (this.tagList.length > 10) {
+            this.tagList.pop();
+          }
+          this.$imessage({
+            content: this.$t("public.tips.success"),
+            type: "success"
+          });
+          this.addTagName = "";
+        }
+      });
     },
     /**
      *  切换操作菜单
      */
     onChangeOperate(item) {
+      if (!this.activeTag) {
+        return false;
+      }
       switch (item[0]) {
         case 'move':
            // 标签移动
+           this.moveTag(item);
            break;
         case 'rename':
             // 标签重命名
@@ -279,24 +352,26 @@ export default {
             }
             break;
         case 'delete':
-            // 标签删除
-            this.$confirm(
-              `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t("tag.deleteTagTip.content")}`,
-              this.$t("tag.deleteTagTip.title"),
-              {
-                confirmButtonText: this.$t("tag.deleteTagTip.btn.ok"),
-                cancelButtonText: this.$t("tag.deleteTagTip.btn.cancel"),
-                confirmButtonClass: "iworku-confirm-button",
-                cancelButtonClass: "iworku-confirm-cancel-button",
-                center: true,
-                dangerouslyUseHTMLString: true
-              }
-            ).then(() => {
-              // 确定删除
-              let index = this.tagList.findIndex(val => val.id == this.activeTag);
-              this.tagList.splice(index, 1);
-              this.activeTag = this.tagList[0].id;
-            });
+            if (!this.activeTag) {
+              return false;
+            }
+            res = this.tagList.find(val => val.id == this.activeTag);
+              // 标签删除
+              this.$confirm(
+                `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t("tag.deleteTagTip.content")}`,
+                this.$t("tag.deleteTagTip.title"),
+                {
+                  confirmButtonText: this.$t("tag.deleteTagTip.btn.ok"),
+                  cancelButtonText: this.$t("tag.deleteTagTip.btn.cancel"),
+                  confirmButtonClass: "iworku-confirm-button",
+                  cancelButtonClass: "iworku-confirm-cancel-button",
+                  center: true,
+                  dangerouslyUseHTMLString: true
+                }
+              ).then(() => {
+                // 确定删除
+                this.deleteTag();
+              }).catch(() =>{});
             break;
       }
       this.isShowOperateMenu = false;
@@ -305,12 +380,86 @@ export default {
      *  确定修改标签名称
      */
     onConfirmTagRename() {
-      let res = this.tagList.find(val => val.id == this.tagRename.id);
-      if (res) {
-        res.labelNameZh = this.tagRename.name;
-        res.labelNameEn = this.tagRename.name;
+      let index = this.tagList.findIndex(val => val.id == this.tagRename.id);
+      if (index > -1) {
+        let uri = '/customer/item/label/update'
+        if (this.type == 'target') {
+          uri = '/target/label/update';
+        }
+        this.$http.post(uri, {
+          id: this.tagList[index].id,
+          labelNameZh: this.tagRename.name,
+          labelNameEn: this.tagRename.name
+        }).then(res => {
+          if (res.iworkuCode == 200) {
+            this.tagList[index].labelNameZh = this.tagRename.name;
+            this.tagList[index].labelNameEn = this.tagRename.name;
+            this.$imessage({
+              content: this.$t("public.tips.success"),
+              type: "success"
+            });
+            // 清空
+            this.tagRename = {name: "", id: ""};
+          }
+        });
       }
-      this.tagRename = {name: "", id: ""};
+    },
+    /**
+     *  删除标签
+     */
+    deleteTag() {
+      let uri = '/customer/item/label/update';
+      if (this.type == 'target') {
+        uri = '/target/label/update';
+      }
+      this.$http.post(uri, { id: this.activeTag, labelStatus: 2 }).then(res => {
+        if (res.iworkuCode == 200) {
+          let index = this.tagList.findIndex(val => val.id == this.activeTag);
+          this.tagList.splice(index, 1);
+          this.activeTag = this.tagList[0].id;
+        }
+      });
+    },
+    /**
+     *  移动标签
+     */
+    moveTag(item) {
+      if (!item || !item[1]) return false;
+      let uri = '/customer/item/label/update';
+      if (this.type == 'target') {
+        uri = '/target/label/update';
+      }
+      this.$http.post(uri, {id: this.activeTag, labelGroupId: item[1]}).then(res => {
+        if (res.iworkuCode == 200) {
+          let index = this.tagList.findIndex(val => val.id == this.activeTag);
+          this.tagList.splice(index, 1);
+          this.activeTag = this.tagList[0].id;
+        }
+      });
+    },
+    /**
+     *  下一页
+     */
+    onNextPage() {
+      this.pagination.pageNum++;
+      this.pagination.pageNum > this.pagination.allPage ? this.pagination.pageNum = this.pagination.allPage : null;
+      this.getTag();
+    },
+    /**
+     *  上一页
+     */
+    onPrePage() {
+      this.pagination.pageNum--;
+      this.pagination.pageNum < 1 ? this.pagination.pageNum = 1 : null;
+      this.getTag();
+    }
+  },
+  watch: {
+    type: {
+      handler(newVal, oldVal) {
+        this.getGroup();
+      },
+      immediate: true
     }
   }
 };
@@ -383,7 +532,7 @@ export default {
     .active-tag {
       background-color: #8d43ff;
       color: white;
-      border-radius: 15px;
+      border-radius: 30px;
       transition: background-color 0s cubic-bezier(1, -0.03, 1, 0.28) 0s;
     }
   }

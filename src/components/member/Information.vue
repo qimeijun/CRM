@@ -3,11 +3,11 @@
   <section class="member-info">
     <div class="member-info__user">
       <div class="member-info__details">
-        <el-avatar :size="100" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
+        <el-avatar :size="100" :src="`${$global.avatarURI}${userInfo.userProfileImage}`"></el-avatar>
         <div class="member-info__details-left">
-          <p class="member-info__details-left-name">Zhangsan</p>
-          <p class="el-icon-location">chengdu,China</p>
-          <p class="member-info__details-left-gender">男</p>
+          <p class="member-info__details-left-name">{{ userInfo.userNameZh }}</p>
+          <p class="el-icon-location">{{ $lang == $global.lang.en ? userInfo.userCountryEn : userInfo.userCountryZh }}</p>
+          <p class="member-info__details-left-gender">{{ userInfo.userGender == '2' ?  $t("member.gender.male") : $t("member.gender.female") }}</p>
         </div>
         <el-button
           class="member-info__details-left-btn"
@@ -18,7 +18,7 @@
       <div class="member-info__account">
         <div>
           <p class="member-info__account-title">{{ $t("memberInfo.account") }}</p>
-          <p class="member-info__account-value">sjdkjfuisjsdfisjfksdf@iworku.com</p>
+          <p class="member-info__account-value">{{ userInfo.userEmail }}</p>
           <p class="member-info__account-title">{{ $t("memberInfo.password") }}</p>
           <p class="member-info__account-value">***********</p>
         </div>
@@ -58,7 +58,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <UpdateMemberInfo></UpdateMemberInfo>
+        <UpdateMemberInfo :user="userInfo" @onOperateSuccess="modifyMemberDialogVisible=false;getUserInfo();"></UpdateMemberInfo>
       </el-scrollbar>
     </el-dialog>
     <!-- 修改成员信息 dialog end -->
@@ -70,10 +70,11 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
+      :close-on-click-modal="false"
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <UpdatePassword></UpdatePassword>
+        <UpdatePassword :user="userInfo" @onOperateSuccess="modifyPasswordDialogVisible=false;"></UpdatePassword>
       </el-scrollbar>
     </el-dialog>
     <!-- 修改成员密码 dialog end -->
@@ -89,14 +90,28 @@ export default {
   data() {
     return {
       modifyMemberDialogVisible: false,
-      modifyPasswordDialogVisible: false
+      modifyPasswordDialogVisible: false,
+      id: this.$route.params.id,
+      userInfo: {}
     };
+  },
+  created() {
+    this.getUserInfo();
   },
   mounted() {
     this.getMemberStatisticsPie();
     this.getMemberStatisticsLine();
   },
   methods: {
+    // 获取用户信息
+    getUserInfo() {
+      this.$http.get(`/user/info/infobypk/${this.id}`).then(res => {
+        if (res.iworkuCode == 200) {
+          this.userInfo = res.datas;
+          // this.$store.commit('members/$_set_username', this.userInfo.userNameZh);
+        }
+      });
+    },
     /**
      *  统计饼图
      */
@@ -240,7 +255,7 @@ export default {
     margin-right: 0.1rem;
     flex: 1.5;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     padding: 0.3rem 0.2rem;
     background-color: $--default-white;
     border-radius: $--default-border-radius;
@@ -256,6 +271,7 @@ export default {
     }
     &-left-btn {
       margin-left: auto;
+      align-self: flex-start;
     }
   }
   &__account {
@@ -269,6 +285,9 @@ export default {
     line-height: 35px;
     &-title {
       color: $--default-light-gray;
+    }
+    &-value {
+      margin-top: -15px; 
     }
   }
   &__statistics {

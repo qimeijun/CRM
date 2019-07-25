@@ -197,7 +197,8 @@ export default {
             country: "请选择国家"
         },
         btn: {
-            confirm: "确认修改"
+            confirm: "确认修改",
+            add: "添加"
         }
     },
     public: {
@@ -217,7 +218,12 @@ export default {
         },
         tips: {
             success: "操作成功!",
-            error: "操作失败，请稍后再试!"
+            error: "操作失败，请稍后再试!",
+            noData: "暂无数据"
+        },
+        page: {
+            prePage: "上一页",
+            nextPage: "下一页"
         }
     },
     workBench: {

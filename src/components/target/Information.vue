@@ -7,7 +7,7 @@
     </div>
     <el-row>
       <el-col>
-        <Tag></Tag>
+        <Tag type="target" :id="targetid"></Tag>
       </el-col>
     </el-row>
     <el-row :gutter="10">
@@ -235,7 +235,16 @@ export default {
       showType: ""
     };
   },
+   computed: {
+    targetid(){
+      return this.$route.query.targetid
+    }
+  },
+ created() {
+    this.getTargetInfo(this.targetid);
+  },
   methods: {
+    // 移入公海
      onCancel() {
       this.$msgbox({
         title: "提示",
@@ -262,6 +271,15 @@ export default {
           });
         });
     },
+    // 获取目标公司资料
+    getTargetInfo(id){
+      this.$http.get(`/target/company/infobypk/${id}`).then(res=>{
+         console.log(res)
+        if(res.iworkuCode==200){
+         
+        }
+      })
+    }
   },
 };
 </script>

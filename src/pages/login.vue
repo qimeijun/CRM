@@ -91,7 +91,7 @@ export default {
                     }).then(res => {
                         this.submitBtnLoading = false;
                         if (res.iworkuCode == 200) {
-                            this.$session.set("user", res.datas);
+                            this.$store.commit('ipublic/$_set_userInfo', res.datas);
                             this.$router.push({ path: '/' });
                         }
                     });

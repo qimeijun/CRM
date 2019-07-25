@@ -1,6 +1,9 @@
 export default {
     head: {
-        title: "全球本地化营销管理系统"
+        title: "全球本地化营销管理系统",
+        account: "账号管理",
+        logout: "退出",
+        today: "今日工作"
     },
     workDiary: {
         title: "日志",

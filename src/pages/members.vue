@@ -22,6 +22,7 @@
       </div>
       <!-- 头部检索 end -->
       <template v-if="dataList.length > 0">
+        <!-- <Region :data="dataList" @getRegionId="getRegionId"></Region> -->
       <Region v-for="(item, index) in dataList" :key="index" :data="item" @getRegionId="getRegionId"></Region>
       </template>
       <template v-else>

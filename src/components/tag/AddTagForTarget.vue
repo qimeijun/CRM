@@ -1,12 +1,15 @@
 <template>
     <!-- 给项目或者目标公司 添加标签 -->
     <section class="add-tag">
+        <!-- 分组 -->
         <ul class="add-tag__group">
             <li v-for="(item, index) in groupList" @click="onChangeGrop(item)" :class="activeGroup == item.id ? 'active' : ''" :key="index">{{ item.groupNameZh }}</li>
         </ul>
+        <!-- 标签 -->
         <div class="add-tag__list">
-            <span v-for="(item, index) in tagList" @click="onSelectTag(item)" :class="selectTagSet.has(item.id) ? 'selected': ''" :key="index" :id="item.id">{{ item.labelNameZh }}</span>
+            <span v-for="(item, index) in tagList" @click="onSelectTag(item)" :class="selectTagMap.has(item.id) ? 'selected': ''" :key="index" :id="item.id">{{ item.labelNameZh }}</span>
         </div>
+        <!-- btn -->
         <div class="add-tag__bottom">
             <span @click="onAddTag">{{ $t("tag.btn.add") }}</span>
             <el-button type="primary" :loading="submitBtnLoading" @click="onConfirmTag">{{ $t("tag.btn.confirm") }}</el-button>
@@ -18,7 +21,7 @@ export default {
     props: {
         /**
          *  区分是操作项目公司还是目标公司
-         *  值为： project、target
+         *  值为： project 或者 target
          */
         type: {
             type: String,
@@ -35,6 +38,11 @@ export default {
         },
         /**
          *  原有的默认标签
+         *  {
+         *      id: "0f28f200-a2ee-11e9-b080-946e68be8353" 必传参数
+                labelNameEn: "标签显示中文名称"
+                labelNameZh: "标签显示中文名称" 必传参数
+         *  }
          */
         defaultTag: {
             type: Array,
@@ -45,10 +53,10 @@ export default {
     },
     data() {
         return {
-            activeGroup: '1',
+            activeGroup: null,
             groupList: [],
             tagList: [],
-            selectTagSet: new Set(),
+            selectTagMap: new Map(),
             submitBtnLoading: false
         }
     },
@@ -92,13 +100,16 @@ export default {
          *  选择标签
          */
         onSelectTag(item) {
+            if (Object.keys(item).length == 0) {
+                return false;
+            }
             /**
              * 如果已经选择的，点击一下就删除
              * 如果原来没有选择，点击一下就添加
              */
-            this.selectTagSet.has(item.id) ? this.selectTagSet.delete(item.id) : this.selectTagSet.add(item.id);
+            this.selectTagMap.has(item.id) ? this.selectTagMap.delete(item.id) : this.selectTagMap.set(item.id, item);
             // 重新赋值，否则检测不到数据变更
-            this.selectTagSet = new Set(this.selectTagSet);
+            this.selectTagMap = new Map(this.selectTagMap);
         },
         /**
          *  添加标签
@@ -109,8 +120,11 @@ export default {
         /**
          * 确定所选的标签
          */
-        onConfirmTag() {
-            let tagList = [...this.selectTagSet];
+        onConfirmTag() { 
+            if (!this.id) {
+                return false;
+            }        
+            let tagList = [...this.selectTagMap.keys()];
             let params = [];
             if (this.type == 'project') {
                 tagList.map(val => {
@@ -127,7 +141,7 @@ export default {
                             content: this.$t("public.tips.success"),
                             type: "success"
                         });
-                        this.$emit("onConfirmTag", tagList);
+                        this.$emit("onConfirmTag", [...this.selectTagMap.values()]);
                     }
                 });
             } else if (this.type == 'target') {
@@ -145,17 +159,26 @@ export default {
                             content: this.$t("public.tips.success"),
                             type: "success"
                         });
-                        this.$emit("onConfirmTag", tagList);
+                        this.$emit("onConfirmTag", [...this.selectTagMap.values()]);
                     }
                 });
             }
-            
         }
     },
     watch: {
         type: {
             handler(newVal, oldVal) {
                 this.getGroup();
+            },
+            immediate: true
+        },
+        defaultTag: {
+            handler(newVal, oldVal) {
+                if (newVal && newVal.length > 0) {
+                    newVal.map(val => {
+                        (val && val.id) ? this.selectTagMap.set(val.id, val) : null;
+                    });
+                }
             },
             immediate: true
         }

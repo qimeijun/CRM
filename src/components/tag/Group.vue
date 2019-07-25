@@ -7,7 +7,7 @@
           label-position="left"
           label-width="30px"
         >
-            <el-form-item v-for="(item, index) in groupList" :key="index" :label="`${index + 1}`" prop="group">
+            <el-form-item v-for="(item, index) in groupLists" :key="index" :label="`${index + 1}`" prop="group">
                 <el-input class="group__input" style="width: 90%;"
                 v-model="item.groupNameEn"
                 ></el-input>
@@ -15,7 +15,7 @@
                     <i :class="`el-icon-delete ${item.isDelete ? '' : 'disabled'}`" @click.stop="onDelete(item,index)"></i>
                 </span>
             </el-form-item>
-            <el-form-item v-if="(type == 'project' && groupList.length < 4) || (type == 'target' && groupList.length < 10)" style="text-align: center;">
+            <el-form-item v-if="(type == 'project' && groupLists.length < 4) || (type == 'target' && groupLists.length < 10)" style="text-align: center;">
                 <el-button style="width: 50%;" type="primary" @click="onAddGroup"><i class="el-icon-plus"></i></el-button>
             </el-form-item>
             <div>
@@ -53,17 +53,8 @@ export default {
         return {
             groupForm: {},
             deleteGroupList: [],
-            submitBtnLoading: false
-        }
-    },
-    computed: {
-        groupList: {
-            get: function () {
-                return this.data;
-            },
-            set: function (newVal) {
-                return newVal;
-            }
+            submitBtnLoading: false,
+            groupLists: []
         }
     },
     methods: {
@@ -72,8 +63,8 @@ export default {
          */
         onDelete(item, index)  {
             if (item.isDelete) {
-                this.groupList[index].groupStatus = 2;
-               let res = this.groupList.splice(index, 1);
+                this.groupLists[index].groupStatus = 2;
+               let res = this.groupLists.splice(index, 1);
                res.length > 0 ? this.deleteGroupList.push(...res) : null;
             }
         },
@@ -83,7 +74,7 @@ export default {
         onConfirmGroup() {
             let params = [];
             // 正常的标签
-            this.groupList.map(val => {
+            this.groupLists.map(val => {
                 params.push({
                     id: val.id,
                     groupNameEn: val.groupNameEn,
@@ -109,7 +100,7 @@ export default {
                             content: this.$t("public.tips.success"),
                             type: "success"
                         });
-                        this.$emit('onConfirmGroup', this.groupList);
+                        this.$emit('onConfirmGroup', this.groupLists);
                     }
                 });
             } else if (this.type == 'target') {
@@ -121,7 +112,7 @@ export default {
                             content: this.$t("public.tips.success"),
                             type: "success"
                         });
-                        this.$emit('onConfirmGroup', this.groupList);
+                        this.$emit('onConfirmGroup', this.groupLists);
                     }
                 })
             }
@@ -130,17 +121,27 @@ export default {
          *  新增添加输入框
          */
         onAddGroup() {
-            if (this.type == 'project' && this.groupList.length < 4) {
-                this.groupList.push({
+            if (this.type == 'project' && this.groupLists.length < 4) {
+                this.groupLists.push({
                     'groupNameEn': "",
                     isDelete: true
                 });
-            } else if (this.type == 'target' && this.groupList.length < 10) {
-                this.groupList.push({
+            } else if (this.type == 'target' && this.groupLists.length < 10) {
+                this.groupLists.push({
                     groupNameEn: "",
                     isDelete: true
                 });
             }
+        }
+    },
+    watch: {
+        data: {
+            handler(newVal, oldVal) {
+                if (newVal && newVal.length > 0) {
+                    this.groupLists = JSON.parse(JSON.stringify(newVal));
+                }
+            },
+            immediate: true
         }
     }
 }

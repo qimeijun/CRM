@@ -18,10 +18,10 @@
             </div>
             <!-- 工作日志模块 -->
             <div style="margin-top: 20px;">
-                <DiaryModule :item="{type: 1}"></DiaryModule>
-                <DiaryModule :item="{type: 2}"></DiaryModule>
+                <DiaryModule v-for="(item, index) in workDiarList" :key="index" :item="item"></DiaryModule>
+                <!-- <DiaryModule :item="{type: 2}"></DiaryModule>
                 <DiaryModule :item="{type: 3}"></DiaryModule>
-                <DiaryModule :item="{type: 4}"></DiaryModule>
+                <DiaryModule :item="{type: 4}"></DiaryModule> -->
             </div>
         </div>
         <div class="work-diary__right">
@@ -51,7 +51,7 @@
         :lock-scroll="true"
         width="30%">
         <el-scrollbar class="scrollbar">
-            <AddWorkDiary></AddWorkDiary>
+            <AddWorkDiary :id="id" :type="type" @onOperateSuccess="addWorkDiaryDialogVisible = false;"></AddWorkDiary>
         </el-scrollbar>
         </el-dialog>
         <!-- 添加工作日志 dialog end -->
@@ -59,6 +59,26 @@
 </template>
 <script>
 export default {
+    props: {
+        // 项目ID、目标公司ID、成员ID
+        id: {
+            type: String,
+            default() {
+                return "";
+            }
+        },
+        /**
+         * project 项目公司
+         * target  目标公司
+         * member  成员
+         */
+        type: {
+            type: String,
+            default() {
+                return 'project';
+            }
+        }
+    },
     components: {
         AddWorkDiary: () => import("@/components/work/AddWorkDiary.vue"),
         DiaryModule: () => import("@/components/work/DiaryModule.vue"), 
@@ -96,13 +116,30 @@ export default {
                     isRead: true
                 }
             ],
-            logMap: new Map()
+            logMap: new Map(),
+            workDiarList: []
         }
     },
     created() {
         this.dataProcessiong();
     },
     methods: {
+        /**
+         *  根据ID 查询工作日志
+         */
+        getWorkDiary(type) {
+            if (this.type == 'project') {
+                this.$http.post('/customer/followup/info/withoutpaginglist', {
+                    followItemId: this.id,
+                    followType: type
+                }).then(res => {
+                    if (res.iworkuCode == 200) {
+                        this.workDiarList = res.datas || [];
+                    }
+                });
+            }
+            
+        },
         /**
          * 切换顶部菜单
          */
@@ -136,7 +173,14 @@ export default {
                 // 获取月份
                 let month = new Date(newVal).getMonth() + 1;
             }
-            
+        },
+        id: {
+            handler(newval) {
+                if (newval) {
+                    this.getWorkDiary();
+                }
+            },
+            immediate: true
         }
     }
 }

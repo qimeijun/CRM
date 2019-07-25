@@ -3,10 +3,10 @@
         <div v-if="data.id" class="tag-item-project__content">
             <div class="title">{{ data.companyName }}</div>
             <div class="user">
-                <el-avatar :size="50" :src="``"></el-avatar>
+                <el-avatar :size="50" :src="`${data.avatarURI}${data.probjectManagerProfileImage}`"></el-avatar>
                 <div style="margin-left: .1rem;">
-                    <p style="font-size:16px;">{{ '哪个成员在跟进' }}</p>
-                    <i class="el-icon-location">{{ '成员所在国家' }}</i>
+                    <p style="font-size:16px;">{{ data.probjectManagerNameZh || data.probjectManagerNameEn }}</p>
+                    <i class="el-icon-location">{{ '越南' }}</i>
                 </div>
             </div>
             <!-- <div class="tag">

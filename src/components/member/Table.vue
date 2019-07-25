@@ -149,7 +149,7 @@ export default {
               content: this.$t('public.tips.success'),
               type: "success"
             });
-            this.$parent.$parent.$parent.getTeamData();
+            this.$parent.$parent.$parent.getRegionData();
           }
         });
     },

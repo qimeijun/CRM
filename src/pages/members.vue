@@ -11,7 +11,7 @@
             v-model="searchMember"
             :placeholder="$t('memberManagement.searchInput')"
           >
-          <i slot="suffix" style="cursor: pointer;" @click="getTeamData" class="el-input__icon el-icon-search"></i></el-input>
+          <i slot="suffix" style="cursor: pointer;" @click="getRegionData" class="el-input__icon el-icon-search"></i></el-input>
           <el-button
             class="member__top-search-btn"
             type="primary"
@@ -22,7 +22,6 @@
       </div>
       <!-- 头部检索 end -->
       <template v-if="dataList.length > 0">
-        <!-- <Region :data="dataList" @getRegionId="getRegionId"></Region> -->
       <Region v-for="(item, index) in dataList" :key="index" :data="item" @getRegionId="getRegionId"></Region>
       </template>
       <template v-else>
@@ -49,7 +48,7 @@
         width="30%"
       >
         <el-scrollbar>
-          <AddMember :params="isAddProjectManager ? {userRole: $global.userRole.projectManager} : {}" @onOperateSuccess="addMemberDialogVisible=false; isAddProjectManager=false; getTeamData();"></AddMember>
+          <AddMember :params="isAddProjectManager ? {userRole: $global.userRole.projectManager} : {}" @onOperateSuccess="addMemberDialogVisible=false; isAddProjectManager=false; getRegionData();"></AddMember>
         </el-scrollbar>
       </el-dialog>
       <!-- 添加成员 dialog end -->
@@ -77,8 +76,6 @@
       </el-dialog>
       <!-- 添加区域经理 dialog end -->
     </section>
-
-    <!-- <i-message></i-message> -->
   </el-scrollbar>
 </template>
 <script>
@@ -108,21 +105,20 @@ export default {
     };
   },
   created() {
-    this.getTeamData();
+    this.getRegionData();
   },
   methods: {
     /**
-     *  超级管理员查看人员，根据Team分类
+     *  超级管理员查看人员，根据区域分类
      */
-    getTeamData() {
-      this.$http.post("/user/team/withpaginglist", {
+    getRegionData() {
+      this.$http.post("/user/region/withpaginglist", {
         keyWord: this.searchMember,
         pageNum: this.pagination.pageNum,
         pageSize: this.pagination.pageSize
       }).then(res => {
         if (res.iworkuCode == 200) {
-          this.dataList = res.datas;
-          this.pagination.total = res.total;
+          this.dataList = res.datas || [];
         }
       });
     },
@@ -131,11 +127,11 @@ export default {
      */
     getManager(data) {
       this.addManagerDialogVisible = false;
-      let currentRegion = this.dataList.find(val => val.id == this.currentRegionId);
+      let currentRegion = this.dataList.find(val => val.regionId == this.currentRegionId);
       if (data) {
-        this.$http.post('/user/team/user/rel/regional/manager', { teamId: this.currentRegionId, userId: data.id }).then(res => {
+        this.$http.post('/user/region/user/rel/regional/manager', { regionId: this.currentRegionId, userId: data.id }).then(res => {
           if (res.iworkuCode == 200) {
-            currentRegion ? currentRegion.regionalManager.push(data) : null;
+            currentRegion ? currentRegion.regionalManagerList.push(data) : null;
           } 
         });
       }

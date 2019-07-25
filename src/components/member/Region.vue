@@ -10,7 +10,7 @@
     <!-- 区域经理 start -->
     <div class="member__regional">
       <div
-        v-for="(item, index) in regionalData.regionalManager"
+        v-for="(item, index) in regionalData.regionalManagerList"
         :key="index"
         class="member__regional-content"
       >
@@ -24,7 +24,7 @@
       <!-- 添加区域经理 start -->
       <!-- 最多只能添加4个区域经理 -->
       <div 
-        v-if="regionalData && regionalData.regionalManager && regionalData.regionalManager.length < 4"
+        v-if="regionalData && regionalData.regionalManagerList && regionalData.regionalManagerList.length < 4"
         class="member__regional-content member__regional-content-add"
         @click="onAddManager"
       >{{ $t("member.btn.addRegional") }}</div>
@@ -43,23 +43,32 @@
         <div>{{ $t('memberManagement.table[5]') }}</div>
         <div>{{ $t('memberManagement.table[6]') }}</div>
       </div>
-      <template v-if="memberList && memberList.length > 0">
-        <template v-for="(item, index) in memberList">
-          <TableList v-if="item" :key="index + 1" :item="{...item, ...{team: regionalData.teamName, teamId: regionalData.id}}"></TableList>
-          <!-- 子成员 start -->
-          <template v-if="item && item.children && item.children.length > 0">
-            <TableList
-              v-for="(cItem, cIndex) in item.children"
-              :key="`${cIndex}-${cItem.id}`"
-              :children="true"
-              :last="cIndex+1 == item.children.length ? true : false"
-              :item="{...cItem, ...{team: regionalData.teamName, teamId: regionalData.id}}"
-            ></TableList>
+      <!-- 团队 list -->
+      <template v-if="teamList && teamList.length > 0">
+        <template v-for="(item, index) in teamList">
+          <!-- 一定是先有项目经理才有团队，最后才能在团队里添加成员 -->
+          <template v-if="item && item.projectManager">
+            <!-- 管理员 start -->
+            <TableList  :key="index + 1" :item="{...item.projectManager, ...{team: item.teamName, teamId: item.id}}"></TableList>
+            <!-- 管理员 end -->
+            <!-- 成员 list start-->
+            <template v-if="item.userInfoList && item.userInfoList.length > 0">
+              <TableList
+                v-for="(cItem, cIndex) in item.userInfoList"
+                :key="`${cIndex}-${cItem.id}`"
+                :children="true"
+                :last="cIndex+1 == item.userInfoList.length ? true : false"
+                :item="{...cItem, ...{team: item.teamName, teamId: item.id}}"
+              ></TableList>
+            </template>
+            <!-- 成员 list end -->
           </template>
-          <!-- 子成员 end -->
+          <template v-else>
+            <div :key="`${index}-nodata`" style="margin-top: 10px;height:290px; background:#F0F0F0; border-radius:8px;"></div>
+          </template>
         </template>
       </template>
-      <!-- 团队没有成员时 -->
+      <!-- 区域没有团队时 -->
       <template v-else>
         <div style="margin-top: 10px;height:290px; background:#F0F0F0; border-radius:8px;"></div>
       </template>
@@ -71,7 +80,7 @@
 export default {
   props: {
     data: {
-      type: Object,
+      type: Object || Array,
       default() {
         return {};
       }
@@ -85,7 +94,7 @@ export default {
     return {
       isUpdateManager: false,
       regionalData: {},
-      memberList: []
+      teamList: []
     };
   },
   methods: {
@@ -94,20 +103,20 @@ export default {
      */
     onAddManager() {
       this.$parent.$parent.addManagerDialogVisible = true;
-      this.$emit("getRegionId", this.regionalData.id);
+      this.$emit("getRegionId", this.regionalData.regionId);
     },
     /**
      *  删除经理
      */
     onDeleteManager(params, index) {
       this.$http
-        .post("/user/team/user/rel/regional/manager/delete", {
-          teamId: this.regionalData.id,
+        .post("/user/region/user/rel/regional/manager/delete", {
+          regionId: this.regionalData.regionId,
           userId: params.id
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            this.regionalData.regionalManager.splice(index, 1);
+            this.regionalData.regionalManagerList.splice(index, 1);
           }
         });
     }
@@ -117,11 +126,8 @@ export default {
       handler(newVal, oldVal) {
         if (!newVal) return false;
         this.regionalData = { ...newVal };
-        // 显示 list 数据处理
-        if (newVal.projectManager) {
-           newVal.projectManager.children = newVal.userInfoList;
-           this.memberList = [newVal.projectManager];
-        } 
+        // 这个区域下的团队
+        this.teamList = newVal.teamResponseVOList || [];
       },
       immediate: true
     }

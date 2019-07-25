@@ -42,6 +42,10 @@ export default {
         },
         $_set_targetType(state, value) {
             state.targetType = value;
+        },
+        $_remove_userInfo(state) {
+            session.remove('user');
+            state.userInfo = {};
         }
     },
     // 提交到 mutations 中

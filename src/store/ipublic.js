@@ -13,8 +13,14 @@ export default {
         country: [],
         // 七牛token
         qiniuToken: "",
+        // 公司行业
+        industry: [],
+        // 项目状态
+        itemStatus:[],
         // 登录用户信息
-        userInfo: {}
+        userInfo: {},
+        // 客户类型
+        targetType:[],
     },
     // 提交
     mutations: {
@@ -24,13 +30,18 @@ export default {
         $_set_qiniuToken(state, value) {
             state.qiniuToken = value;
         },
+         $_set_industry(state, value) {
+            state.industry = value;
+        },
+         $_set_itemStatus(state, value) {
+            state.itemStatus = value;
+        },
         $_set_userInfo(state, value) {
             session.set('user', value);
             state.userInfo = value;
         },
-        $_remove_userInfo(state) {
-            session.remove('user');
-            state.userInfo = {};
+        $_set_targetType(state, value) {
+            state.targetType = value;
         }
     },
     // 提交到 mutations 中
@@ -46,6 +57,15 @@ export default {
         },
         qiniuToken: state => {
             return state.qiniuToken;
+        },
+        industry:state =>{
+            return state.industry;
+        },
+        itemStatus:state =>{
+            return state.itemStatus;
+        },
+        targetType:state =>{
+            return state.targetType;
         },
         userInfo: state => {
             if (Object.keys(state.userInfo).length == 0) {

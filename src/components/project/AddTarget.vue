@@ -20,12 +20,12 @@
           <el-input v-model="companyForm.name" placeholder="请输入公司名称"></el-input>
         </el-form-item>
         <el-form-item style="width:250px;" :label="$t('target.form.country')" prop="country">
-          <el-select v-model="companyForm.country">
+          <el-select filterable v-model="companyForm.country">
             <el-option
               v-for="(item,index) in countryList"
               :key="'country'+index"
-              :label="item.nameZh"
-              :value="item.value"
+              :label="$lang==$global.lang.en?item.areaNameEn:item.areaNameZh"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -56,13 +56,7 @@
           <el-input v-model="keymenForm.name" placeholder="请输入公司名称"></el-input>
         </el-form-item>
         <el-form-item :label="$t('target.form.position')">
-          <el-select v-model="keymenForm.position">
-            <el-option
-              v-for="(item,index) in positionList"
-              :key="'position'+index"
-              :label="item.nameZh"
-            ></el-option>
-          </el-select>
+          <el-input v-model="keymenForm.position"></el-input>
         </el-form-item>
         <el-form-item :label="$t('target.form.keymenPhone')">
           <el-input v-model="keymenForm.phone"></el-input>
@@ -93,9 +87,10 @@
         <el-form-item :label="$t('target.form.clientType')">
           <el-select v-model="otherForm.type">
             <el-option
-              v-for="(item,index) in countryList"
+              v-for="(item,index) in targetTypeList"
               :key="'position'+index"
-              :label="item.nameZh"
+              :label="$lang==$global.lang.en?item.nameEn:item.nameZh"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -123,25 +118,12 @@
   </section>
 </template>
 <script>
+import { getCountry, getTargetType } from "@/plugins/configuration.js";
 export default {
-  computed: {
-    countryList() {
-      return [
-        {
-          nameZh: "中国",
-          nameEn: "中国en",
-          value: "1"
-        },
-        {
-          nameZh: "中国2",
-          nameEn: "中国en2",
-          value: "2"
-        }
-      ];
-    }
-  },
   data() {
     return {
+      countryList: [],
+      targetTypeList: [],
       activeName: 1,
       companyForm: {
         name: "",
@@ -185,17 +167,51 @@ export default {
       }
     };
   },
+  computed: {
+    itemid() {
+      return this.$route.query.itemid;
+    }
+  },
+  async created() {
+    // 国家
+    this.countryList = await getCountry(this);
+    // 公司类型
+    this.targetTypeList = await getTargetType(this);
+  },
   methods: {
     /**
      *  提交表单
      */
     onSubmitForm(formName, number) {
-      console.log(this[formName]);
       this.$refs[formName].validate(valid => {
         if (valid) {
           alert("submit!");
           if (number === 4) {
             this.$emit("close");
+            let params = {
+              targetCompanyName: this.companyForm.name,
+              targetCompanyCountry: this.companyForm.name,
+              itemId: this.itemid,
+              targetCompanyAddress: this.companyForm.site,
+              targetCompanyWebsite: this.companyForm.url,
+              targetCompanyTel: this.companyForm.phone,
+              personName: this.keymenForm.name,
+              personPosition: this.keymenForm.position,
+              personTel: this.keymenForm.phone,
+              personEmail: this.keymenForm.email,
+              personAccount: this.keymenForm.social,
+              nodeCustomerSource: this.otherForm.source,
+              nodeClientType: this.otherForm.type,
+              nodePurchaseScale: this.otherForm.scale,
+              nodeHacode: this.otherForm.hsCode,
+              nodeGrade: this.otherForm.rate,
+              nodeProfile: this.otherForm.introduce,
+              nodeRemarks: this.otherForm.note
+            };
+            this.$http.post("/target/company/save", params).then(res=>{
+              if(res.iworkuCode==200){
+              }
+            });
           } else {
             this.activeName = number;
           }

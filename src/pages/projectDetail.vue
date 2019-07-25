@@ -1,22 +1,9 @@
 <template>
+<!-- 项目详情 -->
   <section class="project-details">
     <div class="project-details__top">
       <PageHeader url="/projectmanage"></PageHeader>
       <div class="project-details__top-name">{{$t("projectInfo.title")}}</div>
-      <template v-if="activeMenu!=='diary'">
-        <template v-if="activeMenu!=='product'">
-          <el-input class="project-details__top-seek" placeholder="请输入内容" v-model="seek">
-            <i slot="suffix" class="el-input__icon el-icon-search" @click="onClickSeek()"></i>
-          </el-input>
-          <el-button type="primary" @click="addShow=true">{{$t("projectInfo.importTarget.add")}}</el-button>
-          <el-button
-            type="primary"
-            @click="importShow=true"
-          >{{$t("projectInfo.importTarget.import")}}</el-button>
-        </template>
-
-        <el-button class="project-details__top-endbtn">{{$t("projectInfo.endProject")}}</el-button>
-      </template>
     </div>
     <div class="project-details__content">
       <div class="project-details__menu">
@@ -27,7 +14,7 @@
             :class="activeMenu == item.value ? 'project-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
           >
-            <router-link :to="`/project/detail/${item.route}`">{{ item.name }}</router-link>
+            <router-link :to="`/project/detail/${item.route}?itemid=${itemid}`">{{ item.name }}</router-link>
           </li>
         </ul>
       </div>
@@ -37,97 +24,70 @@
             <router-view></router-view>
           </el-col>
           <el-col v-if="activeMenu==='information'||activeMenu==='product'" :span="8">
-            <Tag></Tag>
+            <Tag type="project" :id="itemid"></Tag>
             <Member></Member>
           </el-col>
         </el-row>
       </el-scrollbar>
     </div>
-    <!-- 新增目标公司 start -->
-    <el-dialog
-      class="el-dialog__scroll"
-      :title="$t('projectInfo.importTarget.add')"
-      :visible.sync="addShow"
-      top="5vh"
-      :append-to-body="true"
-      :modal="false"
-      :lock-scroll="true"
-      width="30%"
-    >
-      <el-scrollbar class="scrollbar">
-        <AddTarget @close="addShow=false"></AddTarget>
-      </el-scrollbar>
-    </el-dialog>
-    <!-- 新增目标公司 end -->
-    <!-- 导入目标公司 start-->
-    <el-dialog
-      class="el-dialog__scroll"
-      :title="$t('projectInfo.importTarget.import')"
-      :visible.sync="importShow"
-      top="5vh"
-      :append-to-body="true"
-      :modal="false"
-      :lock-scroll="true"
-      width="30%"
-    >
-      <el-scrollbar class="scrollbar">
-        <ImportTarget @close="importShow=false"></ImportTarget>
-      </el-scrollbar>
-    </el-dialog>
-    <!-- 导入目标公司 end-->
+  
   </section>
 </template>
 <script>
 import PageHeader from "@/components/lib/PageHeader.vue";
 import Tag from "@/components/project/Tag.vue";
 import Member from "@/components/project/Member.vue";
-import AddTarget from "@/components/project/AddTarget.vue";
-import ImportTarget from "@/components/project/ImportTarget.vue";
 export default {
   data() {
     return {
       activeMenu: "information",
       menuList: [
+        // 资料
         {
           name: this.$t("projectInfo.menu[0]"),
           value: "information",
           route: "info"
         },
+        // 产品
         {
           name: this.$t("projectInfo.menu[1]"),
           value: "product",
           route: "product"
         },
+        // 项目公海
         {
           name: this.$t("projectInfo.menu[2]"),
           value: "commonality",
           route: "commonality"
         },
+        // 私海
         {
           name: this.$t("projectInfo.menu[3]"),
           value: "private",
           route: "private"
         },
+        // 日志
         {
           name: this.$t("projectInfo.menu[4]"),
           value: "diary",
           route: "diary"
         }
       ],
-      seek: "",
-      addShow: false,
-      importShow: false
     };
   },
   created() {
     this.activeMenu = this.$route.name;
+    console.log(this.activeMenu)
+  },
+  computed: {
+    itemid(){
+      return this.$route.query.itemid
+    }
   },
   components: {
     PageHeader,
     Tag,
-    Member,
-    AddTarget,
-    ImportTarget
+    Member
   },
   methods: {
     /**
@@ -135,8 +95,8 @@ export default {
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
-      this.$router.push({ path: `/project/detail/${item.route}` });
-    }
+      this.$router.push({ path: `/project/detail/${item.route}?itemid=${this.itemid}` });
+    },
   }
 };
 </script>
@@ -151,13 +111,6 @@ export default {
       font-size: 24px;
       margin-left: 0.2rem;
       flex-grow: 2;
-    }
-    &-seek {
-      width: 313px;
-      margin-right: 0.1rem;
-    }
-    &-endbtn {
-      color: $--default-color;
     }
   }
   &__content {

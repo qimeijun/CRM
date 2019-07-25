@@ -43,3 +43,57 @@ export const rename = (name) => {
     let fileName = name.replace(oldName, newName);
     return fileName;
 }
+
+/**
+ *  获取公司行业
+ */
+export const getIndustry= async ({$http, $store, $lang, $global}) => {
+    let industry = $store.getters['ipublic/industry'];
+    if (industry.length == 0) {
+        let params = {sortname: 'd_stort_en'};
+        $lang == $global.lang.en ? params.sortname = 'd_stort_en' : params.sortname = 'd_stort_zh';
+        let res = await $http.post('/properties/dictionary/withoutpaginglist', { treeCode:"INDUSTRIES",  ...params});
+        if (res.iworkuCode == 200) {
+            industry = res.datas;
+            $store.commit('ipublic/$_set_industry', res.datas);
+        } else {
+        }
+    }
+    return industry;
+}
+
+/**
+ *  获取项目状态字典
+ */
+export const getItemStatus= async ({$http, $store, $lang, $global}) => {
+    let itemStatus = $store.getters['ipublic/itemStatus'];
+    if (itemStatus.length == 0) {
+        let params = {sortname: 'd_stort_en'};
+        $lang == $global.lang.en ? params.sortname = 'd_stort_en' : params.sortname = 'd_stort_zh';
+        let res = await $http.post('/properties/dictionary/withoutpaginglist', { treeCode:"ITEM_STATUS",  ...params});
+        if (res.iworkuCode == 200) {
+            itemStatus = res.datas;
+            $store.commit('ipublic/$_set_itemStatus', res.datas);
+        } else {
+        }
+    }
+    return itemStatus;
+}
+
+/**
+ *  获取目标公司类型
+ */
+export const getTargetType= async ({$http, $store, $lang, $global}) => {
+    let targetType = $store.getters['ipublic/targetType'];
+    if (targetType.length == 0) {
+        let params = {sortname: 'd_stort_en'};
+        $lang == $global.lang.en ? params.sortname = 'd_stort_en' : params.sortname = 'd_stort_zh';
+        let res = await $http.post('/properties/dictionary/withoutpaginglist', { treeCode:"TARGET_COMPANY_CLIENT_TYPE",  ...params});
+        if (res.iworkuCode == 200) {
+            targetType = res.datas;
+            $store.commit('ipublic/$_set_targetType', res.datas);
+        } else {
+        }
+    }
+    return targetType;
+}

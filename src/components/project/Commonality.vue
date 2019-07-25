@@ -1,12 +1,36 @@
 <template>
+<!-- 项目公海 -->
   <section class="project-detail-commonality">
+    <div style="position:fixed; top: 1rem; right: .2rem; display:flex;">
+      <el-input class="commonality-seek" placeholder="请输入内容" v-model="seek" @keyup.enter.native="getCommonality(itemid, 1)">
+        <i
+          slot="suffix"
+          class="el-input__icon el-icon-search"
+          @click="getCommonality(itemid, 1)"
+        ></i>
+      </el-input>
+      <el-button type="primary" @click="addShow=true">{{$t("projectInfo.importTarget.add")}}</el-button>
+      <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
+      <!-- 结束项目 -->
+      <el-button
+        class="commonality-endbtn"
+        @click="onDeleteMember(itemid,2)"
+      >{{$t("projectInfo.endProject")}}</el-button>
+      <!-- 重启项目 -->
+      <el-button class="commonality-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+    </div>
     <div class="commonality_top">
       <!-- 分类 start -->
-      <el-select class="top_select" v-model="value" placeholder="请选择">
+      <el-select
+        class="top_select"
+        v-model="targetType"
+        placeholder="请选择"
+        @change="getCommonality(itemid, 1)"
+      >
         <el-option
-          v-for="item in classifys"
+          v-for="item in targetTypeList"
           :key="item.value"
-          :label="item.label"
+          :label="$lang==$global.lang.en?item.nameEn:item.nameZh"
           :value="item.value"
         ></el-option>
       </el-select>
@@ -15,10 +39,9 @@
       <el-cascader
         class="top_select"
         v-model="tag"
-        :options="taglist"
         :show-all-levels="false"
-        :props="{ expandTrigger: 'hover' }"
-        @change="onClickTag"
+        :props="props"
+        @change="getCommonality(itemid, 1)"
       ></el-cascader>
       <!-- 标签 end -->
       <el-button type="primary" @click="allocationShow=true">{{$t("project.allot")}}</el-button>
@@ -33,28 +56,61 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="35"></el-table-column>
-        <el-table-column prop="name" :label="$t('projectInfo.commonality.tableHeader[0]')" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="rate" :label="$t('projectInfo.commonality.tableHeader[1]')" width="150">
+        <el-table-column
+          prop="targetCompanyName"
+          :label="$t('projectInfo.commonality.tableHeader[0]')"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="status"
+          :label="$t('projectInfo.commonality.tableHeader[1]')"
+          width="150"
+        >
           <template slot-scope="scope">
             <el-rate v-model="scope.row.rate" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
             <p>重点跟进客户</p>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('projectInfo.commonality.tableHeader[2]')" width="120">
-          <template slot-scope="scope">{{ scope.row.date }}</template>
+        <el-table-column
+          prop="updateTimeStr"
+          :label="$t('projectInfo.commonality.tableHeader[2]')"
+          width="120"
+        >
+          <template slot-scope="scope">
+            <p>{{scope.row.updateTimeStr?scope.row.updateTimeStr.split(' ')[0]:''}}</p>
+          </template>
         </el-table-column>
-        <el-table-column prop="name" :label="$t('projectInfo.commonality.tableHeader[3]')" width="120"></el-table-column>
-        <el-table-column prop="date" :label="$t('projectInfo.commonality.tableHeader[4]')" width="120"></el-table-column>
-        <el-table-column prop="name" :label="$t('projectInfo.commonality.tableHeader[5]')" width="120"></el-table-column>
+        <el-table-column
+          prop="statusNameZh"
+          :label="$t('projectInfo.commonality.tableHeader[3]')"
+          width="120"
+        ></el-table-column>
+        <el-table-column
+          prop="addTimeStr"
+          :label="$t('projectInfo.commonality.tableHeader[4]')"
+          width="120"
+        >
+          <template slot-scope="scope">
+            <p>{{scope.row.addTimeStr?scope.row.addTimeStr.split(' ')[0]:''}}</p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="division"
+          :label="$t('projectInfo.commonality.tableHeader[5]')"
+          width="120"
+        ></el-table-column>
         <el-table-column :label="$t('projectInfo.commonality.tableHeader[6]')" width="60">
           <template slot-scope="scope">
             <Operate>
               <ul>
                 <li>
-                  <router-link to="/target/detail">{{$t("project.view")}}</router-link>
+                  <router-link :to="`/target/detail?targetid=${scope.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
                 <li class="table_operation" @click="allocationShow=true">{{$t("project.allot")}}</li>
-                <li class="table_operation" @click="onCancel(scope.row.id)">{{$t("project.invalid")}}</li>
+                <li
+                  class="table_operation"
+                  @click="onCancel(scope.row.id)"
+                >{{$t("project.invalid")}}</li>
               </ul>
             </Operate>
           </template>
@@ -77,144 +133,113 @@
       </el-scrollbar>
     </el-dialog>
     <!-- 分配 end -->
+    <!-- 新增目标公司 start -->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('projectInfo.importTarget.add')"
+      :visible.sync="addShow"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+        <AddTarget @close="addShow=false"></AddTarget>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 新增目标公司 end -->
+    <!-- 导入目标公司 start-->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('projectInfo.importTarget.import')"
+      :visible.sync="importShow"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+        <ImportTarget @close="importShow=false"></ImportTarget>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 导入目标公司 end-->
   </section>
 </template>
 <script>
+import { getTargetType } from "@/plugins/configuration.js";
 export default {
   components: {
     Operate: () => import("@/components/lib/Operate.vue"),
     ChangeAdministrator: () =>
-      import("@/components/member/ChangeAdministrator.vue")
+      import("@/components/member/ChangeAdministrator.vue"),
+    AddTarget: () => import("@/components/project/AddTarget.vue"),
+    ImportTarget: () => import("@/components/project/ImportTarget.vue")
   },
   data() {
     return {
-      classifys: [
-        {
-          value: "选项1",
-          label: "分类1"
-        },
-        {
-          value: "选项2",
-          label: "分类2"
-        },
-        {
-          value: "选项3",
-          label: "分类3"
-        },
-        {
-          value: "选项4",
-          label: "分类4"
-        },
-        {
-          value: "选项5",
-          label: "分类5"
+      targetTypeList: [],
+      props: {
+        lazy: true,
+        lazyLoad: (node, resolve) => {
+          if (node.level == 0) {
+            // 获取项目标签分组
+            this.$http
+              .post("/target/label/group/withoutpaginglist", {
+                groupStatus: 1
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  let taglist = res.datas.map(o => {
+                    return {
+                      value: o.id,
+                      label: o.groupNameZh
+                    };
+                  });
+                  resolve(taglist);
+                }
+              });
+          } else {
+            // 获取项目各组标签
+            this.$http
+              .post(`/target/label/withoutpaginglist`, {
+                labelGroupId: node.value
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  let taglist = res.datas.map(o => {
+                    return {
+                      value: o.id,
+                      label: o.labelNameZh,
+                      leaf: true
+                    };
+                  });
+                  resolve(taglist);
+                }
+              });
+          }
         }
-      ],
-      taglist: [
-        {
-          value: "zuyi",
-          label: "组1",
-          children: [
-            {
-              value: "biaoxian1",
-              label: "标签1"
-            },
-            {
-              value: "biaoxian2",
-              label: "标签2"
-            },
-            {
-              value: "biaoxian3",
-              label: "标签3"
-            }
-          ]
-        },
-        {
-          value: "zuer",
-          label: "组2",
-          children: [
-            {
-              value: "biaoxian1",
-              label: "标签"
-            },
-            {
-              value: "biaoxian2",
-              label: "标签2"
-            },
-            {
-              value: "biaoxian3",
-              label: "标签3"
-            }
-          ]
-        },
-        {
-          value: "zusan",
-          label: "组3",
-          children: [
-            {
-              value: "biaoxian1",
-              label: "标签1"
-            },
-            {
-              value: "biaoxian2",
-              label: "标签2"
-            },
-            {
-              value: "biaoxian3",
-              label: "标签3"
-            }
-          ]
-        }
-      ],
-      tableData: [
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-08",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-06",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        },
-        {
-          date: "2016-05-07",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4
-        }
-      ],
+      },
+      tableData: [],
       multipleSelection: [],
       tag: "",
-      value: "",
-      allocationShow:false
+      targetType: "",
+      seek: "",
+      allocationShow: false,
+      addShow: false,
+      importShow: false
     };
+  },
+  computed: {
+    itemid() {
+      return this.$route.query.itemid;
+    }
+  },
+  async created() {
+    // 获取公司类型
+    this.targetTypeList = await getTargetType(this);
+    this.getCommonality(this.itemid, 1);
   },
   methods: {
     onCancel() {
@@ -229,26 +254,130 @@ export default {
         center: true
       })
         .then(() => {
-          // 取消删除
-          this.$message({
-            type: "success",
-            message: "取消删除"
-          });
+          // 确定
+          this.$http
+            .post("/target/company/status/update", {
+              id: id,
+              status: 4 //目标公司状态（ 1.待跟进 2跟进中 3.未跟进 4.作废）
+            })
+            .then(res => {
+              if (res.iworkuCode == 200) {
+                this.$message({
+                  type: "success",
+                  message: "已作废"
+                });
+              }
+            });
         })
         .catch(() => {
-          // 确定删除
+          // 取消
           this.$message({
             type: "info",
-            message: "确定删除"
+            message: "已取消操作"
           });
         });
     },
-    handleSelectionChange() {},
-    onClickTag() {}
+    // 获取项目公海列表
+    getCommonality(id, page) {
+      this.$http
+        .post("/target/company/withpaginglist", {
+          id: id,
+          type: 1,
+          pageNum: page,
+          clientType: this.targetType,
+          labelId: this.tag[1],
+          keyWord: `${this.seek}`
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            console.log("项目公海", res);
+            this.tableData = res.datas;
+          }
+        });
+    },
+     // 结束项目
+    onDeleteMember(id) {
+      this.$msgbox({
+        title: "提示",
+        message:
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要结束此项目吗？</p>",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 确定
+          this.$http
+            .post("/customer/item/update/status", {
+              itemId: id,
+              itemStatus: 2
+            })
+            .then(res => {});
+          this.$message({
+            type: "success",
+            message: "已结束项目"
+          });
+        })
+        .catch(() => {
+          // 取消
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
+    },
+    // 重启项目
+    onRestartMember(id) {
+      this.$msgbox({
+        title: "提示",
+        message:
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要重启此项目吗？</p>",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 确定
+          this.$http
+            .post("/customer/item/update/status", {
+              itemId: id,
+              itemStatus: 3
+            })
+            .then(res => {});
+          this.$message({
+            type: "success",
+            message: "已重启项目"
+          });
+        })
+        .catch(() => {
+          // 取消
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
+    },
+    handleSelectionChange(){
+      
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
+.commonality-seek {
+  width: 313px;
+  margin-right: 0.1rem;
+}
+.commonality-endbtn {
+      color: $--default-color;
+    }
+.el-icon-search{
+  cursor: pointer;
+}
 .commonality_top {
   display: flex;
   align-items: center;

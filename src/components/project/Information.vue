@@ -1,49 +1,69 @@
 <template>
   <section class="project-detail-info">
+    <div style="position:fixed; top: 1rem; right: .2rem;">
+          <!-- 结束项目 -->
+      <el-button
+        class="info-endbtn"
+        @click="onDeleteMember(itemid,2)"
+      >{{$t("projectInfo.endProject")}}</el-button>
+      <!-- 重启项目 -->
+      <el-button class="info-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+    </div>
     <!-- 资料展示 start -->
     <div class="info_top">
       <div class="info_top_div" style="align-items:center">
         <h3>{{$t("projectInfo.menu[0]")}}</h3>
         <div>
+          <!-- 修改密码 -->
           <el-button type="text" @click="passwordshow=true">{{$t("password.modify")}}</el-button>
-          <el-button type="primary" size="small" @click="show = true;infoFrom=info">{{$t("project.btn.edit")}}</el-button>
+          <!-- 编辑 -->
+          <el-button
+            type="primary"
+            size="small"
+            @click="show = true;infoFrom={...info}"
+          >{{$t("project.btn.edit")}}</el-button>
         </div>
       </div>
       <div class="info_top_div">
         <p>
           <span>{{$t("project.from.companyName")}}</span>
           <br />
-          <span>{{info.name}}</span>
+          <span>{{info.companyName}}</span>
         </p>
         <p>
           <span>{{$t("project.from.tmt")}}</span>
           <br />
-          <span>{{info.tmt}}</span>
+          <span>{{info.companyIndustry}}</span>
         </p>
         <p>
           <span>{{$t("project.from.site")}}</span>
           <br />
-          <span>{{info.site}}</span>
+          <span>{{info.companyAddress}}</span>
         </p>
         <p>
           <span>{{$t("project.from.url")}}</span>
           <br />
-          <span>{{info.url}}</span>
+          <span>{{info.companyWebsite}}</span>
         </p>
         <p>
           <span>{{$t("project.from.email")}}</span>
           <br />
-          <span>{{info.email}}</span>
+          <span>{{info.companyEmail}}</span>
+        </p>
+        <p>
+          <span>{{'公司电话'}}</span>
+          <br />
+          <span>{{info.companyTel}}</span>
         </p>
       </div>
     </div>
     <div class="info_intro">
       <h4>{{$t("project.from.intro")}}</h4>
-      <p>{{info.intro}}</p>
+      <p>{{info.companyProfile}}</p>
     </div>
     <div class="info_strength">
       <h4>{{$t("project.from.strength")}}</h4>
-      <p>{{info.strength}}</p>
+      <p>{{info.companyStrength}}</p>
     </div>
     <!-- 资料展示 end -->
 
@@ -51,58 +71,69 @@
       <!-- 编辑资料弹窗 start -->
       <el-dialog class="el-dialog__scroll" title="修改资料" :visible.sync="show" width="600px">
         <el-scrollbar class="scrollbar">
-        <h1>{{$t("project.from.secondTitle")}}</h1>
-        <el-form :model="infoFrom" label-position="top">
-          <el-form-item :label="$t('project.from.projectTitle')">
-            <el-input v-model="infoFrom.name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.companyName')">
-            <el-input v-model="infoFrom.name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.tmt')">
-            <el-select v-model="infoFrom.tmt" placeholder="请选择行业">
-              <el-option label="行业1" value="shanghai"></el-option>
-              <el-option label="行业2" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.site')">
-            <el-input v-model="infoFrom.site" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.url')">
-            <el-input v-model="infoFrom.url" autocomplete="off"></el-input>
-          </el-form-item>
-          <!-- 电子邮箱 -->
-          <el-form-item :label="$t('project.from.email')">
-            <el-input
-              v-model="infoFrom.email"
-              autocomplete="off"
-              :placeholder="$t('project.placeholder.email')"
-            ></el-input>
-          </el-form-item>
-          <!-- 公司简介 -->
-          <el-form-item :label="$t('project.from.intro')">
-            <el-input
-              v-model="infoFrom.intro"
-              autocomplete="off"
-              :placeholder="$t('project.placeholder.intro')"
-              type="textarea"
-              :rows="4"
-            ></el-input>
-          </el-form-item>
-          <!-- 优势 -->
-          <el-form-item :label="$t('project.from.strength')">
-            <el-input
-              v-model="infoFrom.strength"
-              autocomplete="off"
-              :placeholder="$t('project.placeholder.strength')"
-              type="textarea"
-              :rows="4"
-            ></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="show = false">{{$t("project.btn.ok")}}</el-button>
-        </div>
+          <h1>{{$t("project.from.secondTitle")}}</h1>
+          <el-form :model="infoFrom" ref="infoFrom" :rules="infoRules" label-position="top">
+            <el-form-item :label="$t('project.from.projectTitle')">
+              <el-input v-model="infoFrom.itemName" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('project.from.companyName')" prop="companyName">
+              <el-input v-model="infoFrom.companyName" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('project.from.tmt')" prop="companyIndustry">
+              <el-select v-model="infoFrom.companyIndustry" placeholder="请选择行业">
+                <el-option
+                  v-for="(item,index) in industryList"
+                  :key="'industry'+index"
+                  :label="$lang==$global.lang.en?item.nameEn:nameZh"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('project.from.site')" prop="companyAddress">
+              <el-input v-model="infoFrom.companyAddress" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('project.from.url')" prop="companyWebsite">
+              <el-input v-model="infoFrom.companyWebsite" autocomplete="off"></el-input>
+            </el-form-item>
+            <!-- 电子邮箱 -->
+            <el-form-item :label="$t('project.from.email')" prop="companyEmail">
+              <el-input
+                v-model="infoFrom.companyEmail"
+                autocomplete="off"
+                :placeholder="$t('project.placeholder.email')"
+              ></el-input>
+            </el-form-item>
+            <!-- 公司电话 -->
+            <el-form-item :label="'公司电话'" prop="companyTel">
+              <el-input v-model="infoFrom.companyTel" autocomplete="off" :placeholder="'请输入公司电话'"></el-input>
+            </el-form-item>
+            <!-- 公司简介 -->
+            <el-form-item :label="$t('project.from.intro')" prop="companyProfile">
+              <el-input
+                v-model="infoFrom.companyProfile"
+                autocomplete="off"
+                :placeholder="$t('project.placeholder.intro')"
+                type="textarea"
+                :rows="4"
+              ></el-input>
+            </el-form-item>
+            <!-- 优势 -->
+            <el-form-item :label="$t('project.from.strength')">
+              <el-input
+                v-model="infoFrom.companyStrength"
+                autocomplete="off"
+                :placeholder="$t('project.placeholder.strength')"
+                type="textarea"
+                :rows="4"
+              ></el-input>
+            </el-form-item>
+            <el-form-item class="update_info_btn">
+              <el-button
+                type="primary"
+                @click="show = false;updateInfo('infoFrom')"
+              >{{$t("project.btn.ok")}}</el-button>
+            </el-form-item>
+          </el-form>
         </el-scrollbar>
       </el-dialog>
       <!-- 编辑资料弹窗 end -->
@@ -113,42 +144,219 @@
   </section>
 </template>
 <script>
+import { getIndustry } from "@/plugins/configuration.js";
 export default {
   components: {
     UpdatePassword: () => import("@/components/member/UpdatePassword.vue")
   },
   data() {
     return {
-      info: {
-        name: "Wuxi Hariken Electric Tools Co., Ltd.",
-        tmt: "电子设备及配件",
-        site:
-          "Qibei Road,Industrial Zone,Yuqi Town,Huishan District,Wuxi,Jiangsu Province P.R China",
-        url: "www.harikentools.com",
-        email: "jordan@harikentools.com",
-        intro:
-          "Wuxi Hariken Electric Tools Co., Ltd. Was founded in 2002. Our company combines the design, development, production and process of hand-held light rotary hammer. Our company sells all products to oversea market and cooperates with the famed international bands to develop the exclusive products, therefore we enjoy a high level of popularity worldwide. Our company owns a complete quality management system, a professional development team full of experience on design and professional employees control the quality of products. Also we hold a perfect function test center, and the test facility such as the hardness metallographic phase.",
-        strength:
-          "Wuxi Hariken Electric Tools Co., Ltd. Was founded in 2002. Our company combines the design, development, production and process of hand-held light rotary hammer. Our company sells all products to oversea market and cooperates with the famed international bands to develop the exclusive products, therefore we enjoy a high level of popularity worldwide. Our company owns a complete quality management system, a professional development team full of experience on design and professional employees control the quality of products. Also we hold a perfect function test center, and the test facility such as the hardness metallographic phase."
-      },
+      info: {},
       show: false,
       passwordshow: false,
+      industryList: [],
       infoFrom: {
-        name: "",
-        tmt: "",
-        site: "",
-        url: "",
-        email: "",
-        intro: "",
-        email: "",
-        intro: "",
-        strength: ""
+        id: "",
+        itemName: "",
+        companyName: "",
+        companyIndustry: "",
+        companyAddress: "",
+        companyWebsite: "",
+        companyEmail: "",
+        companyTel: "",
+        companyProfile: "",
+        companyStrength: ""
+      },
+      infoRules: {
+        itemName: [
+          {
+            required: true,
+            message: "请输入项目名称",
+            trigger: "blur"
+          }
+        ],
+        companyName: [
+          {
+            required: true,
+            message: "请输入公司名称",
+            trigger: "blur"
+          }
+        ],
+        companyIndustry: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyAddress: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyWebsite: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyEmail: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyTel: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyProfile: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ],
+        companyStrength: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur"
+          }
+        ]
       }
     };
+  },
+  computed: {
+    itemid() {
+      return this.$route.query.itemid;
+    }
+  },
+  async created() {
+    // 获取项目ID
+    if (this.itemid) {
+      this.getInfo(this.itemid);
+    }
+    // 获取行业
+    this.industryList = await getIndustry(this);
+  },
+  methods: {
+    // 获取项目公司资料
+    getInfo(id) {
+      this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
+        console.log("资料", res.datas);
+        if (res.iworkuCode == 200) {
+          this.info = {
+            id: res.datas.id,
+            itemName: res.datas.itemName,
+            companyName: res.datas.companyName,
+            companyIndustry: res.datas.companyIndustry,
+            companyAddress: res.datas.companyAddress,
+            companyWebsite: res.datas.companyWebsite,
+            companyEmail: res.datas.companyEmail,
+            companyTel: res.datas.companyTel,
+            companyProfile: res.datas.companyProfile,
+            companyStrength: res.datas.companyStrength
+          };
+        }
+      });
+    },
+    // 编辑公司资料提交
+    updateInfo(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log(this[formName]);
+          let params = this[formName];
+          this.$http.post("/customer/company/update", params).then(res => {
+            console.log("修改公司资料", res);
+            if(res.iworkuCode==200){
+              // 重新获取资料
+              this.getInfo(this.itemid);
+            }
+          });
+        }
+      });
+    },
+       // 结束项目
+    onDeleteMember(id) {
+      this.$msgbox({
+        title: "提示",
+        message:
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要结束此项目吗？</p>",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 确定
+          this.$http
+            .post("/customer/item/update/status", {
+              itemId: id,
+              itemStatus: 2
+            })
+            .then(res => {});
+          this.$message({
+            type: "success",
+            message: "已结束项目"
+          });
+        })
+        .catch(() => {
+          // 取消
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
+    },
+    // 重启项目
+    onRestartMember(id) {
+      this.$msgbox({
+        title: "提示",
+        message:
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要重启此项目吗？</p>",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 确定
+          this.$http
+            .post("/customer/item/update/status", {
+              itemId: id,
+              itemStatus: 3
+            })
+            .then(res => {});
+          this.$message({
+            type: "success",
+            message: "已重启项目"
+          });
+        })
+        .catch(() => {
+          // 取消
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
+    },
   }
 };
 </script>
 <style lang="scss" scoped>
+.info-endbtn{
+  color: $--default-color;
+}
 .project-detail-info {
   border-radius: 8px;
   overflow: hidden;
@@ -190,6 +398,9 @@ export default {
       font-size: 12px;
       line-height: 17px;
     }
+  }
+  .update_info_btn {
+    text-align: right;
   }
 }
 </style>

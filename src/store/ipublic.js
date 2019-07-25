@@ -1,3 +1,4 @@
+import session from '../plugins/session.js'
 export default {
     /**
      *  存储字典相关的、公共的一些信息
@@ -15,7 +16,11 @@ export default {
         // 公司行业
         industry: [],
         // 项目状态
-        itemStatus:[]
+        itemStatus:[],
+        // 登录用户信息
+        userInfo: {},
+        // 客户类型
+        targetType:[],
     },
     // 提交
     mutations: {
@@ -31,6 +36,12 @@ export default {
          $_set_itemStatus(state, value) {
             state.itemStatus = value;
         },
+        $_set_userInfo(state, value) {
+            state.userInfo = value;
+        },
+        $_set_targetType(state, value) {
+            state.targetType = value;
+        }
     },
     // 提交到 mutations 中
     actions: {
@@ -51,6 +62,16 @@ export default {
         },
         itemStatus:state =>{
             return state.itemStatus;
+        },
+        targetType:state =>{
+            return state.targetType;
+        },
+        userInfo: state => {
+            if (Object.keys(state.userInfo).length == 0) {
+                return session.get('user') || {};
+            } else {
+                return state.userInfo;
+            }
         }
     }
 };

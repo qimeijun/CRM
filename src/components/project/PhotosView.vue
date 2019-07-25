@@ -1,7 +1,7 @@
 <template>
   <section class="iworku-photosview">
     <p class="photosview_img" @click="photosShow=true">
-      <img :src="'https://vodcn.iworku.com/'+imgList.length>0?imgList[0].nodeFiles:''" alt />
+      <img :src="`${$global.avatarURI}${imgList.length>0?imgList[0].nodeFiles:''}`" alt />
       <span>1/{{imgList.length}} &nbsp;</span>
     </p>
     <div v-if="photosShow" class="photosview_mask">
@@ -9,7 +9,7 @@
       <div class="mask_content">
         <i class="el-icon-back" @click="imgIndex>0?imgIndex--:''"></i>
         <p>
-          <img :src="'https://vodcn.iworku.com/'+imgList[imgIndex].nodeFiles" alt />
+          <img :src="`${$global.avatarURI}${imgList[0].nodeFiles}`" alt />
         </p>
         <i class="el-icon-right" @click="imgIndex<imgList.length-1?imgIndex++:''"></i>
       </div>

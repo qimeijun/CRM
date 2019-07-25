@@ -5,11 +5,13 @@
       <div class="info_top_div" style="align-items:center">
         <h3>{{$t("projectInfo.menu[0]")}}</h3>
         <div>
+          <!-- 修改密码 -->
           <el-button type="text" @click="passwordshow=true">{{$t("password.modify")}}</el-button>
+          <!-- 编辑 -->
           <el-button
             type="primary"
             size="small"
-            @click="show = true;infoFrom=info"
+            @click="show = true;infoFrom={...info}"
           >{{$t("project.btn.edit")}}</el-button>
         </div>
       </div>
@@ -63,25 +65,29 @@
           <h1>{{$t("project.from.secondTitle")}}</h1>
           <el-form :model="infoFrom" ref="infoFrom" :rules="infoRules" label-position="top">
             <el-form-item :label="$t('project.from.projectTitle')">
-              <el-input v-model="infoFrom.name" autocomplete="off"></el-input>
+              <el-input v-model="infoFrom.itemName" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('project.from.companyName')">
+            <el-form-item :label="$t('project.from.companyName')" prop="companyName">
               <el-input v-model="infoFrom.companyName" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('project.from.tmt')">
+            <el-form-item :label="$t('project.from.tmt')" prop="companyIndustry">
               <el-select v-model="infoFrom.companyIndustry" placeholder="请选择行业">
-                <el-option label="行业1" value="shanghai"></el-option>
-                <el-option label="行业2" value="beijing"></el-option>
+                <el-option
+                  v-for="(item,index) in industryList"
+                  :key="'industry'+index"
+                  :label="$lang==$global.lang.en?item.nameEn:nameZh"
+                  :value="item.value"
+                ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('project.from.site')">
+            <el-form-item :label="$t('project.from.site')" prop="companyAddress">
               <el-input v-model="infoFrom.companyAddress" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('project.from.url')">
+            <el-form-item :label="$t('project.from.url')" prop="companyWebsite">
               <el-input v-model="infoFrom.companyWebsite" autocomplete="off"></el-input>
             </el-form-item>
             <!-- 电子邮箱 -->
-            <el-form-item :label="$t('project.from.email')">
+            <el-form-item :label="$t('project.from.email')" prop="companyEmail">
               <el-input
                 v-model="infoFrom.companyEmail"
                 autocomplete="off"
@@ -89,11 +95,11 @@
               ></el-input>
             </el-form-item>
             <!-- 公司电话 -->
-            <el-form-item :label="'公司电话'">
+            <el-form-item :label="'公司电话'" prop="companyTel">
               <el-input v-model="infoFrom.companyTel" autocomplete="off" :placeholder="'请输入公司电话'"></el-input>
             </el-form-item>
             <!-- 公司简介 -->
-            <el-form-item :label="$t('project.from.intro')">
+            <el-form-item :label="$t('project.from.intro')" prop="companyProfile">
               <el-input
                 v-model="infoFrom.companyProfile"
                 autocomplete="off"
@@ -129,6 +135,7 @@
   </section>
 </template>
 <script>
+import { getIndustry } from "@/plugins/configuration.js";
 export default {
   components: {
     UpdatePassword: () => import("@/components/member/UpdatePassword.vue")
@@ -138,8 +145,10 @@ export default {
       info: {},
       show: false,
       passwordshow: false,
+      industryList: [],
       infoFrom: {
-        id:"",
+        id: "",
+        itemName: "",
         companyName: "",
         companyIndustry: "",
         companyAddress: "",
@@ -150,6 +159,13 @@ export default {
         companyStrength: ""
       },
       infoRules: {
+        itemName: [
+          {
+            required: true,
+            message: "请输入项目名称",
+            trigger: "blur"
+          }
+        ],
         companyName: [
           {
             required: true,
@@ -214,18 +230,32 @@ export default {
       return this.$route.query.itemid;
     }
   },
-  created() {
+  async created() {
+    // 获取项目ID
     if (this.itemid) {
       this.getInfo(this.itemid);
     }
+    // 获取行业
+    this.industryList = await getIndustry(this);
   },
   methods: {
     // 获取项目公司资料
     getInfo(id) {
-      this.$http.get(`/customer/company/infobypk/${id}`).then(res => {
+      this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
         console.log("资料", res.datas);
         if (res.iworkuCode == 200) {
-          this.info = res.datas;
+          this.info = {
+            id: res.datas.id,
+            itemName: res.datas.itemName,
+            companyName: res.datas.companyName,
+            companyIndustry: res.datas.companyIndustry,
+            companyAddress: res.datas.companyAddress,
+            companyWebsite: res.datas.companyWebsite,
+            companyEmail: res.datas.companyEmail,
+            companyTel: res.datas.companyTel,
+            companyProfile: res.datas.companyProfile,
+            companyStrength: res.datas.companyStrength
+          };
         }
       });
     },
@@ -234,9 +264,13 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           console.log(this[formName]);
-          let params=this[formName];
-          this.$http.post("/customer/company/update",params).then(res => {
+          let params = this[formName];
+          this.$http.post("/customer/company/update", params).then(res => {
             console.log("修改公司资料", res);
+            if(res.iworkuCode==200){
+              // 重新获取资料
+              this.getInfo(this.itemid);
+            }
           });
         }
       });

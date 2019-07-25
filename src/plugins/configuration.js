@@ -79,3 +79,21 @@ export const getItemStatus= async ({$http, $store, $lang, $global}) => {
     }
     return itemStatus;
 }
+
+/**
+ *  获取目标公司类型
+ */
+export const getTargetType= async ({$http, $store, $lang, $global}) => {
+    let targetType = $store.getters['ipublic/targetType'];
+    if (targetType.length == 0) {
+        let params = {sortname: 'd_stort_en'};
+        $lang == $global.lang.en ? params.sortname = 'd_stort_en' : params.sortname = 'd_stort_zh';
+        let res = await $http.post('/properties/dictionary/withoutpaginglist', { treeCode:"TARGET_COMPANY_CLIENT_TYPE",  ...params});
+        if (res.iworkuCode == 200) {
+            targetType = res.datas;
+            $store.commit('ipublic/$_set_targetType', res.datas);
+        } else {
+        }
+    }
+    return targetType;
+}

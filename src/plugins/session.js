@@ -1,6 +1,5 @@
 import Vue from 'vue'
-
-Vue.prototype.$session = {
+const session = {
     set(key, value) {
         if (Object.prototype.toString.call(value) !== "[object String]") {
             sessionStorage.setItem(key, JSON.stringify(value));
@@ -24,3 +23,5 @@ Vue.prototype.$session = {
         sessionStorage.clear();
     }
 }
+Vue.prototype.$session = session;
+export default session;

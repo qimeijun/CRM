@@ -1,8 +1,27 @@
 <template>
+<!-- 项目私海 -->
   <section class="project-detail-private">
+     <div style="position:fixed; top: 1rem; right: .2rem; display:flex;">
+      <el-input class="private-seek" placeholder="请输入内容" v-model="seek" @keyup.enter.native="getPrivate(itemid, 1)">
+        <i
+          slot="suffix"
+          class="el-input__icon el-icon-search"
+          @click="getPrivate(itemid, 1)"
+        ></i>
+      </el-input>
+      <el-button type="primary" @click="addShow=true">{{$t("projectInfo.importTarget.add")}}</el-button>
+      <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
+      <!-- 结束项目 -->
+      <el-button
+        class="project-details__top-endbtn"
+        @click="onDeleteMember(itemid,2)"
+      >{{$t("projectInfo.endProject")}}</el-button>
+      <!-- 重启项目 -->
+      <el-button class="project-details__top-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+    </div>
     <div class="private_top">
       <!-- 分类 start -->
-      <el-select class="top_select" v-model="value" placeholder="请选择">
+      <el-select class="top_select" v-model="targetType" placeholder="请选择" @change="getPrivate(itemid, 1)">
         <el-option
           v-for="item in classifys"
           :key="item.value"
@@ -18,7 +37,7 @@
         :options="taglist"
         :show-all-levels="false"
         :props="{ expandTrigger: 'hover' }"
-        @change="onClickTag"
+        @change="getPrivate(itemid, 1)"
       ></el-cascader>
       <!-- 标签 end -->
       <el-button class="top_button" @click="onCancel()">{{$t("project.intoSea")}}</el-button>
@@ -61,7 +80,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <!-- 移交管理员的dialog -->
+    <!-- 移交管理员的dialog start-->
     <el-dialog
       class="el-dialog__scroll"
       :title="$t('selectRegionalManager.title')"
@@ -76,14 +95,50 @@
         <ChangeAdministrator  operate="handOver"></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
+    <!-- 移交管理员的dialog end-->
+     <!-- 新增目标公司 start -->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('projectInfo.importTarget.add')"
+      :visible.sync="addShow"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+        <AddTarget @close="addShow=false"></AddTarget>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 新增目标公司 end -->
+    <!-- 导入目标公司 start-->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('projectInfo.importTarget.import')"
+      :visible.sync="importShow"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+        <ImportTarget @close="importShow=false"></ImportTarget>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 导入目标公司 end-->
   </section>
 </template>
 <script>
+import { getTargetType } from "@/plugins/configuration.js";
 export default {
   components: {
     Operate: () => import("@/components/lib/Operate.vue"),
     ChangeAdministrator: () =>
-      import("@/components/member/ChangeAdministrator.vue")
+      import("@/components/member/ChangeAdministrator.vue"),
+       AddTarget: () => import("@/components/project/AddTarget.vue"),
+    ImportTarget: () => import("@/components/project/ImportTarget.vue")
   },
   data() {
     return {
@@ -211,11 +266,25 @@ export default {
       ],
       multipleSelection: [],
       tag: "",
-      value: "",
+      targetType: "",
+      seek: "",
       changeAdministratorDialogVisible:false,
+      addShow: false,
+      importShow: false
     };
   },
+   computed: {
+    itemid() {
+      return this.$route.query.itemid;
+    }
+  },
+  async created() {
+    // 获取公司类型
+    this.targetTypeList = await getTargetType(this);
+    this.getPrivate(this.itemid, 1);
+  },
   methods: {
+    // 移入公海
     onCancel() {
       this.$msgbox({
         title: "提示",
@@ -242,12 +311,101 @@ export default {
           });
         });
     },
-    onClickTag(){},
-    handleSelectionChange(){}
+     // 结束项目
+    onDeleteMember(id) {
+      this.$msgbox({
+        title: "提示",
+        message:
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要结束此项目吗？</p>",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 确定
+          this.$http
+            .post("/customer/item/update/status", {
+              itemId: id,
+              itemStatus: 2
+            })
+            .then(res => {});
+          this.$message({
+            type: "success",
+            message: "已结束项目"
+          });
+        })
+        .catch(() => {
+          // 取消
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
+    },
+    // 重启项目
+    onRestartMember(id) {
+      this.$msgbox({
+        title: "提示",
+        message:
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要重启此项目吗？</p>",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 确定
+          this.$http
+            .post("/customer/item/update/status", {
+              itemId: id,
+              itemStatus: 3
+            })
+            .then(res => {});
+          this.$message({
+            type: "success",
+            message: "已重启项目"
+          });
+        })
+        .catch(() => {
+          // 取消
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
+    },
+    // 获取私海列表
+        getPrivate(id, page) {
+      this.$http
+        .post("/target/company/withpaginglist", {
+          id: id,
+          type: 2,
+          pageNum: page,
+          clientType: this.tag[1],
+          labelId: this.targetType,
+          keyWord: this.seek
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            console.log("项目私海", res);
+            this.tableData = res.datas;
+          }
+        });
+    },
+      handleSelectionChange(){
+        
+      }
   }
 };
 </script>
 <style lang="scss" scoped>
+.private-seek {
+  width: 313px;
+  margin-right: 0.1rem;
+}
 .private_top {
   display: flex;
   align-items: center;

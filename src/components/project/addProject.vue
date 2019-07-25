@@ -279,7 +279,6 @@ export default {
       show: false,
       dialogVisible: false,
       imgShow: false,
-      isLt2M: false,
       industryList: [],
       uploadData: {},
       imgDescription: "",

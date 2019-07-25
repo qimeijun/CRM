@@ -1,7 +1,7 @@
 <template>
   <!-- 项目列表 -->
-  <section>
-    <div style="position: fixed; top: 1rem; right: .2rem; display:flex;">
+  <section style="position: relative;">
+    <div style="position:absolute; top: -.6rem; right: .2rem; display:flex;">
       <el-input
         class="top_seek"
         :placeholder="$t('project.placeholder.seek')"
@@ -123,7 +123,6 @@ export default {
       props: {
         lazy: true,
         lazyLoad: (node, resolve) => {
-          console.log("节点", node);
           if (node.level == 0) {
             // 获取项目标签分组
             this.$http
@@ -131,12 +130,11 @@ export default {
                 groupStatus: 1
               })
               .then(res => {
-                console.log("分组标签", res);
                 if (res.iworkuCode == 200) {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: o.groupNameZh
+                      label:this.$lang==$global.lang.en?o.groupNameEn:o.groupNameZh
                     };
                   });
                   resolve(taglist);
@@ -149,12 +147,11 @@ export default {
                 labelGroupId: node.value
               })
               .then(res => {
-                console.log("标签", res);
                 if (res.iworkuCode == 200) {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: o.labelNameZh,
+                      label: this.$lang==$global.lang.en?o.groupNameEn:o.labelNameZh,
                       leaf: true
                     };
                   });

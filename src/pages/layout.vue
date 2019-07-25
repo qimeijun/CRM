@@ -64,6 +64,37 @@ export default {
     path() {
       return this.$route.path;
     }
+  },
+  created() {
+    let userinfo = {"id": "e4b083fd-ff24-41f2-979b-e54246b29318",
+    "orgId": "f58c163b-a1f3-11e9-b080-946e68be8353",
+    "orgName": "IWORKU",
+    "orgLogo": "FufyNI07_QLDRxAj1IAVbf2rrKp5",
+    "orgDescription": null,
+    "userNameZh": "qimeijunqq.com",
+    "userNameEn": "qimejunsf",
+    "userProfileImage": "th_1563937812189.jpg",
+    "userGender": "1",
+    "userPhone": "13708238404",
+    "userPassword": "25f9e794323b453885f5181f1b624d0b",
+    "userCountry": "country44",
+    "userCountryEn": "China",
+    "userCountryZh": "中国",
+    "userCity": null,
+    "userCityEn": null,
+    "userCityZh": null,
+    "userEmail": "qimeijun@qq.com",
+    "userAccount": "qimeijun@qq.com",
+    "userRole": "c24fa6ba-a1f6-11e9-b080-946e68be8353",
+    "roleName": "区域经理",
+    "userStatus": "1",
+    "targetCompanyCount": "0",
+    "addTimeStr": "2019-07-24 03:10:45",
+    "loginTime": null,
+    "jwtKey": "Authorization",
+    "jwtValue": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJtYXAiOnsiaWQiOiJlNGIwODNmZC1mZjI0LTQxZjItOTc5Yi1lNTQyNDZiMjkzMTgiLCJ1c2VyUm9sZSI6ImMyNGZhNmJhLWExZjYtMTFlOS1iMDgwLTk0NmU2OGJlODM1MyJ9LCJzdWIiOiJlNGIwODNmZC1mZjI0LTQxZjItOTc5Yi1lNTQyNDZiMjkzMTgiLCJleHAiOjE1NjQxOTcwODF9.QhSx0V4i-b4GOdBJOn2OaDJOqfKpBYQFDALbmug5WRyuC-MoTZBphOIBKdFaU91ZoBlBeB9JHhXYhq44ogvo2Q"}
+    this.$session.set("user", userinfo);
+  
   }
 };
 </script>

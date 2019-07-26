@@ -45,7 +45,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <AddTagForTarget :type="type" :id="id" :defaultTag="taglist"></AddTagForTarget>
+        <AddTagForTarget :type="type" :id="id" :defaultTag="[...taglist]" @onConfirmTag="addTagList"></AddTagForTarget>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加标签弹窗 end -->
@@ -126,6 +126,12 @@ export default {
             }
           });
       }
+    },
+    // 添加标签回调
+    addTagList(list){
+      console.log(list);
+         this.taglist=list;
+         this.shwo=false;
     }
   }
 };

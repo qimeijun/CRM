@@ -24,15 +24,15 @@
           </div>
           <div class="info_div_content">
             <h5>{{$t("target.info.companyName")}}</h5>
-            <p>{{companyForm.name}}</p>
+            <p>{{companyForm.targetCompanyName}}</p>
             <h5>{{$t("target.info.country")}}</h5>
-            <p>{{companyForm.country}}</p>
+            <p>{{companyForm.targetCompanyCountry}}</p>
             <h5>{{$t("target.info.site")}}</h5>
-            <p>{{companyForm.site}}</p>
+            <p>{{companyForm.targetCompanyAddress}}</p>
             <h5>{{$t("target.info.url")}}</h5>
-            <p>{{companyForm.url}}</p>
+            <p>{{companyForm.targetCompanyWebsite}}</p>
             <h5>{{$t("target.info.phone")}}</h5>
-            <p>{{companyForm.phone}}</p>
+            <p>{{companyForm.targetCompanyTel}}</p>
           </div>
         </div>
         <!-- 目标公司资料 end -->
@@ -48,19 +48,19 @@
           </div>
           <div class="info_div_content">
             <h5>{{$t("target.info.source")}}</h5>
-            <p>{{otherForm.source}}</p>
+            <p>{{otherForm.nodeCustomerSource}}</p>
             <h5>{{$t("target.info.clientType")}}</h5>
-            <p>{{otherForm.type}}</p>
+            <p>{{otherForm.nodeClientType}}</p>
             <h5>{{$t("target.info.purchaseScale")}}</h5>
-            <p>{{otherForm.scale}}</p>
+            <p>{{otherForm.nodePurchaseScale}}</p>
             <h5>{{$t("target.info.hsCode")}}</h5>
-            <p>{{otherForm.importance}}</p>
+            <p>{{otherForm.nodeHacode}}</p>
             <h5>{{$t("target.info.importance")}}</h5>
-            <p>{{otherForm.rate}}</p>
+            <p>{{otherForm.nodeGrade}}</p>
             <h5>{{$t("target.info.introduce")}}</h5>
-            <p>{{otherForm.introduce}}</p>
+            <p>{{otherForm.nodeProfile}}</p>
             <h5>{{$t("target.info.remark")}}</h5>
-            <p>{{otherForm.introduce}}</p>
+            <p>{{otherForm.nodeRemarks}}</p>
           </div>
         </div>
         <!-- 其他 end -->
@@ -127,15 +127,15 @@
           </div>
           <div class="info_div_content">
             <h5>{{$t("target.info.keymenName")}}</h5>
-            <p>{{keymenForm.name}}</p>
+            <p>{{keymenForm.personName}}</p>
             <h5>{{$t("target.info.position")}}</h5>
-            <p>{{keymenForm.position}}</p>
+            <p>{{keymenForm.personPosition}}</p>
             <h5>{{$t("target.info.keymenPhone")}}</h5>
-            <p>{{keymenForm.phone}}</p>
+            <p>{{keymenForm.personTel}}</p>
             <h5>{{$t("target.info.email")}}</h5>
-            <p>{{keymenForm.email}}</p>
+            <p>{{keymenForm.personEmail}}</p>
             <h5>{{$t("target.info.social")}}</h5>
-            <p>{{keymenForm.social}}</p>
+            <p>{{keymenForm.personAccount}}</p>
           </div>
         </div>
         <!-- 关键人信息 end -->
@@ -205,31 +205,10 @@ export default {
         orderNum: 1
       },
       companyForm: {
-        name: "Cong ty Nam binh",
-        country: "Vietnam",
-        site: "037 Okuneva Field",
-        url: "www.alexandrea.us",
-        phone: "0086-510-83898353",
-        email: "schmitt_kirk@hotmail.com"
       },
       keymenForm: {
-        name: "Michael Russell",
-        position: "Purchasing manager",
-        phone: "0086-510-832124678",
-        email: "leopold_marvin@hotmail.com",
-        social: "Facebook："
       },
-      otherForm: {
-        source: "Michael Russell",
-        type: "采购商",
-        scale: "100，000 万美元",
-        importance: "58042910",
-        rate: "3",
-        introduce:
-          "I have detailed below the most cost effective forms of internet marketing to advertising your business using your company website. HTPcompany.com provides marketing, Internet advertising, search engine optimization and sales consulting for businesses, ",
-        note:
-          "I have detailed below the most cost effective forms of internet marketing to advertising your business using your company website. HTPcompany.com provides marketing, Internet advertising, search engine optimization and sales consulting for businesses, "
-      },
+      otherForm: {},
       show: false,
       changeAdministratorDialogVisible:false,
       showType: ""
@@ -276,7 +255,9 @@ export default {
       this.$http.get(`/target/company/infobypk/${id}`).then(res=>{
          console.log(res)
         if(res.iworkuCode==200){
-         
+         this.companyForm=res.datas.targetCompany;         
+         this.keymenForm=res.datas.targetCompanyKeyPerson;         
+         this.otherForm=res.datas.targetCompanyNodeInfo;   
         }
       })
     }

@@ -37,7 +37,11 @@
 import PageHeader from "@/components/lib/PageHeader.vue";
 import Tag from "@/components/project/Tag.vue";
 import Member from "@/components/project/Member.vue";
-export default {
+export default {  components: {
+    PageHeader,
+    Tag,
+    Member
+  },
   data() {
     return {
       activeMenu: "information",
@@ -84,11 +88,7 @@ export default {
       return this.$route.query.itemid
     }
   },
-  components: {
-    PageHeader,
-    Tag,
-    Member
-  },
+
   methods: {
     /**
      *  切换菜单

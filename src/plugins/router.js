@@ -128,7 +128,13 @@ const router = new VueRouter({
                     path: '/highseas',
                     name: 'highseas',
                     component: () => import('./../pages/highseas.vue')
-                },{
+                },
+                {
+                    path: '/highseas/loca/:targetName',
+                    name:"highseasLoca",
+                    component: () => import('./../pages/highseasLoca.vue')
+                },
+                {
                     path: '/notice',
                     name: 'notice',
                     component: () => import('./../pages/notice.vue')

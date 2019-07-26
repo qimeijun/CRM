@@ -173,7 +173,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: this.$lang==this.$global.lang.en?o.groupNameEn:o.labelNameZh,
+                      label: this.$lang==this.$global.lang.en?o.labelNameEn:o.labelNameZh,
                       leaf: true
                     };
                   });

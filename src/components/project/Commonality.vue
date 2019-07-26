@@ -194,7 +194,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: o.groupNameZh
+                      label: this.$lang==this.$global.lang.en?o.groupNameEn:o.groupNameZh
                     };
                   });
                   resolve(taglist);
@@ -211,7 +211,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: o.labelNameZh,
+                      label: this.$lang==this.$global.lang.en?o.labelNameEn:o.labelNameZh,
                       leaf: true
                     };
                   });

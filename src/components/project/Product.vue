@@ -25,15 +25,11 @@
       </div>
       <h4>{{$t("projectInfo.product.accessory")}}</h4>
       <div>
-        <Attachment name="asdfs.psd"></Attachment>
-        <Attachment name="asdfs.xsd"></Attachment>
-        <Attachment name="asdfs.wsd"></Attachment>
+        <Attachment v-for="(item,index) in product.attachmentList" :key="'attachment'+index" :name="item.nodeFiles"></Attachment>
       </div>
       <h4>{{$t("projectInfo.product.study")}}</h4>
       <div>
-        <Attachment name="asdfs.psd"></Attachment>
-        <Attachment name="asdfs.xsd"></Attachment>
-        <Attachment name="asdfs.wsd"></Attachment>
+         <Attachment v-for="(item,index) in product.studyList" :key="'attachment'+index" :name="item.nodeFiles"></Attachment>
       </div>
     </div>
     <div class="product_redact">
@@ -73,8 +69,8 @@ export default {
         productName: "Wuxi Hariken Electric Tools Co., Ltd.",
         imgList: [],
         videoList: [],
-        attachment: [],
-        study: []
+        attachmentList: [],
+        studyList: []
       },
       productFrom: {
         productName: "",
@@ -111,7 +107,14 @@ export default {
           this.product.videoList = res.datas[0].productNodeList.filter(o => {
             return o.nodeType == 2;
           });
-          console.log( this.product.imgList);
+          // 整理附件
+          this.product.attachmentList = res.datas[0].productNodeList.filter(o => {
+            return o.nodeType == 3;
+          });
+          // 整理学习资料
+          this.product.studyList = res.datas[0].productNodeList.filter(o => {
+            return o.nodeType == 4;
+          });
         }
       });
     },

@@ -1,142 +1,220 @@
 <template>
-  <div>
-   <el-table
-        ref="multipleTable"
-        :data="tableData"
-        tooltip-effect="dark"
-        style="width: 100%"
+  <section>
+    <div style="position:fixed; top: 1rem; right: .2rem;">
+      <el-input
+        class="top_seek"
+        :placeholder="$t('highseas.placeholder.seek')"
+        v-model="seek"
+        @keyup.enter.native="getHighseas(1)"
       >
-        <el-table-column prop="name" :label="$t('highseas.table.target')" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="rate" :label="$t('highseas.table.importance')" width="170">
-          <template slot-scope="scope">
-            <el-rate v-model="scope.row.rate" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
-            <p>重点跟进客户</p>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('highseas.table.updatedate')" width="120">
-          <template slot-scope="scope">{{ scope.row.date }}</template>
-        </el-table-column>
-        <el-table-column prop="name" :label="$t('highseas.table.projectNum')" width="120"></el-table-column>
-        <el-table-column prop="date" :label="$t('highseas.table.whenCreated')" width="120"></el-table-column>
-        <el-table-column prop="order" :label="$t('highseas.table.orderNum')" width="120"></el-table-column>
+        <i slot="suffix" class="el-input__icon el-icon-search"></i>
+      </el-input>
+    </div>
+    <div class="highseas_filtration">
+      <!-- 国家 start -->
+      <el-select
+        class="filtration_select"
+        filterable
+        v-model="country"
+        :placeholder="$t('highseas.placeholder.country')"
+        @change="getHighseas(1)"
+      >
+        <el-option
+          v-for="item in countryList"
+          :key="item.id"
+          :label="$lang==$global.lang.en?item.areaNameEn:item.areaNameZh"
+          :value="item.id"
+        ></el-option>
+      </el-select>
+      <!-- 国家 end -->
+      <!-- 分类 start -->
+      <el-select
+        class="filtration_select"
+        v-model="targetType"
+        :placeholder="$t('highseas.placeholder.sort')"
+        @change="getHighseas(1)"
+      >
+        <el-option
+          v-for="item in targetTypeList"
+          :key="item.id"
+          :label="$lang==$global.lang.en?item.nameEn:item.nameZh"
+          :value="item.id"
+        ></el-option>
+      </el-select>
+      <!-- 分类 end -->
+      <!-- 标签选择 start -->
+      <el-cascader
+        class="filtration_select"
+        v-model="tag"
+        :show-all-levels="false"
+        :props="props"
+        :placeholder="$t('highseas.placeholder.tag')"
+        @change="getHighseas(1)"
+      ></el-cascader>
+      <!-- 标签选择 end -->
+    </div>
+    <div>
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
+        <el-table-column
+          prop="targetCompanyName"
+          :label="$t('highseas.table.target')"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column prop="count" :label="$t('highseas.table.projectNum')" width="150"></el-table-column>
+        <el-table-column prop="orderCount" :label="$t('highseas.table.orderNum')" width="150"></el-table-column>
         <el-table-column :label="$t('highseas.table.operate')" width="80">
           <template slot-scope="scope">
             <Operate>
               <ul>
                 <li>
-                  <router-link to="/target/detail">{{$t("highseas.table.details")}}</router-link>
+                  <router-link :to="`/highseas/loca/${scope.row.targetCompanyName}`">{{$t("highseas.table.details")}}</router-link>
                 </li>
               </ul>
             </Operate>
           </template>
         </el-table-column>
       </el-table>
-    <el-pagination
-      style="text-align:center;"
-      background
-      layout="prev, pager, next,sizes"
-      :total="1000"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
-    ></el-pagination>
-  </div>
+      <el-pagination
+        style="text-align:center;"
+        background
+        layout="prev, pager, next,sizes"
+        :total="total"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size.sync="size"
+        :current-page.sync="page"
+        @size-change="getHighseas(1)"
+        @current-change="getHighseas(page)"
+      ></el-pagination>
+    </div>
+  </section>
 </template>
 <script>
-import Operate from "@/components/lib/Operate.vue";
+import { getTargetType, getCountry } from "@/plugins/configuration.js";
 export default {
   components: {
-    Operate
+    Operate: () => import("@/components/lib/Operate.vue")
   },
   data() {
     return {
-      tableData: [
+      tableData: [],
+      total: 0,
+      page: 1,
+      size: 10,
+      seek: "",
+      country: "",
+      targetType: "",
+      tag: "",
+      countryList: [],
+      targetTypeList: [
         {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4,
-          order:1
+          value: "选项1",
+          label: "分类"
         },
         {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4,
-          order:1
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4,
-          order:1
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4,
-          order:1
-        },
-        {
-          date: "2016-05-08",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4,
-          order:1
-        },
-        {
-          date: "2016-05-06",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4,
-          order:1
-        },
-        {
-          date: "2016-05-07",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-          rate: 4,
-          order:1
+          value: "选项2",
+          label: "分类2"
         }
       ],
+      props: {
+        lazy: true,
+        lazyLoad: (node, resolve) => {
+          if (node.level == 0) {
+            // 获取项目标签分组
+            this.$http
+              .post("/customer/item/label/group/withoutpaginglist", {
+                groupStatus: 1
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  let taglist = res.datas.map(o => {
+                    return {
+                      value: o.id,
+                      label:
+                        this.$lang == this.$global.lang.en
+                          ? o.groupNameEn
+                          : o.groupNameZh
+                    };
+                  });
+                  resolve(taglist);
+                }
+              });
+          } else {
+            // 获取项目各组标签
+            this.$http
+              .post(`/customer/item/label/withoutpaginglist`, {
+                labelGroupId: node.value
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  let taglist = res.datas.map(o => {
+                    return {
+                      value: o.id,
+                      label:
+                        this.$lang == this.$global.lang.en
+                          ? o.labelNameEn
+                          : o.labelNameZh,
+                      leaf: true
+                    };
+                  });
+                  resolve(taglist);
+                }
+              });
+          }
+        }
+      }
     };
   },
+  async created() {
+    this.getHighseas(1);
+    this.targetTypeList = await getTargetType(this);
+    this.countryList = await getCountry(this);
+  },
   methods: {
+    // 获取公海列表
+    getHighseas(page) {
+      let params = {
+        pageNum: page,
+        pageSize: this.size,
+       keyWord:this.seek
+      };
+      if(this.tag){
+          params.labelId=this.tag[1];
+      }
+      if(this.targetType){
+          params.clientType=this.targetType;
+      }
+      if(this.country){
+          params.country=this.country;
+      }
+      this.$http.post("/target/company/admin/withpaginglist", params).then(res => {
+        if (res.iworkuCode == 200) {
+          console.log("大公海", res);
+          this.tableData = res.datas;
+          this.total = res.total;
+          this.page = page;
+        }
+      });
+    },
     handleClick(row) {
       console.log(row);
-    },
-    onDeleteMember() {
-      this.$msgbox({
-        title: "提示",
-        message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要结束此项目吗？</p>",
-        confirmButtonText:"确定",
-        cancelButtonText:"取消",
-        showCancelButton:true,
-        dangerouslyUseHTMLString: true,
-        center: true
-      })
-        .then(() => {
-          // 取消删除
-          this.$message({
-            type: "success",
-            message: "取消删除"
-          });
-        })
-        .catch(() => {
-          // 确定删除
-          this.$message({
-            type: "info",
-            message: "确定删除"
-          });
-        });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.top_seek {
+  width: 3.13rem;
+}
+.highseas_filtration {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  .filtration_select {
+    width: 2.58rem;
+    margin-right: 10px;
+  }
+}
 .table_img {
   vertical-align: middle;
   margin-right: 10px;

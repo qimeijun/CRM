@@ -195,7 +195,7 @@
         width="30%"
       >
         <el-scrollbar>
-          <AddMember :params="{orgId: teamInfo.id, userRole: $global.userRole.member}"></AddMember>
+          <AddMember :params="{orgId: teamInfo.id, userRole: $global.userRole.member}" @onOperateSuccess="addMemberDialogVisible=false; getTeamInfo()"></AddMember>
         </el-scrollbar>
       </el-dialog>
     <!-- 添加新成员 dialog end -->

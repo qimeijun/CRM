@@ -2,17 +2,17 @@
 <!-- 单个日志 -->
     <section class="diary-module">
         <div class="diary-module__left">
-            <div class="time" :style="`background-color: ${diaryTypeColors[parseInt(item.type) - 1]}`">
+            <div class="time" :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">
                 <p>2019</p>
                 <p>Jun.6</p>
                 <p>13:32</p>
             </div>
-            <div class="type" :style="`background-color: ${diaryTypeColors[parseInt(item.type) - 1]}`">{{ $t("workDiary.diarType.daily") }}</div>
+            <div class="type" :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">{{ $t("workDiary.diarType.daily") }}</div>
         </div>
         <div class="diary-module__right">
-            <div class="project" :style="`background-color: ${diaryTypeColors[parseInt(item.type) - 1]}`">
+            <div class="project" :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">
                 <span>
-                    Taurus Wujiang taide electronics Co.,LTD
+                    {{ item.followItemIdName }}
                 </span>
                 <el-dropdown @command="onHandleCommand"  style="color: white; cursor: pointer;">
                     <span class="el-dropdown-link">
@@ -26,27 +26,27 @@
                 </el-dropdown>
             </div>
             <div class="target-company">
-                目标公司：CÔNG TY CTHUTHUTHUTHUTHUTHUTHU
+                目标公司：{{ item.followTargetCompanyName }}
             </div>
             <div class="diary-content">
-                <div style="font-size: 16px; color: black; line-height: 35px;">Truong Nam machines quality feedback</div>
+                <div style="font-size: 16px; color: black; line-height: 35px;">{{ item.followTitle }}</div>
                 <div style="display: flex; align-items: center;">
                     <el-avatar style="margin-right: .2rem;" :size="40" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
                     <span style="font-size: 12px;">Matilda McGee</span>
                 </div>
                 <!-- 订单 -->
                 <div class="order">
-                    订单信息待定
+                    <!-- 订单信息待定 -->
                 </div>
                 <!-- 订单 -->
                 <div style="margin-top: 20px; margin-bottom: 20px; line-height: 20px;">
-                    Dear All： Hereinafter attachment is Truong Nam report relates our machines for the first order Please take your time to review it and seriously to check the mistakes and solve these problems in next order. Thank you！
+                    {{ item.followContent }}
                 </div>
                 <el-button type="primary" size="mini">{{ $t("workDiary.btn.translate") }}</el-button>
                 <!-- 翻译内容显示 start -->
                 <div style="margin-top: 20px; margin-bottom: 20px; line-height: 20px;">
                     <p style="line-height: 30px;">翻译内容为：</p>
-                    Dear All： Hereinafter attachment is Truong Nam report relates our machines for the first order Please take your time to review it and seriously to check the mistakes and solve these problems in next order. Thank you！
+                    {{ item.followContent }}
                 </div>
                 <!-- 翻译内容显示 end -->
                 <!-- 聊天记录 -->
@@ -56,13 +56,10 @@
                     <el-image class="img" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-image>
                 </div>
                 <!-- 聊天记录 -->
-                <div class="attachment">
+                <div v-if="item && item.followFiles" class="attachment">
                     <p>{{ $t("workDiary.attachment") }}</p>
                     <div>
-                        <Attachment name="asdfs.psd"></Attachment>
-                        <Attachment name="asdfs.xsd"></Attachment>
-                        <Attachment name="asdfs.wsd"></Attachment>
-                        <Attachment name="asdfs.ysd"></Attachment>
+                        <Attachment v-for="(aItem, aIndex) in item.followFiles.split(';')" :key="aIndex" :name="aItem"></Attachment>
                     </div>
                 </div>
                 <el-button type="primary" size="mini" style="margin-top: 20px;">{{ $t("workDiary.btn.leaveMessage") }}</el-button>

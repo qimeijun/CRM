@@ -1,18 +1,20 @@
 <template>
     <section class="attachment">
-        <div class="logo" :title="name" 
-             :style="`background-color: ${suffixFirstLetter && colors.get(suffixFirstLetter) && colors.get(suffixFirstLetter)[0]}`">
-            <span class="white"></span>
-            <span class="angle" :style="`border-bottom: 12px solid ${suffixFirstLetter && colors.get(suffixFirstLetter) && colors.get(suffixFirstLetter)[1]}`"></span>
-            <template v-if="colors.has(suffixFirstLetter)">
-                {{ suffixFirstLetter }}
-            </template>
-            <template v-else>
-                <i class="el-icon-paperclip"></i>
-            </template>
-            <i v-if="isDelete" class="el-icon-error" @click.stop="onDelete"></i>
-        </div>
-        <p class="name">{{ name }}</p>
+        <a :href="`${$global.avatarURI}${name}`" target="_blank">
+            <div class="logo" :title="name" 
+                :style="`background-color: ${suffixFirstLetter && colors.get(suffixFirstLetter) && colors.get(suffixFirstLetter)[0]}`">
+                <span class="white"></span>
+                <span class="angle" :style="`border-bottom: 12px solid ${suffixFirstLetter && colors.get(suffixFirstLetter) && colors.get(suffixFirstLetter)[1]}`"></span>
+                <template v-if="colors.has(suffixFirstLetter)">
+                    {{ suffixFirstLetter }}
+                </template>
+                <template v-else>
+                    <i class="el-icon-paperclip"></i>
+                </template>
+                <i v-if="isDelete" class="el-icon-error" @click.stop="onDelete"></i>
+            </div>
+            <p class="name">{{ name }}</p>
+        </a>
     </section>
 </template>
 <script>

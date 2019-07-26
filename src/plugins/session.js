@@ -17,7 +17,7 @@ const session = {
        return res;
     },
     remove(key) {
-        sessionStorage.remove(key);
+        sessionStorage.removeItem(key);
     },
     clear() {
         sessionStorage.clear();

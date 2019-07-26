@@ -53,7 +53,7 @@ const router = new VueRouter({
                         {
                             path: 'diary/:id',
                             name: 'member-diary',
-                            component: () => import('./../components/work/WorkDiary.vue')
+                            component: () => import('./../components/member/WorkDiary.vue')
                         },
                         {
                             path: 'private/:id',
@@ -89,7 +89,7 @@ const router = new VueRouter({
                         {
                             path: 'diary',
                             name: 'diary',
-                            component: () => import('./../components/work/WorkDiary.vue')
+                            component: () => import('./../components/project/WorkDiary.vue')
                         },
                     ]
                 },
@@ -110,7 +110,7 @@ const router = new VueRouter({
                         {
                             path: 'diary',
                             name: 'target_diary',
-                            component: () => import('./../components/work/WorkDiary.vue')
+                            component: () => import('./../components/target/WorkDiary.vue')
                         },
                         {
                             path: 'loca',

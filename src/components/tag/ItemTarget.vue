@@ -11,11 +11,11 @@
             </div> -->
             <div class="rate">
                 <el-rate
-                    v-model="value"
+                    :value="parseInt(data.grade)"
                     :colors="['#E50054', '#E50054', '#E50054']"
                     disabled>
                 </el-rate>
-                <span style="display: inline-block; margin-top: 10px;">重点跟进客户</span>
+                <span style="display: inline-block; margin-top: 10px;">{{ data.statusNameZh }}</span>
             </div>
         </div>
     </section>

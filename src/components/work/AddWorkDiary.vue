@@ -11,9 +11,10 @@
     >
       <!-- 项目 start -->
       <el-form-item :label="`${$t('workDiary.form.projectName')}`" prop="projectName">
-        <el-select v-model="diaryForm.projectName" filterable placeholder>
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="diaryForm.projectName" filterable placeholder @change="onChangeProject">
+          <template v-if="projectList && projectList.length > 0">
+            <el-option v-for="(item, index) in projectList" :key="index" :label="item.companyName" :value="item.itemId"></el-option>
+          </template>
         </el-select>
       </el-form-item>
       <!-- 项目 end -->
@@ -32,8 +33,9 @@
       <!-- 目标公司 start -->
       <el-form-item :label="`${$t('workDiary.form.targetCompany')}`" prop="targetCompany">
         <el-select v-model="diaryForm.targetCompany" filterable placeholder>
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+          <template v-if="targetList && targetList.length > 0">
+            <el-option v-for="(item, index) in targetList" :key="index" :label="item.targetCompanyName" :value="item.id"></el-option>
+          </template>
         </el-select>
       </el-form-item>
       <!-- 目标公司 end -->
@@ -97,19 +99,24 @@
         :label="`${$t('workDiary.form.chatLog')}`"
         prop="chatLog"
       >
+      <!-- class="iworku-upload" -->
         <el-upload
           :action="$global.qiniuURL"
+          list-type="picture-card"
           :on-preview="onChatLogUploadPreview"
+          :on-success="onChatLogUploadSuccess"
           :on-remove="onChtLogUploadRemove"
-          class="iworku-upload"
+          :before-upload="onBeforeUpload"
+          :data="uploadData"
+          class="iworku-upload-card"
         >
           <div class="content">
-            <i style="font-size: 30px;" class="el-icon-picture-outline"></i>
-            <div class="el-upload__text">{{ $t("workDiary.uploadChatLog") }}</div>
+            <i style="font-size: 30px; color: white;" class="el-icon-picture-outline"></i>
+            <span class="text">{{ $t("workDiary.uploadChatLog") }}</span>
           </div>
         </el-upload>
-        <el-dialog :visible.sync="chatLogDialogVisible">
-          <img width="100%" :src="diaryForm.chatLog" alt />
+        <el-dialog :visible.sync="chatLogDialogVisible" title="　" :modal="false">
+           <img width="100%" :src="diaryForm.chatLogPreview" alt />
         </el-dialog>
       </el-form-item>
       <!-- 上传聊天记录 end -->
@@ -121,26 +128,54 @@
       >
         <el-upload
           :action="$global.qiniuURL"
+          list-type="picture-card"
           :on-preview="onAttachmentUploadPreview"
+          :on-success="onAttachmentUploadSuccess"
           :on-remove="onAttachmentUploadRemove"
+          :before-upload="onBeforeUpload"
+          :data="uploadData"
           multiple
-          class="iworku-upload"
+          class="iworku-upload-card"
         >
           <div class="content">
-            <i style="font-size: 30px;" class="el-icon-paperclip"></i>
-            <div class="el-upload__text">{{ $t("public.btn.upload") }}</div>
+            <i style="font-size: 30px; color: white;" class="el-icon-paperclip"></i>
+            <span class="text">{{ $t("public.btn.upload") }}</span>
           </div>
         </el-upload>
+        <el-dialog :visible.sync="attachmentDialogVisible" title="　" :modal="false">
+           <img width="100%" :src="diaryForm.attachmentPreview" alt />
+        </el-dialog>
       </el-form-item>
       <!-- 上传附件 end -->
       <el-form-item class="add-work-diary__btn">
-        <el-button type="primary" @click="onSubmitForm('diaryForm')">{{ $t("public.btn.submit") }}</el-button>
+        <el-button type="primary" :loading="submitBtnLoading" @click="onSubmitForm('diaryForm')">{{ $t("public.btn.submit") }}</el-button>
       </el-form-item>
     </el-form>
   </section>
 </template>
 <script>
+import { getQiniuToken, rename } from "@/plugins/configuration.js"
 export default {
+  props: {
+    // 项目ID、目标公司ID、成员ID
+    id: {
+        type: String,
+        default() {
+            return "";
+        }
+    },
+    /**
+     * project 项目公司
+     * target  目标公司
+     * member  成员
+     */
+    type: {
+        type: String,
+        default() {
+            return 'project';
+        }
+    }
+  },
   data() {
     return {
       diaryForm: {
@@ -149,8 +184,10 @@ export default {
         targetCompany: "",
         title: "",
         description: "",
-        chatLog: "",
-        attachment: "",
+        chatLog: [],
+        chatLogPreview: "", // 上传的钩子
+        attachment: [],
+        attachmentPreview: "", //上传的钩子
         // 订单信息
         orderNo: "",
         orderName: "",
@@ -188,17 +225,83 @@ export default {
           }
         ]
       },
-      chatLogDialogVisible: false
+      chatLogDialogVisible: false,
+      attachmentDialogVisible: false,
+      projectList: [],
+      targetList: [],
+      uploadData: {},
+      submitBtnLoading: false
     };
   },
+  created() {
+    this.getProject();
+  },
   methods: {
+    /**
+     *  获取全部项目
+     */
+    getProject() {
+        this.$http.post('/customer/item/withoutpaginglist').then(res => {
+            if (res.iworkuCode == 200) {
+                this.projectList = res.datas;
+            }
+        });
+    },
+    /**
+     *  根据项目获取目标公司
+     *  id: 项目ID
+     */
+    getTarget(id) {
+      // 根据项目ID查询当前登录人的私海
+      this.$http.post('/target/company/withpaginglist', {
+        id: id,
+        type: 2
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.targetList = res.datas;
+        }
+      });
+    },
+    onChangeProject(item) {
+      this.getTarget(item);
+    },
     /**
      * 提交表单
      */
     onSubmitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          let params = {
+            followTitle: this.diaryForm.title,
+            followContent: this.diaryForm.description,
+            followItemId: this.diaryForm.projectName,
+            followNodeType: this.diaryForm.type,
+            followFiles: this.diaryForm.attachment.join(";")
+          };
+          // 订单
+          if (this.diaryForm.type == 4) {
+            params.orderCode  = this.diaryForm.orderDescription;
+            params.orderNumber  = this.diaryForm.orderNum;
+            params.orderAmount = this.diaryForm.orderPrice;
+          }
+          if (this.diaryForm.projectName && !this.diaryForm.targetCompany) {
+            // 添加项目日志
+            this.submitBtnLoading = true;
+            this.$http.post('/customer/followup/info/save', params).then(res => {
+              this.submitBtnLoading = false;
+              if (res.iworkuCode == 200) {
+                this.$imessage({
+                  content: this.$t("public.tips.success"),
+                  type: "success"
+                });
+                this.onResetForm(formName);
+                this.$emit("onOperateSuccess");
+              }
+            });
+          } else if (this.diaryForm.projectName && this.diaryForm.targetCompany) {
+            // 添加项目下面的目标公司日志
+
+          }
         }
       });
     },
@@ -209,26 +312,64 @@ export default {
       this.$refs[formName].resetFields();
     },
     /**
-     *  聊天记录：上传
+     *  附件上传之前
      */
-    onChatLogUploadPreview(){},
+    async onBeforeUpload(file) {
+      // 获取七牛token
+      this.uploadData.token = await getQiniuToken(this);
+      this.uploadData.key = rename(file.name);
+    },
+    /**
+     *  聊天记录：预上传
+     */
+    onChatLogUploadPreview(file) {
+      this.diaryForm.chatLogPreview = file.url;
+      this.chatLogDialogVisible = true;
+    },
+    /**
+     *  聊天记录：上传成功
+     */
+    onChatLogUploadSuccess(response){
+      this.diaryForm.chatLog.push(response.key);
+    },
     /**
      *  聊天记录 删除
      */
     onChtLogUploadRemove(file) {
-      this.diaryForm.chatLog = file.url;
-      this.chatLogDialogVisible = true;
+      let index = this.diaryForm.chatLog.findIndex(val => file.response.key);
+      this.diaryForm.chatLog.splice(index, 1);
     },
     /**
-     *  附件： 上传
+     *  附件：预上传
      */
     onAttachmentUploadPreview(file) {
-      this.diaryForm.attachment = file.url;
+      this.diaryForm.attachmentPreview = file.url;
+      this.attachmentDialogVisible = true;
+    },
+    /**
+     *  附件： 上传成功
+     */
+    onAttachmentUploadSuccess(response) {
+      this.diaryForm.attachment.push(response.key);
     },
     /**
      * 附件: 删除
      */
-    onAttachmentUploadRemove(file, fileList) {}
+    onAttachmentUploadRemove(file) {
+      let index = this.diaryForm.attachment.findIndex(val => file.response.key);
+      this.diaryForm.attachment.splice(index, 1);
+    }
+  },
+  watch: {
+    type: {
+      handler(newVal) {
+        if (newVal == 'project') {
+          this.diaryForm.projectName = this.id;
+          this.getTarget(this.id);
+        } 
+      },
+      immediate: true
+    }
   }
 };
 </script>

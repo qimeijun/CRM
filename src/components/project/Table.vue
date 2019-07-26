@@ -85,7 +85,7 @@
                   class="table_delete"
                   @click="onDeleteMember(scope.row.itemId,3)"
                 >重启项目</li>
-                <li @click="allocationShow=true">
+                <li @click="allocationShow=true; allotProject=scope.row">
                   分配
                 </li>
               </ul>
@@ -117,7 +117,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ChangeAdministrator operate="add" ></ChangeAdministrator>
+        <ChangeAdministrator operate="add" :params="{type: 'addProjectManager'}" @getManager="getManager"></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 分配 end -->
@@ -182,7 +182,8 @@ export default {
               });
           }
         }
-      }
+      },
+      allotProject: {}
     };
   },
   async created() {
@@ -249,6 +250,26 @@ export default {
     // 搜索触发
     onClickSeek() {
       this.getProject(1);
+    },
+    // 获取分配的管理员
+    getManager(data) {
+      if (!data.id || !this.allotProject.itemId) {
+        return false;
+      }
+      this.$http.post('/user/item/user/rel/project/manager/save', {
+        itemId: this.allotProject.itemId,
+        userId: data.id
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.allocationShow = false;
+          this.allotProject = {};
+          this.getProject(this.currentPage);
+          this.$imessage({
+            content: this.$t("public.tips.success"),
+            type: "success"
+          });
+        }
+      });
     }
   }
 };

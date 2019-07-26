@@ -118,12 +118,14 @@ export default {
           }
         });
       } else if (obj.type == 'handoverProjectManger'){
+        // 移交项目经理
         this.$http.post('/user/item/user/rel/project/manager/init/withoutpaginglist').then(res => {
           if (res.iworkuCode == 200) {
             this.adminstratorList = res.datas;
           }
         });
       } else if (obj.type == 'handOverTeamManger') {
+        // 团队管理员的移交
         if (obj.data.length <= 1) {
           return false;
         }
@@ -131,6 +133,13 @@ export default {
         // 删除第一个, 列表中第一个是管理员
         temp.shift();
         this.adminstratorList = temp;
+      } else if (obj.type == 'addProjectManager') {
+        // 将一个新的项目分配给项目经理
+        this.$http.post('/user/info/find/role', { userRole: this.$global.userRole.projectManager }).then(res => {
+          if (res.iworkuCode == '200') {
+            this.adminstratorList = res.datas;
+          }
+        });
       }
     }
   },

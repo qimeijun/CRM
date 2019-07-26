@@ -1,6 +1,9 @@
 export default {
     head: {
-        title: "Global Localization Marketing Management System"
+        title: "Global Localization Marketing Management System",
+        account: "Account",
+        logout: "Log Out",
+        today: "Work Today"
     },
     workDiary: {
         title: "Work Log",

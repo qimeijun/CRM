@@ -37,10 +37,15 @@ export default {
             state.itemStatus = value;
         },
         $_set_userInfo(state, value) {
+            session.set('user', value);
             state.userInfo = value;
         },
         $_set_targetType(state, value) {
             state.targetType = value;
+        },
+        $_remove_userInfo(state) {
+            session.remove('user');
+            state.userInfo = {};
         }
     },
     // 提交到 mutations 中

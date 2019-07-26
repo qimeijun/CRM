@@ -7,7 +7,7 @@
       :rules="rules"
       ref="diaryForm"
       label-position="left"
-      label-width="80px"
+      label-width="100px"
     >
       <!-- 项目 start -->
       <el-form-item :label="`${$t('workDiary.form.projectName')}`" prop="projectName">
@@ -58,6 +58,14 @@
         <!-- 日志描述 end -->
       </template>
       <template v-else>
+        <!-- 订单类型 正常或者不正常 start -->
+        <el-form-item :label="`${$t('workDiary.form.orderType')}`" prop="orderType">
+          <el-select v-model="diaryForm.orderType" filterable placeholder>
+            <el-option :label="$t('workDiary.orderType[0]')" value="1"></el-option>
+            <el-option :label="$t('workDiary.orderType[1]')" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- 订单类型 end -->
         <!-- 订单编号 start -->
         <el-form-item :label="`${$t('workDiary.form.orderNo')}`" prop="orderNo">
           <el-input v-model="diaryForm.orderNo"></el-input>
@@ -99,7 +107,6 @@
         :label="`${$t('workDiary.form.chatLog')}`"
         prop="chatLog"
       >
-      <!-- class="iworku-upload" -->
         <el-upload
           :action="$global.qiniuURL"
           list-type="picture-card"
@@ -108,6 +115,7 @@
           :on-remove="onChtLogUploadRemove"
           :before-upload="onBeforeUpload"
           :data="uploadData"
+          :file-list="diaryForm.chatLogList"
           class="iworku-upload-card"
         >
           <div class="content">
@@ -134,6 +142,7 @@
           :on-remove="onAttachmentUploadRemove"
           :before-upload="onBeforeUpload"
           :data="uploadData"
+          :file-list="diaryForm.attachmentList"
           multiple
           class="iworku-upload-card"
         >
@@ -174,11 +183,21 @@ export default {
         default() {
             return 'project';
         }
+    },
+    /**
+     *  编辑工作日志时，原来的工作日志内容
+     */
+    diaryInfo: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
   data() {
     return {
       diaryForm: {
+        id: "",
         projectName: "",
         type: "",
         targetCompany: "",
@@ -191,9 +210,12 @@ export default {
         // 订单信息
         orderNo: "",
         orderName: "",
+        orderType: '1',
         orderNum: 0,
         orderPrice: 0,
-        orderDescription: ""
+        orderDescription: "",
+        chatLogList: [],
+        attachmentList: []
       },
       rules: {
         projectName: [
@@ -276,18 +298,24 @@ export default {
             followContent: this.diaryForm.description,
             followItemId: this.diaryForm.projectName,
             followNodeType: this.diaryForm.type,
-            followFiles: this.diaryForm.attachment.join(";")
+            followFiles: this.diaryForm.attachment.join(";"),
+            followLog: this.diaryForm.chatLog.join(";")
           };
           // 订单
           if (this.diaryForm.type == 4) {
-            params.orderCode  = this.diaryForm.orderDescription;
+            params.orderCode  = this.diaryForm.orderNo;
             params.orderNumber  = this.diaryForm.orderNum;
             params.orderAmount = this.diaryForm.orderPrice;
+            params.productName = this.diaryForm.orderName;
+            params.orderType = this.diaryForm.orderType;
+            params.followContent = this.diaryForm.orderDescription;
           }
-          if (this.diaryForm.projectName && !this.diaryForm.targetCompany) {
-            // 添加项目日志
+          
+          if (this.diaryForm.id) {
+            params.id = this.diaryForm.id;
+            // 修改工作日志
             this.submitBtnLoading = true;
-            this.$http.post('/customer/followup/info/save', params).then(res => {
+            this.$http.post('/customer/followup/info/update', params).then(res => {
               this.submitBtnLoading = false;
               if (res.iworkuCode == 200) {
                 this.$imessage({
@@ -298,10 +326,22 @@ export default {
                 this.$emit("onOperateSuccess");
               }
             });
-          } else if (this.diaryForm.projectName && this.diaryForm.targetCompany) {
-            // 添加项目下面的目标公司日志
-
-          }
+          } else {
+            // 添加工作日志
+              
+              this.submitBtnLoading = true;
+              this.$http.post('/customer/followup/info/save', params).then(res => {
+                this.submitBtnLoading = false;
+                if (res.iworkuCode == 200) {
+                  this.$imessage({
+                    content: this.$t("public.tips.success"),
+                    type: "success"
+                  });
+                  this.onResetForm(formName);
+                  this.$emit("onOperateSuccess");
+                }
+              });
+            } 
         }
       });
     },
@@ -358,6 +398,44 @@ export default {
     onAttachmentUploadRemove(file) {
       let index = this.diaryForm.attachment.findIndex(val => file.response.key);
       this.diaryForm.attachment.splice(index, 1);
+    },
+    getModifyDiary(params) {
+        this.diaryForm.id = params.id;
+        this.diaryForm.projectName = params.followItemId;
+        this.diaryForm.type = params.followNodeType;
+        this.diaryForm.targetCompany = params.followTargetCompany;
+        this.diaryForm.title = params.followTitle ;
+        this.diaryForm.description = params.followContent;
+        this.diaryForm.chatLog = (params.followLog && params.followLog.split(';')) || [] ;
+        this.diaryForm.chatLogPreview = params.followLog; // 上传的钩子
+        this.diaryForm.attachment = (params.followFiles && params.followFiles.split(';')) || [];
+        this.diaryForm.attachmentPreview = params.followFiles; //上传的钩子
+        // 订单信息
+        this.diaryForm.orderNo = params.orderCode;
+        this.diaryForm.orderName = params.productName;
+        this.diaryForm.orderNum = params.orderNumber;
+        this.diaryForm.orderPrice = params.orderAmount;
+        this.diaryForm.orderType = params.orderType;
+        this.diaryForm.orderDescription = params.followContent;
+
+        if (params.followLog) {
+          this.diaryForm.chatLogList = [];
+          params.followLog.split(";").map(val => {
+            this.diaryForm.chatLogList.push({
+              name: val,
+              url: `${this.$global.avatarURI}${val}`
+            });
+          });
+        } 
+        if (params.followFiles) {
+          this.diaryForm.attachmentList = [];
+          params.followFiles.split(";").map(val => {
+            this.diaryForm.attachmentList.push({
+              name: val,
+              url: `${this.$global.avatarURI}${val}`
+            });
+          });
+        }
     }
   },
   watch: {
@@ -367,6 +445,14 @@ export default {
           this.diaryForm.projectName = this.id;
           this.getTarget(this.id);
         } 
+      },
+      immediate: true
+    },
+    diaryInfo: {
+      handler(newVal) {
+        if (newVal && newVal.id) {
+          this.getModifyDiary(newVal);
+        }
       },
       immediate: true
     }

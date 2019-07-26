@@ -6,34 +6,45 @@
       style="width: 100%"
       :default-sort="{prop: 'date', order: 'descending'}"
     >
-      <el-table-column prop="date" label="ID" sortable width="180"></el-table-column>
-      <el-table-column prop="name" :label="$t('memberInfo.projectTable[0]')"></el-table-column>
-      <el-table-column prop="name" :label="$t('memberInfo.projectTable[1]')" sortable></el-table-column>
+      <el-table-column prop="itemNumber" label="ID" sortable width="180"></el-table-column>
+      <el-table-column prop="itemName" :label="$t('memberInfo.projectTable[0]')"></el-table-column>
+      <el-table-column :label="$t('memberInfo.projectTable[1]')" sortable>
+        <template slot-scope="scope">
+          {{ $t(`project.status[${parseInt(scope.row.itemStatus) - 1}]`) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="name" :label="$t('memberInfo.projectTable[2]')">
         <template slot-scope="scope">
-          <el-avatar style="vertical-align: middle;" :size="40" :src="circleUrl"></el-avatar>
-          {{ scope.row.name }}
+          <el-avatar style="vertical-align: middle;" :size="40" :src="`${$global.probjectManagerProfileImage}`"></el-avatar>
+          {{ scope.row.probjectManagerNameZh || scope.row.probjectManagerNameEn }}
         </template>
       </el-table-column>
       <el-table-column prop="name" :label="$t('memberInfo.projectTable[3]')">
         <template slot-scope="scope">
-          <el-tag class="member-project__tag" effect="dark" type="primary" disable-transitions>{{scope.row.name}}</el-tag>
-          <el-tag class="member-project__tag" effect="dark" type="primary" disable-transitions>{{scope.row.name}}</el-tag>
-          <el-tag class="member-project__tag" effect="dark" type="primary" disable-transitions>{{scope.row.name}}</el-tag>
-          <el-tag class="member-project__tag" effect="dark" type="primary" disable-transitions>{{scope.row.name}}</el-tag>
+          <template v-if="scope.row && scope.row.itemLabelList">
+              <el-tag
+                class="member-project__tag" effect="dark" type="primary" disable-transitions
+                v-for="(item,index) in scope.row.itemLabelList.slice(0,10)"
+                :key="index"
+              >{{ item.labelNameEn }}</el-tag>
+          </template>
         </template>
       </el-table-column>
-      <el-table-column prop="name" :label="$t('memberInfo.projectTable[4]')" sortable></el-table-column>
-      <el-table-column prop="address" :label="$t('memberInfo.projectTable[5]')" sortable></el-table-column>
+      <el-table-column prop="day" :label="$t('memberInfo.projectTable[4]')" sortable></el-table-column>
+      <el-table-column prop="addTimeStr" :label="$t('memberInfo.projectTable[5]')" sortable></el-table-column>
       <el-table-column :label="$t('memberInfo.projectTable[6]')">
-          <span class="member-project__delete" @click="onDelete">{{ $t("memberInfo.btn.shiftOutProject") }}</span>
+        <template slot-scope="scope">
+          <span class="member-project__delete" @click="onDelete(scope.row)">{{ $t("memberInfo.btn.shiftOutProject") }}</span>
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination
       style="text-align: center; margin-top: 20px;"
       :background="true"
       layout="prev, pager, next"
-      :total="1000"
+      :total="page.total"
+      :current-page="page.pageNum"
+      :current-change="getProject"
     ></el-pagination>
 
     <!-- 重新分配项目经理 dialog start -->
@@ -79,28 +90,7 @@ export default {
     },
   data() {
     return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ],
+      tableData: [],
       handOverAdministratorDialogVisible: false,
       addMemberDialogVisible: false,
       userId: this.$route.params.id,
@@ -126,22 +116,23 @@ export default {
       /**
        *  移出项目
        */
-      onDelete() {
+      onDelete(item) {
         this.$confirm(`<i style="font-size: 35px; color: #E50054;" class="el-icon-question"></i><br/>${this.$t("memberInfo.memberShiftOutTip.content[0]")}`, this.$t("memberInfo.memberShiftOutTip.title"), {
-            confirmButtonText: this.$t("memberInfo.memberShiftOutTip.btn[1]"),
-            cancelButtonText: this.$t("memberInfo.memberShiftOutTip.btn[0]"),
+            confirmButtonText: this.$t("memberInfo.memberShiftOutTip.btn[0]"),
+            cancelButtonText: this.$t("memberInfo.memberShiftOutTip.btn[1]"),
             center: true,
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
+            confirmButtonClass: "iworku-confirm-button",
+            cancelButtonClass: "iworku-confirm-cancel-button",
         }).then(() => {
             // 取消移除
-        }).catch(() => {
-            this.onConfirmShiftOutProject();
-        });
+            this.onConfirmShiftOutProject(item);
+        }).catch(() => {});
       },
       /**
        *  确定移除项目
        */
-      onConfirmShiftOutProject() {
+      onConfirmShiftOutProject(item) {
         // 确定删除 正在跟进当中的
         this.$confirm(`<i style="font-size: 35px; color: #E50054;" class="el-icon-question"></i><br/>${this.$t("memberInfo.memberShiftOutTip.content[1]")}<br/>${this.$t("memberInfo.memberShiftOutTip.content[2]")}`, this.$t("memberInfo.memberShiftOutTip.title"), {
             confirmButtonText: this.$t("memberInfo.memberShiftOutTip.btn[2]"),
@@ -150,7 +141,7 @@ export default {
             dangerouslyUseHTMLString: true
         }).then(() => {
           // 移交任务操作 
-          this.onShiftOutProjectAdministrator();
+          this.onShiftOutProjectAdministrator(item);
         }).catch(() => {
           // 移入公海操作
         });

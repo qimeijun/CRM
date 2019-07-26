@@ -17,7 +17,8 @@ export default {
             description: "工作描述",
             chatLog: "聊天记录",
             attachment: "附件",
-            leaveMessage: "留言内容"
+            leaveMessage: "留言内容",
+            orderType: "订单类型"
         },
         rules: {
             projectName: "请选择项目",
@@ -48,7 +49,8 @@ export default {
             total: "订单总量",
             price: "订单金额",
             description: "订单描述"
-        }
+        },
+        orderType: ["正常", "异常"]
     },
     member: {
         add: "添加新成员",
@@ -412,7 +414,8 @@ export default {
             ok: "完成",
             edit:"编辑"
         },
-        tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"]
+        tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"],
+        status: ["进行中", "已结束", "重启项目", "新项目"]
     },
     projectInfo:{
         title:"项目详情",

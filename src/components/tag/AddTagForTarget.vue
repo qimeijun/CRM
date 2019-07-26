@@ -7,7 +7,8 @@
         </ul>
         <!-- 标签 -->
         <div class="add-tag__list">
-            <span v-for="(item, index) in tagList" @click="onSelectTag(item)" :class="selectTagMap.has(item.id) ? 'selected': ''" :key="index" :id="item.id">{{ item.labelNameZh }}</span>
+            <span v-for="(item, index) in tagList" @click="onSelectTag(item)" 
+                 :class="[selectTagMap.has(item.id) ? 'selected': '56']" :key="index" :id="item.id">{{ item.labelNameZh }}</span>
         </div>
         <!-- btn -->
         <div class="add-tag__bottom">
@@ -57,7 +58,8 @@ export default {
             groupList: [],
             tagList: [],
             selectTagMap: new Map(),
-            submitBtnLoading: false
+            submitBtnLoading: false,
+            deleteTagMap: new Map()
         }
     },
     methods: {
@@ -107,9 +109,17 @@ export default {
              * 如果已经选择的，点击一下就删除
              * 如果原来没有选择，点击一下就添加
              */
-            this.selectTagMap.has(item.id) ? this.selectTagMap.delete(item.id) : this.selectTagMap.set(item.id, item);
+            if (this.selectTagMap.has(item.id)) {
+                // 如果存在标签，那么就删除
+                this.deleteTagMap.set(item.id, item);
+                this.selectTagMap.delete(item.id);
+            } else {
+                this.deleteTagMap.delete(item.id, item);
+                this.selectTagMap.set(item.id, item);
+            }
             // 重新赋值，否则检测不到数据变更
             this.selectTagMap = new Map(this.selectTagMap);
+            this.deleteTagMap = new Map(this.deleteTagMap);
         },
         /**
          *  添加标签
@@ -123,18 +133,35 @@ export default {
         onConfirmTag() { 
             if (!this.id) {
                 return false;
-            }        
-            let tagList = [...this.selectTagMap.keys()];
+            }
+            // 添加列表中是否存在之前已经存在的标签
+            let alreadExist = this.defaultTag.filter(val => this.selectTagMap.has(val.id));
+            if (alreadExist) {
+                alreadExist.map(val => {
+                    this.selectTagMap.delete(val.id);
+                });
+            }
+            let addTagList = [...this.selectTagMap.values()];
+            let deleteTagList = [...this.deleteTagMap.values()];
             let params = [];
             if (this.type == 'project') {
-                tagList.map(val => {
+                addTagList.map(val => {
                     params.push({
-                        labelId: val,
-                        itemId: this.id
+                        labelId: val.id,
+                        itemId: this.id,
+                        type: 1
                     });
                 });
+                
+                deleteTagList.map(val => {
+                    params.push({
+                        labelId: val.id,
+                        itemId: this.id,
+                        type: 2
+                    })
+                })
                 this.submitBtnLoading = true;
-                this.$http.post('/customer/item/label/rel/save', { itemLabelRelList: params }).then(res => {
+                this.$http.post('/customer/item/label/item/label/rel/update', { itemLabelRelList: params }).then(res => {
                     this.submitBtnLoading = false;
                     if(res.iworkuCode == 200) {
                         this.$imessage({
@@ -145,14 +172,22 @@ export default {
                     }
                 });
             } else if (this.type == 'target') {
-                tagList.map(val => {
+                addTagList.map(val => {
                     params.push({
                         labelId: val,
-                        targetCompanyId: this.id
+                        targetCompanyId: this.id,
+                        type: 1
                     });
                 });
+                deleteTagList.map(val => {
+                    params.push({
+                        labelId: val.id,
+                        targetCompanyId: this.id,
+                        type: 2
+                    })
+                })
                 this.submitBtnLoading = true;
-                this.$http.post('/target/label/rel/save', { targetCompanyLabelRelList: params }).then(res => {
+                this.$http.post('/target/label/rel/update', { targetCompanyLabelRelList: params }).then(res => {
                     this.submitBtnLoading = false;
                     if (res.iworkuCode == 200) {
                         this.$imessage({
@@ -167,17 +202,19 @@ export default {
     },
     watch: {
         type: {
-            handler(newVal, oldVal) {
+            handler(newVal) {
                 this.getGroup();
             },
             immediate: true
         },
         defaultTag: {
-            handler(newVal, oldVal) {
+            handler(newVal) {
                 if (newVal && newVal.length > 0) {
                     newVal.map(val => {
-                        (val && val.id) ? this.selectTagMap.set(val.id, val) : null;
+                        if (val.labelId) val.id = val.labelId;
+                        (val && val.id) ? this.selectTagMap.set(val.labelId, Object.assign({}, val)) : null;
                     });
+                    this.selectTagMap = new Map(this.selectTagMap);
                 }
             },
             immediate: true

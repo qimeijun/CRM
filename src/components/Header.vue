@@ -73,7 +73,7 @@
           <img
             class="head__avatar__img"
             :src="`${$global.avatarURI}${userInfo.userProfileImage}`"
-            alt
+            :alt="userInfo.userProfileImage"
             slot="reference"
           />
         </el-popover>

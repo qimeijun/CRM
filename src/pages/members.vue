@@ -25,7 +25,7 @@
       <Region v-for="(item, index) in dataList" :key="index" :data="item" @getRegionId="getRegionId"></Region>
       </template>
       <template v-else>
-        暂无数据
+        <div style="height: 200px; background-color: white; border-radius: 8px; text-align: center; line-height: 200px;">{{ $t("public.tips.noData") }}</div>
       </template>
       <el-pagination
         v-if="pagination.total > pagination.pageSize * pagination.pageNum"
@@ -92,7 +92,7 @@ export default {
     return {
       addMemberDialogVisible: false,
       addManagerDialogVisible: false,
-      searchMember: "",
+      searchMember: null,
       dataList: [],
       pagination: {
         pageSize: 10,

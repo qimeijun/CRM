@@ -22,7 +22,8 @@ export default {
             orderName: "Product Name",
             orderNum: "Number",
             orderPrice: "Price",
-            orderDescription: "Order Description"
+            orderDescription: "Order Description",
+            orderType: "Order Type"
         },
         rules: {
             projectName: "Please select a project",
@@ -54,7 +55,8 @@ export default {
             total: "Total Order",
             price: "Order Price",
             description: "Order Description"
-        }
+        },
+        orderType: ["Normal", "Abnormal"]
     },
     member: {
         add: "Add New Member",
@@ -420,7 +422,8 @@ export default {
             ok: "完成",
             edit:"编辑"
         },
-        tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"]
+        tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"],
+        status: ["进行中", "已结束", "重启项目", "新项目"]
     },
     projectInfo:{
         title:"项目详情",

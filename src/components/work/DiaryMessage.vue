@@ -3,57 +3,46 @@
     <section class="diary-message">
         <div class="parent">
             <div class="name">
-                <span class="user">Pualthin Pow: </span>
+                <span class="user">{{ message.followAddUserNameZh || message.followAddUserNameEn }}: </span>
                 <div>
-                    <span class="time">2019/04/23 12:23:23</span>
-                    <span @click="onShowLeaveMesssageForm" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
+                    <span class="time">{{ message.followAddTimeStr }}</span>
+                    <span @click="onShowLeaveMesssageForm(message)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
                 </div>
             </div>
             <div class="content">
-                I have check the report,this client is suitable for us. I will communicate with my boss.I will reply you ASAP.
+                {{ message.followContent }}
             </div>
-            <div class="child">
+            <div v-if="message && message.followFiles" class="attchment">
+                <Attachment v-for="(aItem, aIndex) in message.followFiles.split(';')" :key="aIndex" :name="aItem"></Attachment>
+            </div>
+            <template v-if="message && message.nodeList && Object.prototype.toString.call(message.nodeList) == '[object Array]'">
+            <div v-for="(item, index) in message.nodeList" :key="index" class="child">
                 <div class="name">
-                    <span class="user">Pualthin Pow: </span>
+                    <span class="user">{{ item.followAddUserNameZh || item.followAddUserNameEn }}: </span>
                     <div>
-                        <span class="time">2019/04/23 12:23:23</span>
-                        <span @click="onShowLeaveMesssageForm" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
+                        <span class="time">{{ item.followAddTimeStr }}</span>
+                        <span @click="onShowLeaveMesssageForm(item)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
+                        
                     </div>
                 </div>
                 <div class="content">
-                    I have check the report,this client is suitable for us. I will communicate with my boss.I will reply you ASAP.
+                    {{ item.followContent }}
                 </div>
-                <div class="attchment">
-                    <Attachment name="sdfsdf.pdf"></Attachment>
-                    <Attachment name="sdfsdf.wdf"></Attachment>
-                    <Attachment name="sdfsdf.xdf"></Attachment>
+                <div v-if="item && item.followFiles" class="attchment">
+                    <Attachment v-for="(aItem, aIndex) in item.followFiles.split(';')" :key="aIndex" :name="aItem"></Attachment>
                 </div>
             </div>
-            <div class="child">
-                <div class="name">
-                    <span class="user">Pualthin Pow: </span>
-                    <div>
-                        <span class="time">2019/04/23 12:23:23</span>
-                        <span @click="onShowLeaveMesssageForm" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
-                    </div>
-                </div>
-                <div class="content">
-                    I have check the report,this client is suitable for us. I will communicate with my boss.I will reply you ASAP.
-                </div>
-                <div class="attchment">
-                    <Attachment name="sdfsdf.pdf"></Attachment>
-                    <Attachment name="sdfsdf.wdf"></Attachment>
-                    <Attachment name="sdfsdf.xdf"></Attachment>
-                </div>
-                <LeaveMessage v-if="isShowLeaveMessageForm" @onCloseLeaveMessage="onCloseLeaveMessage"></LeaveMessage>
-            </div>
-            
+            </template>
+            <LeaveMessage v-if="isShowLeaveMessageForm" :parent="currentParentMessage" @onOperateSuccess="onCloseLeaveMessage"></LeaveMessage>
         </div>
     </section>
 </template>
 <script>
 export default {
-    prop: {
+    props: {
+        /**
+         *  关于留言的信息
+         */
         message: {
             type: Object,
             default() {
@@ -67,7 +56,8 @@ export default {
     },
     data() {
         return {
-            isShowLeaveMessageForm: false
+            isShowLeaveMessageForm: false,
+            currentParentMessage: {}
         }
     },
     methods: {
@@ -80,8 +70,15 @@ export default {
         /**
          *  显示留言表单
          */
-        onShowLeaveMesssageForm() {
+        onShowLeaveMesssageForm(current) {
+            this.currentParentMessage = current;
             this.isShowLeaveMessageForm = true;
+        }
+    },
+    watch: {
+        message: {
+            handler(newVal){},
+            immediate: true
         }
     }
 }
@@ -103,6 +100,7 @@ export default {
     }
     .content {
         color: #7B7B7B;
+        word-break: break-all;
     }
     .child {
         margin-left: .3rem;

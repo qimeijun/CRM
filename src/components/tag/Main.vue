@@ -137,8 +137,7 @@ export default {
   components: {
     Group: () => import("@/components/tag/Group.vue"),
     ItemProject: () => import("@/components/tag/ItemProject.vue"),
-    ItemTarget: () => import("@/components/tag/ItemTarget.vue"),
-    Add: () => import("@/components/tag/AddTagForTarget.vue"),
+    ItemTarget: () => import("@/components/tag/ItemTarget.vue")
   },
   data() {
     return {

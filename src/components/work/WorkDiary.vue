@@ -17,11 +17,15 @@
                 </div>
             </div>
             <!-- 工作日志模块 -->
-            <div style="margin-top: 20px;">
-                <DiaryModule v-for="(item, index) in workDiarList" :key="index" :item="item"></DiaryModule>
-                <!-- <DiaryModule :item="{type: 2}"></DiaryModule>
-                <DiaryModule :item="{type: 3}"></DiaryModule>
-                <DiaryModule :item="{type: 4}"></DiaryModule> -->
+            <div style="margin-top: 20px;" >
+                <template v-if="workDiarList && workDiarList.length > 0">
+                    <DiaryModule v-for="(item, index) in workDiarList" :key="index" :diary="item"></DiaryModule>
+                </template>
+                <template v-else>
+                    <div style="height: 200px; background-color: white; border-radius: 8px; line-height: 200px; text-align: center;">
+                        {{ $t("public.tips.noData") }}
+                    </div>
+                </template>
             </div>
         </div>
         <div class="work-diary__right">
@@ -29,7 +33,7 @@
                 <template
                     slot="dateCell"
                     slot-scope="{date, data}">
-                    <div @click="onnChangeDiary" :class="(logMap.has(data.day.split('-')[2]) && data.type == 'current-month') ? 'have-log' : ''">
+                    <div :class="(logMap.has(data.day.split('-')[2]) && data.type == 'current-month') ? 'have-log' : ''">
                         <el-badge :is-dot="logMap.get(data.day.split('-')[2]) && data.type == 'current-month'" class="item">
                             <span>
                                 {{ data.day.split('-')[2] }}
@@ -49,9 +53,10 @@
         :append-to-body="true"
         :modal="false"
         :lock-scroll="true"
+        :close-on-click-modal="false"
         width="30%">
         <el-scrollbar class="scrollbar">
-            <AddWorkDiary :id="id" :type="type" @onOperateSuccess="addWorkDiaryDialogVisible = false;"></AddWorkDiary>
+            <AddWorkDiary :id="id" :type="type" @onOperateSuccess="addWorkDiaryDialogVisible=false;getWorkDiary(activeMenu)"></AddWorkDiary>
         </el-scrollbar>
         </el-dialog>
         <!-- 添加工作日志 dialog end -->
@@ -88,7 +93,13 @@ export default {
             activeMenu: 'all',
             addWorkDiaryDialogVisible: false,
             calendarValue: new Date(),
-            menuList: [
+            logMap: new Map(),
+            workDiarList: []
+        }
+    },
+    computed: {
+        menuList() {
+            return [
                 {
                     name: this.$t("memberInfo.workDiaryMenu[0]"),
                     value: "all",
@@ -101,50 +112,68 @@ export default {
                     name: this.$t("memberInfo.workDiaryMenu[2]"),
                     value: "target",
                 }
-            ],
-            isHaveLog: [
-                {
-                    date: '02',
-                    isRead: true
-                },
-                {
-                    date: '12',
-                    isRead: true
-                },
-                {
-                    date: '22',
-                    isRead: true
-                }
-            ],
-            logMap: new Map(),
-            workDiarList: []
-        }
-    },
-    created() {
-        this.dataProcessiong();
+            ]
+        },
     },
     methods: {
         /**
          *  根据ID 查询工作日志
          */
-        getWorkDiary(type) {
-            if (this.type == 'project') {
+        getWorkDiary(diaryType) {
+            if (this.type == 'member') {
+                this.$http.post('/customer/followup/info/user/withpaginglist', {
+                    userId: this.id,
+                    followType: diaryType,
+                    pageSize: 10,
+                    pageNum: 1
+                }).then(res => {
+                    if (res.iworkuCode == 200) {
+                        this.workDiarList = res.datas || [];
+                    }
+                });
+            } else {
                 this.$http.post('/customer/followup/info/withoutpaginglist', {
                     followItemId: this.id,
-                    followType: type
+                    followType: diaryType
                 }).then(res => {
                     if (res.iworkuCode == 200) {
                         this.workDiarList = res.datas || [];
                     }
                 });
             }
-            
+        },
+        /**
+         *  获取未读日志的日期
+         */
+        getCalendarList() {
+            let params = {};
+            if (this.type == 'member') {
+                params.userId = this.id;
+            } else {
+                params.followItemId = this.id;
+            }
+            // 项目
+            this.$http.post('/customer/followup/info/unread/date/withoutpaginglist', params).then(res => {
+                if (res.iworkuCode == 200) {
+                    res.datas.map(val => {
+                        this.logMap.set(val.followDate.substr(-2), parseInt(val.unreadDateCount) > 0 ? true : false);
+                    });
+                    this.logMap = new Map(this.logMap);
+                }
+            });
         },
         /**
          * 切换顶部菜单
          */
         onChangeMenu(item) {
             this.activeMenu = item.value;
+            if (item.value == 'project') {
+                this.getWorkDiary(1)
+            } else if (item.value == 'target') {
+                this.getWorkDiary(2);
+            } else {
+                this.getWorkDiary();
+            }
         },
         /**
          * 添加工作日志
@@ -153,30 +182,47 @@ export default {
             this.addWorkDiaryDialogVisible = true;
         },
         /**
-         *  处理返回来的日历数据
+         *  根据日期查询工作日志
          */
-        dataProcessiong() {
-            this.isHaveLog.map((val) => {
-                this.logMap.set(val.date, val.isRead);
+        getWorkDiaryByDate(time) {
+            let date = time.getDate();
+            date < 10 ? date = `0${date}` : null;
+            let month = time.getMonth() + 1;
+            month < 10 ? month = `0${month}` : null;
+
+            if (!this.logMap.has(`${date}`)) {
+                return false;
+            }
+            let params = {
+                followDate: `${time.getFullYear()}-${month}-${time.getDate()}`
+            };
+            if (this.type == 'project') {
+                params.followItemId = this.id;
+            } else if (this.type == 'member') {
+                params.userId = this.id;
+            }
+            this.$http.post('/customer/followup/info/unread/withoutpaginglist', params).then(res => {
+                if (res.iworkuCode == 200) {
+                    this.workDiarList = res.datas || [];
+                    // 日期点击之后就设置为已读
+                    this.logMap.set(`${date}`, false);
+                    this.logMap = new Map(this.logMap);
+                }
             });
-        },
-        /**
-         *  点击日历，切换工作日志日期
-         */
-        onnChangeDiary() {
-            console.log(this.calendarValue);
         }
     },
     watch: {
         calendarValue(newVal, oldVal) {
             if (newVal) {
                 // 获取月份
-                let month = new Date(newVal).getMonth() + 1;
+                let time = new Date(newVal);
+                this.getWorkDiaryByDate(time);
             }
         },
         id: {
             handler(newval) {
                 if (newval) {
+                    this.getCalendarList();
                     this.getWorkDiary();
                 }
             },

@@ -17,12 +17,13 @@
         <!-- 附件 start -->
         <el-form-item label>
           <div style="display: flex;">
-            <Attachment name="123.pdf" :isDelete="true" @onDelete="onDeleteAttachment"></Attachment>
+            <Attachment v-for="(item, index) in messageForm.attachment" :key="index" :name="item" :isDelete="true" @onDelete="onDeleteAttachment(index)"></Attachment>
             <el-upload
               style="display: inline-block;"
               :action="$global.qiniuURL"
-              :on-preview="onAttachmentUploadPreview"
-              :on-remove="onAttachmentUploadRemove"
+              :on-success="onAttachmentUploadSuccess"
+              :before-upload="onBeforeUpload"
+              :data="uploadData"
               multiple
             >
               <div class="content">
@@ -37,6 +38,7 @@
         <el-form-item class="leave-message__btn">
           <el-button @click="onCancelForm('messageForm')" size="mini">{{ $t("public.btn.cancel") }}</el-button>
           <el-button
+            :loading="btnLoading"
             type="primary"
             size="mini"
             @click="onSubmitForm('messageForm')"
@@ -48,7 +50,19 @@
   </section>
 </template>
 <script>
+import { getQiniuToken, rename } from "@/plugins/configuration.js"
 export default {
+  props: {
+    /**
+     *  父级相关的信息
+     */
+    parent: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
   components: {
     Attachment: () => import("@/components/lib/Attachment.vue")
   },
@@ -56,7 +70,7 @@ export default {
     return {
       messageForm: {
         content: "",
-        attachment: ""
+        attachment: []
       },
       rules: {
         content: [
@@ -66,7 +80,9 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      uploadData: {},
+      btnLoading: false
     };
   },
   methods: {
@@ -76,7 +92,24 @@ export default {
     onSubmitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          this.btnLoading = true;
+          this.$http.post('/customer/followup/info/save', {
+            followNodeType: 6, // 回复
+            followParent: this.parent.id,
+            followContent: this.messageForm.content,
+            followFiles: this.messageForm.attachment.join(";"),
+            followTitle: this.parent.followTitle,
+            followItemId: this.parent.followItemId
+          }).then(res => {
+            this.btnLoading = false;
+            if (res.iworkuCode == 200) {
+              this.$imessage({
+                content: this.$t("public.tips.success"),
+                type: "success"
+              });
+              this.$emit("onOperateSuccess");
+            }
+          });
         }
       });
     },
@@ -85,23 +118,28 @@ export default {
      */
     onCancelForm(formName) {
       this.$refs[formName].resetFields();
+      this.messageForm.attachment = [];
       this.$emit("onCloseLeaveMessage");
     },
     /**
-     *  附件： 上传
+     *  附件上传之前
      */
-    onAttachmentUploadPreview(file) {
-      this.messageForm.attachment = file.url;
+    async onBeforeUpload(file) {
+      // 获取七牛token
+      this.uploadData.token = await getQiniuToken(this);
+      this.uploadData.key = rename(file.name);
     },
     /**
-     * 附件: 删除
+     *  附件： 上传成功
      */
-    onAttachmentUploadRemove(file, fileList) {},
+    onAttachmentUploadSuccess(response) {
+      this.messageForm.attachment.push(response.key);
+    },
     /**
      *  删除附件
      */
-    onDeleteAttachment() {
-        console.log("删除");
+    onDeleteAttachment(index) {
+        this.message.attachment.splice(index, 1);
     }
   }
 };

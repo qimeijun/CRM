@@ -3,57 +3,81 @@
     <section class="diary-module">
         <div class="diary-module__left">
             <div class="time" :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">
-                <p>2019</p>
-                <p>Jun.6</p>
-                <p>13:32</p>
+                <p>{{ timeInfo.year }}</p>
+                <p>{{ timeInfo.month }}.{{ timeInfo.day }}</p>
+                <p>{{ timeInfo.hour }}:{{ timeInfo.minute }}</p>
             </div>
-            <div class="type" :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">{{ $t("workDiary.diarType.daily") }}</div>
+            <div class="type" :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">
+                <template v-if="item.followNodeType == '1'">{{ $t('workDiary.diarType.daily') }}</template>
+                <template v-else-if="item.followNodeType == '2'">{{ $t('workDiary.diarType.weekly') }}</template>
+                <template v-else-if="item.followNodeType == '3'">{{ $t('workDiary.diarType.monthly') }}</template>
+                <template v-else-if="item.followNodeType == '4'">{{ $t('workDiary.diarType.order') }}</template>
+            </div>
         </div>
         <div class="diary-module__right">
             <div class="project" :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">
                 <span>
                     {{ item.followItemIdName }}
                 </span>
-                <el-dropdown @command="onHandleCommand"  style="color: white; cursor: pointer;">
+                <el-dropdown @command="onHandleCommand" style="color: white; cursor: pointer;">
                     <span class="el-dropdown-link">
                         {{ $t("workDiary.operate") }}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu class="diary-module-drop-list" slot="dropdown">
                         <el-dropdown-item command="modify">{{ $t("workDiary.btn.modifyDiary") }}</el-dropdown-item>
                         <el-dropdown-item command="leave">{{ $t("workDiary.btn.leaveMessageNow") }}</el-dropdown-item>
-                        <el-dropdown-item command="delete">{{ $t("workDiary.btn.delete") }}</el-dropdown-item>
+                        <!-- <el-dropdown-item command="delete">{{ $t("workDiary.btn.delete") }}</el-dropdown-item> -->
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-            <div class="target-company">
+            <div v-if="item.followTargetCompanyName" class="target-company">
                 目标公司：{{ item.followTargetCompanyName }}
             </div>
             <div class="diary-content">
                 <div style="font-size: 16px; color: black; line-height: 35px;">{{ item.followTitle }}</div>
                 <div style="display: flex; align-items: center;">
-                    <el-avatar style="margin-right: .2rem;" :size="40" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
-                    <span style="font-size: 12px;">Matilda McGee</span>
+                    <el-avatar style="margin-right: .2rem;" :size="40" :src="`${$global.avatarURI}${item.followAddUserProfileImage}`"></el-avatar>
+                    <span style="font-size: 12px;">{{ item.followAddUserNameZh || item.followAddUserNameEn }}</span>
                 </div>
                 <!-- 订单 -->
-                <div class="order">
+                <div class="order" v-if="item.followNodeType == '4'">
                     <!-- 订单信息待定 -->
+                    <div>
+                        <span>{{ $t('workDiary.form.orderNo') }}:</span>
+                        {{ item.orderCode }}
+                    </div>
+                    <div>
+                        <span>{{ $t('workDiary.form.orderPrice') }}：</span>
+                        {{ item.orderAmount }}{{ $t("public.dollar") }}
+                    </div>
+                    <div>
+                        <span>{{ $t('workDiary.form.orderNum') }}：</span>
+                        {{ item.orderNumber }}件
+                    </div>
+                    <div>
+                        <span>{{ $t('workDiary.form.orderType') }}:</span>
+                        {{ $t(`workDiary.orderType[${item.orderType}]`) }}
+                    </div>
+                    <div>
+                        <span>{{ $t('workDiary.form.orderName') }}:</span>
+                        {{ item.productName }}
+                    </div>
                 </div>
                 <!-- 订单 -->
-                <div style="margin-top: 20px; margin-bottom: 20px; line-height: 20px;">
+                <div style="margin-top: 20px; margin-bottom: 20px; line-height: 20px; word-break: break-all;">
                     {{ item.followContent }}
                 </div>
-                <el-button type="primary" size="mini">{{ $t("workDiary.btn.translate") }}</el-button>
+                <el-button v-if="item.followContent" @click="onTranslate(item.followContent)" type="primary" size="mini" :disabled="translateContent ? true : false" :loading="translateBtnLoading">{{ $t("workDiary.btn.translate") }}</el-button>
                 <!-- 翻译内容显示 start -->
-                <div style="margin-top: 20px; margin-bottom: 20px; line-height: 20px;">
+                <div v-if="translateContent" style="margin-top: 20px; margin-bottom: 20px; line-height: 20px;word-break: break-all;">
                     <p style="line-height: 30px;">翻译内容为：</p>
-                    {{ item.followContent }}
+                    {{ translateContent }}
                 </div>
                 <!-- 翻译内容显示 end -->
                 <!-- 聊天记录 -->
-                <div class="chat-log">
+                <div v-if="item && item.followLog" class="chat-log">
                     <p style="margin-bottom: 10px;">{{ $t("workDiary.chatLog") }}</p>
-                    <el-image class="img" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-image>
-                    <el-image class="img" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-image>
+                    <el-image v-for="(cItem, cIndex) in item.followLog.split(';')" :key="cIndex" class="img" :src="`${$global.avatarURI}${cItem}`"></el-image>
                 </div>
                 <!-- 聊天记录 -->
                 <div v-if="item && item.followFiles" class="attachment">
@@ -62,9 +86,14 @@
                         <Attachment v-for="(aItem, aIndex) in item.followFiles.split(';')" :key="aIndex" :name="aItem"></Attachment>
                     </div>
                 </div>
-                <el-button type="primary" size="mini" style="margin-top: 20px;">{{ $t("workDiary.btn.leaveMessage") }}</el-button>
+                <!-- <el-button v-if="item && item.nodeList && item.nodeList == 0" type="primary" size="mini" style="margin-top: 20px;">{{ $t("workDiary.btn.leaveMessage") }}</el-button> -->
+                <!-- v-if="item && item.nodeList && item.nodeList == 0" -->
+                <LeaveMessage  :parent="item" @onOperateSuccess="onQueryDiary"></LeaveMessage>
                 <!-- 留言信息 start -->
-                <Message></Message>
+                <template v-if="item && item.nodeList && item.nodeList.length > 0">
+                    <Message v-for="(nItem, nIndex) in item.nodeList" :key="nIndex" :message="nItem"></Message>
+                </template>
+                
                 <!-- 留言信息 end -->
             </div>
         </div>
@@ -77,9 +106,10 @@
         :append-to-body="true"
         :modal="false"
         :lock-scroll="true"
+        :close-on-click-modal="false"
         width="30%">
         <el-scrollbar class="scrollbar">
-            <ModifyWorkDiary></ModifyWorkDiary>
+            <ModifyWorkDiary :id="$parent.id" :type="$parent.type" :diaryInfo="diary" @onOperateSuccess="modifyWorkDiaryDialogVisible=false;onQueryDiary();"></ModifyWorkDiary>
         </el-scrollbar>
         </el-dialog>
         <!-- 编辑工作日志 dialog end -->
@@ -88,12 +118,10 @@
 <script>
 export default {
     props: {
-        item: {
+        diary: {
             type: Object,
             default() {
-                return {
-                    type: '1'
-                };
+                return {};
             }
         }
     },
@@ -101,21 +129,39 @@ export default {
         Attachment: () => import('@/components/lib/Attachment.vue'),
         Message: () => import('@/components/work/DiaryMessage.vue'),
         ModifyWorkDiary: () => import("@/components/work/AddWorkDiary.vue"),
+        LeaveMessage: () => import("@/components/work/LeaveMessage.vue")
     },
     data() {
         return {
+            item: {},
             modifyWorkDiaryDialogVisible: false,
-            // diaryTypeColors: {
-            //     order: "#E50054",
-            //     daily: "#31376D",
-            //     weekly: "#4937EA",
-            //     monthly: "#8D43FF"
-            // }
             // 分别是日报、周报、月报、订单
-            diaryTypeColors: ["#31376D", "#4937EA", "#8D43FF", "#E50054"]
+            diaryTypeColors: ["#31376D", "#4937EA", "#8D43FF", "#E50054"],
+            translateContent: "",
+            translateBtnLoading: false,
+            monthEnglish: ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            timeInfo: {
+                year: '2019',
+                day: '2',
+                month: 'Jun',
+                hour: "12",
+                minute: "12"
+            }
         }
     },
     methods: {
+        /**
+         *  根据ID查询详情
+         */
+        onQueryDiary() {
+            if (this.$parent.type == 'project') {
+                this.$http.get(`/customer/followup/info/infobypk/${this.diary.id}`).then(res => {
+                    if (res.iworkuCode == 200) {
+                        this.item = res.datas;
+                    }
+                });
+            }
+        },
         /**
          *  留言菜单操作
          */
@@ -129,9 +175,52 @@ export default {
                 case 'delete':
                     break;
             }
+        },
+        onTranslate(content) {
+            if (!content) {
+                return false;
+            } 
+            let params = {};
+            switch (this.$global.lang) {
+                case 'en':
+                    params.to = 'en';
+                    break;
+                case 'zh':
+                    params.to = 'zh';
+                    break;
+                default:
+                    params.to = 'en';
+            }
+            params.querry = content;
+            this.translateBtnLoading = true;
+            this.$http.post('/third_party/translate/find', params).then(res => {
+                this.translateBtnLoading = false;
+                if (res.iworkuCode == 200) {
+                    this.translateContent = res.datas && res.datas.result;
+                }  
+            });
+        }
+    },
+    watch: {
+        diary: {
+            handler(newVal) {
+                if (newVal.id) {
+                    this.item = newVal;
+                }
+                // 处理时间
+                if (newVal.followAddTimeStr) {
+                    let time = new Date(newVal.followAddTimeStr);
+                    this.timeInfo.year = time.getFullYear();
+                    let month = time.getMonth() + 1;
+                    this.timeInfo.day = time.getDate();
+                    this.timeInfo.hour = time.getHours();
+                    this.timeInfo.minute = time.getMinutes();
+                    this.timeInfo.month = this.monthEnglish[month];
+                }
+            },
+            immediate: true
         }
     }
-    
 }
 </script>
 <style lang="scss" scoped>
@@ -195,6 +284,10 @@ $-scope-padding-lr: .2rem;
                     margin-right: 10px;
                     margin-bottom: 10px;
                 }
+            }
+            .order {
+                margin-top: 15px;
+                line-height: 30px;
             }
         }
     }

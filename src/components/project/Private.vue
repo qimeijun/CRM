@@ -69,7 +69,7 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link :to="`/target/detail?targetid=${scoped.row.id}`">{{$t("project.view")}}</router-link>
+                  <router-link :to="`/target/detail?targetid=${scope.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
                 <li class="table_operation" @click="onCancel()">{{$t("project.intoSea")}}</li>
                 <li class="table_operation" @click="changeAdministratorDialogVisible=true">{{$t("project.transfer")}}</li>
@@ -186,8 +186,8 @@ export default {
       tableData: [],
       multipleSelection: [],
       tag: "",
-      targetType: "",
-      seek: "",
+      targetType: null,
+      seek: null,
       changeAdministratorDialogVisible:false,
       addShow: false,
       importShow: false
@@ -299,11 +299,11 @@ export default {
     },
     // 获取私海列表
         getPrivate(id, page) {
-      this.$http
-        .post("/target/company/withpaginglist", {
+      this.$http.post("/target/company/withpaginglist", {
           id: id,
-          type: 2,
+          type: 1,
           pageNum: page,
+          pageSize: 10,
           clientType: this.tag[1],
           labelId: this.targetType,
           keyWord: this.seek

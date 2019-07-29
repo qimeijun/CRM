@@ -106,7 +106,7 @@
                 <li>
                   <router-link :to="`/target/detail?targetid=${scope.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
-                <li class="table_operation" @click="allocationShow=true">{{$t("project.allot")}}</li>
+                <li class="table_operation" @click="allocationShow=true; currentTarget=scope.row">{{$t("project.allot")}}</li>
                 <li
                   class="table_operation"
                   @click="onCancel(scope.row.id)"
@@ -129,7 +129,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ChangeAdministrator operate="add"></ChangeAdministrator>
+        <ChangeAdministrator operate="add" :params="{id: itemid, type: 'assignMemberForTarget'}" @getManager="onAssignMember"></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 分配 end -->
@@ -228,7 +228,8 @@ export default {
       seek: "",
       allocationShow: false,
       addShow: false,
-      importShow: false
+      importShow: false,
+      currentTarget: {}
     };
   },
   computed: {
@@ -363,6 +364,27 @@ export default {
     },
     handleSelectionChange(){
       
+    },
+    // 给目标公司分配工作人员
+    onAssignMember(data) {
+      if (!data || !data.id) {
+        return false;
+      }
+      this.$http.post('/target/company/private/list/update', {
+        idList: [this.currentTarget.id],
+        type: 1,
+        userId: data.id
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.allocationShow = false;
+          this.$imessage({
+            content: this.$t("public.tips.success"),
+            type: "success"
+          });
+          this.currentTarget = {};
+          this.getCommonality(this.itemid, 1);
+        }
+      })
     }
   }
 };

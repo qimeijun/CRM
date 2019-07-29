@@ -70,7 +70,7 @@
                 <li>
                   <!-- 查看详情 -->
                   <router-link
-                    :to="`/project/detail?itemid=${scope.row.itemId}`"
+                    :to="`/project/detail?itemid=${scope.row.itemId}&adminId=${scope.row.probjectManager}`"
                   >{{$t("project.view")}}</router-link>
                 </li>
                 <!-- 结束项目 -->

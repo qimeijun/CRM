@@ -37,7 +37,7 @@
       width="30%"
     >
       <el-scrollbar>
-        <ChangeAdministrator></ChangeAdministrator>
+        <ChangeAdministrator :params="{id: id, type: 'addMemberForProject'}" @getManager="addMemberForProject"></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加成员 dialog end -->
@@ -46,6 +46,15 @@
 <script>
 import {getProjectUserApi} from "@/plugins/axios.js"
 export default {
+  props: {
+    // 项目管理员ID
+    id: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
+  },
   components:{
      // 添加新成员
     ChangeAdministrator: () => import("@/components/member/ChangeAdministrator.vue"),
@@ -91,14 +100,41 @@ export default {
   },
   methods: {
     getMemberList(){
-    this.$http.post('/user/item/user/rel/withoutpaginglist',{itemId:this.itemid}).then(res=>{
-      console.log('项目成员',res);
-      if(res.iworkuCode==200){
-        this.memberlist=res.datas;
+      this.$http.post('/user/item/user/rel/withoutpaginglist',{itemId:this.itemid}).then(res=>{
+        if(res.iworkuCode==200){
+          console.log(res.datas);
+          this.memberlist=res.datas;
+        }
+      })
+    },
+    /**
+     *  给项目添加成员
+     */
+    addMemberForProject(data) {
+      if (!data || !data.id) {
+        return false;
       }
-    })
+      this.$http.post('/user/item/user/rel/save', {
+        itemId: this.itemid,
+        userList: [data.id]
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.getMemberList();
+          this.addMemberDialogVisible = false;
+          this.$imessage({
+            content: this.$t("public.tips.success"),
+            type: "success"
+          });
+        }
+      })
     }
   },
+  watch: {
+    id: {
+      handler(newVal) {},
+      immediate: true
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -14,7 +14,7 @@
             :class="activeMenu == item.value ? 'project-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
           >
-            <router-link :to="`/project/detail/${item.route}?itemid=${itemid}`">{{ item.name }}</router-link>
+            <router-link :to="`/project/detail/${item.route}?itemid=${itemid}&adminId=${adminId}`">{{ item.name }}</router-link>
           </li>
         </ul>
       </div>
@@ -25,7 +25,7 @@
           </el-col>
           <el-col v-if="activeMenu==='information'||activeMenu==='product'" :span="8">
             <Tag type="project" :id="itemid"></Tag>
-            <Member></Member>
+            <Member :id="adminId"></Member>
           </el-col>
         </el-row>
       </el-scrollbar>
@@ -82,6 +82,9 @@ export default {
   computed: {
     itemid(){
       return this.$route.query.itemid
+    },
+    adminId() {
+      return this.$route.query.adminId;
     }
   },
   components: {
@@ -95,7 +98,7 @@ export default {
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
-      this.$router.push({ path: `/project/detail/${item.route}?itemid=${this.itemid}` });
+      this.$router.push({ path: `/project/detail/${item.route}?itemid=${this.itemid}&adminId=${this.adminId}` });
     },
   }
 };

@@ -13,7 +13,7 @@
       </ul>
       <!-- 第一步添加账号 start -->
       <el-form
-        v-if="activeName===1"
+        v-show="activeName===1||activeName===4"
         :model="firstForm"
         label-width="80px"
         label-position="top"
@@ -33,7 +33,7 @@
       <!-- 第二步项目资料 start -->
       <el-form
         class="addProject_form"
-        v-if="activeName===2"
+        v-show="activeName===2||activeName===4"
         :model="secondForm"
         label-width="80px"
         label-position="top"
@@ -122,7 +122,7 @@
       <!-- 第三步产品资料 start -->
       <el-form
         class="addProject_form"
-        v-if="activeName===3"
+        v-show="activeName===3||activeName===4"
         :model="thirdlyForm"
         label-width="80px"
         label-position="top"
@@ -474,12 +474,12 @@ export default {
             };
             this.activeName = 1;
             this.$http.post("/customer/company/save", params).then(res => {
-              console.log("添加新项目", res);
               if(res.iworkuCode==200){
-                this.show=false;
-                this.$refs.firstForm.resetFields();
+                this.$refs['thirdlyForm'].resetFields();
                 this.$refs.secondForm.resetFields();
-                this.$refs.thirdlyForm.resetFields();
+                this.$refs.firstForm.resetFields();
+                this.show=false;
+                this.$emit("getList");
               }
             });
           }

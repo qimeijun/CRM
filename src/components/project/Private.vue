@@ -69,7 +69,7 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link :to="`/target/detail?targetid=${scoped.row.id}`">{{$t("project.view")}}</router-link>
+                  <router-link :to="`/target/detail?targetid=${scope.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
                 <li class="table_operation" @click="onCancel()">{{$t("project.intoSea")}}</li>
                 <li class="table_operation" @click="changeAdministratorDialogVisible=true">{{$t("project.transfer")}}</li>
@@ -195,7 +195,7 @@ export default {
   },
    computed: {
     itemid() {
-      return this.$route.query.itemid;
+      return this.$route.params.itemid;
     }
   },
   async created() {

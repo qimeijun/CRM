@@ -1,13 +1,15 @@
 <template>
-<!-- 项目公海 -->
+  <!-- 项目公海 -->
   <section class="project-detail-commonality">
     <div style="position:fixed; top: 1rem; right: .2rem; display:flex;">
-      <el-input class="commonality-seek" placeholder="请输入内容" v-model="seek" @keyup.enter.native="getCommonality(itemid, 1)">
-        <i
-          slot="suffix"
-          class="el-input__icon el-icon-search"
-          @click="getCommonality(itemid, 1)"
-        ></i>
+      <el-input
+        class="commonality-seek"
+        placeholder="请输入内容"
+        v-model="seek"
+        @keyup.enter.native="getCommonality(itemid, 1)"
+        @click="getCommonality(itemid, 1)"
+      >
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="getCommonality(itemid, 1)"></i>
       </el-input>
       <el-button type="primary" @click="addShow=true">{{$t("projectInfo.importTarget.add")}}</el-button>
       <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
@@ -22,6 +24,8 @@
     <div class="commonality_top">
       <!-- 分类 start -->
       <el-select
+        filterable
+        clearable
         class="top_select"
         v-model="targetType"
         placeholder="请选择"
@@ -37,6 +41,8 @@
       <!-- 分类 end -->
       <!-- 标签 start -->
       <el-cascader
+        filterable
+        clearable
         class="top_select"
         v-model="tag"
         :show-all-levels="false"
@@ -104,7 +110,9 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link :to="`/target/detail?targetid=${scope.row.id}`">{{$t("project.view")}}</router-link>
+                  <router-link
+                    :to="`/target/detail?targetid=${scope.row.id}`"
+                  >{{$t("project.view")}}</router-link>
                 </li>
                 <li class="table_operation" @click="allocationShow=true">{{$t("project.allot")}}</li>
                 <li
@@ -194,7 +202,10 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: this.$lang==this.$global.lang.en?o.groupNameEn:o.groupNameZh
+                      label:
+                        this.$lang == this.$global.lang.en
+                          ? o.groupNameEn
+                          : o.groupNameZh
                     };
                   });
                   resolve(taglist);
@@ -211,7 +222,10 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: this.$lang==this.$global.lang.en?o.labelNameEn:o.labelNameZh,
+                      label:
+                        this.$lang == this.$global.lang.en
+                          ? o.labelNameEn
+                          : o.labelNameZh,
                       leaf: true
                     };
                   });
@@ -233,7 +247,7 @@ export default {
   },
   computed: {
     itemid() {
-      return this.$route.query.itemid;
+      return this.$route.params.itemid;
     }
   },
   async created() {
@@ -242,7 +256,7 @@ export default {
     this.getCommonality(this.itemid, 1);
   },
   methods: {
-    onCancel() {
+    onCancel(id) {
       this.$msgbox({
         title: "提示",
         message:
@@ -266,6 +280,7 @@ export default {
                   type: "success",
                   message: "已作废"
                 });
+                this.getCommonality(this.itemid, 1);
               }
             });
         })
@@ -295,7 +310,7 @@ export default {
           }
         });
     },
-     // 结束项目
+    // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
         title: "提示",
@@ -361,9 +376,7 @@ export default {
           });
         });
     },
-    handleSelectionChange(){
-      
-    }
+    handleSelectionChange() {}
   }
 };
 </script>
@@ -373,9 +386,9 @@ export default {
   margin-right: 0.1rem;
 }
 .commonality-endbtn {
-      color: $--default-color;
-    }
-.el-icon-search{
+  color: $--default-color;
+}
+.el-icon-search {
   cursor: pointer;
 }
 .commonality_top {

@@ -7,11 +7,14 @@
         :placeholder="$t('project.placeholder.seek')"
         v-model="seek"
         @keyup.enter.native="onClickSeek"
+        @change="onClickSeek"
       >
         <i slot="suffix" class="el-input__icon el-icon-search" @click="onClickSeek()"></i>
       </el-input>
       <!-- 标签选择 start -->
       <el-cascader
+      filterable
+      clearable
         class="top_select"
         v-model="tag"
         :show-all-levels="false"
@@ -22,7 +25,7 @@
       <!-- 标签选择 end -->
 
       <!-- 添加新项目按钮 start -->
-      <AddProject></AddProject>
+      <AddProject @getList=" this.getProject(1);"></AddProject>
       <!-- 添加新项目按钮 end -->
     </div>
     <div>
@@ -30,20 +33,20 @@
         <el-table-column fixed prop="itemNumber" :label="$t('project.tableHeader[0]')" width="50"></el-table-column>
         <el-table-column prop="itemName" :label="$t('project.tableHeader[1]')" min-width="100"></el-table-column>
         <el-table-column
-          :prop="$lang==$global.lang.en?itemStatusEn:itemStatusZh"
+          :prop="$lang==$global.lang.en?'itemStatusEn':'itemStatusZh'"
           :label="$t('project.tableHeader[2]')"
           width="100"
         ></el-table-column>
-        <el-table-column prop="probjectManager" :label="$t('project.tableHeader[3]')" width="140">
+        <el-table-column prop="probjectManager" :label="$t('project.tableHeader[3]')" width="200">
           <template slot-scope="scope">
-            <p>
+            <p  v-show="scope.row.probjectManager!==null">
               <el-avatar
                 class="table_img"
                 size="medium"
-                :src="'http://testfile.iworku.cn/'+scope.row.probjectManager"
+                :src="'http://testfile.iworku.cn/'+scope.row.probjectManagerProfileImage"
               ></el-avatar>
               <!-- <img  :src="'https://vodcn.iworku.com/'+scope.row.img" alt /> -->
-              <span>{{scope.row.probjectManagerNameZh}}</span>
+              <span>{{$lang==$global.lang.en?scope.row.probjectManagerNameEn:scope.row.probjectManagerNameZh}}</span>
             </p>
           </template>
         </el-table-column>
@@ -57,7 +60,7 @@
             >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="zip" :label="$t('project.tableHeader[5]')" width="120"></el-table-column>
+        <el-table-column prop="day" :label="$t('project.tableHeader[5]')" width="120"></el-table-column>
         <el-table-column prop="addTimeStr" :label="$t('project.tableHeader[6]')" width="120">
           <template slot-scope="scope">
             <p>{{scope.row.addTimeStr.split(' ')[0]}}</p>
@@ -70,7 +73,7 @@
                 <li>
                   <!-- 查看详情 -->
                   <router-link
-                    :to="`/project/detail?itemid=${scope.row.itemId}`"
+                    :to="`/project/detail/info/${scope.row.itemId}`"
                   >{{$t("project.view")}}</router-link>
                 </li>
                 <!-- 结束项目 -->

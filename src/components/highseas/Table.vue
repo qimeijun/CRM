@@ -15,6 +15,7 @@
       <el-select
         class="filtration_select"
         filterable
+        clearable
         v-model="country"
         :placeholder="$t('highseas.placeholder.country')"
         @change="getHighseas(1)"
@@ -29,6 +30,8 @@
       <!-- 国家 end -->
       <!-- 分类 start -->
       <el-select
+        filterable
+        clearable
         class="filtration_select"
         v-model="targetType"
         :placeholder="$t('highseas.placeholder.sort')"
@@ -44,6 +47,8 @@
       <!-- 分类 end -->
       <!-- 标签选择 start -->
       <el-cascader
+        filterable
+        clearable
         class="filtration_select"
         v-model="tag"
         :show-all-levels="false"
@@ -67,7 +72,9 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link :to="`/highseas/loca/${scope.row.targetCompanyName}`">{{$t("highseas.table.details")}}</router-link>
+                  <router-link
+                    :to="`/highseas/loca/${scope.row.targetCompanyName}`"
+                  >{{$t("highseas.table.details")}}</router-link>
                 </li>
               </ul>
             </Operate>
@@ -175,25 +182,27 @@ export default {
       let params = {
         pageNum: page,
         pageSize: this.size,
-       keyWord:this.seek
+        keyWord: this.seek
       };
-      if(this.tag){
-          params.labelId=this.tag[1];
+      if (this.tag) {
+        params.labelId = this.tag[1];
       }
-      if(this.targetType){
-          params.clientType=this.targetType;
+      if (this.targetType) {
+        params.clientType = this.targetType;
       }
-      if(this.country){
-          params.country=this.country;
+      if (this.country) {
+        params.country = this.country;
       }
-      this.$http.post("/target/company/admin/withpaginglist", params).then(res => {
-        if (res.iworkuCode == 200) {
-          console.log("大公海", res);
-          this.tableData = res.datas;
-          this.total = res.total;
-          this.page = page;
-        }
-      });
+      this.$http
+        .post("/target/company/admin/withpaginglist", params)
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            console.log("大公海", res);
+            this.tableData = res.datas;
+            this.total = res.total;
+            this.page = page;
+          }
+        });
     },
     handleClick(row) {
       console.log(row);

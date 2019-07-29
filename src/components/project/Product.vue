@@ -84,7 +84,7 @@ export default {
   },
   computed: {
     itemid() {
-      return this.$route.query.itemid;
+      return this.$route.params.itemid;
     }
   },
   created() {

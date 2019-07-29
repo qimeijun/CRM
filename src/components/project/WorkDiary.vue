@@ -8,7 +8,7 @@ export default {
     },
     data() {
         return {
-            id: this.$route.query.itemid
+            id: this.$route.params.itemid
         }
     }
 }

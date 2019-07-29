@@ -6,41 +6,40 @@
       <div class="highseas-loca__top-name">所在项目</div>
     </div>
     <div>
-      <el-table :data="tableData" style="width: 100%" :show-header="false">
+      <el-table :data="tableData" style="width: 100%" :show-header="true">
         <el-table-column fixed prop="id" :label="$t('target.loca.tableHeader[0]')" width="50"></el-table-column>
-        <el-table-column prop="name" :label="$t('target.loca.tableHeader[1]')" min-width="100"></el-table-column>
-        <el-table-column prop="province" :label="$t('target.loca.tableHeader[2]')" width="100"></el-table-column>
-        <el-table-column prop="city" :label="$t('target.loca.tableHeader[3]')" width="120">
+        <el-table-column prop="itemName" :label="$t('target.loca.tableHeader[1]')" min-width="100"></el-table-column>
+        <el-table-column :prop="$lang==$global.lang.en?'statusNameEn':'statusNameZh'" :label="$t('target.loca.tableHeader[2]')" width="200"></el-table-column>
+        <el-table-column prop="userNameEn" :label="$t('target.loca.tableHeader[3]')" width="200">
           <template slot-scope="scope">
             <p>
               <el-avatar
                 class="table_img"
                 size="medium"
-                :src="'https://vodcn.iworku.com/'+scope.row.img"
+                :src="`${$global.avatarURI}${scope.row.userProfileImage}`"
               ></el-avatar>
-              <!-- <img  :src="'https://vodcn.iworku.com/'+scope.row.img" alt /> -->
-              <span>{{scope.row.city}}</span>
+              <span>{{$lang==$global.lang.en?scope.row.userNameEn:scope.row.userNameZh}}</span>
             </p>
           </template>
         </el-table-column>
-        <el-table-column prop="address" :label="$t('target.loca.tableHeader[4]')" max-width="200">
+        <el-table-column prop="itemLabelList" :label="$t('target.loca.tableHeader[4]')" max-width="200">
           <template slot-scope="scope">
             <el-tag
               class="table_tag"
-              v-for="(item,index) in scope.row.address"
-              :key="index"
+              v-for="(item,index) in scope.row.itemLabelList"
+              :key="'tag'+index"
               size="medium"
-            >{{item }}</el-tag>
+            >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="zip" :label="$t('target.loca.tableHeader[5]')" width="120"></el-table-column>
+        <el-table-column prop="day" :label="$t('target.loca.tableHeader[5]')" width="120"></el-table-column>
         <el-table-column prop="date" :label="$t('target.loca.tableHeader[6]')" width="120"></el-table-column>
         <el-table-column :label="$t('target.loca.tableHeader[7]')" width="60">
           <template slot-scope="scope">
             <Operate>
               <ul>
                 <li>
-                  <router-link :to="`/project/detail/${scope.row.id}`">{{$t("target.loca.view")}}</router-link>
+                  <router-link :to="`/target/detail/info/${scope.row.targetCompanyId}`">{{$t("target.loca.view")}}</router-link>
                 </li>
               </ul>
             </Operate>
@@ -104,7 +103,7 @@ export default {
   },
   computed: {
       targetName(){
-          return this.$route.query.targetName;
+          return this.$route.params.targetName;
       }
   },
   created() {
@@ -116,7 +115,8 @@ export default {
               companyName:this.targetName
           }).then(res=>{
               if(res.iworkuCode==200){
-                  console.log("所在",res)
+                 this.tableData=res.datas;
+                 console.log("所在",res)
               }
           })
       }

@@ -7,7 +7,7 @@
     </div>
     <el-row>
       <el-col>
-        <Tag type="target" :id="targetid"></Tag>
+        <Tag type="target" :id="targetid" ></Tag>
       </el-col>
     </el-row>
     <el-row :gutter="10">
@@ -216,7 +216,8 @@ export default {
   },
    computed: {
     targetid(){
-      return this.$route.query.targetid
+      console.log(this.$route.params.targetid);
+      return this.$route.params.targetid
     }
   },
  created() {

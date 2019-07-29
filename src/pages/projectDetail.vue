@@ -14,7 +14,7 @@
             :class="activeMenu == item.value ? 'project-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
           >
-            <router-link :to="`/project/detail/${item.route}?itemid=${itemid}`">{{ item.name }}</router-link>
+            <router-link :to="`/project/detail/${item.route}/${itemid}`">{{ item.name }}</router-link>
           </li>
         </ul>
       </div>
@@ -85,7 +85,7 @@ export default {  components: {
   },
   computed: {
     itemid(){
-      return this.$route.query.itemid
+      return this.$route.params.itemid
     }
   },
 
@@ -95,7 +95,7 @@ export default {  components: {
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
-      this.$router.push({ path: `/project/detail/${item.route}?itemid=${this.itemid}` });
+      this.$router.push({ path: `/project/detail/${item.route}/${this.itemid}` });
     },
   }
 };

@@ -50,13 +50,14 @@
             <h5>{{$t("target.info.source")}}</h5>
             <p>{{otherForm.nodeCustomerSource}}</p>
             <h5>{{$t("target.info.clientType")}}</h5>
-            <p>{{otherForm.nodeClientType}}</p>
+            <p>{{$lang==$global.lang.en?otherForm.nodeClientTypeEn:otherForm.nodeClientTypeZh}}</p>
             <h5>{{$t("target.info.purchaseScale")}}</h5>
             <p>{{otherForm.nodePurchaseScale}}</p>
             <h5>{{$t("target.info.hsCode")}}</h5>
             <p>{{otherForm.nodeHacode}}</p>
             <h5>{{$t("target.info.importance")}}</h5>
-            <p>{{otherForm.nodeGrade}}</p>
+            <el-rate :value="otherForm.nodeGrade-0" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
+            <p>{{$lang==$global.lang.en?otherForm.nodeGradeEn:otherForm.nodeGradeZh}}</p>
             <h5>{{$t("target.info.introduce")}}</h5>
             <p>{{otherForm.nodeProfile}}</p>
             <h5>{{$t("target.info.remark")}}</h5>
@@ -74,40 +75,40 @@
           </div>
           <div class="info_div_content">
             <el-row>
-              <!-- 目标公司数 -->
+              <!-- 日志总数量 -->
               <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <img src="@/assets/img/img_log.png" alt />
                 <p>
-                  <span>{{overview.targetNum}}</span>
+                  <span>{{overview.count}}</span>
                   <br />
-                  <span>{{$t("workBench.overview.targetNum")}}</span>
+                  <span>日志总数量</span>
                 </p>
               </el-col>
-              <!-- 已拜访 -->
+              <!-- 月报数量 -->
               <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <img src="@/assets/img/img_month.png" alt />
                 <p>
-                  <span>{{overview.vlinkNum}}</span>
+                  <span>{{overview.monthlyReportCount}}</span>
                   <br />
-                  <span>{{$t("workBench.overview.vlinkNum")}}</span>
+                  <span>月报数量</span>
                 </p>
               </el-col>
-              <!-- 意向 -->
-              <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-                <img src="@/assets/img/img_order.png" alt />
-                <p>
-                  <span>{{overview.intentionNum}}</span>
-                  <br />
-                  <span>{{$t("workBench.overview.intentionNum")}}</span>
-                </p>
-              </el-col>
-              <!-- 订单 -->
+              <!-- 周报数量 -->
               <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <img src="@/assets/img/img_week.png" alt />
                 <p>
-                  <span>{{overview.orderNum}}</span>
+                  <span>{{overview.weeklyCount}}</span>
                   <br />
-                  <span>{{$t("workBench.overview.orderNum")}}</span>
+                  <span>周报数量</span>
+                </p>
+              </el-col>
+              <!-- 订单数量 -->
+              <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <img src="@/assets/img/img_order.png" alt />
+                <p>
+                  <span>{{overview.orderLog}}</span>
+                  <br />
+                  <span>订单数量</span>
                 </p>
               </el-col>
             </el-row>
@@ -155,11 +156,11 @@
     >
       <el-scrollbar class="scrollbar">
         <!-- 编辑公司资料表单 -->
-        <ChangeCompany v-if="showType==='company'" :companyForm="companyForm"></ChangeCompany>
+        <ChangeCompany v-if="showType==='company'" :companyForm="companyForm" @closeShow="oncloseShow"></ChangeCompany>
         <!-- 编辑关键人表单 -->
-        <ChangeKeymen v-if="showType==='keymen'" :keymenForm="keymenForm"></ChangeKeymen>
+        <ChangeKeymen v-if="showType==='keymen'" :keymenForm="keymenForm" @closeShow="oncloseShow"></ChangeKeymen>
         <!-- 编辑其他表单 -->
-        <ChangeOther v-if="showType==='other'" :otherForm="otherForm"></ChangeOther>
+        <ChangeOther v-if="showType==='other'" :otherForm="otherForm" @closeShow="oncloseShow"></ChangeOther>
       </el-scrollbar>
     </el-dialog>
     <!-- 编辑弹窗 end -->
@@ -198,12 +199,7 @@ export default {
   },
   data() {
     return {
-      overview: {
-        targetNum: 123123,
-        vlinkNum: 23,
-        intentionNum: 4,
-        orderNum: 1
-      },
+      overview: {},
       companyForm: {
       },
       keymenForm: {
@@ -216,7 +212,6 @@ export default {
   },
    computed: {
     targetid(){
-      console.log(this.$route.params.targetid);
       return this.$route.params.targetid
     }
   },
@@ -237,17 +232,17 @@ export default {
         center: true
       })
         .then(() => {
-          // 取消删除
+          //确定
           this.$message({
             type: "success",
-            message: "取消移入公海"
+            message: "确定移入公海"
           });
         })
         .catch(() => {
-          // 确定删除
+          // 取消
           this.$message({
             type: "info",
-            message: "确定移入公海"
+            message: "取消移入公海"
           });
         });
     },
@@ -258,9 +253,15 @@ export default {
         if(res.iworkuCode==200){
          this.companyForm=res.datas.targetCompany;         
          this.keymenForm=res.datas.targetCompanyKeyPerson;         
-         this.otherForm=res.datas.targetCompanyNodeInfo;   
+         this.otherForm=res.datas.targetCompanyNodeInfo;
+          this.overview=res.additionalParameters;
         }
       })
+    },
+    // 关闭弹窗
+    oncloseShow(){
+      this.show=false;
+      this.getTargetInfo(this.targetid);
     }
   },
 };

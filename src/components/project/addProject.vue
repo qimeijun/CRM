@@ -474,11 +474,11 @@ export default {
             };
             this.activeName = 1;
             this.$http.post("/customer/company/save", params).then(res => {
-              if(res.iworkuCode==200){
-                this.$refs['thirdlyForm'].resetFields();
+              if (res.iworkuCode == 200) {
+                this.$refs["thirdlyForm"].resetFields();
                 this.$refs.secondForm.resetFields();
                 this.$refs.firstForm.resetFields();
-                this.show=false;
+                this.show = false;
                 this.$emit("getList");
               }
             });
@@ -523,15 +523,18 @@ export default {
      */
     onUploadAvatarSuccessVideo(response) {
       // 删除之前视频的空间
-      this.$http
-        .post(
-          `/third_party/qiniu/delete/${this.thirdlyForm.videoList[0].nodeFiles}`
-        )
-        .then(res => {
-          if (res.iworkuCode == 200) {
-            this.thirdlyForm.videoList[0].nodeFiles = response.key;
-          }
-        });
+      if (this.thirdlyForm.videoList[0].nodeFiles) {
+        this.$http
+          .post(
+            `/third_party/qiniu/delete/${this.thirdlyForm.videoList[0].nodeFiles}`
+          )
+          .then(res => {
+            if (res.iworkuCode == 200) {
+              this.thirdlyForm.videoList[0].nodeFiles = response.key;
+            }
+          });
+      }
+      this.thirdlyForm.videoList[0].nodeFiles = response.key;
     },
     // 图片上传之前
     async onBeforeAvatarUploadImg(file) {
@@ -559,7 +562,7 @@ export default {
     async onBeforeAvatarUploadAccessory(file) {
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
-        this.$message.error("上传视频大小不能超过 5MB!");
+        this.$message.error("上传附件大小不能超过 5MB!");
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);

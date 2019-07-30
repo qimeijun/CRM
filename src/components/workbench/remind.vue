@@ -1,11 +1,15 @@
 <template>
-<!-- 日程提醒 -->
+  <!-- 日程提醒 -->
   <div class="iworku-card workbench-remind">
     <div class="remind_top">
       <h3>{{$t("workBench.remind.title")}}</h3>
       <el-button class="top_button" @click="dialogFormVisible = true">{{$t("workBench.remind.add")}}</el-button>
       <!-- 添加表单 -->
-      <el-dialog :title="$t('workBench.remind.dialogTitle')" :visible.sync="dialogFormVisible" width="30%">
+      <el-dialog
+        :title="$t('workBench.remind.dialogTitle')"
+        :visible.sync="dialogFormVisible"
+        width="30%"
+      >
         <AddRemind></AddRemind>
       </el-dialog>
     </div>
@@ -16,7 +20,7 @@
           <div class="remind_list_item" v-for="(item,index) in list" :key="index">
             <i :style="'background-color:'+item.color"></i>
             <div class="item_img">
-              <el-avatar size="medium" :src="'https://vodcn.iworku.com/'+item.img"></el-avatar>
+              <el-avatar size="medium" :src="`${$global.avatarURI}${item.img}`"></el-avatar>
               <!-- <img :src="'https://vodcn.iworku.com/'+item.img" alt /> -->
               <br />
               <span>{{item.name}}</span>
@@ -36,8 +40,16 @@
 </template>
 <script>
 export default {
-  components:{
-    AddRemind:()=>import("@/components/workbench/AddRemind.vue")
+  components: {
+    AddRemind: () => import("@/components/workbench/AddRemind.vue")
+  },
+  props: {
+    itemid: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
   },
   data() {
     return {
@@ -143,7 +155,7 @@ export default {
         email: "",
         remind: ""
       },
-      count: 1,
+      page: 1,
       loading: false
     };
   },
@@ -155,9 +167,22 @@ export default {
       return this.loading || this.noMore;
     }
   },
+  created() {
+    this.getremindList();
+  },
   methods: {
-    getdate(event) {
-      console.log(event);
+    getremindList() {
+      this.$http
+        .post("/user/workbench/schedule/withpaginglist", {
+          pageNum: this.page,
+          pageSize: 2
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            console.log("richen",res);
+            this.list=res.datas;
+          }
+        });
     },
     load() {
       this.loading = true;
@@ -165,7 +190,7 @@ export default {
         this.list.push({
           color: "#00C853FF",
           img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: this.count++,
+          name: this.page++,
           title: "拜访 Công ty TNHH Ngư",
           time: { start: "2019/04/30", end: "2019/05/04" },
           people: "Gary.P"
@@ -186,7 +211,6 @@ export default {
       background-color: $--default-color;
       color: white;
     }
-   
   }
   .remind_list {
     height: 370px;

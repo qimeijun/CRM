@@ -10,7 +10,7 @@
         <el-table-column fixed prop="id" :label="$t('target.loca.tableHeader[0]')" width="50"></el-table-column>
         <el-table-column prop="itemName" :label="$t('target.loca.tableHeader[1]')" min-width="100"></el-table-column>
         <el-table-column :prop="$lang==$global.lang.en?'statusNameEn':'statusNameZh'" :label="$t('target.loca.tableHeader[2]')" width="200"></el-table-column>
-        <el-table-column prop="userNameEn" :label="$t('target.loca.tableHeader[3]')" width="200">
+        <el-table-column :prop="$lang==$global.lang.en?'userNameEn':'userNameZh'" :label="$t('target.loca.tableHeader[3]')" width="200">
           <template slot-scope="scope">
             <p>
               <el-avatar
@@ -26,14 +26,20 @@
           <template slot-scope="scope">
             <el-tag
               class="table_tag"
-              v-for="(item,index) in scope.row.itemLabelList"
+              v-for="(item,index) in scope.row.itemLabelList.slice(0,10)"
               :key="'tag'+index"
               size="medium"
             >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="day" :label="$t('target.loca.tableHeader[5]')" width="120"></el-table-column>
-        <el-table-column prop="date" :label="$t('target.loca.tableHeader[6]')" width="120"></el-table-column>
+        <el-table-column prop="itemAddTimeStr" :label="$t('target.loca.tableHeader[6]')" width="120">
+          <template slot-scope="scope">
+          <p>
+            {{scope.row.itemAddTimeStr.split(" ")[0]}}
+          </p>
+          </template>
+        </el-table-column>
         <el-table-column :label="$t('target.loca.tableHeader[7]')" width="60">
           <template slot-scope="scope">
             <Operate>
@@ -57,48 +63,7 @@ export default {
   },
   data() {
     return {
-      tableData: [
-        {
-          id: "1",
-          date: "2016-05-02",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: ["标签1", "标签2", "标签3", "标签4"],
-          zip: 200333,
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5"
-        },
-        {
-          id: "2",
-          date: "2016-05-04",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: ["标签1", "标签2", "标签3", "标签4"],
-          zip: 200333,
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5"
-        },
-        {
-          id: "3",
-          date: "2016-05-01",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: ["标签1", "标签2", "标签3", "标签4"],
-          zip: 200333,
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5"
-        },
-        {
-          id: "4",
-          date: "2016-05-03",
-          name: "王小虎",
-          province: "上海",
-          city: "普陀区",
-          address: ["标签1", "标签2", "标签3", "标签4"],
-          zip: 200333,
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5"
-        }
-      ]
+      tableData: []
     };
   },
   computed: {
@@ -161,8 +126,7 @@ margin:20px;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin: 4px;
   border-radius: 20px;
   background-color: #8d43ff;
   color: white;

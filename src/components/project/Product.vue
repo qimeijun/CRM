@@ -1,14 +1,15 @@
 <template>
   <!-- 产品 -->
   <section class="iworku-card project-detail-product">
-     <div style="position:fixed; top: 1rem; right: .2rem;">
-          <!-- 结束项目 -->
+    <div style="position:fixed; top: 1rem; right: .2rem;">
+      <!-- 结束项目 -->
       <el-button
+      v-show="itemStatus!=2"
         class="product-endbtn"
         @click="onDeleteMember(itemid,2)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button class="product-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+      <el-button v-show="itemStatus==2" class="product-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
     </div>
     <div class="product_top">
       <h3>{{$t("projectInfo.menu[1]")}}</h3>
@@ -25,11 +26,19 @@
       </div>
       <h4>{{$t("projectInfo.product.accessory")}}</h4>
       <div>
-        <Attachment v-for="(item,index) in product.attachmentList" :key="'attachment'+index" :name="item.nodeFiles"></Attachment>
+        <Attachment
+          v-for="(item,index) in product.attachmentList"
+          :key="'attachment'+index"
+          :name="item.nodeFiles"
+        ></Attachment>
       </div>
       <h4>{{$t("projectInfo.product.study")}}</h4>
       <div>
-         <Attachment v-for="(item,index) in product.studyList" :key="'attachment'+index" :name="item.nodeFiles"></Attachment>
+        <Attachment
+          v-for="(item,index) in product.studyList"
+          :key="'attachment'+index"
+          :name="item.nodeFiles"
+        ></Attachment>
       </div>
     </div>
     <div class="product_redact">
@@ -79,7 +88,8 @@ export default {
         attachment: [],
         study: []
       },
-      show: false
+      show: false,
+      itemStatus: 1
     };
   },
   computed: {
@@ -90,35 +100,51 @@ export default {
   created() {
     if (this.itemid) {
       this.getProduct(this.itemid);
+      this.getItemStatus(this.itemid);
     }
   },
   methods: {
     // 获取项目产品信息
     getProduct(id) {
-      this.$http.post('/customer/company/product/item/withoutpaginglist',{ itemId: id }).then(res => {
-        console.log("产品", res);
+      this.$http
+        .post("/customer/company/product/item/withoutpaginglist", {
+          itemId: id
+        })
+        .then(res => {
+          console.log("产品", res);
+          if (res.iworkuCode == 200) {
+            this.product.productName = res.datas[0].productName;
+            // 整理图片
+            this.product.imgList = res.datas[0].productNodeList.filter(o => {
+              return o.nodeType == 1;
+            });
+            // 整理视频
+            this.product.videoList = res.datas[0].productNodeList.filter(o => {
+              return o.nodeType == 2;
+            });
+            // 整理附件
+            this.product.attachmentList = res.datas[0].productNodeList.filter(
+              o => {
+                return o.nodeType == 3;
+              }
+            );
+            // 整理学习资料
+            this.product.studyList = res.datas[0].productNodeList.filter(o => {
+              return o.nodeType == 4;
+            });
+          }
+        });
+    },
+    // 获取项目状态
+    getItemStatus(id) {
+      this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
         if (res.iworkuCode == 200) {
-          this.product.productName = res.datas[0].productName;
-          // 整理图片
-          this.product.imgList = res.datas[0].productNodeList.filter(o => {
-            return o.nodeType == 1;
-          });
-          // 整理视频
-          this.product.videoList = res.datas[0].productNodeList.filter(o => {
-            return o.nodeType == 2;
-          });
-          // 整理附件
-          this.product.attachmentList = res.datas[0].productNodeList.filter(o => {
-            return o.nodeType == 3;
-          });
-          // 整理学习资料
-          this.product.studyList = res.datas[0].productNodeList.filter(o => {
-            return o.nodeType == 4;
-          });
+          console.log(res.datas);
+          this.itemStatus = res.datas.itemStatus;
         }
       });
     },
-        // 结束项目
+    // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
         title: "提示",
@@ -168,7 +194,7 @@ export default {
           this.$http
             .post("/customer/item/update/status", {
               itemId: id,
-              itemStatus: 3
+              itemStatus:1
             })
             .then(res => {});
           this.$message({
@@ -183,7 +209,7 @@ export default {
             message: "取消操作"
           });
         });
-    },
+    }
   }
 };
 </script>
@@ -203,7 +229,7 @@ export default {
       display: flex;
     }
   }
-  .product-endbtn{
+  .product-endbtn {
     color: $--default-color;
   }
 }

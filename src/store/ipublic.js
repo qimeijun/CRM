@@ -21,6 +21,10 @@ export default {
         userInfo: {},
         // 客户类型
         targetType:[],
+        // 日程提醒颜色
+        remindColor:[],
+        // 目标公司重要程度
+        grade:[]
     },
     // 提交
     mutations: {
@@ -42,6 +46,12 @@ export default {
         },
         $_set_targetType(state, value) {
             state.targetType = value;
+        },
+        $_set_remindColor(state, value) {
+            state.remindColor = value;
+        },
+        $_set_grade(state, value) {
+            state.grade = value;
         },
         $_remove_userInfo(state) {
             session.remove('user');
@@ -70,6 +80,12 @@ export default {
         },
         targetType:state =>{
             return state.targetType;
+        },
+        remindColor:state =>{
+            return state.remindColor;
+        },
+        grade:state =>{
+            return state.grade;
         },
         userInfo: state => {
             if (Object.keys(state.userInfo).length == 0) {

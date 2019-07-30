@@ -5,19 +5,19 @@
       <!-- 提醒内容 start -->
       <el-form-item label-width="0px">
         <el-input
-          v-model="dateForm.title"
+          v-model="dateForm.scheduleContent"
           :placeholder="$t('workBench.addremind.placeholder.content')"
         ></el-input>
       </el-form-item>
       <!-- 提醒内容 end -->
       <!-- 标记颜色 start -->
       <el-form-item label-width="0px">
-        <el-radio-group v-model="dateForm.color">
+        <el-radio-group v-model="dateForm.scheduleShowColour">
           <el-tooltip
             v-for="item in colorTypes"
             :key="item.value"
             effect="dark"
-            :content="item.label"
+            :content="$lang==$global.lang.en?item.nameEn:item.nameZh"
             placement="top"
           >
             <el-radio-button
@@ -63,17 +63,14 @@
       <!-- 邮箱 start -->
       <el-form-item :label="$t('workBench.addremind.form.email')">
         <el-input
-          v-model="dateForm.email"
+          v-model="dateForm.scheduleNoticeEmail"
           :placeholder="$t('workBench.addremind.placeholder.email')"
         ></el-input>
       </el-form-item>
       <!-- 邮箱 end -->
       <!-- 目标公司 start -->
       <el-form-item :label="$t('workBench.addremind.form.target')">
-          <el-select
-          v-model="dateForm.target"
-          :placeholder="'选择目标公司'"
-        >
+        <el-select v-model="dateForm.targetCompanyId" :placeholder="'选择目标公司'">
           <el-option
             v-for="item in remindTypes"
             :key="item.value"
@@ -101,54 +98,63 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { getRemindColor } from "@/plugins/configuration.js";
 export default {
+  props:{
+    itemid:{
+      type:String,
+      default(){
+        return ""
+      }
+    }
+  },
   data() {
     return {
       remindTypes: [
         {
-          value: "选项1",
+          value: "0",
           label: "不提醒"
         },
         {
-          value: "选项2",
-          label: "提前一天"
+          value: "1",
+          label: "发送一次"
         },
         {
-          value: "选项3",
-          label: "提前两天"
+          value: "2",
+          label: "每天发送"
         }
       ],
-      colorTypes: [
-        {
-          value: "#D50000FF",
-          label: "重要且紧急",
-          color: "#D50000FF"
-        },
-        {
-          value: "#FF6D00FF",
-          label: "重要不紧急",
-          color: "#FF6D00FF"
-        },
-        {
-          value: "#FFEA00FF",
-          label: "不紧急",
-          color: "#FFEA00FF"
-        },
-        {
-          value: "#00C853FF",
-          label: "不重要",
-          color: "#00C853FF"
-        }
-      ],
+      colorTypes: [],
       dateForm: {
-        title: "",
-        color: "#D50000FF",
+        scheduleContent: "",
+        scheduleShowColour: "#D50000FF",
         time: [],
-        email: "",
-        remind: "",
-        target:""
+        scheduleNoticeEmail: "",
+        remind: "0",
+        targetCompanyId: ""
       }
     };
+  },
+    computed: {
+    ...mapGetters("ipublic", ["userInfo"])
+  },
+  async created() {
+    this.colorTypes = await getRemindColor(this);
+    console.log(this.colorTypes);
+  },
+  methods: {
+    getTargetList() {
+      this.$http.post("/target/company/withoutpaginglist", {
+        id:this.itemid,
+        memberId:this.userInfo.id,
+        type :2
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          console.log("添加提醒目标公司列表",res.datas);
+        }
+      });
+    }
   }
 };
 </script>

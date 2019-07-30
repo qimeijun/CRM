@@ -13,11 +13,12 @@
       <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
       <!-- 结束项目 -->
       <el-button
+      v-show="itemStatus!=2"
         class="private-endbtn"
-        @click="onDeleteMember(itemid,2)"
+        @click="onDeleteMember(itemid)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button class="private-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+      <el-button v-show="itemStatus==2" class="private-endbtn" @click="onRestartMember(itemid)">重启项目</el-button>
     </div>
     <div class="private_top">
       <!-- 分类 start -->
@@ -188,6 +189,7 @@ export default {
       tag: "",
       targetType: "",
       seek: "",
+      itemStatus:1,
       changeAdministratorDialogVisible:false,
       addShow: false,
       importShow: false
@@ -202,6 +204,7 @@ export default {
     // 获取公司类型
     this.targetTypeList = await getTargetType(this);
     this.getPrivate(this.itemid, 1);
+    this.getItemStatus(this.itemid);
   },
   methods: {
     // 移入公海
@@ -281,7 +284,7 @@ export default {
           this.$http
             .post("/customer/item/update/status", {
               itemId: id,
-              itemStatus: 3
+              itemStatus: 1
             })
             .then(res => {});
           this.$message({
@@ -314,6 +317,15 @@ export default {
             this.tableData = res.datas;
           }
         });
+    },
+         // 获取项目状态
+    getItemStatus(id) {
+      this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
+        if (res.iworkuCode == 200) {
+          console.log(res.datas);
+          this.itemStatus = res.datas.itemStatus;
+        }
+      });
     },
       handleSelectionChange(){
         

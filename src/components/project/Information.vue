@@ -3,11 +3,12 @@
     <div style="position:fixed; top: 1rem; right: .2rem;">
           <!-- 结束项目 -->
       <el-button
+      v-show="info.itemStatus!=2"
         class="info-endbtn"
-        @click="onDeleteMember(itemid,2)"
+        @click="onDeleteMember(itemid)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button class="info-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+      <el-button v-show="info.itemStatus==2" class="info-endbtn" @click="onRestartMember(itemid)">重启项目</el-button>
     </div>
     <!-- 资料展示 start -->
     <div class="info_top">
@@ -254,6 +255,7 @@ export default {
         console.log("资料", res.datas);
         if (res.iworkuCode == 200) {
           this.info = {
+            itemStatus:res.datas.itemStatus,
             id: res.datas.id,
             itemName: res.datas.itemName,
             companyName: res.datas.companyName,
@@ -334,7 +336,7 @@ export default {
           this.$http
             .post("/customer/item/update/status", {
               itemId: id,
-              itemStatus: 3
+              itemStatus: 1
             })
             .then(res => {});
           this.$message({

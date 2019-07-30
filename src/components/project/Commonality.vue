@@ -14,12 +14,13 @@
       <el-button type="primary" @click="addShow=true">{{$t("projectInfo.importTarget.add")}}</el-button>
       <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
       <!-- 结束项目 -->
-      <el-button
+      <el-button 
+      v-show="itemStatus!=2"
         class="commonality-endbtn"
-        @click="onDeleteMember(itemid,2)"
+        @click="onDeleteMember(itemid)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button class="commonality-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+      <el-button v-show="itemStatus==2" class="commonality-endbtn" @click="onRestartMember(itemid)">重启项目</el-button>
     </div>
     <div class="commonality_top">
       <!-- 分类 start -->
@@ -70,11 +71,11 @@
         <el-table-column
           prop="status"
           :label="$t('projectInfo.commonality.tableHeader[1]')"
-          width="150"
+          width="200"
         >
           <template slot-scope="scope">
-            <el-rate v-model="scope.row.rate" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
-            <p>重点跟进客户</p>
+            <el-rate :value="scope.row.grade-0" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
+            <p>{{$lang==$global.lang.en?scope.row.gradeEn:scope.row.gradeEn}}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -87,9 +88,9 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="statusNameZh"
+          :prop="$lang==$global.lang.en?'statusNameEn':'statusNameZh'"
           :label="$t('projectInfo.commonality.tableHeader[3]')"
-          width="120"
+          width="150"
         ></el-table-column>
         <el-table-column
           prop="addTimeStr"
@@ -111,7 +112,7 @@
               <ul>
                 <li>
                   <router-link
-                    :to="`/target/detail?targetid=${scope.row.id}`"
+                    :to="`/target/detail/info/${scope.row.id}`"
                   >{{$t("project.view")}}</router-link>
                 </li>
                 <li class="table_operation" @click="allocationShow=true">{{$t("project.allot")}}</li>
@@ -240,6 +241,7 @@ export default {
       tag: "",
       targetType: "",
       seek: "",
+      itemStatus:1,
       allocationShow: false,
       addShow: false,
       importShow: false
@@ -254,6 +256,7 @@ export default {
     // 获取公司类型
     this.targetTypeList = await getTargetType(this);
     this.getCommonality(this.itemid, 1);
+    this.getItemStatus(this.itemid);
   },
   methods: {
     onCancel(id) {
@@ -310,6 +313,15 @@ export default {
           }
         });
     },
+     // 获取项目状态
+    getItemStatus(id) {
+      this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
+        if (res.iworkuCode == 200) {
+          console.log(res.datas);
+          this.itemStatus = res.datas.itemStatus;
+        }
+      });
+    },
     // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
@@ -360,7 +372,7 @@ export default {
           this.$http
             .post("/customer/item/update/status", {
               itemId: id,
-              itemStatus: 3
+              itemStatus: 1
             })
             .then(res => {});
           this.$message({

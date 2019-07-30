@@ -6,10 +6,10 @@
         class="top_seek"
         :placeholder="$t('project.placeholder.seek')"
         v-model="seek"
-        @keyup.enter.native="onClickSeek"
-        @change="onClickSeek"
+        @keyup.enter.native="getProject(1);"
+        @change="getProject(1);"
       >
-        <i slot="suffix" class="el-input__icon el-icon-search" @click="onClickSeek()"></i>
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="getProject(1)"></i>
       </el-input>
       <!-- 标签选择 start -->
       <el-cascader
@@ -19,13 +19,13 @@
         v-model="tag"
         :show-all-levels="false"
         :props="props"
-        @change="onClickTag"
+        @change="getProject(1);"
         :placeholder="$t('project.placeholder.tag')"
       ></el-cascader>
       <!-- 标签选择 end -->
 
       <!-- 添加新项目按钮 start -->
-      <AddProject @getList=" this.getProject(1);"></AddProject>
+      <AddProject @getList="getProject(1);"></AddProject>
       <!-- 添加新项目按钮 end -->
     </div>
     <div>
@@ -43,7 +43,7 @@
               <el-avatar
                 class="table_img"
                 size="medium"
-                :src="'http://testfile.iworku.cn/'+scope.row.probjectManagerProfileImage"
+                :src="`${$global.avatarURI}${scope.row.probjectManagerProfileImage}`"
               ></el-avatar>
               <!-- <img  :src="'https://vodcn.iworku.com/'+scope.row.img" alt /> -->
               <span>{{$lang==$global.lang.en?scope.row.probjectManagerNameEn:scope.row.probjectManagerNameZh}}</span>
@@ -78,17 +78,17 @@
                 </li>
                 <!-- 结束项目 -->
                 <li
-                  v-show="scope.row.itemStatus==2"
+                v-show="scope.row.itemStatus!=2"
                   class="table_delete"
-                  @click="onDeleteMember(scope.row.itemId,2)"
+                  @click="onDeleteMember(scope.row.itemId)"
                 >{{$t("projectInfo.endProject")}}</li>
                 <!-- 重启项目 -->
                 <li
                   v-show="scope.row.itemStatus==2"
                   class="table_delete"
-                  @click="onDeleteMember(scope.row.itemId,3)"
+                  @click="onRestartMember(scope.row.itemId)"
                 >重启项目</li>
-                <li @click="allocationShow=true; allotProject=scope.row">
+                <li v-show="scope.row.itemStatus!=2" class="table_delete" @click="allocationShow=true; allotProject=scope.row">
                   分配
                 </li>
               </ul>
@@ -213,7 +213,7 @@ export default {
           }
         });
     },
-    // 结束、重启项目
+    // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
         title: "提示",
@@ -246,13 +246,38 @@ export default {
           });
         });
     },
-    // 标签change触发
-    onClickTag(value) {
-      this.getProject(1);
-    },
-    // 搜索触发
-    onClickSeek() {
-      this.getProject(1);
+     // 重启项目
+    onRestartMember(id) {
+      this.$msgbox({
+        title: "提示",
+        message:
+          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要重启此项目吗？</p>",
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 确定
+          this.$http
+            .post("/customer/item/update/status", {
+              itemId: id,
+              itemStatus: 1
+            })
+            .then(res => {});
+          this.$message({
+            type: "success",
+            message: "已重启项目"
+          });
+        })
+        .catch(() => {
+          // 取消
+          this.$message({
+            type: "info",
+            message: "取消操作"
+          });
+        });
     },
     // 获取分配的管理员
     getManager(data) {

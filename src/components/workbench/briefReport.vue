@@ -1,10 +1,13 @@
 <template>
-<!-- 日志简报 -->
+  <!-- 日志简报 -->
   <div class="iworku-card workbench-briefreport">
     <div class="briefreport_top">
       <h3>{{$t("workBench.briefreport.title")}}</h3>
       <div>
-        <el-button type="text">{{$t("workBench.briefreport.btn.all")}}</el-button>
+        <el-button
+          type="text"
+          @click="goPath(`/project/detail/diary/${itemid}`)"
+        >{{$t("workBench.briefreport.btn.all")}}</el-button>
       </div>
       <el-button
         class="top_button"
@@ -21,7 +24,7 @@
         width="30%"
       >
         <el-scrollbar class="scrollbar">
-          <AddWorkDiary></AddWorkDiary>
+          <AddWorkDiary :id="itemid" type="project" @onOperateSuccess=""></AddWorkDiary>
         </el-scrollbar>
       </el-dialog>
     </div>
@@ -30,17 +33,26 @@
       <el-scrollbar style="height:100%;">
         <div v-infinite-scroll="load" infinite-scroll-disabled="disabled">
           <div class="briefreport_list_item" v-for="(item,index) in list" :key="index">
-            <i :style="'background-color:'+item.color">{{item.type}}</i>
+            <i :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">
+              <template v-if="item.followNodeType == '1'">{{ $t('workDiary.diarType.daily') }}</template>
+              <template v-else-if="item.followNodeType == '2'">{{ $t('workDiary.diarType.weekly') }}</template>
+              <template
+                v-else-if="item.followNodeType == '3'"
+              >{{ $t('workDiary.diarType.monthly') }}</template>
+              <template v-else-if="item.followNodeType == '4'">{{ $t('workDiary.diarType.order') }}</template>
+            </i>
             <div class="item_img">
-              <el-avatar size="medium" :src="'https://vodcn.iworku.com/'+item.img"></el-avatar>
-              <!-- <img :src="'https://vodcn.iworku.com/'+item.img" alt /> -->
+              <el-avatar
+                size="medium"
+                :src="`${$global.avatarURI}${item.followAddUserProfileImage}`"
+              ></el-avatar>
               <br />
-              <span>{{item.name}}</span>
+              <span>{{$lang==$global.lang.en?item.followAddUserNameEn:item.followAddUserNameZh}}</span>
             </div>
             <p class="item_p">
-              <span>{{item.title}}</span>
+              <span>{{item.followTitle}}</span>
               <br />
-              <span>{{item.time.start}}-{{item.time.end}}</span>
+              <span>{{item.followAddTimeStr}}</span>
             </p>
           </div>
           <p v-if="loading">{{$t("workBench.briefreport.loading")}}</p>
@@ -57,143 +69,66 @@ export default {
   components: {
     AddWorkDiary
   },
+  props: {
+    itemid: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
+  },
   data() {
     return {
-      list: [
-        {
-          color: "#31376DFF",
-          type: "日报",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#E50054FF",
-          type: "订单",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#8D43FFFF",
-          type: "月报",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#4937EAFF",
-          type: "周报",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#31376DFF",
-          type: "日报",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#31376DFF",
-          type: "日报",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#31376DFF",
-          type: "日报",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        }
-      ],
-      remindTypes: [
-        {
-          value: "选项1",
-          label: "目标公司1"
-        },
-        {
-          value: "选项2",
-          label: "目标公司2"
-        },
-        {
-          value: "选项3",
-          label: "目标公司3"
-        }
-      ],
-      colorTypes: [
-        {
-          value: "#D50000FF",
-          label: "红",
-          color: "#D50000FF"
-        },
-        {
-          value: "#FF6D00FF",
-          label: "橙",
-          color: "#FF6D00FF"
-        },
-        {
-          value: "#FFEA00FF",
-          label: "黄",
-          color: "#FFEA00FF"
-        }
-      ],
+      diaryTypeColors: ["#31376D", "#4937EA", "#8D43FF", "#E50054"],
+      list: [],
       addWorkDiaryDialogVisible: false,
-      dateForm: {
-        title: "",
-        color: "#D50000FF",
-        time: [],
-        email: "",
-        remind: ""
-      },
-      count: 1,
-      loading: false
+      page: 1,
+      loading: false,
+      noMore: false
     };
   },
   computed: {
-    noMore() {
-      return this.list.length >= 20;
-    },
     disabled() {
       return this.loading || this.noMore;
     }
   },
   methods: {
-    getdate(event) {
-      console.log(event);
+    getBriefReport(id, page) {
+      this.$http
+        .post("/customer/followup/info/withpaginglist", {
+          followItemId: id,
+          pageNum: page,
+          pageSize: 6
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            console.log(222, res.datas);
+            this.list = [...this.list, ...res.datas];
+            this.loading = false;
+            this.page=page+1;
+            if (res.datas.length < 6) {
+              this.noMore = true;
+            }
+          }
+        });
     },
     load() {
       this.loading = true;
-      setTimeout(() => {
-        this.list.push({
-          color: "#31376DFF",
-          type: "日报",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: this.count++,
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        });
+      if (this.itemid) {
+        this.getBriefReport(this.itemid, this.page);
+      } else {
         this.loading = false;
-      }, 2000);
+      }
+    },
+    goPath(path) {
+      this.$router.push({ path });
+    },
+    // 添加日志成功回调
+    onOperateSuccess(){
+      this.addWorkDiaryDialogVisible=false;
+      getBriefReport(this.itemid, 1);
     }
+
   }
 };
 </script>
@@ -217,7 +152,7 @@ export default {
     .briefreport_list_item {
       background-color: $--default-list-gray;
       border-radius: 8px;
-      height: 62px;
+      height: 70px;
       display: flex;
       align-items: center;
       overflow: hidden;
@@ -231,12 +166,12 @@ export default {
         font-size: 16px;
         font-weight: 500;
         padding: 0 7px;
-        letter-spacing: 4px;
       }
     }
     .item_img {
       text-align: center;
       margin: 0 12px;
+      width:100px;
       img {
         width: 35px;
         height: 35px;

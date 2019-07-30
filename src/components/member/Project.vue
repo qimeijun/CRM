@@ -56,9 +56,14 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
+      :close-on-click-modal="false"
       width="30%">
       <el-scrollbar>
-        <AddAdministrator @getManager="getManager" :oldAdminstrator="currentProjectManger" :params="{type: 'changeProjectManger'}" @addProjectAdministrator="handOverAdministratorDialogVisible=false;addMemberDialogVisible=true;" operate="handOver"></AddAdministrator>
+        <AddAdministrator @getManager="getManager" 
+            :oldAdminstrator="currentProjectManger" 
+            :params="{type: currentProjectManger.type, id: currentProjectManger.itemId}" 
+            @addProjectAdministrator="handOverAdministratorDialogVisible=false;addMemberDialogVisible=true;"
+            operate="handOver"></AddAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加区域经理 dialog end -->
@@ -71,6 +76,7 @@
         :append-to-body="true"
         :modal="false"
         :lock-scroll="true"
+        :close-on-click-modal="false"
         width="30%"
       >
         <el-scrollbar>
@@ -126,7 +132,8 @@ export default {
             userNameZh: item.probjectManagerNameZh,
             userCountryEn: item.probjectManagerCountryEn,
             userCountryZh: item.probjectManagerCountryZh,
-            userProfileImage: item.probjectManagerProfileImage
+            userProfileImage: item.probjectManagerProfileImage,
+            type: 'changeProjectManger'
           }
           this.onShiftOutProjectAdministrator(item);
           return false;
@@ -148,21 +155,13 @@ export default {
             }).then(res => {
               // 成员在当前项目中没有正在跟进的目标公司时才能直接删除
               if (res.iworkuCode == 200 && res.datas > 0) {
-                this.onConfirmShiftOutProject(item);
+                this.onConfirmShiftOutProject(item, index);
               } else if (res.iworkuCode == 200 && res.datas <= 0) {
                 // 移除成员
-                this.$http.post('/user/item/user/rel/remove', {
+                this.onMoveOutMemberFromProject({
                   userId: this.userId,
                   itemId: item.itemId
-                }).then(res => {
-                  if (res.iworkuCode == 200) {
-                    this.tableData.splice(index, 1);
-                    this.$imessage({
-                      type: "success",
-                      content: this.$t("public.tips.success")
-                    });
-                  }
-                });
+                }, index)
               }
             });
         }).catch(action => {});
@@ -170,7 +169,7 @@ export default {
       /**
        *  成员有跟进项目，确定删除
        */
-      onConfirmShiftOutProject(item) {
+      onConfirmShiftOutProject(item, index) {
         // 确定删除 正在跟进当中的
         this.$confirm(`<i style="font-size: 35px; color: #E50054;" class="el-icon-question"></i><br/>${this.$t("memberInfo.memberShiftOutTip.content[1]")}<br/>${this.$t("memberInfo.memberShiftOutTip.content[2]")}`, this.$t("memberInfo.memberShiftOutTip.title"), {
             confirmButtonText: this.$t("memberInfo.memberShiftOutTip.btn[2]"),
@@ -181,12 +180,41 @@ export default {
             confirmButtonClass: "iworku-confirm-button",
             cancelButtonClass: "iworku-confirm-cancel-button",
         }).then(() => {
-          // 移交任务操作 
-          // this.onShiftOutProjectAdministrator(item);
+          // 获取当前成员的信息
+          this.$http.get(`/user/info/infobypk/${this.userId}`).then(res => {
+            if (res.iworkuCode == 200 && res.datas) {
+              // 当前这个用户
+              this.currentProjectManger = {
+                itemId: item.itemId,
+                userNameEn: res.datas.userNameEn,
+                userNameZh: res.datas.userNameZh,
+                userCountryEn: res.datas.userCountryEn,
+                userCountryZh: res.datas.userCountryZh,
+                userProfileImage: res.datas.userProfileImage,
+                type: 'handOverMemberForProject'
+              }
+              this.handOverAdministratorDialogVisible = true;
+            }
+          });
         }).catch(action => {
           // 移入公海操作
           if (action == 'cancel') {
-            
+            this.onMoveOutMemberFromProject({
+              userId: this.userId,
+              itemId: item.itemId
+            }, index);
+          }
+        });
+      },
+      onMoveOutMemberFromProject(params, index) {
+        // 移除成员
+        this.$http.post('/user/item/user/rel/remove', params).then(res => {
+          if (res.iworkuCode == 200) {
+            this.tableData.splice(index, 1);
+            this.$imessage({
+              type: "success",
+              content: this.$t("public.tips.success")
+            });
           }
         });
       },
@@ -212,18 +240,42 @@ export default {
         if (!data || !data.id) {
           return false;
         }
-        this.$http.post('/user/item/user/rel/project/manager/save', {
-          itemId: this.currentProjectManger.itemId,
-          userId: data.id
-        }).then(res => {
-          this.$imessage({
-            type: "success",
-            content: this.$t("public.tips.success")
+        if (this.currentProjectManger.type == 'changeProjectManger') {
+          // 管理员的移交
+          this.$http.post('/user/item/user/rel/project/manager/save', {
+            itemId: this.currentProjectManger.itemId,
+            userId: data.id
+          }).then(res => {
+            if (res.iworkuCode == 200) {
+              this.$imessage({
+                type: "success",
+                content: this.$t("public.tips.success")
+              });
+              this.handOverAdministratorDialogVisible = false;
+              this.currentProjectManger = {};
+              this.getProject();
+            }
           });
-          this.handOverAdministratorDialogVisible = false;
-          this.currentProjectManger = {};
-          this.getProject();
-        });
+        } else if (this.currentProjectManger.type == 'handOverMemberForProject') {
+          console.log(this.currentProjectManger);
+          console.log(data);
+          // 普通成员的移交
+          this.$http.post('/user/item/user/rel/remove', {
+            userId: this.userId,
+            itemId: this.currentProjectManger.itemId,
+            teamUserid: data.id
+          }).then(res => {
+            if (res.iworkuCode == 200) {
+              this.$imessage({
+                type: "success",
+                content: this.$t("public.tips.success")
+              });
+              this.handOverAdministratorDialogVisible = false;
+              this.currentProjectManger = {};
+              this.getProject();
+            }
+          });
+        }
       }
   }
 };

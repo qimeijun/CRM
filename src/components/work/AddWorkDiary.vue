@@ -164,6 +164,7 @@
 </template>
 <script>
 import { getQiniuToken, rename } from "@/plugins/configuration.js"
+import { mapGetters } from 'vuex'
 export default {
   props: {
     // 项目ID、目标公司ID、成员ID
@@ -258,6 +259,9 @@ export default {
   created() {
     this.getProject();
   },
+  computed: {
+    ...mapGetters('ipublic', ['userInfo'])
+  },
   methods: {
     /**
      *  获取全部项目
@@ -275,9 +279,10 @@ export default {
      */
     getTarget(id) {
       // 根据项目ID查询当前登录人的私海
-      this.$http.post('/target/company/withpaginglist', {
+      this.$http.post('/target/company/withoutpaginglist', {
         id: id,
-        type: 2
+        type: 2,
+        memberId: this.userInfo.id
       }).then(res => {
         if (res.iworkuCode == 200) {
           this.targetList = res.datas;

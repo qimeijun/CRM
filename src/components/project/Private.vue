@@ -39,8 +39,8 @@
         @change="getPrivate(itemid, 1)"
       ></el-cascader>
       <!-- 标签 end -->
-      <el-button class="top_button" @click="onCancel()">{{$t("project.intoSea")}}</el-button>
-      <el-button type="primary" @click="changeAdministratorDialogVisible=true">{{$t("project.transfer")}}</el-button>
+      <!-- <el-button class="top_button" @click="onCancel()">{{$t("project.intoSea")}}</el-button>
+      <el-button type="primary" @click="changeAdministratorDialogVisible=true">{{$t("project.transfer")}}</el-button> -->
     </div>
     <div class="private_table">
       <el-table
@@ -48,10 +48,10 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
-        @selection-change="handleSelectionChange"
+        
       >
-        <el-table-column type="selection" width="35"></el-table-column>
-        <el-table-column prop="name" :label="$t('projectInfo.commonality.tableHeader[0]')" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column type="selection" width="35"></el-table-column> @selection-change="handleSelectionChange" -->
+        <el-table-column prop="targetCompanyName" :label="$t('projectInfo.commonality.tableHeader[0]')" show-overflow-tooltip></el-table-column>
         <el-table-column prop="rate" :label="$t('projectInfo.commonality.tableHeader[1]')" width="150">
           <template slot-scope="scope">
             <el-rate v-model="scope.row.rate" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
@@ -71,8 +71,8 @@
                 <li>
                   <router-link :to="`/target/detail?targetid=${scope.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
-                <li class="table_operation" @click="onCancel()">{{$t("project.intoSea")}}</li>
-                <li class="table_operation" @click="changeAdministratorDialogVisible=true">{{$t("project.transfer")}}</li>
+                <li class="table_operation" @click="onCancel(scope.row, scope.$index)">{{$t("project.intoSea")}}</li>
+                <li class="table_operation" @click="onHandOver(scope.row)">{{$t("project.transfer")}}</li>
               </ul>
             </Operate>
           </template>
@@ -91,7 +91,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ChangeAdministrator  operate="handOver"></ChangeAdministrator>
+        <ChangeAdministrator @getManager="getManager" :oldAdminstrator="currentTarget.targetCompanyUserInfo" :params="{type: 'handOverMemberForProject', id: currentTarget.itemId}" operate="handOver"></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 移交管理员的dialog end-->
@@ -190,7 +190,8 @@ export default {
       seek: null,
       changeAdministratorDialogVisible:false,
       addShow: false,
-      importShow: false
+      importShow: false,
+      currentTarget: {}
     };
   },
    computed: {
@@ -205,7 +206,7 @@ export default {
   },
   methods: {
     // 移入公海
-    onCancel() {
+    onCancel(item, index) {
       this.$msgbox({
         title: "提示",
         message:
@@ -217,18 +218,22 @@ export default {
         center: true
       })
         .then(() => {
-          // 取消删除
-          this.$message({
-            type: "success",
-            message: "取消移入公海"
+          // 取消移入公海
+          this.$http.post('/target/company/private/list/update', {
+            idList: [item.id],
+            type: 2
+          }).then(res => {
+            if (res.iworkuCode == 200) {
+              this.tableData.splice(index, 1);
+              this.$imessage({
+                content: this.$t("public.tips.success"),
+                type: "success"
+              });
+            }
           });
         })
         .catch(() => {
-          // 确定删除
-          this.$message({
-            type: "info",
-            message: "确定移入公海"
-          });
+          // 取消移入公海
         });
     },
      // 结束项目
@@ -301,7 +306,7 @@ export default {
         getPrivate(id, page) {
       this.$http.post("/target/company/withpaginglist", {
           id: id,
-          type: 1,
+          type: 2,
           pageNum: page,
           pageSize: 10,
           clientType: this.tag[1],
@@ -315,8 +320,29 @@ export default {
           }
         });
     },
-      handleSelectionChange(){
-        
+      handleSelectionChange(list){
+        console.log(list);
+      },
+      onHandOver(params) {
+        this.changeAdministratorDialogVisible = true; 
+        this.currentTarget = params;
+      },
+      getManager(data) {
+        if (!data || !data.id) {
+          return false;
+        }
+        this.$http.post('/target/company/private/transfer/update', {
+          id: this.currentTarget.id,
+          userId: data.id
+        }).then(res => {
+          if (res.iworkuCode == 200) {
+            this.getPrivate(this.itemid, 1);
+            this.$imessage({
+              content: this.$t("public.tips.success"),
+              type: "success"
+            });
+          }
+        });
       }
   }
 };

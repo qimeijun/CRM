@@ -17,19 +17,19 @@ export default {
             description: "Work Description",
             chatLog: "Chat Record",
             attachment: "Attachment",
-            leaveMessage: "Message Content",
+            leaveMessage: "Message",
             orderNo: "Order No",
-            orderName: "Product Name",
+            orderName: "Product",
             orderNum: "Number",
             orderPrice: "Price",
-            orderDescription: "Order Description",
+            orderDescription: "Description",
             orderType: "Order Type"
         },
         rules: {
             projectName: "Please select a project",
             type: "Please select the work log type",
-            title: "Please input the title",
-            leaveMessage: "Please input the message content",
+            title: "Please input a title",
+            leaveMessage: "Leave a Message",
             orderDescription: "Please input the order description"
         },
         diarType: {
@@ -39,7 +39,7 @@ export default {
             order: "Order"
         },
         uploadChatLog: "Upload",
-        attachment: "Attachment(Product List)",
+        attachment: "Attachment(Catalogue)",
         chatLog: "Chat Record",
         operate: "Operate",
         btn: {
@@ -56,7 +56,7 @@ export default {
             price: "Order Price",
             description: "Order Description"
         },
-        orderType: ["Normal", "Abnormal"]
+         orderType: ["Normal", "Abnormal"]
     },
     member: {
         add: "Add New Member",
@@ -115,7 +115,7 @@ export default {
     },
     changeAdministrator: {
         title: "Change Manager",
-        search: "Input the administrator name",
+        search: "Administrator name",
         btn: {
             handOver: "Hand Over",
             add: "Assign",
@@ -125,7 +125,7 @@ export default {
     password: {
         modify: "Change Password",
         form: {
-            new: "New Pasword",
+            new: "New Password",
             confirm: "Re-enter"
         },
         rules: {
@@ -133,8 +133,8 @@ export default {
             confirm: ["Please input a confirmation password", "The passwords are inconsistent twice, please re-enter"]
         },
         placeholder: {
-            new: "Password must be at least 8 characters and cannot have special symbols",
-            confirm: "Password must be at least 8 characters and cannot have special symbols"
+            new: "At least 8 characters,no special characters",
+            confirm: "PAt least 8 characters,no special characters"
         },
         btn: {
             cancel: "OK"
@@ -152,7 +152,7 @@ export default {
             addMember: "Add New Member",
             ok: "OK"
         },
-        searchInput: "Search for members, team names",
+        searchInput: "Search members, team names",
         regionalManagement: "Regional Manager Management",
         deleteTip: {
             title: "Tip",
@@ -165,7 +165,7 @@ export default {
         priviteTable: ["Tartget Company", "Importance", "Update Time", "Status", "Create Time", "Information Integrity", "Operate"],
         projectTable: ["Project Name", "Status", "Administrator", "Tag", "Number of days", "Add Time", "Operate"],
         btn: {
-            shiftIn: "Move into the public",
+            shiftIn: "Move into public",
             shiftOut: "Out",
             handOver: "Hand Over",
             modify: "Edit",
@@ -175,13 +175,13 @@ export default {
         },
         priviteShiftInTip: {
             title: "Tip",
-            content: ["The target company is following up, are you sure you want to move to the public?"],
+            content: ["The target company is following up, are you sure you want to move to public?"],
             btn: ["Ok", "Cancel"]
         },
         memberShiftOutTip: {
             title: "Tip",
             btn: ["Ok", "Cancel", "Handover Task", "Moved into the public"],
-            content: ["Are you sure you want to move this member out of the project?", "Can't move out!", "This member still has the target company to follow up, please hand over the task and remove it.!", "This member is the project manager and must be assigned a new project manager before moving out.!"]
+            content: ["Are you sure you want to move this member out of the project?", "Can't move out!", "This member still has the target company to follow up, please hand over the task and move it.!", "This member is the project manager and must be assigned a new project manager before moving out.!"]
         },
         operate: "Operate",
         teamOperate: ["Edit Team", "Handover Team", "Freeze Team"],
@@ -190,12 +190,12 @@ export default {
         account: "Account",
         password: "Password",
         workDiaryMenu: ["All", "Project", "Target Company"],
-        statistics: ["Task Overview", "This month's performance"],
+        statistics: ["Task Overview", "Performance of this month"],
         joinTime: "Join Time",
         handOverTeam: "Hand Over",
         teamStatistics: ["All Member Performance", '1V1 Performance'],
         teamStatisticsTime: ["Month", "Year"],
-        privateOperate: ["View", "Move into the public", "Hand Over"]
+        privateOperate: ["View", "Move into public", "Hand Over"]
     },
     team: {
         add: "Add Team",
@@ -212,7 +212,8 @@ export default {
         btn: {
             confirm: "Confirm Modification",
             add: "Add"
-        }
+        },
+         statistics: ['Monthly Champion']
     },
     public: {
         btn: {
@@ -231,23 +232,23 @@ export default {
         },
         tips: {
             success: "Successful!",
-            error: "The operation failed, please try again later!",
-            noData: "No Datas"
+            error: "Failed, please try again later!",
+             noData: "No Datas"
         },
-        page: {
+         page: {
             prePage: "Previous Page",
             nextPage: "Next Page"
         }
     },
     workBench: {
-        title: "工作台",
+        title: "Work Bench",
         btn: {
             addProject: "Add New Project"
         },
         briefreport: {
             title: "Briefing Schedule",
-            loading: "加载中...",
-            noMore: "没有更多了",
+            loading: "Loading...",
+            noMore: "No More",
             btn: {
                 all: "All Logs",
                 submit: "Submit Log"
@@ -259,47 +260,47 @@ export default {
             targetNum: "Target Company",
             vlinkNum: "Number of Target Companies Visited",
             intentionNum: "Intention Target Company",
-            orderNum: "Get order quantity",
-            btn:"编辑"
+            orderNum: "Order",
+            btn:"Edit"
         },
         variables: {
-            title: "Work This Month",
+            title: "Work of this Month",
             dataX: ["1st Week", "2st Week", "3st Week", "4st Week"],
         },
         calendar: {
-            title: "日程安排",
+            title: "Schedule",
             btn: {
-                redact: "编辑",
-                delete: "删除",
+                redact: "Edit",
+                delete: "Delete",
             }
         },
         remind: {
-            title: "日程提醒",
-            add: "添加提醒",
-            loading: "加载中...",
-            noMore: "没有更多了",
-            dialogTitle: "添加日程提醒",
-            addPeople: "添加人"
+            title: "Schedule reminder",
+            add: "Add a reminder",
+            loading: "Loading...",
+            noMore: "No More",
+            dialogTitle: "Add a schedule reminder",
+            addPeople: "Added by"
         },
         addremind: {
             form: {
-                date: "起止日期",
-                remindTime: "提醒时间",
-                email: "邮箱",
-                target: "目标公司",
-                people: "参与人员",
+                date: "Start & Finish date",
+                remindTime: "Remind Time",
+                email: "Email",
+                target: "Target",
+                people: "Person",
 
             },
             placeholder: {
-                content: "请输入日程内容",
-                startDate: "开始日期",
-                endDate: "结束日期",
-                remindTime: "是否提醒",
-                email: "提醒内容和时间将发送至本邮箱",
-                target: "请输入日程内容",
-                people: "请输入日程内容",
+                content: "Title",
+                startDate: "Start Date",
+                endDate: "Finish Date",
+                remindTime: "Remind or Not",
+                email: "Send an Email",
+                target: "Select a Target",
+                people: "People",
             },
-            save: "保存",
+            save: "Save",
         }
     },
     tag: {
@@ -318,7 +319,7 @@ export default {
         },
         deleteTagTip: {
             title: "Tip",
-            content: "Are you sure you want to delete this tag??",
+            content: "Are you sure you want to delete this tag?",
             btn: {
                 ok: "Ok",
                 cancel: "Cancel"
@@ -330,7 +331,7 @@ export default {
             title: "Tip",
             content: ["Can't add", "Currently your group has reached the maximum number, please click Manage Group to manage!"]
         },
-        deleteTips: "Existing tag groupings cannot be deleted. Please delete or move tags to other groups and delete them.",
+        deleteTips: "Can not delete existing tag groupings. Delete tag, or move tags to other groups.",
         nextPage: "Next Page",
         addTagPlaceholder: "Add New Tag"
     },
@@ -338,125 +339,124 @@ export default {
         title: ["Information", "Change Password"],
         form: {
             companyName: "Company Name",
-            companyShortName: "Company Short Name",
-            telphone: "Contact Number",
+            companyShortName: "Short Name",
+            telphone: "Tel",
             email: "Email",
             country: "Country",
             account: ["Account", "Temporarily unable to modify"]
         },
         rules: {
-            companyName: "Please input the company name",
-            companyShortName: "Please input the company short name"
+            companyName: "Company name",
+            companyShortName: "Short name"
         },
         btn: {
             save: "Save"
         }
     },
     highseas: {
-        title: "公海管理",
+        title: "Public Management",
         placeholder: {
-            seek: "搜索目标公司名称、ID、地址、关键人",
-            country: "请选择国家",
-            sort: "请选择分类",
-            tag: "请选择标签"
+            seek: "Search Target, ID, Address, Key Person",
+            country: " Country",
+            sort: "Category",
+            tag: "Tag "
         },
         table: {
-            target: "目标公司",
-            importance: "重要程度",
-            updatedate: "更新时间",
-            projectNum: "已分项目数",
-            whenCreated: "创建时间",
-            orderNum: "成单量",
-            operate: "操作",
-            details: "查看详情"
+            target: "Target",
+            importance: "Importance",
+            updatedate: "Update Date",
+            projectNum: "Number of Projects",
+            whenCreated: "Creat Time",
+            orderNum: "Order",
+            operate: "Operate",
+            details: "View"
         }
     },
     project: {
-        title: "项目管理",
-        add: "添加新项目",
-        allot:"分配",
-        invalid:"作废",
-        transfer:"移交",
-        intoSea:"移入公海",
-        view:"查看详情",
+        title: "Project Management",
+        add: "Add New Projects",
+        allot:"Assign",
+        invalid:"Cancel",
+        transfer:"Transfer",
+        intoSea:" Move to Public",
+        view:"View",
         placeholder: {
-            seek: "搜索项目名称、地址",
-            tag: "选择标签",
-            projectTitle: "请输入项目名称",
-            companyName: "请输入企业名称",
-            tmt: "请选择行业",
-            site: "请输入地址",
-            url: "Https://",
-            email: "请输入电子邮箱",
-            intro:"请输入公司简介",
-            strength: "请说明优势",
-            productName: "请输入产品名称",
-            describe: "请输入产品描述",
+            seek: "Search Project, Address",
+            tag: "Tag",
+            projectTitle: "Project Name",
+            companyName: "Company Name",
+            tmt: "Industry",
+            site: "Address",
+            url: "Website",
+            email: "Email",
+            intro:"Introduction",
+            strength: "Advantages",
+            productName: "Product",
+            describe: "Description",
         },
         from: {
-            firstTitle: "添加项目",
-            secondTitle: "项目资料",
-            thirdlyTitle: "产品资料",
-            account: "登录账号",
-            password: "登录密码",
-            projectTitle: "项目名称",
-            companyName: "企业名称",
-            tmt: "行业",
-            site: "地址",
-            url: "网址",
-            email: "电子邮箱",
-            intro:"公司简介",
-            strength: "优势",
-            productName: "产品名称",
-            productImg: "产品图片",
-            productVideo: "产品视频",
-            accessory: "附件(产品目录)",
-            study: "学习资料"
+            firstTitle: "Add Project",
+            secondTitle: "Project Info",
+            thirdlyTitle: "Product Info",
+            account: "Account",
+            password: "Password",
+            projectTitle: "Project",
+            companyName: "Company",
+            tmt: "Industry",
+            site: "Address",
+            url: "Website",
+            email: "Email",
+            intro:"Introduction",
+            strength: "Advantages",
+            productName: "Product",
+            productImg: "Picture",
+            productVideo: "Video",
+            accessory: "Attachment (Catalogue)",
+            study: "Reference Info"
         },
         btn: {
-            uploadImg: "上传图片",
-            uploadVideo: "上传视频",
-            uploadAccessory: "上传附件",
-            perfect: "完善资料",
-            continue: "继续完善",
-            ok: "完成",
-            edit:"编辑"
+            uploadImg: "Upload a Picture",
+            uploadVideo: "Upload a Video",
+            uploadAccessory: "Upload an Attachment",
+            perfect: "Complete Your Profile",
+            continue: "Continue",
+            ok: "Completed",
+            edit:"Edit"
         },
-        tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"],
-        status: ["进行中", "已结束", "重启项目", "新项目"]
+        tableHeader:["ID","Project","Status","Administrator","Tag","Working Days","Add date","Operate"]
     },
     projectInfo:{
-        title:"项目详情",
-        endProject:"结束项目",
-        menu:["资料","产品","公海客户","成员私海","工作日志"],
+        title:"Details",
+        endProject:"End the Project",
+        menu:["Info","Product","Public Client","Private","Work Log"],
         member:{
-            title:"工作成员",
-            add:"添加成员",
-            target:["目标公司","家"],
-            time:["进行时间","天"]
+            title:"Member",
+            add:"Add Member",
+            target:["Target","Home"],
+            time:["Working time","days"]
         },
         commonality:{
-            tableHeader:["目标公司","重要程度","更新时间","状态","创建时间","资料完整度","操作"]
+            tableHeader:["Target","Importance","Update date","status","Creat Time","Completeness","Operate"]
         },
         importTarget:{
-            add:"新增目标公司",
-            import:"导入目标公司",
-            textTip:["按导入模板，填写表格","表格大小控制在 5M 以内","目标公司正在导入中，请耐心等待···"],
-            uploadBtn:["点击上传","重新上传","一键导入"],
-            dialogTitle:"提示",
-            noimport:"不导入",
-            coverage:"覆盖"
+            add:"Add new Target",
+            import:"Import Target",
+            textTip:["Fill in the Form according to the Templat","Size not exceeding 5M","Importing , please wait..."],
+            uploadBtn:["Upload","Upload again","Click to Import"],
+            dialogTitle:"Prompt",
+            noimport:"Not import",
+            coverage:"Cover"
         },
         tag:{
-            title:"标签",
-            detele:"删除",
-            ok:"完成",
-            dialogTitle:"添加标签"
+            title:"Tag",
+            detele:"Delete",
+            ok:"Completed",
+            dialogTitle:"Add Tag"
         },
         product:{
-            accessory:"附件(产品目录)",
-            study:"学习资料",
-            view:"编辑"
+            accessory:"Attachment (Catalogue)",
+            study:"Reference Info",
+            view:"Edit"
         }
     },
     notice: {
@@ -477,73 +477,73 @@ export default {
         },
         autoLogin: "Automatic login within 7 days",
         link: ["Contact Us", "About Us"],
-        ownership: "© 2019 IWORKU CO., LTD，保留所有权利",
+        ownership: "© 2019 IWORKU CO., LTD，All rights reserved",
         btn: "Log In"
     },
     target: {
-        title:"目标公司详情",
-        menu:["资料","调研报告","工作日志","所在项目"],
+        title:"Details of Target",
+        menu:["Info","Research Report","Work Log","Project"],
         form: {
-            companyTitle: "公司信息",
-            keymenTitle: "关键人",
-            otherTitle: "其他",
-            companyName: "公司名称",
-            country: "国家",
-            site: "地址",
-            url: "网址",
-            phone: "电话",
-            keymenName: "姓名",
-            position: "职位",
-            keymenPhone: "关键人电话",
-            email: "电子邮件",
-            social: "社交账户",
-            source: "客户来源",
-            clientType: "客户类型",
-            purchaseScale: "预计采购",
-            hsCode: "海关编码",
-            importance: "重要程度",
-            introduce: "介绍",
-            remark: "备注",
-            btn:"完成"
+            companyTitle: "Company",
+            keymenTitle: "Key Person",
+            otherTitle: "Other",
+            companyName: "Company Name",
+            country: "Country",
+            site: "Address",
+            url: "Website",
+            phone: "Tel",
+            keymenName: "Name",
+            position: "Position",
+            keymenPhone: "Tel",
+            email: "Email",
+            social: "Social Account",
+            source: "Source",
+            clientType: "Type",
+            purchaseScale: "Purchasing Product ",
+            hsCode: "HS Code",
+            importance: "Importance",
+            introduce: "Introduction",
+            remark: "Remark",
+            btn:"Done"
         },
         info:{
-            companyTitle:"目标公司资料",
-            keymenTitle:"关键人信息",
-            otherTitle:"其他",
-            overviewTitle:"目标公司概览",
-            companyName:"公司名称",
-            country:"国家",
-            site:"地址",
-            url:"网址",
-            phone:"联系电话",
-            keymenName:"关键人",
-            position:"职位",
-            keymenPhone:"联系电话",
-            email:"邮件",
-            social:"社交账户",
-            source:"客户来源",
-            clientType:"客户类型",
-            purchaseScale:"预计采购规模",
-            hsCode:"海关编码",
-            importance:"重要程度",
-            introduce:"介绍",
-            remark:"备注",
-            btn:"编辑"
+            companyTitle:"Target profile",
+            keymenTitle:"Key Person",
+            otherTitle:"Other",
+            overviewTitle:"Overview",
+            companyName:"Company Name",
+            country:"Country",
+            site:"Address",
+            url:"Website",
+            phone:"Tel",
+            keymenName:"Key Person",
+            position:"Position",
+            keymenPhone:"Tel",
+            email:"Email",
+            social:"Social Account",
+            source:"Source",
+            clientType:"Type",
+            purchaseScale:"Purchase Scale",
+            hsCode:"HS Code",
+            importance:"Importance",
+            introduce:"Introduction",
+            remark:"Remark",
+            btn:"Edit"
         },
-        next: "下一步",
-        finish: "完成添加",
+        next: "Next",
+        finish: "Finish",
         probe:{
-            upload:"上传报告",
-            update:"修改报告",
-            delete:"删除",
-            title:"调研报告",
-            textTip:["按上传模板，填写表格","表格大小控制在 5M 以内","目标公司正在导入中，请耐心等待···"],
-            uploadBtn:["点击上传","重新上传","开始上传"],
-            dialogTitle:"提示"  
+            upload:"Upload a Report",
+            update:"Edit the Report",
+            delete:"Delete",
+            title:"Research Report",
+            textTip:["Fill in Form according to Template","Size not exceeding 5M","Importing, please Wait···"],
+            uploadBtn:["Click to Upload","Upload Again","Upload Now"],
+            dialogTitle:"Prompt"  
         },
         loca:{
-            tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"],
-            view:"查看详情"
+            tableHeader:["ID","Project","Status","Administration","Tag","Working days","Add date","Operate"],
+            view:"View"
         },
         status: ["待跟进", "跟进中", "未跟进", "作废"],
         importanceStatus: ["待跟进", "资料完善", "有跟进记录", "一般意向客户", "重点跟进客户", "已有成交客户"]

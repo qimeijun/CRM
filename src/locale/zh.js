@@ -204,7 +204,8 @@ export default {
         btn: {
             confirm: "确认修改",
             add: "添加"
-        }
+        },
+        statistics: ['月度冠军']
     },
     public: {
         btn: {

@@ -155,18 +155,12 @@ export default {
           }
         });
       } else if (obj.type == 'handOverTargetByOther') {
-        // 把目标公司的工作人员移交给其他工作人员
-        this.$http.get(`/customer/item/infobypk/${obj.id}`).then(res => {
-          if (res.iworkuCode == 200 && res.datas && res.datas.probjectManager) {
-            this.$http.post('/user/item/user/rel/project/manager/withoutpaginglist', {
-              userId: res.datas.probjectManager
-            }).then(resL => {
-              if (resL.iworkuCode == 200) {
-                this.adminstratorList = resL.datas;
-              }
-            });
+        // 把目标公司的工作人员移交给项目中的其他工作人员
+        this.$http.post('/user/item/user/rel/withoutpaginglist', {itemId: obj.id}).then(res => {
+          if (res.iworkuCode == 200) {
+            this.adminstratorList = res.datas;
           }
-        });
+        })
       } else if (obj.type == 'changeProjectManger') {
         // 将一个项目从一个管理员手中移交到另一个管理员
         this.$http.post('/user/info/find/role', { userRole: this.$global.userRole.projectManager }).then(res => {
@@ -174,6 +168,13 @@ export default {
             this.adminstratorList = res.datas;
           }
         });
+      } else if (obj.type == 'handOverMemberForProject') {
+        // 把这个项目移交给项目中的其他成员
+        this.$http.post('/user/item/user/rel/withoutpaginglist', {itemId: obj.id}).then(res => {
+          if (res.iworkuCode == 200) {
+            this.adminstratorList = res.datas;
+          }
+        })
       }
     }
   },

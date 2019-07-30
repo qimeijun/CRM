@@ -309,7 +309,7 @@ export default {
         type: 2
       }).then(res => {
         if (res.iworkuCode == 200) {
-          this.tableData.splice(index, 1);
+          this.getTarget();
           this.$message({
             type: "success",
             message: this.$t("public.tips.success")
@@ -345,8 +345,8 @@ export default {
             type: "success",
             content: this.$t("public.tips.success")
           });
+          // this.page.pageNum = 1;
           this.getTarget();
-          this.page.pageNum = 1;
         }
       });
     }

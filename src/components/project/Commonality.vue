@@ -106,7 +106,7 @@
                 <li>
                   <router-link :to="`/target/detail?targetid=${scope.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
-                <li class="table_operation" @click="allocationShow=true; currentTarget=scope.row">{{$t("project.allot")}}</li>
+                <li class="table_operation" @click="allocationShow=true; currentTarget=[scope.row]">{{$t("project.allot")}}</li>
                 <li
                   class="table_operation"
                   @click="onCancel(scope.row.id)"
@@ -229,7 +229,7 @@ export default {
       allocationShow: false,
       addShow: false,
       importShow: false,
-      currentTarget: {}
+      currentTarget: []
     };
   },
   computed: {
@@ -362,16 +362,20 @@ export default {
           });
         });
     },
-    handleSelectionChange(){
-      
+    handleSelectionChange(list){
+      this.currentTarget = list;
     },
     // 给目标公司分配工作人员
     onAssignMember(data) {
       if (!data || !data.id) {
         return false;
       }
+      let params = [];
+      this.currentTarget.map(val => {
+        params.push(val.id);
+      });
       this.$http.post('/target/company/private/list/update', {
-        idList: [this.currentTarget.id],
+        idList: params,
         type: 1,
         userId: data.id
       }).then(res => {
@@ -381,7 +385,7 @@ export default {
             content: this.$t("public.tips.success"),
             type: "success"
           });
-          this.currentTarget = {};
+          this.currentTarget = [];
           this.getCommonality(this.itemid, 1);
         }
       })

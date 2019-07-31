@@ -204,7 +204,8 @@ export default {
         btn: {
             confirm: "确认修改",
             add: "添加"
-        }
+        },
+        statistics: ['月度冠军']
     },
     public: {
         btn: {
@@ -536,6 +537,9 @@ export default {
         loca:{
             tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"],
             view:"查看详情"
-        }
+        },
+        status: ["待跟进", "跟进中", "未跟进", "作废"],
+        importanceStatus: ["待跟进", "资料完善", "有跟进记录", "一般意向客户", "重点跟进客户", "已有成交客户"]
+        
     }
 }

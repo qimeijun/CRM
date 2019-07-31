@@ -137,8 +137,9 @@
         </div>
       </div>
       <Statistics
-        :sType="statisticsSelectParams.type"
-        :time="{year: statisticsSelectParams.year, month: statisticsSelectParams.month}"
+        :id="teamId"
+        :team="teamInfo.userInfoList"
+        :params="statisticsSelectParams"
       ></Statistics>
     </div>
 

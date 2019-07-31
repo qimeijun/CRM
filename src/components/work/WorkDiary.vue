@@ -17,16 +17,18 @@
                 </div>
             </div>
             <!-- 工作日志模块 -->
-            <div style="margin-top: 20px;" >
+            <el-scrollbar style="height: calc(100vh - 3.08rem);" >
+            <div style="margin-top: 20px;" v-infinite-scroll="load" :infinite-scroll-immediate="false" :infinite-scroll-distance="100">
                 <template v-if="workDiarList && workDiarList.length > 0">
                     <DiaryModule v-for="(item, index) in workDiarList" :key="index" :diary="item"></DiaryModule>
                 </template>
                 <template v-else>
-                    <div style="height: 200px; background-color: white; border-radius: 8px; line-height: 200px; text-align: center;">
+                    <div style="height: calc(100vh - 3.3rem); background-color: white; border-radius: 8px; line-height: 200px; text-align: center;">
                         {{ $t("public.tips.noData") }}
                     </div>
                 </template>
             </div>
+            </el-scrollbar>
         </div>
         <div class="work-diary__right">
             <el-calendar class="work-diary__right-calendar" v-model="calendarValue">
@@ -94,7 +96,13 @@ export default {
             addWorkDiaryDialogVisible: false,
             calendarValue: new Date(),
             logMap: new Map(),
-            workDiarList: []
+            workDiarList: [],
+            page: {
+                total: 0,
+                pageSize: 5,
+                pageNum: 1,
+                totalPage: 1
+            }
         }
     },
     computed: {
@@ -116,6 +124,12 @@ export default {
         },
     },
     methods: {
+        load() {
+            this.page.pageNum += 1;
+            if (this.page.totalPage >= this.page.pageNum) {
+                this.getWorkDiary(this.activeMenu);
+            }
+        },
         /**
          *  根据ID 查询工作日志
          */
@@ -124,11 +138,13 @@ export default {
                 this.$http.post('/customer/followup/info/user/withpaginglist', {
                     userId: this.id,
                     followType: diaryType,
-                    pageSize: 10,
-                    pageNum: 1
+                    pageSize: this.page.pageSize,
+                    pageNum: this.page.pageNum
                 }).then(res => {
                     if (res.iworkuCode == 200) {
-                        this.workDiarList = res.datas || [];
+                        this.page.pageNum > 1 ? this.workDiarList.push(...res.datas) : this.workDiarList = res.datas || [];
+                        this.page.total = res.total;
+                        this.page.totalPage = res.pages;
                     }
                 });
             } else {
@@ -137,7 +153,9 @@ export default {
                     followType: diaryType
                 }).then(res => {
                     if (res.iworkuCode == 200) {
-                        this.workDiarList = res.datas || [];
+                        this.page.pageNum > 1 ? this.workDiarList.push(...res.datas) : this.workDiarList = res.datas || [];
+                        this.page.total = res.total;
+                        this.page.totalPage = res.pages;
                     }
                 });
             }
@@ -167,6 +185,7 @@ export default {
          */
         onChangeMenu(item) {
             this.activeMenu = item.value;
+            this.page.pageNum = 1;
             if (item.value == 'project') {
                 this.getWorkDiary(1)
             } else if (item.value == 'target') {
@@ -194,7 +213,9 @@ export default {
                 return false;
             }
             let params = {
-                followDate: `${time.getFullYear()}-${month}-${time.getDate()}`
+                followDate: `${time.getFullYear()}-${month}-${time.getDate()}`,
+                pageSize: this.page.pageSize,
+                pageNum: this.page.pageNum
             };
             if (this.type == 'project') {
                 params.followItemId = this.id;
@@ -203,7 +224,7 @@ export default {
             }
             this.$http.post('/customer/followup/info/unread/withoutpaginglist', params).then(res => {
                 if (res.iworkuCode == 200) {
-                    this.workDiarList = res.datas || [];
+                    this.page.pageNum > 1 ? this.workDiarList.push(...res.datas) : this.workDiarList = res.datas || [];
                     // 日期点击之后就设置为已读
                     this.logMap.set(`${date}`, false);
                     this.logMap = new Map(this.logMap);
@@ -216,6 +237,7 @@ export default {
             if (newVal) {
                 // 获取月份
                 let time = new Date(newVal);
+                this.page.pageNum = 1;
                 this.getWorkDiaryByDate(time);
             }
         },

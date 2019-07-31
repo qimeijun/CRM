@@ -73,7 +73,7 @@
                 <li>
                   <!-- 查看详情 -->
                   <router-link
-                    :to="`/project/detail/info/${scope.row.itemId}`"
+                    :to="`/project/detail/info/${scope.row.itemId}/${scope.row.probjectManager}`"
                   >{{$t("project.view")}}</router-link>
                 </li>
                 <!-- 结束项目 -->

@@ -110,18 +110,18 @@ export default {
       this.selectAdminstratorInfo = {};
     },
     getUserData(obj) {
-      // 添加区域经理
       if (obj.type == 'addRegionalManager') {
+        // 添加区域经理
         this.$http.post('/user/info/find/role', { userRole: obj.id }).then(res => {
           if (res.iworkuCode == '200') {
             this.adminstratorList = res.datas;
           }
         });
       } else if (obj.type == 'handoverProjectManger'){
-        // 移交项目经理
-        this.$http.post('/user/item/user/rel/project/manager/init/withoutpaginglist').then(res => {
-          if (res.iworkuCode == 200) {
-            this.adminstratorList = res.datas;
+        // 移交团队管理员，只能移交给同一个团队的成员
+        this.$http.get(`/user/team/infobypk/${obj.id}`).then(res => {
+          if (res.iworkuCode == 200 && res.datas) {
+            this.adminstratorList = res.datas.userInfoList;
           }
         });
       } else if (obj.type == 'handOverTeamManger') {
@@ -140,6 +140,41 @@ export default {
             this.adminstratorList = res.datas;
           }
         });
+      } else if (obj.type == 'assignMemberForTarget'){
+        // 给目标公司分配成员
+        this.$http.post('/user/item/user/rel/withoutpaginglist', {itemId: obj.id}).then(res => {
+          if (res.iworkuCode == 200) {
+            this.adminstratorList = res.datas;
+          }
+        })
+      } else if (obj.type == 'addMemberForProject') {
+        // 给项目添加成员
+        this.$http.post('/user/item/user/rel/project/manager/withoutpaginglist', { userId: this.params.id }).then(res => {
+          if (res.iworkuCode == 200) {
+            this.adminstratorList = res.datas; 
+          }
+        });
+      } else if (obj.type == 'handOverTargetByOther') {
+        // 把目标公司的工作人员移交给项目中的其他工作人员
+        this.$http.post('/user/item/user/rel/withoutpaginglist', {itemId: obj.id}).then(res => {
+          if (res.iworkuCode == 200) {
+            this.adminstratorList = res.datas;
+          }
+        })
+      } else if (obj.type == 'changeProjectManger') {
+        // 将一个项目从一个管理员手中移交到另一个管理员
+        this.$http.post('/user/info/find/role', { userRole: this.$global.userRole.projectManager }).then(res => {
+          if (res.iworkuCode == '200') {
+            this.adminstratorList = res.datas;
+          }
+        });
+      } else if (obj.type == 'handOverMemberForProject') {
+        // 把这个项目移交给项目中的其他成员
+        this.$http.post('/user/item/user/rel/withoutpaginglist', {itemId: obj.id}).then(res => {
+          if (res.iworkuCode == 200) {
+            this.adminstratorList = res.datas;
+          }
+        })
       }
     }
   },
@@ -149,7 +184,6 @@ export default {
         if (newVal) {
           this.getUserData(newVal);
         }
-        
       },
       immediate: true
     }

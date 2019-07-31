@@ -34,7 +34,7 @@
       <el-table-column prop="addTimeStr" :label="$t('memberInfo.projectTable[5]')" sortable></el-table-column>
       <el-table-column :label="$t('memberInfo.projectTable[6]')">
         <template slot-scope="scope">
-          <span class="member-project__delete" @click="onDelete(scope.row)">{{ $t("memberInfo.btn.shiftOutProject") }}</span>
+          <span class="member-project__delete" @click="onDelete(scope.row, scope.$index)">{{ $t("memberInfo.btn.shiftOutProject") }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -50,15 +50,20 @@
     <!-- 重新分配项目经理 dialog start -->
     <el-dialog
       class="el-dialog__scroll"
-      :title="$t('selectRegionalManager.title')"
+      :title="$t('changeAdministrator.title')"
       :visible.sync="handOverAdministratorDialogVisible"
       top="5vh"
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
+      :close-on-click-modal="false"
       width="30%">
       <el-scrollbar>
-        <AddAdministrator @getManager="getManager" @addProjectAdministrator="handOverAdministratorDialogVisible=false;addMemberDialogVisible=true;" operate="add"></AddAdministrator>
+        <AddAdministrator @getManager="getManager" 
+            :oldAdminstrator="currentProjectManger" 
+            :params="{type: currentProjectManger.type, id: currentProjectManger.itemId}" 
+            @addProjectAdministrator="handOverAdministratorDialogVisible=false;addMemberDialogVisible=true;"
+            operate="handOver"></AddAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加区域经理 dialog end -->
@@ -71,6 +76,7 @@
         :append-to-body="true"
         :modal="false"
         :lock-scroll="true"
+        :close-on-click-modal="false"
         width="30%"
       >
         <el-scrollbar>
@@ -98,7 +104,8 @@ export default {
         pageSize: 10,
         pageNum: 1,
         total: 0
-      }
+      },
+      currentProjectManger: {}
     };
   },
   created() {
@@ -114,47 +121,113 @@ export default {
       });
     },
       /**
-       *  移出项目
+       *  将成员移出项目
        */
-      onDelete(item) {
+      onDelete(item, index) {
+        if (item.probjectManager == this.userId) {
+          // 将管理员移除这个项目
+          this.currentProjectManger = {
+            itemId: item.itemId,
+            userNameEn: item.probjectManagerNameEn,
+            userNameZh: item.probjectManagerNameZh,
+            userCountryEn: item.probjectManagerCountryEn,
+            userCountryZh: item.probjectManagerCountryZh,
+            userProfileImage: item.probjectManagerProfileImage,
+            type: 'changeProjectManger'
+          }
+          this.onShiftOutProjectAdministrator(item);
+          return false;
+        }
+        // 将普通成员移除
         this.$confirm(`<i style="font-size: 35px; color: #E50054;" class="el-icon-question"></i><br/>${this.$t("memberInfo.memberShiftOutTip.content[0]")}`, this.$t("memberInfo.memberShiftOutTip.title"), {
             confirmButtonText: this.$t("memberInfo.memberShiftOutTip.btn[0]"),
             cancelButtonText: this.$t("memberInfo.memberShiftOutTip.btn[1]"),
             center: true,
             dangerouslyUseHTMLString: true,
+            distinguishCancelAndClose: true,
             confirmButtonClass: "iworku-confirm-button",
             cancelButtonClass: "iworku-confirm-cancel-button",
         }).then(() => {
-            // 取消移除
-            this.onConfirmShiftOutProject(item);
-        }).catch(() => {});
+            // 确定移除
+            this.$http.post('/user/info/check/data', {
+              userId: this.userId,
+              itemId: item.itemId
+            }).then(res => {
+              // 成员在当前项目中没有正在跟进的目标公司时才能直接删除
+              if (res.iworkuCode == 200 && res.datas > 0) {
+                this.onConfirmShiftOutProject(item, index);
+              } else if (res.iworkuCode == 200 && res.datas <= 0) {
+                // 移除成员
+                this.onMoveOutMemberFromProject({
+                  userId: this.userId,
+                  itemId: item.itemId
+                }, index)
+              }
+            });
+        }).catch(action => {});
       },
       /**
-       *  确定移除项目
+       *  成员有跟进项目，确定删除
        */
-      onConfirmShiftOutProject(item) {
+      onConfirmShiftOutProject(item, index) {
         // 确定删除 正在跟进当中的
         this.$confirm(`<i style="font-size: 35px; color: #E50054;" class="el-icon-question"></i><br/>${this.$t("memberInfo.memberShiftOutTip.content[1]")}<br/>${this.$t("memberInfo.memberShiftOutTip.content[2]")}`, this.$t("memberInfo.memberShiftOutTip.title"), {
             confirmButtonText: this.$t("memberInfo.memberShiftOutTip.btn[2]"),
             cancelButtonText: this.$t("memberInfo.memberShiftOutTip.btn[3]"),
             center: true,
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
+            distinguishCancelAndClose: true,
+            confirmButtonClass: "iworku-confirm-button",
+            cancelButtonClass: "iworku-confirm-cancel-button",
         }).then(() => {
-          // 移交任务操作 
-          this.onShiftOutProjectAdministrator(item);
-        }).catch(() => {
+          // 获取当前成员的信息
+          this.$http.get(`/user/info/infobypk/${this.userId}`).then(res => {
+            if (res.iworkuCode == 200 && res.datas) {
+              // 当前这个用户
+              this.currentProjectManger = {
+                itemId: item.itemId,
+                userNameEn: res.datas.userNameEn,
+                userNameZh: res.datas.userNameZh,
+                userCountryEn: res.datas.userCountryEn,
+                userCountryZh: res.datas.userCountryZh,
+                userProfileImage: res.datas.userProfileImage,
+                type: 'handOverMemberForProject'
+              }
+              this.handOverAdministratorDialogVisible = true;
+            }
+          });
+        }).catch(action => {
           // 移入公海操作
+          if (action == 'cancel') {
+            this.onMoveOutMemberFromProject({
+              userId: this.userId,
+              itemId: item.itemId
+            }, index);
+          }
+        });
+      },
+      onMoveOutMemberFromProject(params, index) {
+        // 移除成员
+        this.$http.post('/user/item/user/rel/remove', params).then(res => {
+          if (res.iworkuCode == 200) {
+            this.tableData.splice(index, 1);
+            this.$imessage({
+              type: "success",
+              content: this.$t("public.tips.success")
+            });
+          }
         });
       },
       /**
        *  如果当前用户是管理员在跟进
        */
-      onShiftOutProjectAdministrator() {
+      onShiftOutProjectAdministrator(item) {
         // 确定删除  项目经理
         this.$alert(`<i style="font-size: 35px; color: #E50054;" class="el-icon-question"></i><br/>${this.$t("memberInfo.memberShiftOutTip.content[1]")}<br/>${this.$t("memberInfo.memberShiftOutTip.content[3]")}`, this.$t("memberInfo.memberShiftOutTip.title"), {
             confirmButtonText: this.$t("memberInfo.memberShiftOutTip.btn[2]"),
             center: true,
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
+            distinguishCancelAndClose: true
         }).then(() => {
             // 分配页面 弹窗
             this.handOverAdministratorDialogVisible = true;
@@ -164,8 +237,45 @@ export default {
        *  获取分配到的管理员信息
        */
       getManager(data) {
-        this.handOverAdministratorDialogVisible = false;
-        console.log(data);
+        if (!data || !data.id) {
+          return false;
+        }
+        if (this.currentProjectManger.type == 'changeProjectManger') {
+          // 管理员的移交
+          this.$http.post('/user/item/user/rel/project/manager/save', {
+            itemId: this.currentProjectManger.itemId,
+            userId: data.id
+          }).then(res => {
+            if (res.iworkuCode == 200) {
+              this.$imessage({
+                type: "success",
+                content: this.$t("public.tips.success")
+              });
+              this.handOverAdministratorDialogVisible = false;
+              this.currentProjectManger = {};
+              this.getProject();
+            }
+          });
+        } else if (this.currentProjectManger.type == 'handOverMemberForProject') {
+          console.log(this.currentProjectManger);
+          console.log(data);
+          // 普通成员的移交
+          this.$http.post('/user/item/user/rel/remove', {
+            userId: this.userId,
+            itemId: this.currentProjectManger.itemId,
+            teamUserid: data.id
+          }).then(res => {
+            if (res.iworkuCode == 200) {
+              this.$imessage({
+                type: "success",
+                content: this.$t("public.tips.success")
+              });
+              this.handOverAdministratorDialogVisible = false;
+              this.currentProjectManger = {};
+              this.getProject();
+            }
+          });
+        }
       }
   }
 };

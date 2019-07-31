@@ -92,7 +92,8 @@ export default {
       modifyMemberDialogVisible: false,
       modifyPasswordDialogVisible: false,
       id: this.$route.params.id,
-      userInfo: {}
+      userInfo: {},
+      weeks: ['1st Week', '2nd Week', '3rd Week', '4th Week', '5th Week']
     };
   },
   created() {
@@ -115,7 +116,7 @@ export default {
     /**
      *  统计饼图
      */
-    getMemberStatisticsPie() {
+    async getMemberStatisticsPie() {
       let option = {
         tooltip: {
           trigger: "item",
@@ -161,21 +162,21 @@ export default {
             },
             data: [
               {
-                value: 335,
+                value: 0,
                 name: "成单客户",
                 label: {
                   color: "#fff"
                 }
               },
               {
-                value: 310,
+                value: 0,
                 name: "跟进客户",
                 label: {
                   color: "#fff"
                 }
               },
               {
-                value: 234,
+                value: 0,
                 name: "私海客户",
                 label: {
                   color: "#1E1E1E"
@@ -186,12 +187,19 @@ export default {
         ],
         color: ["#E50054", "#8D43FF", "#EBEAEE"]
       };
+
+      let res = await this.$http.get(`/user/team/user/rel/task/number/${this.id}`);
+      if (res.iworkuCode == 200 && res.datas) {
+        option.series[0].data[0].value = res.datas.successNumber || 0;
+        option.series[0].data[1].value = res.datas.processingNumber || 0;
+        option.series[0].data[2].value = res.datas.privateNumber || 0;
+      }
       echarts.init(this.$refs.memberStatisticsPie).setOption(option);
     },
     /**
      *  柱状统计图
      */
-    getMemberStatisticsLine() {
+    async getMemberStatisticsLine() {
       let option = {
         color: ["#4DD0E1"],
         grid: {
@@ -203,7 +211,7 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            data: [],
             axisTick: {
               alignWithLabel: true
             }
@@ -234,10 +242,23 @@ export default {
                 color: '#505D6F'
             },
             barWidth: '24',
-            data: [10, 52, 200, 334, 390, 330, 220]
+            data: []
           }
         ]
       };
+      let date = new Date();
+      let month = date.getMonth() + 1;
+      month < 10 ? month = `0${month}` : null
+      let res = await this.$http.post('/user/team/user/rel/task/month/number', {
+        userId: this.id,
+        text: `${date.getFullYear()}-${month}`
+      });
+      if (res.iworkuCode == 200) {
+        res.datas.map((val, index) => {
+          option.xAxis[0].data.push(this.weeks[index]);
+          option.series[0].data.push(val.count);
+        });
+      }
       echarts.init(this.$refs.memberStatisticsLine).setOption(option);
     }
   }

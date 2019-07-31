@@ -6,11 +6,13 @@
       <el-button type="primary" size="small" @click="addMemberDialogVisible=true">{{$t("projectInfo.member.add")}}</el-button>
     </div>
     <div class="member_list" v-for="(item, index) in memberlist" :key="'member'+index">
-      <i :style="'background-color:'+item.color">{{item.roleName}}</i>
+      <i :style="`background-color:${item.roleColor}`">
+        <template >{{item.roleName}}</template>
+        </i>
       <p class="list_img">
-        <el-avatar size="medium" :src="'https://vodcn.iworku.com/'+item.userProfileImage"></el-avatar>
+        <el-avatar size="medium" :src="$global.avatarURI+item.userProfileImage"></el-avatar>
         <br />
-        <span>{{item.userNameZh}}</span>
+        <span>{{$lang==$global.en?item.userNameEn:item.userNameZh}}</span>
       </p>
       <div class="list_div">
         <p>
@@ -37,7 +39,7 @@
       width="30%"
     >
       <el-scrollbar>
-        <ChangeAdministrator></ChangeAdministrator>
+        <ChangeAdministrator :params="{id: id, type: 'addMemberForProject'}" @getManager="addMemberForProject"></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加成员 dialog end -->
@@ -46,38 +48,23 @@
 <script>
 import {getProjectUserApi} from "@/plugins/axios.js"
 export default {
+  props: {
+    // 项目管理员ID
+    id: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
+  },
   components:{
      // 添加新成员
     ChangeAdministrator: () => import("@/components/member/ChangeAdministrator.vue"),
   },
   data() {
     return {
-      memberlist: [
-        {
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          color: "#E50054",
-          type: "区域经理",
-          number: "123",
-          day: "321"
-        },
-        {
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          color: "#FF6D00",
-          type: "项目经理",
-          number: "123",
-          day: "321"
-        },
-        {
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          color: "#00C853",
-          type: "普通成员",
-          number: "123",
-          day: "321"
-        }
-      ],
+      memberColors:["#E50054","#FF6D00","#00C853"],
+      memberlist: [],
       addMemberDialogVisible:false,
     };
   },
@@ -91,14 +78,62 @@ export default {
   },
   methods: {
     getMemberList(){
-    this.$http.post('/user/item/user/rel/withoutpaginglist',{itemId:this.itemid}).then(res=>{
-      console.log('项目成员',res);
-      if(res.iworkuCode==200){
-        this.memberlist=res.datas;
+      this.$http.post('/user/item/user/rel/withoutpaginglist',{itemId:this.itemid}).then(res=>{
+        if(res.iworkuCode==200){
+          console.log(res.datas);
+          this.memberlist=res.datas.map(o=>{
+            let roleColor;
+            switch(o.roleName){
+              case "区域经理":{
+                roleColor=this.memberColors[0];
+                break;
+              };
+              case "项目经理":{
+                roleColor=this.memberColors[1];
+                break;
+              };
+              case "成员":{
+                roleColor=this.memberColors[2];
+                break;
+              };
+            }
+            return {
+              roleColor,
+              ...o
+            }
+          });
+           console.log(this.memberlist)
+        }
+      })
+    },
+    /**
+     *  给项目添加成员
+     */
+    addMemberForProject(data) {
+      if (!data || !data.id) {
+        return false;
       }
-    })
+      this.$http.post('/user/item/user/rel/save', {
+        itemId: this.itemid,
+        userList: [data.id]
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.getMemberList();
+          this.addMemberDialogVisible = false;
+          this.$imessage({
+            content: this.$t("public.tips.success"),
+            type: "success"
+          });
+        }
+      })
     }
   },
+  watch: {
+    id: {
+      handler(newVal) {},
+      immediate: true
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -141,8 +176,9 @@ export default {
     }
     .list_img {
       text-align: center;
-      margin: 0 20px;
+      margin: 0 10px;
       font-size: 12px;
+      width:100px;
     }
     .list_div {
       display: flex;

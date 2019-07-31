@@ -33,8 +33,16 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      activeMenu: "member-info",
-      menuList: [
+      activeMenu: "member-info"
+    };
+  },
+  components: {
+    PageHeader
+  },
+  computed: {
+    ...mapGetters("members", ["memberInfo"]),
+    menuList() {
+      return [
         {
           name: this.$t("memberInfo.menu[0]"),
           value: "member-info",
@@ -61,13 +69,7 @@ export default {
           route: "diary"
         }
       ]
-    };
-  },
-  components: {
-    PageHeader
-  },
-  computed: {
-    ...mapGetters("members", ["memberInfo"])
+    } 
   },
   created() {
     this.activeMenu = this.$route.name;

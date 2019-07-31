@@ -52,7 +52,6 @@
       ></el-cascader>
       <!-- 标签 end -->
       <el-button type="primary" @click="allocationShow=true">{{$t("project.allot")}}</el-button>
-      <el-button class="top_button" @click="onCancel()">{{$t("project.invalid")}}</el-button>
     </div>
     <div class="commonality_table">
       <el-table
@@ -75,7 +74,7 @@
         >
           <template slot-scope="scope">
             <el-rate :value="scope.row.grade-0" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
-            <p>{{$lang==$global.lang.en?scope.row.gradeEn:scope.row.gradeEn}}</p>
+            <p>{{$lang==$global.lang.en?scope.row.gradeEn:scope.row.gradeZh}}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -115,7 +114,7 @@
                     :to="`/target/detail/info/${scope.row.id}`"
                   >{{$t("project.view")}}</router-link>
                 </li>
-                <li class="table_operation" @click="allocationShow=true">{{$t("project.allot")}}</li>
+                <li class="table_operation" @click="allocationShow=true; currentTarget=[scope.row]">{{$t("project.allot")}}</li>
                 <li
                   class="table_operation"
                   @click="onCancel(scope.row.id)"
@@ -138,7 +137,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ChangeAdministrator operate="add"></ChangeAdministrator>
+        <ChangeAdministrator operate="add" :params="{id: itemid, type: 'assignMemberForTarget'}" @getManager="onAssignMember"></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 分配 end -->
@@ -244,7 +243,8 @@ export default {
       itemStatus:1,
       allocationShow: false,
       addShow: false,
-      importShow: false
+      importShow: false,
+      currentTarget: []
     };
   },
   computed: {
@@ -388,7 +388,34 @@ export default {
           });
         });
     },
-    handleSelectionChange() {}
+    handleSelectionChange(list){
+      this.currentTarget = list;
+    },
+    // 给目标公司分配工作人员
+    onAssignMember(data) {
+      if (!data || !data.id) {
+        return false;
+      }
+      let params = [];
+      this.currentTarget.map(val => {
+        params.push(val.id);
+      });
+      this.$http.post('/target/company/private/list/update', {
+        idList: params,
+        type: 1,
+        userId: data.id
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.allocationShow = false;
+          this.$imessage({
+            content: this.$t("public.tips.success"),
+            type: "success"
+          });
+          this.currentTarget = [];
+          this.getCommonality(this.itemid, 1);
+        }
+      })
+    }
   }
 };
 </script>

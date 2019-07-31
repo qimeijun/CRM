@@ -66,28 +66,28 @@ const router = new VueRouter({
                     path: '/project/detail', component: () => import('./../pages/projectDetail.vue'),
                     children: [
                         {
-                            path: 'info/:itemid',
+                            path: 'info/:itemid/:adminId',
                             alias: "info",
                             name: "information",
                             component: () => import('./../components/project/Information.vue')
                         },
                         {
-                            path: 'product/:itemid',
+                            path: 'product/:itemid/:adminId',
                             name: "product",
                             component: () => import('./../components/project/Product.vue')
                         },
                         {
-                            path: 'commonality/:itemid',
+                            path: 'commonality/:itemid/:adminId',
                             name: 'commonality',
                             component: () => import('./../components/project/Commonality.vue')
                         },
                         {
-                            path: 'private/:itemid',
+                            path: 'private/:itemid/:adminId',
                             name: 'private',
                             component: () => import('./../components/project/Private.vue')
                         },
                         {
-                            path: 'diary/:itemid',
+                            path: 'diary/:itemid/:adminId',
                             name: 'diary',
                             component: () => import('./../components/project/WorkDiary.vue')
                         },

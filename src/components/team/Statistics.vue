@@ -2,7 +2,7 @@
   <!-- 团队统计 -->
   <section class="team-statistics">
     <!-- 对比图 -->
-    <div v-if="sType == 'compare'" class="compare-line-title">
+    <div v-if="params.type == 'compare'" class="compare-line-title">
       <span class="monthly-champion">月度冠军</span>
       <span class="vs">VS</span>
       <el-dropdown @command="onChangeMember" class="member-name">
@@ -12,15 +12,15 @@
         </span>
         <el-dropdown-menu class="member-name-menu" slot="dropdown">
           <el-dropdown-item
-            v-for="(item, index) in memberList"
+            v-for="(item, index) in team"
             :key="index"
             :command="item"
           >{{ item.userNameEn }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <div :style="sType == 'compare' ? 'display: block' : 'display: none'" class="compare-line" id="compareLine"></div>
-    <div :style="sType == 'performance' ? 'display: block' : 'display: none'" class="all-performance" id="allPerformance"></div>
+    <div :style="params.type == 'compare' ? 'display: block' : 'display: none'" class="compare-line" id="compareLine"></div>
+    <div :style="params.type == 'performance' ? 'display: block' : 'display: none'" class="all-performance" id="allPerformance"></div>
   </section>
 </template>
 <script>
@@ -28,53 +28,43 @@ import echarts from "echarts";
 export default {
     props: {
         /**
-         *  图标类型，业绩图 performance  对比图compare
+         *  时间 年 月，图标类型
          */
-        sType: {
-            type: String,
-            default: 'performance'
-        },
-        /**
-         *  时间 年 月
-         */
-        time: {
+        params: {
             type: Object,
             default() {
-                return {
-                    year: new Date().getFullYear(),
-                    month: new Date().getMonth() + 1
-                }
+                return {}
             }
+        },
+        /**
+         *  团队ID
+         */
+        id: {
+          type: String,
+          default() {
+            return "";
+          }
+        },
+        /**
+         *  团队成员
+         */
+        team: {
+          type: Array,
+          default() {
+            return [];
+          }
         }
     },
   data() {
     return {
       selectMember: null,
-      memberList: [
-        {
-          id: "1",
-          userNameZh: "张三",
-          userNameEn: "zhangsan"
-        },
-        {
-          id: "2",
-          userNameZh: "张三2",
-          userNameEn: "zhangsan2"
-        },
-        {
-          id: "3",
-          userNameZh: "张三3",
-          userNameEn: "zhangsan3"
-        }
-      ]
+      weeks: ['1st Week', '2st Week', '3st Week', '4st Week', '5st Week']
     };
   },
-  created() {
-    this.selectMember = this.memberList[0];
-  },
-  mounted() {
-    // this.getStatisticsCompareLine();
-    // this.getStatisticsAllPerformance();
+  computed: {
+    champion() {
+      return this.$t("team.statistics[0]")
+    }
   },
   methods: {
     // 切换成员
@@ -84,8 +74,8 @@ export default {
     /**
      * 成员对比业绩图
      */
-    getStatisticsCompareLine() {
-      let title = ["月度冠军", "zhangsan"];
+    async getStatisticsCompareLine() {
+      let title = [this.champion, this.selectMember.userNameZh];
       let option = {
         color: ["#8D43FF", "#4DD0E1"],
         grid: {
@@ -97,7 +87,7 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            data: [],
             axisTick: {
               alignWithLabel: true
             }
@@ -112,6 +102,9 @@ export default {
             }
           }
         ],
+        tooltip: {
+          show: true,
+        },
         series: [
           {
             name: title[0],
@@ -128,7 +121,7 @@ export default {
               color: "#505D6F"
             },
             barWidth: "24",
-            data: [10, 52, 200, 334, 390, 330, 220]
+            data: []
           },
           {
             name: title[1],
@@ -145,16 +138,54 @@ export default {
               color: "#505D6F"
             },
             barWidth: "24",
-            data: [10, 52, 200, 334, 390, 330, 220]
+            data: []
           }
         ]
       };
+      let params = {
+        teamId: this.id,
+        pattern: 'yyyy',
+        text: `${this.params.year}`,
+        userId: this.selectMember.id
+      };
+      if (this.params.timeType == 'month') {
+        params.pattern = 'yyyy-MM';
+        let month = this.params.month;
+        month < 10 ? month = `0${month}` : null;
+        params.text = `${this.params.year}-${month}`
+      }
+      let res = await this.$http.post('/user/team/user/rel/vs/number', params);
+      if (res.iworkuCode == 200 && this.params.timeType == 'year' && res.additionalParameters && res.additionalParameters.champion && res.datas) {
+        res.additionalParameters.champion.map(val => {
+          option.xAxis[0].data.push(val.month);
+          option.series[0].data.push(val.count);
+        });
+        let nameList = res.additionalParameters.champion.find(val => val.userId);
+        if (nameList) {
+          option.series[0].name = nameList.userNameZh;
+        }
+        res.datas.map(val => {
+          option.series[1].data.push(val.count);
+        });
+      } else if (res.iworkuCode == 200 && this.params.timeType == 'month' && res.additionalParameters && res.additionalParameters.champion && res.datas) {
+        res.additionalParameters.champion.map((val, index) => {
+          option.xAxis[0].data.push(this.weeks[index]);
+          option.series[0].data.push(val.count);
+        });
+        let nameList = res.additionalParameters.champion.find(val => val.userId);
+        if (nameList) {
+          option.series[0].name = nameList.userNameZh;
+        }
+        res.datas.map(val => {
+          option.series[1].data.push(val.count);
+        });
+      }
       echarts.init(document.getElementById('compareLine')).setOption(option);
     },
     /**
      *  所有成员的业绩表
      */
-    getStatisticsAllPerformance() {
+    async getStatisticsAllPerformance() {
       let option = {
         tooltip: {
           show: false
@@ -175,7 +206,7 @@ export default {
         },
         yAxis: {
           type: "category",
-          data: ["巴西", "印尼", "美国", "印度", "中国", "世界人口(万)"]
+          data: []
         },
         label: {
           show: true,
@@ -186,37 +217,77 @@ export default {
         },
         series: [
           {
-            name: "2011年",
+            name: `${this.params.year}`,
             type: "bar",
             barWidth: "22",
-            data: [18203, 23489, 29034, 104970, 131744, 630230],
+            data: [],
             itemStyle: {
               barBorderRadius: [0, 10, 10, 0]
             }
           }
         ]
       };
+      let params = {
+        teamId: this.id,
+        pattern: 'yyyy',
+        text: `${this.params.year}` 
+      };
+      if (this.params.timeType == 'month') {
+        params.pattern = 'yyyy-MM';
+        let month = this.params.month;
+        month < 10 ? month = `0${month}` : null;
+        params.text = `${this.params.year}-${month}`
+      }
+      let res = await this.$http.post('/user/team/user/rel/number', params);
+      if (res.iworkuCode == 200) {
+        let tempData = res.datas || [];
+        let tempSet = new Set();
+        tempData.map(val => {
+          option.yAxis.data.push(val.userNameZh);
+          option.series[0].data.push(val.count);
+          tempSet.add(val.id);
+        });
+        // 查找出没有数据的用户，并将 count 设置为0
+        let resFilter = this.team.filter(val => !tempSet.has(val.id));
+        if (resFilter) {
+          resFilter.map(val => {
+            option.yAxis.data.push(val.userNameZh);
+            option.series[0].data.push(0);
+          });
+        }
+      }
       echarts.init(document.getElementById('allPerformance')).setOption(option);
     }
   },
   watch: {
-      sType: {
-          handler(newVal, oldVal) {
-            if (newVal == 'performance') {
-                setTimeout(() => {
-                    this.getStatisticsAllPerformance();
-                }, 10);
-            } else {
-                setTimeout(() => {
-                    this.getStatisticsCompareLine();
-                }, 10);
-                
-            }
-          },
-          immediate: true
+      params:{
+        handler(newVal) {
+          if (newVal.type == 'performance') {
+              setTimeout(() => {
+                  this.getStatisticsAllPerformance();
+              }, 10);
+          } else {
+              setTimeout(() => {
+                  this.getStatisticsCompareLine();
+              }, 10);
+          }
+        },
+        immediate: true,
+        deep: true
       },
-      time(newVal, oldVal) {
-
+      team: {
+        handler(newVal) {
+          if (!newVal || newVal.length == 0) {
+            return false;
+          }
+          this.selectMember = newVal[0];
+        },
+        immediate: true
+      },
+      selectMember(newVal) {
+        if (newVal) {
+          this.getStatisticsCompareLine();
+        }
       }
   }
 };

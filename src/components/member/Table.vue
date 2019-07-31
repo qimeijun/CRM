@@ -43,7 +43,7 @@
             :lock-scroll="true"
             width="30%">
             <el-scrollbar class="scrollbar">
-                <ChangeAdministrator @getManager="getManager" :oldAdminstrator="item" operate="handOver" :params="{type: 'handoverProjectManger'}"></ChangeAdministrator>
+                <ChangeAdministrator @getManager="getManager" :oldAdminstrator="item" operate="handOver" :params="{type: 'handoverProjectManger', id:item.teamId }"></ChangeAdministrator>
             </el-scrollbar>
         </el-dialog>
     </div>

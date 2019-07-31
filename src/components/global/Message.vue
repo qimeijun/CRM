@@ -60,6 +60,7 @@ export default {
     transform: translateX(-50%);
     text-align: center;
     z-index: 9999;
+    transition: top 2s ease-in-out 0s;
     .cont {
         width: 100%;
     }

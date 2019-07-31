@@ -78,7 +78,7 @@ export default {
                     // 是保存用户信息
                     if (this.loginForm.isSave) {
                         let password = "";
-                        this.loginForm.password ? password = CryptoJS.AES.encrypt(this.loginForm.password, "iworku").toString() : null;
+                        this.loginForm.password ? password = CryptoJS.AES.encrypt(this.loginForm.password, this.$global.encryptionKey).toString() : null;
                         let date = new Date();
                         date.setDate(date.getDate() + this.$global.userSaveTime);
                         document.cookie = `password=${password};path=/; expires=${date.toGMTString()}`;

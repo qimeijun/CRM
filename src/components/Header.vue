@@ -21,12 +21,13 @@
               <span>{{ $t("notice.box") }}</span>
               <span style="color: #4937EA; cursor: pointer;" @click="onReadAll">{{ $t("notice.read") }}</span>
             </div>
-            <ul class="list">
-              <li>[系统]sfsdfsdfsdfsdfsdfsd</li>
-              <li>[系统]sfsdfsdfsdfsdfsdfsd</li>
-              <li>[系统]sfsdfsdfsdfsdfsdfsd</li>
-              <li>[系统]sfsdfsdfsdfsdfsdfsd</li>
-              <li class="read">[系统]sfsdfsdfsdfsdfsdfsd</li>
+            <ul class="list" v-if="noticeList && noticeList.length > 0">
+              <li v-for="(item, index) in noticeList" :class="[item.messageStatus == 2 ? 'read': '']" :key="index">
+                [{{ item.title }}]{{ item.content }}
+              </li>
+            </ul>
+            <ul v-else>
+              <li style="height: 100px; line-height: 100px; text-align: center;">{{ $t("public.tips.noData") }}</li>
             </ul>
             <div class="check-all">
               <span style="cursor: pointer;" @click="$router.push({ path: '/notice' });">{{ $t("notice.checkAll") }}</span>
@@ -84,14 +85,21 @@
 <script>
 import Vue from "vue"
 import { mapGetters } from 'vuex'
+import WebsocketHeartbeatJs from 'websocket-heartbeat-js';
 export default {
   data() {
     return {
-      visible: false
+      visible: false,
+      noticeList: [],
+      websocket: {}
     };
   },
   computed: {
     ...mapGetters('ipublic', ['userInfo'])
+  },
+  created() {
+    this.getNewNotice();
+    this.connectSocket();
   },
   methods: {
     /**
@@ -100,26 +108,72 @@ export default {
     onChangeLang() {
       if (this.$lang == "en") {
         Vue.config.lang = "zh";
+        window.localStorage.setItem('lang', 'zh');
       } else {
         Vue.config.lang = "en";
+        window.localStorage.setItem('lang', 'en');
       }
     },
     /**
      * 页面刷新
      */
     onRefresh() {
-      window.reload();
+      window.location.reload();
     },
     /**
      *  将全部消息设置为已读
      */
-    onReadAll() {},
+    onReadAll() {
+      this.$http.post('/user/message/status/update').then(res => {
+        if (res.iworkuCode == 200) {
+          // 将消息状态修改为已读
+          this.noticeList.map(val => val.messageStatus = 2);
+          this.$imessage({
+            type: "success",
+            content: this.$t("public.tips.success")
+          });
+        }
+      });
+    },
+    /**
+     *  获取最新的5条站内信
+     */
+    getNewNotice() {
+      this.$http.post('/user/message/withpaginglist', {
+        pageSize: 5,
+        pageNum: 1
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.noticeList = res.datas;
+        }
+      });
+    },
     /**
      *  账号退出
      */
     onLogout() {
       this.$store.commit('ipublic/$_remove_userInfo', {});
+      this.websocket.onreconnect = function () {}
       this.$router.push({ path: '/login' });
+    },
+    /**
+     *  连接 websocket
+     */
+    connectSocket() {
+      let _this = this;
+      this.websocket = new WebsocketHeartbeatJs({
+          url: `${process.env.VUE_APP_WEBSOCKET}${this.userInfo.id}`
+      });
+      this.websocket.onopen = function () {
+          _this.websocket.send('hello server');
+      }
+      this.websocket.onmessage = function (e) {
+          let res = JSON.parse(e.data);
+          if (res.status == 3) {
+              _this.getNewNotice();
+          }
+      }
+      
     }
   }
 };
@@ -191,6 +245,11 @@ $border-color: #EBEAEE;
       line-height: 40px;
       font-size: 15px;
       border-bottom: 1px solid $border-color;
+      li {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
     .read {
       color: #BBBBBB;

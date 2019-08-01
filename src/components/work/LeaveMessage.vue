@@ -107,7 +107,8 @@ export default {
                 content: this.$t("public.tips.success"),
                 type: "success"
               });
-              this.$emit("onOperateSuccess");
+              this.onCancelForm(formName);
+              this.$emit("onCloseLeaveMessage");
             }
           });
         }
@@ -119,7 +120,6 @@ export default {
     onCancelForm(formName) {
       this.$refs[formName].resetFields();
       this.messageForm.attachment = [];
-      this.$emit("onCloseLeaveMessage");
     },
     /**
      *  附件上传之前

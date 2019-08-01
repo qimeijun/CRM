@@ -285,7 +285,7 @@ export default {
         immediate: true
       },
       selectMember(newVal) {
-        if (newVal) {
+        if (newVal && this.params.type == 'compare') {
           this.getStatisticsCompareLine();
         }
       }

@@ -56,7 +56,8 @@ axios.interceptors.response.use((response) => {
 // 获取浏览器cookie
 function getCookie(name) {
     var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
-    if (arr = document.cookie.match(reg))
+    arr = document.cookie.match(reg)
+    if (arr && arr.length > 0)
         return unescape(arr[2]);
     else
         return null;

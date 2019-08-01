@@ -19,7 +19,7 @@
           <div class="head__notice">
             <div class="top">
               <span>{{ $t("notice.box") }}</span>
-              <span style="color: #4937EA; cursor: pointer;" @click="onReadAll">{{ $t("notice.read") }}</span>
+              <span v-if="noticeList && noticeList.length > 0" style="color: #4937EA; cursor: pointer;" @click="onReadAll">{{ $t("notice.read") }}</span>
             </div>
             <ul class="list" v-if="noticeList && noticeList.length > 0">
               <li v-for="(item, index) in noticeList" :class="[item.messageStatus == 2 ? 'read': '']" :key="index">
@@ -33,7 +33,7 @@
               <span style="cursor: pointer;" @click="$router.push({ path: '/notice' });">{{ $t("notice.checkAll") }}</span>
             </div>
           </div>
-          <el-badge slot="reference" is-dot class="head__right__message">
+          <el-badge slot="reference" :is-dot="noticeList && noticeList.length > 0" class="head__right__message">
             <i class="el-icon-message-solid"></i>
           </el-badge>
         </el-popover>
@@ -63,11 +63,10 @@
               </ul>
               <ul class="today">
                 <li style="font-size: 14px; font-weight: 600;">{{ $t("head.today") }}</li>
-                <li class="list">拜访 Công ty TNHH拜访 Công ty TNHH</li>
-                <li class="list">拜访 Công ty TNHH拜访 Công ty TNHH</li>
-                <li class="list">拜访 Công ty TNHH拜访 Công ty TNHH</li>
-                <li class="list">拜访 Công ty TNHH拜访 Công ty TNHH</li>
-                <li class="list">拜访 Công ty TNHH拜访 Công ty TNHH</li>
+                <template v-if="todayTaskList && todayTaskList.length > 0">
+                <li class="list" v-for="(item, index) in todayTaskList" :key="index">{{ item.scheduleContent }}</li>
+                </template>
+                <li v-else class="list" >{{ $t("public.tips.noData") }}</li>
               </ul>
             </div>
           </div>
@@ -91,7 +90,8 @@ export default {
     return {
       visible: false,
       noticeList: [],
-      websocket: {}
+      websocket: {},
+      todayTaskList: []
     };
   },
   computed: {
@@ -100,6 +100,7 @@ export default {
   created() {
     this.getNewNotice();
     this.connectSocket();
+    this.getTodayTask();
   },
   methods: {
     /**
@@ -173,7 +174,28 @@ export default {
               _this.getNewNotice();
           }
       }
-      
+    },
+    /**
+     *  获取今日工作
+     */
+    getTodayTask() {
+      let time = new Date();
+      let month = time.getMonth() + 1;
+      month < 10 ? month = `0${month}` : null;
+      let date = time.getDate();
+      date < 10 ? date = `0${date}` : null;
+
+      this.$http.post('/user/workbench/schedule/withpaginglist', {
+        scheduleDate: `${time.getFullYear()}-${month}-${date}`,
+        scheduleDatePattern: 'yyyy-MM-dd',
+        userId: this.userInfo.id,
+        pageSize: 5,
+        pageNum: 1
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.todayTaskList = res.datas;
+        }
+      });
     }
   }
 };

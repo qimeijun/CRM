@@ -138,6 +138,11 @@ const router = new VueRouter({
             path: '/login',
             name: 'login',
             component: () => import('./../pages/login.vue')
+        },
+        {
+            path: '*',
+            name: '4-0-4',
+            component: () => import('./../pages/404.vue')
         }
     ]
 });

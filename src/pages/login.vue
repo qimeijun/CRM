@@ -11,16 +11,16 @@
                 <el-form style="width: 50%;" :model="loginForm" :rules="rules" ref="loginForm">
                     <div class="title">{{ $t("login.title") }}</div>
                     <el-form-item label="" prop="email">
-                        <el-input v-model="loginForm.email" :placeholder="$t('login.placeholder.email')"></el-input>
+                        <el-input v-model="loginForm.email" :placeholder="$t('login.placeholder.email')" @keyup.enter.native="onSubmitForm('loginForm')"></el-input>
                     </el-form-item>
                     <el-form-item label="" prop="password">
-                        <el-input type="password" show-password v-model="loginForm.password" :placeholder="$t('login.placeholder.password')"></el-input>
+                        <el-input type="password" show-password v-model="loginForm.password" :placeholder="$t('login.placeholder.password')" @keyup.enter.native="onSubmitForm('loginForm')"></el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <el-checkbox v-model="loginForm.isSave">{{ $t("login.autoLogin") }}</el-checkbox>
                     </el-form-item>
                     <el-form-item label="">
-                        <el-button :loading="submitBtnLoading" round class="login__btn" @click="onSubmitForm('loginForm')">{{ $t("login.btn") }}</el-button>
+                        <el-button :loading="submitBtnLoading" round class="login__btn" @click="onSubmitForm('loginForm')" @keyup.enter.native="onSubmitForm('loginForm')">{{ $t("login.btn") }}</el-button>
                     </el-form-item>
                 </el-form>
             </div>

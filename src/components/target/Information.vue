@@ -1,10 +1,30 @@
 <template>
-<!-- 资料 -->
+  <!-- 资料 -->
   <div class="target-info">
     <div style="position: fixed; top: 1rem; right: .2rem;">
-      <el-button type="primary" @click="onCancel()">移入公海</el-button>
-      <el-button type="primary" @click="changeAdministratorDialogVisible=true">移交</el-button>
+      <el-button
+        v-show="companyForm.ownUser==2"
+        type="primary"
+        @click="onExplantation(targetid)"
+      >移入公海</el-button>
+      <el-button
+        v-show="companyForm.ownUser==2"
+        type="primary"
+        @click="changeAdministratorDialogVisible=true"
+      >移交</el-button>
+      <el-button
+        v-show="companyForm.ownUser==1"
+        type="primary"
+        @click="allocationShow=true"
+      >{{$t("project.allot")}}</el-button>
+      <el-button
+        v-show="companyForm.status!=4"
+        class="top_button"
+        @click="onCancel(4)"
+      >{{$t("project.invalid")}}</el-button>
+      <el-button v-show="companyForm.status==4" class="top_button" @click="onCancel(1)">激活</el-button>
     </div>
+
     <el-row>
       <el-col>
         <Tag type="target" :id="targetid"></Tag>
@@ -24,15 +44,15 @@
           </div>
           <div class="info_div_content">
             <h5>{{$t("target.info.companyName")}}</h5>
-            <p>{{companyForm.name}}</p>
+            <p>{{companyForm.targetCompanyName}}</p>
             <h5>{{$t("target.info.country")}}</h5>
-            <p>{{companyForm.country}}</p>
+            <p>{{companyForm.targetCompanyCountry}}</p>
             <h5>{{$t("target.info.site")}}</h5>
-            <p>{{companyForm.site}}</p>
+            <p>{{companyForm.targetCompanyAddress}}</p>
             <h5>{{$t("target.info.url")}}</h5>
-            <p>{{companyForm.url}}</p>
+            <p>{{companyForm.targetCompanyWebsite}}</p>
             <h5>{{$t("target.info.phone")}}</h5>
-            <p>{{companyForm.phone}}</p>
+            <p>{{companyForm.targetCompanyTel}}</p>
           </div>
         </div>
         <!-- 目标公司资料 end -->
@@ -48,19 +68,24 @@
           </div>
           <div class="info_div_content">
             <h5>{{$t("target.info.source")}}</h5>
-            <p>{{otherForm.source}}</p>
+            <p>{{otherForm.nodeCustomerSource}}</p>
             <h5>{{$t("target.info.clientType")}}</h5>
-            <p>{{otherForm.type}}</p>
+            <p>{{$lang==$global.lang.en?otherForm.nodeClientTypeEn:otherForm.nodeClientTypeZh}}</p>
             <h5>{{$t("target.info.purchaseScale")}}</h5>
-            <p>{{otherForm.scale}}</p>
+            <p>{{otherForm.nodePurchaseScale}}</p>
             <h5>{{$t("target.info.hsCode")}}</h5>
-            <p>{{otherForm.importance}}</p>
+            <p>{{otherForm.nodeHacode}}</p>
             <h5>{{$t("target.info.importance")}}</h5>
-            <p>{{otherForm.rate}}</p>
+            <el-rate
+              :value="otherForm.nodeGrade-0"
+              disabled
+              :colors="['#E50054','#E50054','#E50054']"
+            ></el-rate>
+            <p>{{$lang==$global.lang.en?otherForm.nodeGradeEn:otherForm.nodeGradeZh}}</p>
             <h5>{{$t("target.info.introduce")}}</h5>
-            <p>{{otherForm.introduce}}</p>
+            <p>{{otherForm.nodeProfile}}</p>
             <h5>{{$t("target.info.remark")}}</h5>
-            <p>{{otherForm.introduce}}</p>
+            <p>{{otherForm.nodeRemarks}}</p>
           </div>
         </div>
         <!-- 其他 end -->
@@ -74,40 +99,40 @@
           </div>
           <div class="info_div_content">
             <el-row>
-              <!-- 目标公司数 -->
+              <!-- 日志总数量 -->
               <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <img src="@/assets/img/img_log.png" alt />
                 <p>
-                  <span>{{overview.targetNum}}</span>
+                  <span>{{overview.count}}</span>
                   <br />
-                  <span>{{$t("workBench.overview.targetNum")}}</span>
+                  <span>日志总数量</span>
                 </p>
               </el-col>
-              <!-- 已拜访 -->
+              <!-- 月报数量 -->
               <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <img src="@/assets/img/img_month.png" alt />
                 <p>
-                  <span>{{overview.vlinkNum}}</span>
+                  <span>{{overview.monthlyReportCount}}</span>
                   <br />
-                  <span>{{$t("workBench.overview.vlinkNum")}}</span>
+                  <span>月报数量</span>
                 </p>
               </el-col>
-              <!-- 意向 -->
-              <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-                <img src="@/assets/img/img_order.png" alt />
-                <p>
-                  <span>{{overview.intentionNum}}</span>
-                  <br />
-                  <span>{{$t("workBench.overview.intentionNum")}}</span>
-                </p>
-              </el-col>
-              <!-- 订单 -->
+              <!-- 周报数量 -->
               <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <img src="@/assets/img/img_week.png" alt />
                 <p>
-                  <span>{{overview.orderNum}}</span>
+                  <span>{{overview.weeklyCount}}</span>
                   <br />
-                  <span>{{$t("workBench.overview.orderNum")}}</span>
+                  <span>周报数量</span>
+                </p>
+              </el-col>
+              <!-- 订单数量 -->
+              <el-col class="content-item" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <img src="@/assets/img/img_order.png" alt />
+                <p>
+                  <span>{{overview.orderLog}}</span>
+                  <br />
+                  <span>订单数量</span>
                 </p>
               </el-col>
             </el-row>
@@ -127,15 +152,15 @@
           </div>
           <div class="info_div_content">
             <h5>{{$t("target.info.keymenName")}}</h5>
-            <p>{{keymenForm.name}}</p>
+            <p>{{keymenForm.personName}}</p>
             <h5>{{$t("target.info.position")}}</h5>
-            <p>{{keymenForm.position}}</p>
+            <p>{{keymenForm.personPosition}}</p>
             <h5>{{$t("target.info.keymenPhone")}}</h5>
-            <p>{{keymenForm.phone}}</p>
+            <p>{{keymenForm.personTel}}</p>
             <h5>{{$t("target.info.email")}}</h5>
-            <p>{{keymenForm.email}}</p>
+            <p>{{keymenForm.personEmail}}</p>
             <h5>{{$t("target.info.social")}}</h5>
-            <p>{{keymenForm.social}}</p>
+            <p>{{keymenForm.personAccount}}</p>
           </div>
         </div>
         <!-- 关键人信息 end -->
@@ -155,15 +180,19 @@
     >
       <el-scrollbar class="scrollbar">
         <!-- 编辑公司资料表单 -->
-        <ChangeCompany v-if="showType==='company'" :companyForm="companyForm"></ChangeCompany>
+        <ChangeCompany
+          v-if="showType==='company'"
+          :companyForm="companyForm"
+          @closeShow="oncloseShow"
+        ></ChangeCompany>
         <!-- 编辑关键人表单 -->
-        <ChangeKeymen v-if="showType==='keymen'" :keymenForm="keymenForm"></ChangeKeymen>
+        <ChangeKeymen v-if="showType==='keymen'" :keymenForm="keymenForm" @closeShow="oncloseShow"></ChangeKeymen>
         <!-- 编辑其他表单 -->
-        <ChangeOther v-if="showType==='other'" :otherForm="otherForm"></ChangeOther>
+        <ChangeOther v-if="showType==='other'" :otherForm="otherForm" @closeShow="oncloseShow"></ChangeOther>
       </el-scrollbar>
     </el-dialog>
     <!-- 编辑弹窗 end -->
-     <!-- 移交管理员的dialog start-->
+    <!-- 移交管理员的dialog start-->
     <el-dialog
       class="el-dialog__scroll"
       :title="$t('selectRegionalManager.title')"
@@ -175,10 +204,35 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ChangeAdministrator  operate="handOver"></ChangeAdministrator>
+        <ChangeAdministrator
+          @getManager="getManager"
+          :oldAdminstrator="overview.targetCompanyUserInfo"
+          :params="{type: 'handOverMemberForProject', id: companyForm.itemId}"
+          operate="handOver"
+        ></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 移交管理员的dialog end-->
+    <!-- 分配 start -->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('project.allot')"
+      :visible.sync="allocationShow"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      width="30%"
+    >
+      <el-scrollbar class="scrollbar">
+        <ChangeAdministrator
+          operate="add"
+          :params="{id:companyForm.itemId, type: 'assignMemberForTarget'}"
+          @getManager="onAssignMember"
+        ></ChangeAdministrator>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 分配 end -->
   </div>
 </template>
 <script>
@@ -198,54 +252,27 @@ export default {
   },
   data() {
     return {
-      overview: {
-        targetNum: 123123,
-        vlinkNum: 23,
-        intentionNum: 4,
-        orderNum: 1
-      },
-      companyForm: {
-        name: "Cong ty Nam binh",
-        country: "Vietnam",
-        site: "037 Okuneva Field",
-        url: "www.alexandrea.us",
-        phone: "0086-510-83898353",
-        email: "schmitt_kirk@hotmail.com"
-      },
-      keymenForm: {
-        name: "Michael Russell",
-        position: "Purchasing manager",
-        phone: "0086-510-832124678",
-        email: "leopold_marvin@hotmail.com",
-        social: "Facebook："
-      },
-      otherForm: {
-        source: "Michael Russell",
-        type: "采购商",
-        scale: "100，000 万美元",
-        importance: "58042910",
-        rate: "3",
-        introduce:
-          "I have detailed below the most cost effective forms of internet marketing to advertising your business using your company website. HTPcompany.com provides marketing, Internet advertising, search engine optimization and sales consulting for businesses, ",
-        note:
-          "I have detailed below the most cost effective forms of internet marketing to advertising your business using your company website. HTPcompany.com provides marketing, Internet advertising, search engine optimization and sales consulting for businesses, "
-      },
+      overview: {},
+      companyForm: {},
+      keymenForm: {},
+      otherForm: {},
       show: false,
-      changeAdministratorDialogVisible:false,
+      changeAdministratorDialogVisible: false,
+      allocationShow:false,
       showType: ""
     };
   },
-   computed: {
-    targetid(){
-      return this.$route.query.targetid
+  computed: {
+    targetid() {
+      return this.$route.params.targetid;
     }
   },
- created() {
+  created() {
     this.getTargetInfo(this.targetid);
   },
   methods: {
     // 移入公海
-     onCancel() {
+    onExplantation(id) {
       this.$msgbox({
         title: "提示",
         message:
@@ -257,30 +284,161 @@ export default {
         center: true
       })
         .then(() => {
-          // 取消删除
-          this.$message({
-            type: "success",
-            message: "取消移入公海"
-          });
+          // 移入公海
+          this.$http
+            .post("/target/company/private/list/update", {
+              idList: [id],
+              type: 2
+            })
+            .then(res => {
+              if (res.iworkuCode == 200) {
+                this.getTargetInfo(id);
+                this.$imessage({
+                  content: this.$t("public.tips.success"),
+                  type: "success"
+                });
+              }
+            });
         })
         .catch(() => {
-          // 确定删除
+          // 取消
           this.$message({
             type: "info",
-            message: "确定移入公海"
+            message: "取消移入公海"
+          });
+        });
+    },
+    // 激活作废  type: 4作废  1激活
+    onCancel(type) {
+      let messageText;
+      if (type == 4) {
+        messageText = "您确定要将这个目标公司作废吗？";
+      } else if (type == 1) {
+        messageText = "您确定要将这个目标公司激活吗？";
+      }
+      this.$msgbox({
+        title: "提示",
+        message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${messageText}</p>`,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showCancelButton: true,
+        dangerouslyUseHTMLString: true,
+        center: true
+      })
+        .then(() => {
+          // 确定
+          if (type == 4 && this.companyForm.ownUser == 2) {
+            // 移入公海
+            this.$http
+              .post("/target/company/private/list/update", {
+                idList: [this.targetid],
+                type: 2
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  this.$http
+                    .post("/target/company/status/update", {
+                      id: this.targetid,
+                      status: type //目标公司状态（ 1.待跟进 2跟进中 3.未跟进 4.作废）
+                    })
+                    .then(res => {
+                      if (res.iworkuCode == 200) {
+                        this.$message({
+                          type: "success",
+                          message: "操作成功"
+                        });
+                        this.getTargetInfo(this.targetid);
+                      }
+                    });
+                }
+              });
+          } else {
+            this.$http
+              .post("/target/company/status/update", {
+                id: this.targetid,
+                status: type //目标公司状态（ 1.待跟进 2跟进中 3.未跟进 4.作废）
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  this.$message({
+                    type: "success",
+                    message: "操作成功"
+                  });
+                  this.getTargetInfo(this.targetid);
+                }
+              });
+          }
+        })
+        .catch(() => {
+          // 取消
+          this.$message({
+            type: "info",
+            message: "已取消操作"
           });
         });
     },
     // 获取目标公司资料
-    getTargetInfo(id){
-      this.$http.get(`/target/company/infobypk/${id}`).then(res=>{
-         console.log(res)
-        if(res.iworkuCode==200){
-         
+    getTargetInfo(id) {
+      this.$http.get(`/target/company/infobypk/${id}`).then(res => {
+        console.log("目标公司", res);
+        if (res.iworkuCode == 200) {
+          this.companyForm = res.datas.targetCompany;
+          this.keymenForm = res.datas.targetCompanyKeyPerson;
+          this.otherForm = res.datas.targetCompanyNodeInfo;
+          this.overview = res.additionalParameters;
         }
-      })
+      });
+    },
+    // 关闭弹窗
+    oncloseShow() {
+      this.show = false;
+      this.getTargetInfo(this.targetid);
+    },
+    // 移交
+    getManager(data) {
+      if (!data || !data.id) {
+        return false;
+      }
+      this.$http
+        .post("/target/company/private/transfer/update", {
+          id: this.targetid,
+          userId: data.id
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.changeAdministratorDialogVisible = false;
+            this.getTargetInfo(this.targetid);
+            this.$imessage({
+              content: this.$t("public.tips.success"),
+              type: "success"
+            });
+          }
+        });
+    },
+    // 给目标公司分配工作人员
+    onAssignMember(data) {
+      if (!data || !data.id) {
+        return false;
+      }
+      let params = [this.targetid];
+      this.$http
+        .post("/target/company/private/list/update", {
+          idList: params,
+          type: 1,
+          userId: data.id
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.allocationShow = false;
+            this.$imessage({
+              content: this.$t("public.tips.success"),
+              type: "success"
+            });
+            this.getTargetInfo(this.targetid);
+          }
+        });
     }
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>

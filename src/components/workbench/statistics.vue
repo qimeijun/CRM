@@ -1,5 +1,5 @@
 <template>
-<!-- 工作台统计图 -->
+  <!-- 工作台统计图 -->
   <div class="iworku-card workbench-variables">
     <div class="variables-top">
       <h3>{{$t("workBench.variables.title")}}</h3>
@@ -12,44 +12,61 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import echarts from "echarts";
 export default {
   data() {
     return {
-      year:"",
-      month:""
+      year: "",
+      month: "",
+      weekList: [],
+      numberList:[]
     };
   },
-  mounted() {
-    let date=new Date();
-      this.year=date.getFullYear();
-      this.month=date.getMonth()+1;
+  computed: {
+    ...mapGetters("ipublic", ["userInfo"])
+  },
+ 
+async created() { 
+ 
+    let date = new Date();
+    this.year = date.getFullYear();
+    this.month = date.getMonth() + 1;
+    let datas= await this.$http
+        .post("/user/team/user/rel/task/month/number", {
+          userId: this.userInfo.id
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            console.log("工作台统计",res)
+            return res.datas;
+          }else{
+            return []
+          }
+        });
+            this.weekList=datas.map(o => {
+              return this.$lang==this.$global.lang.en?`${o.week}st Week`:`第${o.week}周`;
+            });
+            this.numberList=datas.map(o=>{
+              return o.count
+            });
+              console.log(datas,this.weekList, this.numberList);
     // 基于准备好的dom，初始化echarts实例
     let myChart = echarts.init(document.getElementById("variables"));
     // 指定图表的配置项和数据
     let option = {
       color: ["#3398DB"],
-      // tooltip: {
-      //   trigger: "axis",
-      //   axisPointer: {
-      //     // 坐标轴指示器，坐标轴触发有效
-      //     type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
-      //   }
-      // },
-      // legend:{
-      //   show:false
-      // },
       grid: {
         left: "0%",
         right: "0%",
         bottom: "3%",
-        top:"8%", 
+        top: "8%",
         containLabel: true
       },
       xAxis: [
         {
           type: "category",
-          data: ["第一周", "第二周", "第三周", "第四周"],
+          data:this.weekList, 
           axisTick: {
             alignWithLabel: true
           }
@@ -66,7 +83,7 @@ export default {
           name: "直接访问",
           type: "bar",
           barWidth: "30%",
-          data: [10, 52, 78, 40],
+          data: this.numberList,
           itemStyle: {
             barBorderRadius: [100, 100, 0, 0]
           },
@@ -82,7 +99,12 @@ export default {
         }
       ]
     };
-    myChart.setOption(option);
+    myChart.setOption(option,true);
+  },
+  methods: {
+    getStatistics() {
+      
+    }
   }
 };
 </script>

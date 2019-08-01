@@ -97,3 +97,39 @@ export const getTargetType= async ({$http, $store, $lang, $global}) => {
     }
     return targetType;
 }
+
+/**
+ *  获取日程提醒颜色
+ */
+export const getRemindColor= async ({$http, $store, $lang, $global}) => {
+    let remindColor = $store.getters['ipublic/remindColor'];
+    if (remindColor.length == 0) {
+        let params = {sortname: 'd_stort_en'};
+        $lang == $global.lang.en ? params.sortname = 'd_stort_en' : params.sortname = 'd_stort_zh';
+        let res = await $http.post('/properties/dictionary/withoutpaginglist', { treeCode:"SCHEDULE_SHOW_COLOUR",  ...params});
+        if (res.iworkuCode == 200) {
+            remindColor = res.datas;
+            $store.commit('ipublic/$_set_remindColor', res.datas);
+        } else {
+        }
+    }
+    return remindColor;
+}
+
+/**
+ *  获取目标公司重要程度
+ */
+export const getGrade= async ({$http, $store, $lang, $global}) => {
+    let grade = $store.getters['ipublic/grade'];
+    if (grade.length == 0) {
+        let params = {sortname: 'd_stort_en'};
+        $lang == $global.lang.en ? params.sortname = 'd_stort_en' : params.sortname = 'd_stort_zh';
+        let res = await $http.post('/properties/dictionary/withoutpaginglist', { treeCode:"TARGETCOMPANY_GRADE",  ...params});
+        if (res.iworkuCode == 200) {
+            grade = res.datas;
+            $store.commit('ipublic/$_set_grade', res.datas);
+        } else {
+        }
+    }
+    return grade;
+}

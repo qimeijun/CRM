@@ -13,7 +13,7 @@
             :class="activeMenu == item.value ? 'target-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
           >
-            <router-link :to="`/target/detail/${item.route}`">{{ item.name }}</router-link>
+            <router-link :to="`/target/detail/${item.route}/${targetid}`">{{ item.name }}</router-link>
           </li>
         </ul>
       </div>
@@ -53,11 +53,6 @@ export default {
           value: "target_diary",
           route: "diary"
         },
-        {
-          name: this.$t("target.menu[3]"),
-          value: "target_loca",
-          route: "loca"
-        }
       ]
     };
   },
@@ -67,13 +62,18 @@ export default {
   components: {
     PageHeader
   },
+  computed: {
+    targetid(){
+      return this.$route.params.targetid;
+    }
+  },
   methods: {
     /**
      *  切换菜单
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
-      this.$router.push({ path: `/target/detail/${item.route}` });
+      this.$router.push({ path: `/target/detail/${item.route}/${this.targetid}` });
     }
   }
 };

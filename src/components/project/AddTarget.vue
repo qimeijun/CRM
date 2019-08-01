@@ -1,5 +1,5 @@
 <template>
-  <!-- 修改公司资料 -->
+  <!-- 新增公司资料 -->
   <section>
     <ul class="addTarget_ul">
       <li :class="activeName===1?'addTarget_ul_li--current':''">{{$t("target.form.companyTitle")}}</li>
@@ -53,7 +53,7 @@
         label-width="80px"
       >
         <el-form-item :label="$t('target.form.keymenName')">
-          <el-input v-model="keymenForm.name" placeholder="请输入公司名称"></el-input>
+          <el-input v-model="keymenForm.name" placeholder="请输入关键人名"></el-input>
         </el-form-item>
         <el-form-item :label="$t('target.form.position')">
           <el-input v-model="keymenForm.position"></el-input>
@@ -98,10 +98,17 @@
           <el-input v-model="otherForm.scale"></el-input>
         </el-form-item>
         <el-form-item :label="$t('target.form.hsCode')">
-          <el-input v-model="otherForm.importance"></el-input>
+          <el-input v-model="otherForm.hsCode"></el-input>
         </el-form-item>
         <el-form-item :label="$t('target.form.importance')">
-          <el-input v-model="otherForm.rate"></el-input>
+          <!-- <el-input v-model="otherForm.importance"></el-input> -->
+          <el-rate
+            v-model="otherForm.importance"
+            :colors="gradeColors"
+            show-text
+            :texts="gradeTexts"
+            :max="4"
+          ></el-rate>
         </el-form-item>
         <el-form-item :label="$t('target.form.introduce')">
           <el-input type="textarea" :rows="4" v-model="otherForm.introduce"></el-input>
@@ -118,12 +125,18 @@
   </section>
 </template>
 <script>
-import { getCountry, getTargetType } from "@/plugins/configuration.js";
+import {
+  getCountry,
+  getTargetType,
+  getGrade
+} from "@/plugins/configuration.js";
 export default {
   data() {
     return {
       countryList: [],
       targetTypeList: [],
+      gradeTexts: [],
+      gradeColors: ["#E50054", "#E50054", "#E50054"],
       activeName: 1,
       companyForm: {
         name: "",
@@ -144,8 +157,8 @@ export default {
         source: "",
         type: "",
         scale: "",
-        importance: "",
-        rate: "",
+        hsCode: "",
+        importance: 0,
         introduce: "",
         note: ""
       },
@@ -169,7 +182,7 @@ export default {
   },
   computed: {
     itemid() {
-      return this.$route.query.itemid;
+      return this.$route.params.itemid;
     }
   },
   async created() {
@@ -177,6 +190,11 @@ export default {
     this.countryList = await getCountry(this);
     // 公司类型
     this.targetTypeList = await getTargetType(this);
+    // 重要程度
+    let gradeList = await getGrade(this);
+    this.gradeTexts = gradeList.map(o => {
+      return this.$lang == this.$global.lang.en ? o.nameEn : o.nameZh;
+    });
   },
   methods: {
     /**
@@ -204,12 +222,12 @@ export default {
               nodeClientType: this.otherForm.type,
               nodePurchaseScale: this.otherForm.scale,
               nodeHacode: this.otherForm.hsCode,
-              nodeGrade: this.otherForm.rate,
+              nodeGrade: this.otherForm.importance,
               nodeProfile: this.otherForm.introduce,
               nodeRemarks: this.otherForm.note
             };
-            this.$http.post("/target/company/save", params).then(res=>{
-              if(res.iworkuCode==200){
+            this.$http.post("/target/company/save", params).then(res => {
+              if (res.iworkuCode == 200) {
               }
             });
           } else {

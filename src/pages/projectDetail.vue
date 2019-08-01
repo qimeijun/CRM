@@ -14,7 +14,8 @@
             :class="activeMenu == item.value ? 'project-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
           >
-            <router-link :to="`/project/detail/${item.route}?itemid=${itemid}&adminId=${adminId}`">{{ item.name }}</router-link>
+            <router-link :to="`/project/detail/${item.route}/${itemid}/${adminId}`">{{ item.name }}</router-link>
+            <!-- <router-link :to="`/project/detail/${item.route}?itemid=${itemid}&adminId=${adminId}`">{{ item.name }}</router-link> -->
           </li>
         </ul>
       </div>
@@ -37,7 +38,11 @@
 import PageHeader from "@/components/lib/PageHeader.vue";
 import Tag from "@/components/project/Tag.vue";
 import Member from "@/components/project/Member.vue";
-export default {
+export default {  components: {
+    PageHeader,
+    Tag,
+    Member
+  },
   data() {
     return {
       activeMenu: "information",
@@ -81,24 +86,20 @@ export default {
   },
   computed: {
     itemid(){
-      return this.$route.query.itemid
+      return this.$route.params.itemid;
     },
     adminId() {
-      return this.$route.query.adminId;
+      return this.$route.params.adminId;
     }
   },
-  components: {
-    PageHeader,
-    Tag,
-    Member
-  },
+
   methods: {
     /**
      *  切换菜单
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
-      this.$router.push({ path: `/project/detail/${item.route}?itemid=${this.itemid}&adminId=${this.adminId}` });
+      this.$router.push({ path: `/project/detail/${item.route}/${this.itemid}/${this.adminId}` });
     },
   }
 };

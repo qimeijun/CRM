@@ -1,27 +1,32 @@
 <template>
-<!-- 项目公海 -->
+  <!-- 项目公海 -->
   <section class="project-detail-commonality">
     <div style="position:fixed; top: 1rem; right: .2rem; display:flex;">
-      <el-input class="commonality-seek" placeholder="请输入内容" v-model="seek" @keyup.enter.native="getCommonality(itemid, 1)">
-        <i
-          slot="suffix"
-          class="el-input__icon el-icon-search"
-          @click="getCommonality(itemid, 1)"
-        ></i>
+      <el-input
+        class="commonality-seek"
+        placeholder="请输入内容"
+        v-model="seek"
+        @keyup.enter.native="getCommonality(itemid, 1)"
+        @click="getCommonality(itemid, 1)"
+      >
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="getCommonality(itemid, 1)"></i>
       </el-input>
       <el-button type="primary" @click="addShow=true">{{$t("projectInfo.importTarget.add")}}</el-button>
       <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
       <!-- 结束项目 -->
-      <el-button
+      <el-button 
+      v-show="itemStatus!=2"
         class="commonality-endbtn"
-        @click="onDeleteMember(itemid,2)"
+        @click="onDeleteMember(itemid)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button class="commonality-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+      <el-button v-show="itemStatus==2" class="commonality-endbtn" @click="onRestartMember(itemid)">重启项目</el-button>
     </div>
     <div class="commonality_top">
       <!-- 分类 start -->
       <el-select
+        filterable
+        clearable
         class="top_select"
         v-model="targetType"
         placeholder="请选择"
@@ -37,6 +42,8 @@
       <!-- 分类 end -->
       <!-- 标签 start -->
       <el-cascader
+        filterable
+        clearable
         class="top_select"
         v-model="tag"
         :show-all-levels="false"
@@ -45,7 +52,6 @@
       ></el-cascader>
       <!-- 标签 end -->
       <el-button type="primary" @click="allocationShow=true">{{$t("project.allot")}}</el-button>
-      <el-button class="top_button" @click="onCancel()">{{$t("project.invalid")}}</el-button>
     </div>
     <div class="commonality_table">
       <el-table
@@ -64,11 +70,11 @@
         <el-table-column
           prop="status"
           :label="$t('projectInfo.commonality.tableHeader[1]')"
-          width="150"
+          width="200"
         >
           <template slot-scope="scope">
-            <el-rate v-model="scope.row.rate" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
-            <p>重点跟进客户</p>
+            <el-rate :value="scope.row.grade-0" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
+            <p>{{$lang==$global.lang.en?scope.row.gradeEn:scope.row.gradeZh}}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -81,9 +87,9 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="statusNameZh"
+          :prop="$lang==$global.lang.en?'statusNameEn':'statusNameZh'"
           :label="$t('projectInfo.commonality.tableHeader[3]')"
-          width="120"
+          width="150"
         ></el-table-column>
         <el-table-column
           prop="addTimeStr"
@@ -104,7 +110,9 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link :to="`/target/detail?targetid=${scope.row.id}`">{{$t("project.view")}}</router-link>
+                  <router-link
+                    :to="`/target/detail/info/${scope.row.id}`"
+                  >{{$t("project.view")}}</router-link>
                 </li>
                 <li class="table_operation" @click="allocationShow=true; currentTarget=[scope.row]">{{$t("project.allot")}}</li>
                 <li
@@ -194,7 +202,10 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: o.groupNameZh
+                      label:
+                        this.$lang == this.$global.lang.en
+                          ? o.groupNameEn
+                          : o.groupNameZh
                     };
                   });
                   resolve(taglist);
@@ -211,7 +222,10 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: o.labelNameZh,
+                      label:
+                        this.$lang == this.$global.lang.en
+                          ? o.labelNameEn
+                          : o.labelNameZh,
                       leaf: true
                     };
                   });
@@ -226,6 +240,7 @@ export default {
       tag: "",
       targetType: "",
       seek: "",
+      itemStatus:1,
       allocationShow: false,
       addShow: false,
       importShow: false,
@@ -234,16 +249,17 @@ export default {
   },
   computed: {
     itemid() {
-      return this.$route.query.itemid;
+      return this.$route.params.itemid;
     }
   },
   async created() {
     // 获取公司类型
     this.targetTypeList = await getTargetType(this);
     this.getCommonality(this.itemid, 1);
+    this.getItemStatus(this.itemid);
   },
   methods: {
-    onCancel() {
+    onCancel(id) {
       this.$msgbox({
         title: "提示",
         message:
@@ -267,6 +283,7 @@ export default {
                   type: "success",
                   message: "已作废"
                 });
+                this.getCommonality(this.itemid, 1);
               }
             });
         })
@@ -296,7 +313,16 @@ export default {
           }
         });
     },
-     // 结束项目
+     // 获取项目状态
+    getItemStatus(id) {
+      this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
+        if (res.iworkuCode == 200) {
+          console.log(res.datas);
+          this.itemStatus = res.datas.itemStatus;
+        }
+      });
+    },
+    // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
         title: "提示",
@@ -346,7 +372,7 @@ export default {
           this.$http
             .post("/customer/item/update/status", {
               itemId: id,
-              itemStatus: 3
+              itemStatus: 1
             })
             .then(res => {});
           this.$message({
@@ -399,9 +425,9 @@ export default {
   margin-right: 0.1rem;
 }
 .commonality-endbtn {
-      color: $--default-color;
-    }
-.el-icon-search{
+  color: $--default-color;
+}
+.el-icon-search {
   cursor: pointer;
 }
 .commonality_top {

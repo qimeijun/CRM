@@ -66,28 +66,28 @@ const router = new VueRouter({
                     path: '/project/detail', component: () => import('./../pages/projectDetail.vue'),
                     children: [
                         {
-                            path: '/',
+                            path: 'info/:itemid/:adminId',
                             alias: "info",
                             name: "information",
                             component: () => import('./../components/project/Information.vue')
                         },
                         {
-                            path: 'product',
+                            path: 'product/:itemid/:adminId',
                             name: "product",
                             component: () => import('./../components/project/Product.vue')
                         },
                         {
-                            path: 'commonality',
+                            path: 'commonality/:itemid/:adminId',
                             name: 'commonality',
                             component: () => import('./../components/project/Commonality.vue')
                         },
                         {
-                            path: 'private',
+                            path: 'private/:itemid/:adminId',
                             name: 'private',
                             component: () => import('./../components/project/Private.vue')
                         },
                         {
-                            path: 'diary',
+                            path: 'diary/:itemid/:adminId',
                             name: 'diary',
                             component: () => import('./../components/project/WorkDiary.vue')
                         },
@@ -97,26 +97,21 @@ const router = new VueRouter({
                     path: '/target/detail', component: () => import('./../pages/targetDetail.vue'),
                     children:[
                         {
-                            path: '/',
+                            path: 'info/:targetid',
                             alias: "info",
                             name: "target_information",
                             component: () => import('./../components/target/Information.vue')
                         },
                         {
-                            path: 'probe',
+                            path: 'probe/:targetid',
                             name: 'target_probe',
                             component: () => import('./../components/target/Probe.vue')
                         },
                         {
-                            path: 'diary',
+                            path: 'diary/:targetid',
                             name: 'target_diary',
                             component: () => import('./../components/target/WorkDiary.vue')
-                        },
-                        {
-                            path: 'loca',
-                            name: 'target_loca',
-                            component: () => import('./../components/target/Loca.vue')
-                        },
+                        }
                     ]
                 },
                 {
@@ -128,7 +123,13 @@ const router = new VueRouter({
                     path: '/highseas',
                     name: 'highseas',
                     component: () => import('./../pages/highseas.vue')
-                },{
+                },
+                {
+                    path: '/highseas/loca/:targetName',
+                    name:"highseasLoca",
+                    component: () => import('./../pages/highseasLoca.vue')
+                },
+                {
                     path: '/notice',
                     name: 'notice',
                     component: () => import('./../pages/notice.vue')

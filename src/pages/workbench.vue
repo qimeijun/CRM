@@ -4,16 +4,15 @@
       <h2>{{$t("workBench.title")}}</h2>
       <!-- 项目下拉菜单 start -->
       <div class="top_div">
-        <el-select class="workbench_top_select" v-model="value" placeholder="请选择">
+        <el-select class="workbench_top_select" v-model="itemid" placeholder="请选择" filterable>
           <template slot="suffix">
             <i class="el-icon-caret-bottom"></i>
           </template>
-
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="(item,index) in itemList"
+            :key="index"
+            :label="item.itemName"
+            :value="item.itemId"
           ></el-option>
         </el-select>
       </div>
@@ -29,7 +28,7 @@
           <el-row :gutter="10">
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 项目概览 -->
-              <Overview></Overview>
+              <Overview :itemid="itemid"></Overview>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 本月工作 -->
@@ -39,11 +38,11 @@
             <el-row>-->
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 日程提醒 -->
-              <Remind></Remind>
+              <Remind :itemid="itemid"></Remind>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 日程简报 -->
-              <BriefReport></BriefReport>
+              <BriefReport :itemid="itemid"></BriefReport>
             </el-col>
           </el-row>
           <el-row>
@@ -58,47 +57,41 @@
   </div>
 </template>
 <script>
-import BriefReport from "@/components/workbench/briefReport.vue";
-import Calendar from "@/components/workbench/calendar.vue";
-import Overview from "@/components/workbench/overview.vue";
-import Remind from "@/components/workbench/remind.vue";
-import Statistics from "@/components/workbench/statistics.vue";
-import AddProject from "@/components/project/addProject.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
-    BriefReport,
-    Calendar,
-    Overview,
-    Remind,
-    Statistics,
-    AddProject
+    BriefReport: () => import("@/components/workbench/briefReport.vue"),
+    Calendar: () => import("@/components/workbench/calendar.vue"),
+    Overview: () => import("@/components/workbench/overview.vue"),
+    Remind: () => import("@/components/workbench/remind.vue"),
+    Statistics: () => import("@/components/workbench/statistics.vue"),
+    AddProject: () => import("@/components/project/addProject.vue")
   },
   data() {
     return {
-      options: [
-        {
-          value: "选项1",
-          label: "项目1"
-        },
-        {
-          value: "选项2",
-          label: "项目2"
-        },
-        {
-          value: "选项3",
-          label: "项目3"
-        },
-        {
-          value: "选项4",
-          label: "项目4"
-        },
-        {
-          value: "选项5",
-          label: "项目5"
-        }
-      ],
-      value: "选项1"
+      itemList: [],
+      itemid: ""
     };
+  },
+  computed: {
+    ...mapGetters("ipublic", ["userInfo"])
+  },
+  created() {
+    this.getItemList();
+  },
+  methods: {
+    // 获取项目列表
+    getItemList() {
+      this.$http
+        .post("/customer/item/withoutpaginglist")
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            console.log(res);
+            this.itemList = res.datas;
+            this.itemid = res.datas ? res.datas[0].itemId : "";
+          }
+        });
+    }
   }
 };
 </script>
@@ -131,7 +124,6 @@ export default {
 }
 </style>
 <style>
-
 .iworku-workbench .workbench_top_select .el-input__inner {
   background-color: #31376dff;
   color: white;

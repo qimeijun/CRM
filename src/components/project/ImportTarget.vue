@@ -5,7 +5,8 @@
       <h3>1</h3>
       <span class="importTarget-margin">{{$t("projectInfo.importTarget.textTip[0]")}}</span>
       <i class="el-icon-paperclip"></i>
-      <a href target="_blank">导入客户模板.xls</a>
+      <a href target="_blank">客户模板.xls</a>
+      <!-- <input type="file" ref="file" > -->
     </div>
     <!-- 二 -->
     <div class="importTarget_div">
@@ -18,16 +19,20 @@
           :on-progress="getfileProgress"
           :on-success="handleSuccess"
           :before-upload="updatebtnShow"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          :limit="1"
           :on-exceed="handleExceed"
-          :file-list="fileList"
           :show-file-list="false"
+          :file-list="fileList"
         >
-          <div v-if="btnShow">
-            <el-button size="small" type="primary">{{$t("projectInfo.importTarget.uploadBtn[0]")}}</el-button>
-            <span slot="tip" class="el-upload__tip">&nbsp;&nbsp;{{$t("projectInfo.importTarget.textTip[1]")}}</span>
+          <div v-if="btnShow||fileList.length>0">
+            <el-button
+              slot="trigger"
+              size="small"
+              type="primary"
+            >{{$t("projectInfo.importTarget.uploadBtn[0]")}}</el-button>
+            <span
+              slot="tip"
+              class="el-upload__tip"
+            >&nbsp;&nbsp;{{$t("projectInfo.importTarget.textTip[1]")}}</span>
           </div>
           <div v-else>
             <p>
@@ -42,9 +47,9 @@
     <!-- 三 -->
     <div class="importTarget_div">
       <h3>3</h3>
-      <el-radio-group v-model="radio">
-        <el-radio :label="3">{{$t("projectInfo.importTarget.noimport")}}</el-radio>
-        <el-radio :label="6">{{$t("projectInfo.importTarget.coverage")}}</el-radio>
+      <el-radio-group v-model="isCover">
+        <el-radio :label="2">{{$t("projectInfo.importTarget.noimport")}}</el-radio>
+        <el-radio :label="1">{{$t("projectInfo.importTarget.coverage")}}</el-radio>
       </el-radio-group>
     </div>
     <div class="importTarget_button">
@@ -73,24 +78,31 @@
 </template>
 <script>
 export default {
+  props: {
+    itemid: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
+  },
   data() {
     return {
-      radio: 3,
+      isCover: 2,
       btnShow: true,
       btnDisabled: false,
       fileProgress: 0,
       fileImport: 0,
       fileName: "123312312312312312",
       dialogVisible: false,
-      fileList: []
+      fileList: [],
+      value: "",
+      file: {}
     };
   },
   methods: {
-    handleRemove(file, fileList) {
-      //   console.log(file, fileList);
-    },
     handlePreview(file) {
-      //   console.log(file);
+      console.log("handlePreview", file);
     },
     handleExceed(files, fileList) {
       this.$message.warning(
@@ -99,16 +111,16 @@ export default {
         } 个文件，共选择了 ${files.length + fileList.length} 个文件`
       );
     },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
-    },
     updatebtnShow(file) {
-      //   console.log(123, file);
+      console.log(123, file);
       this.btnShow = false;
       this.fileName = file.name;
+      this.file ={ ...file};
+      return false;
     },
     // 获取上传进度
     getfileProgress(event, file, fileList) {
+      console.log("fileprogerss");
       this.fileProgress = parseInt(file.percentage);
     },
     // 上传成功后
@@ -117,13 +129,39 @@ export default {
       this.btnDisabled = false;
     },
     // 一键导入
-    submitFile() {
-      let interval=window.setInterval(() => {
-        this.fileImport++;
-        if (this.fileImport === 100) {
-          window.clearInterval(interval);
+    submitFile(file) {
+      // let interval=window.setInterval(() => {
+      //   this.fileImport++;
+      //   if (this.fileImport === 100) {
+      //     window.clearInterval(interval);
+      //   }
+      // }, 100);
+
+      // console.log(234,this.$refs.file.files);
+console.log(this.file);
+  let parameters = new FormData();
+  parameters.append('isCover', this.isCover);
+  parameters.append('itemId', this.itemid);
+  parameters.append('file', this.file);
+      this.$http.post(
+        "/target/company/resolve",
+       parameters
+        //  isCover:this.isCover,
+        //  itemId:this.itemid,
+        //  file:this.file
+       ,
+        {
+          headers: {
+            // "Cache-Control": "no-cache",
+            "Content-Type":"multipart/form-data"
+          }
         }
-      }, 100);
+      ).then(res=>{
+        
+      });
+    },
+    getFile() {
+      // console.log(123,this.value);
     }
   }
 };

@@ -15,7 +15,7 @@
       <h3>{{$t("projectInfo.menu[1]")}}</h3>
       <el-button
         type="primary"
-        @click="show = true;productFrom=product"
+        @click="show = true;"
       >{{$t("projectInfo.product.view")}}</el-button>
     </div>
     <div class="product_content">
@@ -43,24 +43,7 @@
     </div>
     <div class="product_redact">
       <el-dialog title="修改资料" :visible.sync="show" width="600px">
-        <h1>{{$t("project.from.thirdlyTitle")}}</h1>
-        <el-form :model="productFrom" label-position="top">
-          <el-form-item :label="$t('project.from.productName')">
-            <el-input v-model="productFrom.productName" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.productImg')">
-            <el-input v-model="productFrom.name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.productVideo')">
-            <el-input v-model="productFrom.site" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('project.from.accessory')">
-            <el-input v-model="productFrom.url" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="show = false">{{$t("project.btn.ok")}}</el-button>
-        </div>
+        <ChangeProduct :product="product" @close="show = false"></ChangeProduct>
       </el-dialog>
     </div>
   </section>
@@ -70,23 +53,17 @@ export default {
   components: {
     Attachment: () => import("@/components/lib/Attachment.vue"),
     PhotosView: () => import("@/components/project/PhotosView.vue"),
-    VideoView: () => import("@/components/project/VideoView.vue")
+    VideoView: () => import("@/components/project/VideoView.vue"),
+    ChangeProduct: () => import("@/components/project/ChangeProduct.vue")
   },
   data() {
     return {
       product: {
-        productName: "Wuxi Hariken Electric Tools Co., Ltd.",
+        productName: "",
         imgList: [],
         videoList: [],
         attachmentList: [],
         studyList: []
-      },
-      productFrom: {
-        productName: "",
-        img: [],
-        video: [],
-        attachment: [],
-        study: []
       },
       show: false,
       itemStatus: 1
@@ -113,6 +90,7 @@ export default {
         .then(res => {
           console.log("产品", res);
           if (res.iworkuCode == 200) {
+            this.product.id=res.datas[0].id;
             this.product.productName = res.datas[0].productName;
             // 整理图片
             this.product.imgList = res.datas[0].productNodeList.filter(o => {

@@ -11,12 +11,17 @@ axios.interceptors.request.use((config) => {
     if (userInfo.jwtValue) {
         config.headers[`${userInfo.jwtKey}`] = userInfo.jwtValue;
     }
-    if (config.method == "post" && config.data) {
+   
+   if (config.method == "post" && config.data) {
         // 获取所有的 value
         let values = Object.values(config.data);
         let hasArray = values.find(val => Object.prototype.toString.call(val) == '[object Array]');
         hasArray ? null : config.data = Qs.stringify(config.data);
     }
+    console.log(config);
+    // if(config.url=="http://172.25.4.159:8769/api-crm/target/company/resolve"){
+
+    // }
 return config;
 }, (error) => {
     return Promise.resolve({

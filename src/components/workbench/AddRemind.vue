@@ -1,7 +1,7 @@
 <template>
   <!-- 添加日程提醒 -->
   <div class="workbench-addremind">
-    <el-form :model="dateForm" label-position="left" label-width="80px">
+    <el-form :model="dateForm" label-position="left" label-width="80px" ref="dateForm">
       <!-- 提醒内容 start -->
       <el-form-item label-width="0px">
         <el-input
@@ -15,17 +15,18 @@
         <el-radio-group v-model="dateForm.scheduleShowColour">
           <el-tooltip
             v-for="item in colorTypes"
-            :key="item.value"
+            :key="item.id"
             effect="dark"
             :content="$lang==$global.lang.en?item.nameEn:item.nameZh"
             placement="top"
           >
             <el-radio-button
-              :label="item.value"
+              :label="item.id"
+              :value="item.value"
               :style="'background-color:'+item.value"
               class="addremind_form_color"
             >
-              <i v-if="dateForm.color===item.value" class="el-icon-check"></i>
+              <i v-if="dateForm.scheduleShowColour===item.value" class="el-icon-check"></i>
               <span v-else>&nbsp;</span>
             </el-radio-button>
           </el-tooltip>
@@ -92,7 +93,7 @@
     <div class="addremind_button">
       <el-button
         type="primary"
-        @click="dialogFormVisible = false"
+        @click="onSubmit('dateForm')"
       >{{$t("workBench.addremind.save")}}</el-button>
     </div>
   </div>
@@ -101,11 +102,11 @@
 import { mapGetters } from "vuex";
 import { getRemindColor } from "@/plugins/configuration.js";
 export default {
-  props:{
-    itemid:{
-      type:String,
-      default(){
-        return ""
+  props: {
+    itemid: {
+      type: String,
+      default() {
+        return "";
       }
     }
   },
@@ -113,30 +114,26 @@ export default {
     return {
       remindTypes: [
         {
-          value: "0",
-          label: "不提醒"
-        },
-        {
           value: "1",
-          label: "发送一次"
+          label: "提醒"
         },
         {
           value: "2",
-          label: "每天发送"
+          label: "不提醒"
         }
       ],
       colorTypes: [],
       dateForm: {
         scheduleContent: "",
-        scheduleShowColour: "#D50000FF",
+        scheduleShowColour: "#D50000",
         time: [],
         scheduleNoticeEmail: "",
-        remind: "0",
+        remind: "2",
         targetCompanyId: ""
       }
     };
   },
-    computed: {
+  computed: {
     ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
@@ -145,13 +142,32 @@ export default {
   },
   methods: {
     getTargetList() {
-      this.$http.post("/target/company/withoutpaginglist", {
-        id:this.itemid,
-        memberId:this.userInfo.id,
-        type :2
-      }).then(res => {
-        if (res.iworkuCode == 200) {
-          console.log("添加提醒目标公司列表",res.datas);
+      this.$http
+        .post("/target/company/withoutpaginglist", {
+          id: this.itemid,
+          memberId: this.userInfo.id,
+          type: 2
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            console.log("添加提醒目标公司列表", res.datas);
+          }
+        });
+    },
+    onSubmit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let params={
+            scheduleBeginDate:this.dateForm.time[0],
+scheduleEndDate:this.dateForm.time[1],
+scheduleContent:this.dateForm.scheduleContent,
+scheduleShowColour:this.dateForm.scheduleShowColour,
+scheduleType: this.dateForm.remind,
+userScheduleParticipateList:[{
+  userId:""
+}]
+          }
+          console.log(params)
         }
       });
     }
@@ -167,11 +183,13 @@ export default {
   text-align: center;
   i {
     line-height: 30px;
+    color: white;
   }
 }
 .addremind_button {
   text-align: right;
 }
+
 </style>
 <style>
 .workbench-addremind .el-radio-button__inner {

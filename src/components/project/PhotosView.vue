@@ -9,7 +9,7 @@
       <div class="mask_content">
         <i class="el-icon-back" @click="imgIndex>0?imgIndex--:''"></i>
         <p>
-          <img :src="`${$global.avatarURI}${imgList[0].nodeFiles}`" alt />
+          <img :src="`${$global.avatarURI}${imgList[imgIndex].nodeFiles}`" alt />
         </p>
         <i class="el-icon-right" @click="imgIndex<imgList.length-1?imgIndex++:''"></i>
       </div>

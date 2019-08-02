@@ -1,7 +1,12 @@
 <template>
   <div class="workbench-addProject">
     <el-button class="addProject_button" @click="show = true">{{$t("project.add")}}</el-button>
-    <el-dialog :title="$t('project.add')" :visible.sync="show" width="610px">
+    <el-dialog
+      :title="$t('project.add')"
+      :visible.sync="show"
+      width="610px"
+      :close-on-click-modal="false"
+    >
       <ul class="addProject_ul">
         <li :class="activeName===1?'addProject_ul_li--current':''">{{$t("project.from.firstTitle")}}</li>
         <li
@@ -141,8 +146,14 @@
           <!-- 产品图片 start -->
           <el-form-item :label="$t('project.from.productImg')">
             <el-row v-for="(item,index) in thirdlyForm.imageList" :key="'img'+index">
-              <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
+              <el-col style="position:relative;" :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
                 <img width="80px" :src="`${$global.avatarURI}${item.nodeFiles}`" alt />
+                <el-button
+                  type="primary"
+                  size="mini"
+                  class="deleteimg_btn"
+                  @click="onDeleteImg(index)"
+                >删除</el-button>
               </el-col>
               <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20" style="text-align:right;">
                 <el-input v-model="item.nodeDescription"></el-input>
@@ -160,6 +171,7 @@
                   :action="$global.qiniuURL"
                   :show-file-list="false"
                   accept="image/jpeg, image/gif, image/png, image/bmp"
+                  :on-progress="getImgProgress"
                   :on-success="onUploadAvatarSuccessImg"
                   :before-upload="onBeforeAvatarUploadImg"
                   :data="uploadData"
@@ -176,7 +188,9 @@
                   v-model="imgDescription"
                   autocomplete="off"
                   :placeholder="$t('project.placeholder.describe')"
+                  style="margin-bottom:14px;"
                 ></el-input>
+                <el-progress v-show="imgProgress" :percentage="imgProgress" color="#E50054"></el-progress>
               </el-col>
             </el-row>
           </el-form-item>
@@ -195,8 +209,8 @@
                   accept="video/ogg, video/mp4, video/webm"
                   :on-success="onUploadAvatarSuccessVideo"
                   :before-upload="onBeforeAvatarUploadVideo"
+                  :on-progress="getVideoProgress"
                   :data="uploadData"
-                  ref="uploadVideo"
                   class="video_upload"
                 >
                   <el-button
@@ -235,7 +249,7 @@
                   :key="'accessory'+index"
                   :name="item.nodeFiles"
                   :isDelete="true"
-                  :onDelete="onDeleteAccessory(index)"
+                  @onDelete="onDeleteAccessory(index)"
                 ></Attachment>
                 <el-upload
                   :action="$global.qiniuURL"
@@ -262,7 +276,7 @@
                   :key="'accessory'+index"
                   :name="item.nodeFiles"
                   :isDelete="true"
-                  :onDelete="onDeleteLearn(index)"
+                  @onDelete="onDeleteLearn(index)"
                 ></Attachment>
                 <el-upload
                   :action="$global.qiniuURL"
@@ -314,12 +328,12 @@ export default {
       activeName: 1,
       show: false,
       dialogVisible: false,
-      imgShow: false,
-      videoShow: true,
+      imgShow: true,
       industryList: [],
       uploadData: {},
       imgDescription: "",
       videoPercentage: 0,
+      imgProgress: 0,
       firstForm: {
         account: "",
         accountPassword: ""
@@ -337,17 +351,11 @@ export default {
       },
       thirdlyForm: {
         productName: "",
-        imageList: [
-          {
-            nodeDescription: "123",
-            nodeFiles: "home_img_02_1563935894204.png",
-            nodeType: 1
-          }
-        ],
+        imageList: [],
         videoList: [
           {
-            nodeDescription: "123",
-            nodeFiles: "iworku_Malaysia.mp4",
+            nodeDescription: "",
+            nodeFiles: "",
             nodeType: 2
           }
         ],
@@ -496,7 +504,11 @@ export default {
         nodeType: 1
       });
       this.imgDescription = "";
-      this.imgShow = false;
+      this.imgProgress = 100;
+      setTimeout(() => {
+        this.imgProgress = 0;
+        this.imgShow = false;
+      }, 400);
     },
     /**
      *  附件上传成功
@@ -534,6 +546,7 @@ export default {
             }
           });
       }
+      this.videoPercentage = 100;
       this.thirdlyForm.videoList[0].nodeFiles = response.key;
     },
     // 图片上传之前
@@ -573,6 +586,11 @@ export default {
     getVideoProgress(event, file, fileList) {
       this.videoPercentage = parseInt(file.percentage);
     },
+    // 获取图片上传进度
+    getImgProgress(event, file, fileList) {
+      console.log(event, file, fileList);
+      this.imgProgress = parseInt(file.percentage);
+    },
     videoformat(percentage) {
       return percentage === 100 ? "视频上传成功" : `${percentage}%`;
     },
@@ -580,7 +598,7 @@ export default {
     onDeleteAccessory(index) {
       this.$http
         .post(
-          `/third_party/qiniu/delete/${this.thirdlyForm.attachmentList[index]}`
+          `/third_party/qiniu/delete/${this.thirdlyForm.attachmentList[index].nodeFiles}`
         )
         .then(res => {
           if (res.iworkuCode == 200) {
@@ -590,10 +608,27 @@ export default {
     },
     onDeleteLearn(index) {
       this.$http
-        .post(`/third_party/qiniu/delete/${this.thirdlyForm.learnList[index]}`)
+        .post(
+          `/third_party/qiniu/delete/${this.thirdlyForm.learnList[index].nodeFiles}`
+        )
         .then(res => {
           if (res.iworkuCode == 200) {
             this.thirdlyForm.learnList.splice(index, 1);
+          }
+        });
+    },
+    // 删除图片
+    onDeleteImg(index) {
+      this.$http
+        .post(
+          `/third_party/qiniu/delete/${this.thirdlyForm.imageList[index].nodeFiles}`
+        )
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.thirdlyForm.imageList.splice(index, 1);
+            if (this.thirdlyForm.imageList.length == 0) {
+              this.imgShow = true;
+            }
           }
         });
     }
@@ -685,6 +720,7 @@ export default {
 }
 .video-content {
   position: relative;
+  height: 80px;
   video {
     width: 80px;
     height: 80px;
@@ -700,6 +736,12 @@ export default {
 }
 .reupload_btn {
   padding: 5px 8px;
+}
+.deleteimg_btn {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  transform: translate(-50%, -50%);
 }
 </style>
 <style>

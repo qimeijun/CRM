@@ -169,7 +169,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ImportTarget @close="importShow=false"></ImportTarget>
+        <ImportTarget :itemid="itemid" @close="importShow=false"></ImportTarget>
       </el-scrollbar>
     </el-dialog>
     <!-- 导入目标公司 end-->

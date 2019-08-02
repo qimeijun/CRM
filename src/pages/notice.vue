@@ -7,22 +7,25 @@
                 @click="onChangeMenu(item)">{{ item.name }}</li>
         </ul>
         <el-scrollbar style="height: calc(100vh - 2.1rem);">
-        <div class="notice__items" v-infinite-scroll="scrollLoad">
-            <div class="notice__items-list" v-for="(item, index) in count" :key="index">
+        <div v-if="noticeList && noticeList.length > 0" class="notice__items" v-infinite-scroll="scrollLoad">
+            <div class="notice__items-list" v-for="(item, index) in noticeList" :key="index">
                 <div>
-                    <el-avatar  :size="50" src="https://vodcn.iworku.com/Fv2iSp_yw1RrjYkvKMGZ251BAvT7"></el-avatar>
+                    <el-avatar  :size="50" :src="`${$global.avatarURI}${item.addUserProfileImage}`"></el-avatar>
                 </div>
                 <div class="notice__items-content">
                     <div style="margin-bottom: 10px; color: #BBBBBB;">
-                        <span>{{ $t("notice.menu[1]") }}</span>
-                        <time class="time">2019/02/23 12:00:00</time>
+                        <!-- <span v-if="activeMenu > 0">{{ menuList[parseInt(activeMenu)].name }}</span> -->
+                        <span>{{ item.title }}</span>
+                        <time class="time">{{ item.addTimeStr }}</time>
                     </div>
                     <div style="color: #1E1E1E;">
-                        Gary.P 在项目 DOW CORNING CORPORATION 中作废了目标公司 DOW CORNING CORPORATION！
-                        Gary.P 在项目 DOW CORNING CORPORATION 中作废了目标公司 DOW CORNING CORPORATION！
+                        {{ item.content }}
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-else style="height: 300px; border-radius: 8px; background-color: white; text-align: center; line-height: 300px;">
+            {{ $t("public.tips.noData") }}
         </div>
         </el-scrollbar>
     </section>
@@ -31,50 +34,78 @@
 export default {
     data() {
         return {
-            activeMenu: '1',
-            count: 20
+            activeMenu: '0',
+            count: 20,
+            page: {
+                total: 0,
+                pageNum: 1,
+                pageSize: 10,
+                totalPage: 0
+            },
+            noticeList: []
         }
     },
     computed: {
         menuList() {
             return [{
                 name: this.$t("notice.menu[0]"),
-                value: "1"
+                value: "0"
             },
             {
                 name: this.$t("notice.menu[1]"),
-                value: "2"
+                value: "1"
             },
             {
                 name: this.$t("notice.menu[2]"),
-                value: "3"
+                value: "2"
             },
             {
                 name: this.$t("notice.menu[3]"),
-                value: "4"
+                value: "3"
             },
             {
                 name: this.$t("notice.menu[4]"),
-                value: "5"
+                value: "4"
             },
             {
                 name: this.$t("notice.menu[5]"),
-                value: "6"
+                value: "5"
             }];
         }
     },
+    created() {
+        this.getNotices();
+    },
     methods: {
+        getNotices() {
+            this.$http.post('/user/message/withpaginglist', {
+                messageType: this.activeMenu > 0 ? this.activeMenu : null,
+                pageNum: this.page.pageNum,
+                pageSize: this.page.pageSize
+            }).then(res => {
+                if (res.iworkuCode == 200) {
+                    this.page.pageNum > 1 ? this.noticeList.push(res.datas) : this.noticeList = res.datas;
+                    this.page.total = res.total; 
+                    this.page.totalPage = res.pages;
+                }
+            });
+        },
         /**
          *  切换菜单
          */
         onChangeMenu(item) {
             this.activeMenu = item.value;
+            this.page.pageNum = 1;
+            this.getNotices();
         },
         /**
          *  滚动加载
          */
         scrollLoad() {
-            this.count += 10;
+            this.page.pageNum += 1;
+            if (this.page.pageNum <= this.page.totalPage) {
+                this.getNotices();
+            }
         }
     }
 }

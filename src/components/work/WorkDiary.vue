@@ -35,11 +35,9 @@
                 <template
                     slot="dateCell"
                     slot-scope="{date, data}">
-                    <div :class="(logMap.has(data.day.split('-')[2]) && data.type == 'current-month') ? 'have-log' : ''">
-                        <el-badge :is-dot="logMap.get(data.day.split('-')[2]) && data.type == 'current-month'" class="item">
-                            <span>
-                                {{ data.day.split('-')[2] }}
-                            </span>
+                    <div :class="logMap.has(data.day) ? 'have-log' : ''">
+                        <el-badge :is-dot="logMap.has(data.day) && logMap.get(data.day).unreadDateCount > 0" class="item">
+                            <span>{{ data.day.split('-')[2] }}</span>
                         </el-badge>
                     </div>
                 </template>
@@ -173,10 +171,13 @@ export default {
             // 项目
             this.$http.post('/customer/followup/info/unread/date/withoutpaginglist', params).then(res => {
                 if (res.iworkuCode == 200) {
+                    let unreadCount = 0;
                     res.datas.map(val => {
-                        this.logMap.set(val.followDate.substr(-2), parseInt(val.unreadDateCount) > 0 ? true : false);
+                        unreadCount += parseInt(val.unreadDateCount);
+                        this.logMap.set(val.followDate, val);
                     });
                     this.logMap = new Map(this.logMap);
+                    this.$store.commit('members/$_set_unReadDiary', unreadCount);
                 }
             });
         },
@@ -209,11 +210,11 @@ export default {
             let month = time.getMonth() + 1;
             month < 10 ? month = `0${month}` : null;
 
-            if (!this.logMap.has(`${date}`)) {
+            if (!this.logMap.has(`${time.getFullYear()}-${month}-${date}`)) {
                 return false;
             }
             let params = {
-                followDate: `${time.getFullYear()}-${month}-${time.getDate()}`,
+                followDate: `${time.getFullYear()}-${month}-${date}`,
                 pageSize: this.page.pageSize,
                 pageNum: this.page.pageNum
             };
@@ -239,6 +240,14 @@ export default {
                 let time = new Date(newVal);
                 this.page.pageNum = 1;
                 this.getWorkDiaryByDate(time);
+            } 
+            if (oldVal) {
+                let oldTime = new Date(oldVal);
+                let newTime = new Date(newVal);
+                // 如果原来的年月和更换后的年月不一样，就去请求日历接口
+                if (`${oldTime.getFullYear()}${oldTime.getMonth()}` != `${newTime.getFullYear()}${newTime.getMonth()}`) {
+                    this.getCalendarList();
+                }
             }
         },
         id: {

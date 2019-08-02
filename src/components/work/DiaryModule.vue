@@ -77,7 +77,11 @@
                 <!-- 聊天记录 -->
                 <div v-if="item && item.followLog" class="chat-log">
                     <p style="margin-bottom: 10px;">{{ $t("workDiary.chatLog") }}</p>
-                    <el-image v-for="(cItem, cIndex) in item.followLog.split(';')" :key="cIndex" class="img" :src="`${$global.avatarURI}${cItem}`"></el-image>
+                    <template v-for="(cItem, cIndex) in item.followLog.split(';')">
+                        <a :href="`${$global.avatarURI}${cItem}`" target="_blank" :key="cIndex">
+                            <el-image  class="img" :src="`${$global.avatarURI}${cItem}`"></el-image>
+                        </a>
+                    </template>
                 </div>
                 <!-- 聊天记录 -->
                 <div v-if="item && item.followFiles" class="attachment">
@@ -91,7 +95,7 @@
                 <LeaveMessage  :parent="item" @onOperateSuccess="onQueryDiary"></LeaveMessage>
                 <!-- 留言信息 start -->
                 <template v-if="item && item.nodeList && item.nodeList.length > 0">
-                    <Message v-for="(nItem, nIndex) in item.nodeList" :key="nIndex" :message="nItem"></Message>
+                    <Message v-for="(nItem, nIndex) in item.nodeList" :key="nIndex" :message="nItem" @onCloseLeaveMessage="onQueryDiary"></Message>
                 </template>
                 
                 <!-- 留言信息 end -->
@@ -154,13 +158,12 @@ export default {
          *  根据ID查询详情
          */
         onQueryDiary() {
-            if (this.$parent.type == 'project') {
-                this.$http.get(`/customer/followup/info/infobypk/${this.diary.id}`).then(res => {
-                    if (res.iworkuCode == 200) {
-                        this.item = res.datas;
-                    }
-                });
-            }
+            
+            this.$http.get(`/customer/followup/info/infobypk/${this.diary.id}`).then(res => {
+                if (res.iworkuCode == 200) {
+                    this.item = res.datas;
+                }
+            });
         },
         /**
          *  留言菜单操作

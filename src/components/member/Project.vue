@@ -4,9 +4,10 @@
       class="member-project__table"
       :data="tableData"
       style="width: 100%"
+      header-row-class-name="table-header"
       :default-sort="{prop: 'date', order: 'descending'}"
     >
-      <el-table-column prop="itemNumber" label="ID" sortable width="180"></el-table-column>
+      <el-table-column prop="itemNumber" label="ID" sortable width="80"></el-table-column>
       <el-table-column prop="itemName" :label="$t('memberInfo.projectTable[0]')"></el-table-column>
       <el-table-column :label="$t('memberInfo.projectTable[1]')" sortable>
         <template slot-scope="scope">
@@ -30,9 +31,9 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column prop="day" :label="$t('memberInfo.projectTable[4]')" sortable></el-table-column>
-      <el-table-column prop="addTimeStr" :label="$t('memberInfo.projectTable[5]')" sortable></el-table-column>
-      <el-table-column :label="$t('memberInfo.projectTable[6]')">
+      <el-table-column prop="day" :label="$t('memberInfo.projectTable[4]')" sortable width="120"></el-table-column>
+      <el-table-column prop="addTimeStr" :label="$t('memberInfo.projectTable[5]')" sortable width="200"></el-table-column>
+      <el-table-column :label="$t('memberInfo.projectTable[6]')" width="120">
         <template slot-scope="scope">
           <span class="member-project__delete" @click="onDelete(scope.row, scope.$index)">{{ $t("memberInfo.btn.shiftOutProject") }}</span>
         </template>
@@ -257,8 +258,6 @@ export default {
             }
           });
         } else if (this.currentProjectManger.type == 'handOverMemberForProject') {
-          console.log(this.currentProjectManger);
-          console.log(data);
           // 普通成员的移交
           this.$http.post('/user/item/user/rel/remove', {
             userId: this.userId,
@@ -293,6 +292,17 @@ export default {
     margin-right: 0.05rem;
     margin-bottom: 0.05rem;
     background-color: #8D43FF;
+    border: none;
+  }
+}
+</style>
+<style lang="scss">
+.member-project {
+  .table-header {
+      font-size: 12px;
+    }
+  .el-table th > .cell {
+    font-size: 14px;
   }
 }
 </style>

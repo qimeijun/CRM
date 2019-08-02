@@ -13,7 +13,7 @@
           :class="activeMenu == item.value ? 'member-details__menu-active' : ''"
           @click="onChangeMenu(item)"
         >
-        <el-badge v-if="item.value == 'member-diary'" :value="5" class="member-details__badge">
+        <el-badge v-if="item.value == 'member-diary' && unReadDiary > 0" :value="unReadDiary" class="member-details__badge">
           <span>{{ item.name }}</span>
         </el-badge>
         <span v-else>
@@ -40,7 +40,7 @@ export default {
     PageHeader
   },
   computed: {
-    ...mapGetters("members", ["memberInfo"]),
+    ...mapGetters("members", ["memberInfo", "unReadDiary"]),
     menuList() {
       return [
         {

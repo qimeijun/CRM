@@ -109,7 +109,6 @@ export default {
       this.$http.get(`/user/info/infobypk/${this.id}`).then(res => {
         if (res.iworkuCode == 200) {
           this.userInfo = res.datas;
-          // this.$store.commit('members/$_set_username', this.userInfo.userNameZh);
         }
       });
     },
@@ -266,7 +265,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .member-info {
-  margin: 20px 0;
+  margin: 10px 0;
   &__user {
     display: flex;
     justify-content: space-between;

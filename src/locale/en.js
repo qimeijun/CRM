@@ -56,7 +56,7 @@ export default {
             price: "Order Price",
             description: "Order Description"
         },
-         orderType: ["Normal", "Abnormal"]
+        orderType: ["Normal", "Abnormal"]
     },
     member: {
         add: "Add New Member",
@@ -72,7 +72,9 @@ export default {
             team: "Team",
             account: "Login Account",
             password: "Login Password",
-            country: "Country"
+            country: "Country",
+            city: "City",
+            region: "Regional Manager",
         },
         rules: {
             avatar: "Please upload the work photo",
@@ -83,7 +85,8 @@ export default {
             account: ["Please input a login account", "please input your vaild email"],
             password: ["Please input a login password", "Password cannot be less than eight digits and cannot have special characters"],
             gender: "Please select a member gender",
-            country: "Please select a country"
+            country: "Please select a country",
+            region: "Please select a regional manager",
         },
         placeholder: {
             account: "Please input a email",
@@ -167,8 +170,8 @@ export default {
         btn: {
             shiftIn: "Move into public",
             shiftOut: "Out",
-            handOver: "Hand Over",
             modify: "Edit",
+            handOver: "Hand Over",
             password: "Edit Password",
             shiftOutProject: "Out",
             addDiary: "Add Work Log"
@@ -213,7 +216,7 @@ export default {
             confirm: "Confirm Modification",
             add: "Add"
         },
-         statistics: ['Monthly Champion']
+        statistics: ['Monthly Champion']
     },
     public: {
         btn: {
@@ -233,9 +236,9 @@ export default {
         tips: {
             success: "Successful!",
             error: "Failed, please try again later!",
-             noData: "No Datas"
+            noData: "No Datas"
         },
-         page: {
+        page: {
             prePage: "Previous Page",
             nextPage: "Next Page"
         }
@@ -261,7 +264,7 @@ export default {
             vlinkNum: "Number of Target Companies Visited",
             intentionNum: "Intention Target Company",
             orderNum: "Order",
-            btn:"Edit"
+            btn: "Edit"
         },
         variables: {
             title: "Work of this Month",
@@ -289,7 +292,6 @@ export default {
                 email: "Email",
                 target: "Target",
                 people: "Person",
-
             },
             placeholder: {
                 content: "Title",
@@ -375,11 +377,11 @@ export default {
     project: {
         title: "Project Management",
         add: "Add New Projects",
-        allot:"Assign",
-        invalid:"Cancel",
-        transfer:"Transfer",
-        intoSea:" Move to Public",
-        view:"View",
+        allot: "Assign",
+        invalid: "Cancel",
+        transfer: "Transfer",
+        intoSea: " Move to Public",
+        view: "View",
         placeholder: {
             seek: "Search Project, Address",
             tag: "Tag",
@@ -389,7 +391,7 @@ export default {
             site: "Address",
             url: "Website",
             email: "Email",
-            intro:"Introduction",
+            intro: "Introduction",
             strength: "Advantages",
             productName: "Product",
             describe: "Description",
@@ -406,7 +408,7 @@ export default {
             site: "Address",
             url: "Website",
             email: "Email",
-            intro:"Introduction",
+            intro: "Introduction",
             strength: "Advantages",
             productName: "Product",
             productImg: "Picture",
@@ -421,42 +423,43 @@ export default {
             perfect: "Complete Your Profile",
             continue: "Continue",
             ok: "Completed",
-            edit:"Edit"
+            edit: "Edit"
         },
-        tableHeader:["ID","Project","Status","Administrator","Tag","Working Days","Add date","Operate"]
+        tableHeader: ["ID", "Project", "Status", "Administrator", "Tag", "Working Days", "Add date", "Operate"],
+        status: ["进行中", "已结束", "重启项目", "新项目"]
     },
-    projectInfo:{
-        title:"Details",
-        endProject:"End the Project",
-        menu:["Info","Product","Public Client","Private","Work Log"],
-        member:{
-            title:"Member",
-            add:"Add Member",
-            target:["Target","Home"],
-            time:["Working time","days"]
+    projectInfo: {
+        title: "Details",
+        endProject: "End the Project",
+        menu: ["Info", "Product", "Public Client", "Private", "Work Log"],
+        member: {
+            title: "Member",
+            add: "Add Member",
+            target: ["Target", "Home"],
+            time: ["Working time", "days"]
         },
-        commonality:{
-            tableHeader:["Target","Importance","Update date","status","Creat Time","Completeness","Operate"]
+        commonality: {
+            tableHeader: ["Target", "Importance", "Update date", "status", "Creat Time", "Completeness", "Operate"]
         },
-        importTarget:{
-            add:"Add new Target",
-            import:"Import Target",
-            textTip:["Fill in the Form according to the Templat","Size not exceeding 5M","Importing , please wait..."],
-            uploadBtn:["Upload","Upload again","Click to Import"],
-            dialogTitle:"Prompt",
-            noimport:"Not import",
-            coverage:"Cover"
+        importTarget: {
+            add: "Add new Target",
+            import: "Import Target",
+            textTip: ["Fill in the Form according to the Templat", "Size not exceeding 5M", "Importing , please wait..."],
+            uploadBtn: ["Upload", "Upload again", "Click to Import"],
+            dialogTitle: "Prompt",
+            noimport: "Not import",
+            coverage: "Cover"
         },
-        tag:{
-            title:"Tag",
-            detele:"Delete",
-            ok:"Completed",
-            dialogTitle:"Add Tag"
+        tag: {
+            title: "Tag",
+            detele: "Delete",
+            ok: "Completed",
+            dialogTitle: "Add Tag"
         },
-        product:{
-            accessory:"Attachment (Catalogue)",
-            study:"Reference Info",
-            view:"Edit"
+        product: {
+            accessory: "Attachment (Catalogue)",
+            study: "Reference Info",
+            view: "Edit"
         }
     },
     notice: {
@@ -481,8 +484,8 @@ export default {
         btn: "Log In"
     },
     target: {
-        title:"Details of Target",
-        menu:["Info","Research Report","Work Log","Project"],
+        title: "Details of Target",
+        menu: ["Info", "Research Report", "Work Log", "Project"],
         form: {
             companyTitle: "Company",
             keymenTitle: "Key Person",
@@ -504,48 +507,51 @@ export default {
             importance: "Importance",
             introduce: "Introduction",
             remark: "Remark",
-            btn:"Done"
+            btn: "Done"
         },
-        info:{
-            companyTitle:"Target profile",
-            keymenTitle:"Key Person",
-            otherTitle:"Other",
-            overviewTitle:"Overview",
-            companyName:"Company Name",
-            country:"Country",
-            site:"Address",
-            url:"Website",
-            phone:"Tel",
-            keymenName:"Key Person",
-            position:"Position",
-            keymenPhone:"Tel",
-            email:"Email",
-            social:"Social Account",
-            source:"Source",
-            clientType:"Type",
-            purchaseScale:"Purchase Scale",
-            hsCode:"HS Code",
-            importance:"Importance",
-            introduce:"Introduction",
-            remark:"Remark",
-            btn:"Edit"
+        info: {
+            companyTitle: "Target profile",
+            keymenTitle: "Key Person",
+            otherTitle: "Other",
+            overviewTitle: "Overview",
+            companyName: "Company Name",
+            country: "Country",
+            site: "Address",
+            url: "Website",
+            phone: "Tel",
+            keymenName: "Key Person",
+            position: "Position",
+            keymenPhone: "Tel",
+            email: "Email",
+            social: "Social Account",
+            source: "Source",
+            clientType: "Type",
+            purchaseScale: "Purchase Scale",
+            hsCode: "HS Code",
+            importance: "Importance",
+            introduce: "Introduction",
+            remark: "Remark",
+            btn: "Edit"
         },
         next: "Next",
         finish: "Finish",
-        probe:{
-            upload:"Upload a Report",
-            update:"Edit the Report",
-            delete:"Delete",
-            title:"Research Report",
-            textTip:["Fill in Form according to Template","Size not exceeding 5M","Importing, please Wait···"],
-            uploadBtn:["Click to Upload","Upload Again","Upload Now"],
-            dialogTitle:"Prompt"  
+        probe: {
+            upload: "Upload a Report",
+            update: "Edit the Report",
+            delete: "Delete",
+            title: "Research Report",
+            textTip: ["Fill in Form according to Template", "Size not exceeding 5M", "Importing, please Wait···"],
+            uploadBtn: ["Click to Upload", "Upload Again", "Upload Now"],
+            dialogTitle: "Prompt"
         },
-        loca:{
-            tableHeader:["ID","Project","Status","Administration","Tag","Working days","Add date","Operate"],
-            view:"View"
+        loca: {
+            tableHeader: ["ID", "Project", "Status", "Administration", "Tag", "Working days", "Add date", "Operate"],
+            view: "View"
         },
         status: ["待跟进", "跟进中", "未跟进", "作废"],
         importanceStatus: ["待跟进", "资料完善", "有跟进记录", "一般意向客户", "重点跟进客户", "已有成交客户"]
+    },
+    page404: {
+        btn: "Try back to the home page"
     }
 }

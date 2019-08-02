@@ -139,6 +139,11 @@ const router = new VueRouter({
             path: '/login',
             name: 'login',
             component: () => import('./../pages/login.vue')
+        },
+        {
+            path: '*',
+            name: '4-0-4',
+            component: () => import('./../pages/404.vue')
         }
     ]
 });
@@ -149,7 +154,7 @@ router.beforeEach((to, from, next) => {
     if (to.name == 'login') {
         (userInfo && userInfo.jwtValue && userInfo.id) ? next({path: '/'}) : next(); 
     } else {
-        next();
+        !userInfo.id ? next({ path: '/login' }) : next();
     }
 });
 export default router;

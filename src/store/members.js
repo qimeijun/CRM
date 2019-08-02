@@ -11,7 +11,9 @@ export default {
         // 成员密码
         password: "",
         // 当前查看信息的用户
-        memberInfo: {}
+        memberInfo: {},
+        // 工作日志中的未读消息
+        unReadDiary: 0
     },
     // 提交
     mutations: {
@@ -24,6 +26,9 @@ export default {
         $_set_memberInfo(state, value) {
             session.set("memberInfo", value);
             state.memberInfo = value;
+        },
+        $_set_unReadDiary(state, value) {
+            state.unReadDiary = value;
         }
     },
     // 提交到 mutations 中
@@ -46,6 +51,9 @@ export default {
             } else {
                 return session.get("memberInfo") || {};
             }
+        },
+        unReadDiary: state => {
+            return state.unReadDiary;
         }
     }
 };

@@ -73,7 +73,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="updateTimeStr" :label="$t('memberInfo.priviteTable[2]')"></el-table-column>
+      <el-table-column prop="updateTimeStr" :label="$t('memberInfo.priviteTable[2]')" width="200"></el-table-column>
       <el-table-column
         prop="statusNameZh"
         :label="$t('memberInfo.priviteTable[3]')"
@@ -83,7 +83,7 @@
       ></el-table-column>
       <el-table-column prop="addTimeStr" :label="$t('memberInfo.priviteTable[4]')"></el-table-column>
       <el-table-column prop="division" :label="$t('memberInfo.priviteTable[5]')"></el-table-column>
-      <el-table-column :label="$t('memberInfo.priviteTable[6]')">
+      <el-table-column :label="$t('memberInfo.priviteTable[6]')" width="120">
         <template slot-scope="scope">
           <Operate>
             <ul class="member-private__operate">

@@ -13,7 +13,7 @@
       <el-form-item :label="`${$t('workDiary.form.projectName')}`" prop="projectName">
         <el-select v-model="diaryForm.projectName" filterable placeholder @change="onChangeProject">
           <template v-if="projectList && projectList.length > 0">
-            <el-option v-for="(item, index) in projectList" :key="index" :label="item.companyName" :value="item.itemId"></el-option>
+            <el-option v-for="(item, index) in projectList" :key="index" :label="item.itemName" :value="item.itemId"></el-option>
           </template>
         </el-select>
       </el-form-item>
@@ -278,11 +278,13 @@ export default {
      *  id: 项目ID
      */
     getTarget(id) {
+      if (!id) {
+        return false;
+      }
       // 根据项目ID查询当前登录人的私海
       this.$http.post('/target/company/withoutpaginglist', {
         id: id,
-        type: 2,
-        memberId: this.userInfo.id
+        type: 2
       }).then(res => {
         if (res.iworkuCode == 200) {
           this.targetList = res.datas;
@@ -333,7 +335,6 @@ export default {
             });
           } else {
             // 添加工作日志
-              
               this.submitBtnLoading = true;
               this.$http.post('/customer/followup/info/save', params).then(res => {
                 this.submitBtnLoading = false;

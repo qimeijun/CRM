@@ -12,10 +12,10 @@
             </div>
             <div>{{ $lang == $global.en ? item.roleName : item.roleName }}</div>
             <div>{{ item.team }}</div>
-            <div>{{ item.targetCompanyCount }}</div>
-            <div>{{ item.targetCompanyCount }}</div>
-            <div>{{ item.addTimeStr }}</div>
-            <div>
+            <div>{{ item.targetCompanyProcessingCount || 0}}</div>
+            <div>{{ item.targetCompanyCount || 0 }}</div>
+            <div style="flex: .8">{{ item.addTimeStr }}</div>
+            <div style="flex: .3">
             <Operate>
                 <ul>
                   <li class="member-table-list__click" @click="onRoute">
@@ -24,7 +24,8 @@
                   <li v-if="item.userRole == $global.userRole.projectManager" class="member-table-list__click" @click="onHandAdministrator(item)">
                       {{ $t("memberManagement.operate[1]") }}
                   </li>
-                  <li v-if="item.userRole == $global.userRole.member"
+                  <!-- 删除： 成员、项目经理（没有任何的员工前提下） -->
+                  <li v-if="((item.userRole == $global.userRole.member) || (item.userRole == $global.userRole.projectManager && item.userList && item.userList.length == 0))"
                       class="member-table-list__click"
                       @click="onDeleteMember(item)"
                   >{{ $t("memberManagement.operate[2]") }}</li>

@@ -19,20 +19,21 @@
           <div class="head__notice">
             <div class="top">
               <span>{{ $t("notice.box") }}</span>
-              <span style="color: #4937EA; cursor: pointer;" @click="onReadAll">{{ $t("notice.read") }}</span>
+              <span v-if="noticeList && noticeList.length > 0" style="color: #4937EA; cursor: pointer;" @click="onReadAll">{{ $t("notice.read") }}</span>
             </div>
-            <ul class="list">
-              <li>[系统]sfsdfsdfsdfsdfsdfsd</li>
-              <li>[系统]sfsdfsdfsdfsdfsdfsd</li>
-              <li>[系统]sfsdfsdfsdfsdfsdfsd</li>
-              <li>[系统]sfsdfsdfsdfsdfsdfsd</li>
-              <li class="read">[系统]sfsdfsdfsdfsdfsdfsd</li>
+            <ul class="list" v-if="noticeList && noticeList.length > 0">
+              <li v-for="(item, index) in noticeList" :class="[item.messageStatus == 2 ? 'read': '']" :key="index">
+                [{{ item.title }}]{{ item.content }}
+              </li>
+            </ul>
+            <ul v-else>
+              <li style="height: 100px; line-height: 100px; text-align: center;">{{ $t("public.tips.noData") }}</li>
             </ul>
             <div class="check-all">
               <span style="cursor: pointer;" @click="$router.push({ path: '/notice' });">{{ $t("notice.checkAll") }}</span>
             </div>
           </div>
-          <el-badge slot="reference" is-dot class="head__right__message">
+          <el-badge slot="reference" :is-dot="noticeList && noticeList.length > 0" class="head__right__message">
             <i class="el-icon-message-solid"></i>
           </el-badge>
         </el-popover>
@@ -62,11 +63,10 @@
               </ul>
               <ul class="today">
                 <li style="font-size: 14px; font-weight: 600;">{{ $t("head.today") }}</li>
-                <li class="list">拜访 Công ty TNHH拜访 Công ty TNHH</li>
-                <li class="list">拜访 Công ty TNHH拜访 Công ty TNHH</li>
-                <li class="list">拜访 Công ty TNHH拜访 Công ty TNHH</li>
-                <li class="list">拜访 Công ty TNHH拜访 Công ty TNHH</li>
-                <li class="list">拜访 Công ty TNHH拜访 Công ty TNHH</li>
+                <template v-if="todayTaskList && todayTaskList.length > 0">
+                <li class="list" v-for="(item, index) in todayTaskList" :key="index">{{ item.scheduleContent }}</li>
+                </template>
+                <li v-else class="list" >{{ $t("public.tips.noData") }}</li>
               </ul>
             </div>
           </div>
@@ -84,14 +84,23 @@
 <script>
 import Vue from "vue"
 import { mapGetters } from 'vuex'
+import WebsocketHeartbeatJs from 'websocket-heartbeat-js';
 export default {
   data() {
     return {
-      visible: false
+      visible: false,
+      noticeList: [],
+      websocket: {},
+      todayTaskList: []
     };
   },
   computed: {
     ...mapGetters('ipublic', ['userInfo'])
+  },
+  created() {
+    this.getNewNotice();
+    this.connectSocket();
+    this.getTodayTask();
   },
   methods: {
     /**
@@ -100,26 +109,93 @@ export default {
     onChangeLang() {
       if (this.$lang == "en") {
         Vue.config.lang = "zh";
+        window.localStorage.setItem('lang', 'zh');
       } else {
         Vue.config.lang = "en";
+        window.localStorage.setItem('lang', 'en');
       }
     },
     /**
      * 页面刷新
      */
     onRefresh() {
-      window.reload();
+      window.location.reload();
     },
     /**
      *  将全部消息设置为已读
      */
-    onReadAll() {},
+    onReadAll() {
+      this.$http.post('/user/message/status/update').then(res => {
+        if (res.iworkuCode == 200) {
+          // 将消息状态修改为已读
+          this.noticeList.map(val => val.messageStatus = 2);
+          this.$imessage({
+            type: "success",
+            content: this.$t("public.tips.success")
+          });
+        }
+      });
+    },
+    /**
+     *  获取最新的5条站内信
+     */
+    getNewNotice() {
+      this.$http.post('/user/message/withpaginglist', {
+        pageSize: 5,
+        pageNum: 1
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.noticeList = res.datas;
+        }
+      });
+    },
     /**
      *  账号退出
      */
     onLogout() {
       this.$store.commit('ipublic/$_remove_userInfo', {});
+      this.websocket.onreconnect = function () {}
       this.$router.push({ path: '/login' });
+    },
+    /**
+     *  连接 websocket
+     */
+    connectSocket() {
+      let _this = this;
+      this.websocket = new WebsocketHeartbeatJs({
+          url: `${process.env.VUE_APP_WEBSOCKET}${this.userInfo.id}`
+      });
+      this.websocket.onopen = function () {
+          _this.websocket.send('hello server');
+      }
+      this.websocket.onmessage = function (e) {
+          let res = JSON.parse(e.data);
+          if (res.status == 3) {
+              _this.getNewNotice();
+          }
+      }
+    },
+    /**
+     *  获取今日工作
+     */
+    getTodayTask() {
+      let time = new Date();
+      let month = time.getMonth() + 1;
+      month < 10 ? month = `0${month}` : null;
+      let date = time.getDate();
+      date < 10 ? date = `0${date}` : null;
+
+      this.$http.post('/user/workbench/schedule/withpaginglist', {
+        scheduleDate: `${time.getFullYear()}-${month}-${date}`,
+        scheduleDatePattern: 'yyyy-MM-dd',
+        userId: this.userInfo.id,
+        pageSize: 5,
+        pageNum: 1
+      }).then(res => {
+        if (res.iworkuCode == 200) {
+          this.todayTaskList = res.datas;
+        }
+      });
     }
   }
 };
@@ -191,6 +267,11 @@ $border-color: #EBEAEE;
       line-height: 40px;
       font-size: 15px;
       border-bottom: 1px solid $border-color;
+      li {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
     .read {
       color: #BBBBBB;

@@ -22,11 +22,5 @@ Vue.prototype.$global = {
         customer: "c25bb273-a1f6-11e9-b080-946e68be8353"
     },
     avatarURI: process.env.VUE_APP_QINIU,
-    userRoleById: {
-        "c24c6bbc-a1f6-11e9-b080-946e68be8353": "超级管理员",
-        "c24fa6ba-a1f6-11e9-b080-946e68be8353": "区域经理",
-        "c253d82b-a1f6-11e9-b080-946e68be8353": "项目经理",
-        "c2581574-a1f6-11e9-b080-946e68be8353": "成员",
-        "c25bb273-a1f6-11e9-b080-946e68be8353": "客户",
-    }
+    encryptionKey: "iworku"
 }

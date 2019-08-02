@@ -83,6 +83,7 @@
                     <li v-if="item.userRole == $global.userRole.projectManager && userInfo.userRole == item.userRole"
                       @click="handOverAdministratorDialogVisible=true;"
                     >{{ $t("memberInfo.teamMemberOperate[1]") }}</li>
+                    <!-- 删除:  成员  -->
                     <li v-if="item.userRole == $global.userRole.member" @click="onDeleteMember(item, index)">{{ $t("memberInfo.teamMemberOperate[2]") }}</li>
                   </ul>
                 </Operate>
@@ -318,7 +319,7 @@ export default {
     /**
      *  接受子组件的信息，更新信息
      */
-    updateTeamInfo(data) {
+    updateTeamInfo() {
       this.updateTeamDialogVisible = false;
       this.getTeamInfo();
     },
@@ -428,7 +429,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .member-team {
-  margin: 20px 0;
+  margin: 10px 0;
   display: flex;
   justify-content: space-between;
   &__list {

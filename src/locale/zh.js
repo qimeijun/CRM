@@ -18,13 +18,19 @@ export default {
             chatLog: "聊天记录",
             attachment: "附件",
             leaveMessage: "留言内容",
+            orderNo: "订单编号",
+            orderName: "产品",
+            orderNum: "订单数量",
+            orderPrice: "订单价格",
+            orderDescription: "订单描述",
             orderType: "订单类型"
         },
         rules: {
             projectName: "请选择项目",
             type: "请选择日志类型",
             title: "请填写日志标题",
-            leaveMessage: "留言内容不能为空"
+            leaveMessage: "留言内容不能为空",
+            orderDescription: "请输入订单类型"
         },
         diarType: {
             daily: "日报",
@@ -33,8 +39,8 @@ export default {
             order: "订单"
         },
         uploadChatLog: "上传图片",
-        chatLog: "聊天记录",
         attachment: "附件(产品目录)",
+        chatLog: "聊天记录",
         operate: "操作",
         btn: {
             translate: "翻译",
@@ -62,13 +68,13 @@ export default {
             gender: "性别",
             telphone: "手机",
             email: "邮箱",
-            country: "国家",
-            city: "城市",
             role: "角色",
             team: "团队",
-            region: "区域经理",
             account: "登录账号",
-            password: "登录密码"
+            password: "登录密码",
+            country: "国家",
+            city: "城市",
+            region: "区域经理"
         },
         rules: {
             avatar: "请上传工作照",
@@ -76,10 +82,11 @@ export default {
             email: "请输入成员邮箱",
             role: "请选择成员角色",
             team: "请选择团队",
+            account: ["请输入账号", "请输入正确的邮箱"],
+            password: ["请输入登录密码", "密码不能少于八位，不能有特殊字符"],
+            gender: "请选择成员性别",
+            country: "请选择国家",
             region: "请选择区域经理",
-            account: ["请输入登录账号", "请输入正确的邮箱"],
-            password: ["请输入登录密码", "密码不能少于八位数，且不能有特殊字符"],
-            gender: "请选择成员角色"
         },
         placeholder: {
             account: "请输入邮箱",
@@ -89,7 +96,8 @@ export default {
             email: "请输入成员的电子邮箱",
             telphone: "请输入成员的手机号码",
             role: "请选择成员的级别",
-            search: "搜索目标公司名称、ID、地址、关键人"
+            search: "搜索目标公司名称、ID、地址、关键人",
+            country: "请选择国家"
         },
         gender: {
             male: "男",
@@ -180,6 +188,7 @@ export default {
         },
         operate: "操作",
         teamOperate: ["编辑团队", "移交团队", "冻结团队"],
+        teamMemberOperate: ["View", "Handover Team", "Delete"],
         noTeam: "暂无团队",
         account: "账号",
         password: "密码",
@@ -192,6 +201,8 @@ export default {
         privateOperate: ["查看详情", "移入公海", "移交"]
     },
     team: {
+        add: "添加团队",
+        modify: "编辑团队",
         form: {
             name: "团队名称",
             country: "国家",
@@ -239,8 +250,8 @@ export default {
         },
         briefreport: {
             title: "日程简报",
-            loading:"加载中...",
-            noMore:"没有更多了",
+            loading: "加载中...",
+            noMore: "没有更多了",
             btn: {
                 all: "全部日志",
                 submit: "提交日志"
@@ -253,7 +264,7 @@ export default {
             vlinkNum: "已拜访目标公司数",
             intentionNum: "意向目标公司数",
             orderNum: "取得订单数量",
-            btn:"编辑"
+            btn: "编辑"
         },
         variables: {
             title: "本月工作",
@@ -266,33 +277,32 @@ export default {
                 delete: "删除",
             }
         },
-        remind:{
-            title:"日程提醒",
-           add:"添加提醒",
-           loading:"加载中...",
-           noMore:"没有更多了",
-           dialogTitle:"添加日程提醒",
-           addPeople:"添加人"
+        remind: {
+            title: "日程提醒",
+            add: "添加提醒",
+            loading: "加载中...",
+            noMore: "没有更多了",
+            dialogTitle: "添加日程提醒",
+            addPeople: "添加人"
         },
-        addremind:{
-            form:{
-                date:"起止日期",
-                remindTime:"提醒时间",
-                email:"邮箱",
-                target:"目标公司",
-                people:"参与人员",
-
+        addremind: {
+            form: {
+                date: "起止日期",
+                remindTime: "提醒时间",
+                email: "邮箱",
+                target: "目标公司",
+                people: "参与人员",
             },
-            placeholder:{
-                content:"请输入日程内容",
-                startDate:"开始日期",
-                endDate:"结束日期",
-                remindTime:"是否提醒",
-                email:"提醒内容和时间将发送至本邮箱",
-                target:"请输入日程内容",
-                people:"请输入日程内容",
+            placeholder: {
+                content: "请输入日程内容",
+                startDate: "开始日期",
+                endDate: "结束日期",
+                remindTime: "是否提醒",
+                email: "提醒内容和时间将发送至本邮箱",
+                target: "请输入日程内容",
+                people: "请输入日程内容",
             },
-           save:"保存",
+            save: "保存",
         }
     },
     tag: {
@@ -367,11 +377,11 @@ export default {
     project: {
         title: "项目管理",
         add: "添加新项目",
-        allot:"分配",
-        invalid:"作废",
-        transfer:"移交",
-        intoSea:"移入公海",
-        view:"查看详情",
+        allot: "分配",
+        invalid: "作废",
+        transfer: "移交",
+        intoSea: "移入公海",
+        view: "查看详情",
         placeholder: {
             seek: "搜索项目名称、地址",
             tag: "选择标签",
@@ -381,7 +391,7 @@ export default {
             site: "请输入地址",
             url: "Https://",
             email: "请输入电子邮箱",
-            intro:"请输入公司简介",
+            intro: "请输入公司简介",
             strength: "请说明优势",
             productName: "请输入产品名称",
             describe: "请输入产品描述",
@@ -398,7 +408,7 @@ export default {
             site: "地址",
             url: "网址",
             email: "电子邮箱",
-            intro:"公司简介",
+            intro: "公司简介",
             strength: "优势",
             productName: "产品名称",
             productImg: "产品图片",
@@ -413,43 +423,43 @@ export default {
             perfect: "完善资料",
             continue: "继续完善",
             ok: "完成",
-            edit:"编辑"
+            edit: "编辑"
         },
-        tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"],
+        tableHeader: ["ID", "项目名称", "状态", "管理员", "标签", "进行天数", "添加时间", "操作"],
         status: ["进行中", "已结束", "重启项目", "新项目"]
     },
-    projectInfo:{
-        title:"项目详情",
-        endProject:"结束项目",
-        menu:["资料","产品","公海客户","成员私海","工作日志"],
-        member:{
-            title:"工作成员",
-            add:"添加成员",
-            target:["目标公司","家"],
-            time:["进行时间","天"]
+    projectInfo: {
+        title: "项目详情",
+        endProject: "结束项目",
+        menu: ["资料", "产品", "公海客户", "成员私海", "工作日志"],
+        member: {
+            title: "工作成员",
+            add: "添加成员",
+            target: ["目标公司", "家"],
+            time: ["进行时间", "天"]
         },
-        commonality:{
-            tableHeader:["目标公司","重要程度","更新时间","状态","创建时间","资料完整度","操作"]
+        commonality: {
+            tableHeader: ["目标公司", "重要程度", "更新时间", "状态", "创建时间", "资料完整度", "操作"]
         },
-        importTarget:{
-            add:"新增目标公司",
-            import:"导入目标公司",
-            textTip:["按导入模板，填写表格","表格大小控制在 5M 以内","目标公司正在导入中，请耐心等待···"],
-            uploadBtn:["点击上传","重新上传","一键导入"],
-            dialogTitle:"提示",
-            noimport:"不导入",
-            coverage:"覆盖"
+        importTarget: {
+            add: "新增目标公司",
+            import: "导入目标公司",
+            textTip: ["按导入模板，填写表格", "表格大小控制在 5M 以内", "目标公司正在导入中，请耐心等待···"],
+            uploadBtn: ["点击上传", "重新上传", "一键导入"],
+            dialogTitle: "提示",
+            noimport: "不导入",
+            coverage: "覆盖"
         },
-        tag:{
-            title:"标签",
-            detele:"删除",
-            ok:"完成",
-            dialogTitle:"添加标签"
+        tag: {
+            title: "标签",
+            detele: "删除",
+            ok: "完成",
+            dialogTitle: "添加标签"
         },
-        product:{
-            accessory:"附件(产品目录)",
-            study:"学习资料",
-            view:"编辑"
+        product: {
+            accessory: "附件(产品目录)",
+            study: "学习资料",
+            view: "编辑"
         }
     },
     notice: {
@@ -473,73 +483,75 @@ export default {
         ownership: "© 2019 IWORKU CO., LTD，保留所有权利",
         btn: "登录"
     },
-    target:{
-        title:"目标公司详情",
-        menu:["资料","调研报告","工作日志","所在项目"],
-        form:{
-            companyTitle:"公司信息",
-            keymenTitle:"关键人",
-            otherTitle:"其他",
-            companyName:"公司名称",
-            country:"国家",
-            site:"地址",
-            url:"网址",
-            phone:"电话",
-            keymenName:"姓名",
-            position:"职位",
-            keymenPhone:"关键人电话",
-            email:"电子邮件",
-            social:"社交账户",
-            source:"客户来源",
-            clientType:"客户类型",
-            purchaseScale:"预计采购",
-            hsCode:"海关编码",
-            importance:"重要程度",
-            introduce:"介绍",
-            remark:"备注",
-            btn:"完成"
+    target: {
+        title: "目标公司详情",
+        menu: ["资料", "调研报告", "工作日志", "所在项目"],
+        form: {
+            companyTitle: "公司信息",
+            keymenTitle: "关键人",
+            otherTitle: "其他",
+            companyName: "公司名称",
+            country: "国家",
+            site: "地址",
+            url: "网址",
+            phone: "电话",
+            keymenName: "姓名",
+            position: "职位",
+            keymenPhone: "关键人电话",
+            email: "电子邮件",
+            social: "社交账户",
+            source: "客户来源",
+            clientType: "客户类型",
+            purchaseScale: "预计采购",
+            hsCode: "海关编码",
+            importance: "重要程度",
+            introduce: "介绍",
+            remark: "备注",
+            btn: "完成"
         },
-        info:{
-            companyTitle:"目标公司资料",
-            keymenTitle:"关键人信息",
-            otherTitle:"其他",
-            overviewTitle:"目标公司概览",
-            companyName:"公司名称",
-            country:"国家",
-            site:"地址",
-            url:"网址",
-            phone:"联系电话",
-            keymenName:"关键人",
-            position:"职位",
-            keymenPhone:"联系电话",
-            email:"邮件",
-            social:"社交账户",
-            source:"客户来源",
-            clientType:"客户类型",
-            purchaseScale:"预计采购规模",
-            hsCode:"海关编码",
-            importance:"重要程度",
-            introduce:"介绍",
-            remark:"备注",
-            btn:"编辑",
+        info: {
+            companyTitle: "目标公司资料",
+            keymenTitle: "关键人信息",
+            otherTitle: "其他",
+            overviewTitle: "目标公司概览",
+            companyName: "公司名称",
+            country: "国家",
+            site: "地址",
+            url: "网址",
+            phone: "联系电话",
+            keymenName: "关键人",
+            position: "职位",
+            keymenPhone: "联系电话",
+            email: "邮件",
+            social: "社交账户",
+            source: "客户来源",
+            clientType: "客户类型",
+            purchaseScale: "预计采购规模",
+            hsCode: "海关编码",
+            importance: "重要程度",
+            introduce: "介绍",
+            remark: "备注",
+            btn: "编辑",
         },
-        next:"下一步",
-        finish:"完成添加",
-        probe:{
-            upload:"上传报告",
-            update:"修改报告",
-            delete:"删除",
-            title:"调研报告",
-            textTip:["按上传模板，填写表格","表格大小控制在 5M 以内","目标公司正在导入中，请耐心等待···"],
-            uploadBtn:["点击上传","重新上传","开始上传"],
-            dialogTitle:"提示"  
+        next: "下一步",
+        finish: "完成添加",
+        probe: {
+            upload: "上传报告",
+            update: "修改报告",
+            delete: "删除",
+            title: "调研报告",
+            textTip: ["按上传模板，填写表格", "表格大小控制在 5M 以内", "目标公司正在导入中，请耐心等待···"],
+            uploadBtn: ["点击上传", "重新上传", "开始上传"],
+            dialogTitle: "提示"
         },
-        loca:{
-            tableHeader:["ID","项目名称","状态","管理员","标签","进行天数","添加时间","操作"],
-            view:"查看详情"
+        loca: {
+            tableHeader: ["ID", "项目名称", "状态", "管理员", "标签", "进行天数", "添加时间", "操作"],
+            view: "查看详情"
         },
         status: ["待跟进", "跟进中", "未跟进", "作废"],
         importanceStatus: ["待跟进", "资料完善", "有跟进记录", "一般意向客户", "重点跟进客户", "已有成交客户"]
-        
+    },
+    page404: {
+        btn: "试试返回首页"
     }
 }

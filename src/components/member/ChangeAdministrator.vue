@@ -42,7 +42,7 @@
 
     </ul>
     <div class="change-administrator__btn">
-      <span v-if="operate == 'add'" style="cursor: pointer;" @click="$emit('addProjectAdministrator')">{{ $t("changeAdministrator.btn.addMember") }}</span>
+      <!-- <span v-if="operate == 'add'" style="cursor: pointer;" @click="$emit('addProjectAdministrator')">{{ $t("changeAdministrator.btn.addMember") }}</span> -->
       <el-button :disabled="selectAdminstratorInfo.id ? false : true" type="primary" @click="onConfirm" style="margin-left: auto;">
         <template v-if="operate == 'add'">
           {{ $t("changeAdministrator.btn.add") }}
@@ -194,6 +194,7 @@ export default {
 .change-administrator {
   background-color: white;
   &__list {
+    margin-bottom: 60px;
     li {
       position: relative;
       border-bottom: 1px solid #d6d6d6;
@@ -243,14 +244,18 @@ export default {
     }
   }
   &__btn {
+    position: absolute;
+    bottom: 0;
+    width: 93%;
+    padding: 10px 0;
     text-align: right;
     margin-right: 20px;
     border-top: 1px solid $--default-light-gray-2;
-    padding-top: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: $--default-color;
+    background-color: white;
   }
 
   &__hand-over {

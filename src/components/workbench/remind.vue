@@ -10,7 +10,7 @@
         :visible.sync="dialogFormVisible"
         width="30%"
       >
-        <AddRemind></AddRemind>
+        <AddRemind :itemid="itemid" @onSuccess="onAddSuccess"></AddRemind>
       </el-dialog>
     </div>
     <!-- 日程列表 -->
@@ -155,7 +155,11 @@ export default {
         email: "",
         remind: ""
       },
-      page: 1,
+      page: {
+        pageSize: 10,
+        pageNum: 1,
+        totalPage: 0
+      },
       loading: false
     };
   },
@@ -174,29 +178,33 @@ export default {
     getremindList() {
       this.$http
         .post("/user/workbench/schedule/withpaginglist", {
-          pageNum: this.page,
-          pageSize: 2
+          pageNum: this.page.pageNum,
+          pageSize: this.page.pageSize
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            console.log("richen",res);
+            this.loading = false;
             this.list=res.datas;
+            this.page.pageNum > 1 ? this.list.push(...res.datas) : this.list = res.datas;
+            this.page.totalPage = res.pages;
+            console.log("日程提醒",this.list);
           }
         });
     },
     load() {
-      this.loading = true;
-      setTimeout(() => {
-        this.list.push({
-          color: "#00C853FF",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: this.page++,
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        });
-        this.loading = false;
-      }, 2000);
+      this.page.pageNum++;
+      if (this.page.totalPage > this.page.pageNum) {
+        this.loading = true;
+        this.getremindList();
+      }
+    },
+    /**
+     *  添加提醒成功
+     */
+    onAddSuccess() {
+      this.dialogFormVisible = false;
+      this.page.pageNum = 1;
+      this.getremindList();
     }
   }
 };

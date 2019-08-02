@@ -13,7 +13,6 @@ axios.interceptors.request.use((config) => {
     if (userInfo.jwtValue) {
         config.headers[`${userInfo.jwtKey}`] = userInfo.jwtValue;
     }
-   
    if (config.method == "post" && config.data) {
         // 获取所有的 value
         let values = Object.values(config.data);

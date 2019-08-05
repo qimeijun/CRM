@@ -5,7 +5,7 @@
       <h3>1</h3>
       <span class="importTarget-margin">{{$t("projectInfo.importTarget.textTip[0]")}}</span>
       <i class="el-icon-paperclip"></i>
-      <a href target="_blank">客户模板.xls</a>
+      <a href="/assets/file/客户模板.xls" download="客户模板.xls">客户模板.xls</a>
       <!-- <input type="file" ref="file" > -->
     </div>
     <!-- 二 -->
@@ -13,17 +13,14 @@
       <h3>2</h3>
       <div>
         <el-upload
+          ref="upload"
           class="importTarget-margin importTarget_upload"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-progress="getfileProgress"
-          :on-success="handleSuccess"
-          :before-upload="updatebtnShow"
-          :on-exceed="handleExceed"
+          action="http://172.25.4.159:8769/api-crm/target/company/resolve"
+          :on-change="onChangeFile"
           :show-file-list="false"
-          :file-list="fileList"
+          :auto-upload="false"
         >
-          <div v-if="btnShow||fileList.length>0">
+          <div v-if="fileList.length==0">
             <el-button
               slot="trigger"
               size="small"
@@ -37,17 +34,16 @@
           <div v-else>
             <p>
               <span>{{fileName}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-              <el-button type="text">{{$t("projectInfo.importTarget.uploadBtn[1]")}}</el-button>
+              <el-button slot="trigger" type="text">{{$t("projectInfo.importTarget.uploadBtn[1]")}}</el-button>
             </p>
           </div>
         </el-upload>
-        <el-progress v-if="!btnShow" :percentage="fileProgress" color="#E50054"></el-progress>
       </div>
     </div>
     <!-- 三 -->
     <div class="importTarget_div">
       <h3>3</h3>
-      <el-radio-group v-model="isCover">
+      <el-radio-group v-model="updateData.isCover">
         <el-radio :label="2">{{$t("projectInfo.importTarget.noimport")}}</el-radio>
         <el-radio :label="1">{{$t("projectInfo.importTarget.coverage")}}</el-radio>
       </el-radio-group>
@@ -60,6 +56,7 @@
         @click="dialogVisible=true;submitFile()"
       >{{$t("projectInfo.importTarget.uploadBtn[2]")}}</el-button>
     </div>
+
     <!-- 导入进度弹框 -->
     <el-dialog
       :title="$t('projectInfo.importTarget.dialogTitle')"
@@ -70,13 +67,15 @@
       center
     >
       <div class="importTarget_dialog">
-        <p>{{$t("projectInfo.importTarget.textTip[2]")}}</p>
+        <p>{{importState==1?'导入完成！':importState==2?'上传内容存在重复，请下载并修改后重新上传！':$t("projectInfo.importTarget.textTip[2]")}}</p>
         <el-progress :percentage="fileImport" color="#E50054"></el-progress>
+        <a class="repeatFile_a" :href="repeatFileURL" :download="repeatFileName">{{repeatFileName}}</a>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   props: {
     itemid: {
@@ -88,80 +87,95 @@ export default {
   },
   data() {
     return {
-      isCover: 2,
-      btnShow: true,
-      btnDisabled: false,
-      fileProgress: 0,
+      updateData: {
+        isCover: 1,
+        itemId: this.itemid
+      },
+      repeatFileURL: "",
+      repeatFileName: "",
+      btnDisabled: true,
       fileImport: 0,
-      fileName: "123312312312312312",
+      importState:0,
+      fileName: "",
       dialogVisible: false,
       fileList: [],
-      value: "",
-      file: {}
     };
   },
+  computed: {
+    ...mapGetters("ipublic", ["userInfo"])
+  },
   methods: {
-    handlePreview(file) {
-      console.log("handlePreview", file);
+    // 选择文件
+    onChangeFile(file, fileList) {
+      const isLt5M = file.size / 1024 / 1024 < 5;
+      if (!isLt5M) {
+        this.$message.error("上传表格大小不能超过 5MB!");
+      } else {
+        this.fileName = file.name;
+        this.btnDisabled = false;
+        this.fileList = [file];
+      }
     },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 1 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-      );
+    // 自定义上传
+    onUpload() {
+      console.log(22, this.fileList);
+      let params = new FormData();
+      params.append("file", this.fileList[0].raw);
+      params.append("isCover", this.updateData.isCover);
+      params.append("itemId", this.itemid);
+      this.getfileImport();
+      this.$http
+        .post("/target/company/resolve", params, {
+          responseType: "arraybuffer",
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(res => {
+          this.btnDisabled = true;
+          if (res&&this.updateData.isCover==2) {
+            let blob = new Blob([res], {
+              type: "application/vnd.ms-excel;charset=UTF-8"
+            });
+            let fileName = "Target Company List.xls";
+            this.repeatFileURL = window.URL.createObjectURL(blob);
+            this.repeatFileName = fileName;
+            this.fileImport = 90;
+            this.importState=2;
+          } else {
+            this.fileImport = 100;
+            this.importState=1;
+            this.$emit("close");
+            this.$imessage({
+              content: "导入成功",
+              type: "success"
+            });
+            this.dialogVisible=false;
+          }
+           this.btnDisabled = false;
+           this.fileList=[];
+           this.fileName="";
+           this.$emit('close');
+
+           
+        });
     },
-    updatebtnShow(file) {
-      console.log(123, file);
-      this.btnShow = false;
-      this.fileName = file.name;
-      this.file ={ ...file};
-      return false;
-    },
-    // 获取上传进度
-    getfileProgress(event, file, fileList) {
-      console.log("fileprogerss");
-      this.fileProgress = parseInt(file.percentage);
-    },
-    // 上传成功后
-    handleSuccess() {
-      this.fileProgress = 100;
-      this.btnDisabled = false;
+    // 假上传进度
+    getfileImport() {
+      this.fileImport = 0;
+      let interval = window.setInterval(() => {
+        if (this.fileImport >= 90) {
+          // this.fileImport=0;
+          window.clearInterval(interval);
+        } else {
+          this.fileImport++;
+        }
+      }, 100);
     },
     // 一键导入
-    submitFile(file) {
-      // let interval=window.setInterval(() => {
-      //   this.fileImport++;
-      //   if (this.fileImport === 100) {
-      //     window.clearInterval(interval);
-      //   }
-      // }, 100);
-
-      // console.log(234,this.$refs.file.files);
-console.log(this.file);
-  let parameters = new FormData();
-  parameters.append('isCover', this.isCover);
-  parameters.append('itemId', this.itemid);
-  parameters.append('file', this.file);
-      this.$http.post(
-        "/target/company/resolve",
-       parameters
-        //  isCover:this.isCover,
-        //  itemId:this.itemid,
-        //  file:this.file
-       ,
-        {
-          headers: {
-            // "Cache-Control": "no-cache",
-            "Content-Type":"multipart/form-data"
-          }
-        }
-      ).then(res=>{
-        
-      });
-    },
-    getFile() {
-      // console.log(123,this.value);
+    submitFile() {
+      // this.$refs.upload.submit();
+      this.onUpload();
     }
   }
 };
@@ -205,6 +219,10 @@ console.log(this.file);
     font-size: 0.18rem;
     font-weight: bold;
     line-height: 25px;
+  }
+  .repeatFile_a {
+    line-height: 40px;
+    color: #4937ea;
   }
 }
 </style>

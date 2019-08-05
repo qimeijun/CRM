@@ -13,14 +13,15 @@ axios.interceptors.request.use((config) => {
     if (userInfo.jwtValue) {
         config.headers[`${userInfo.jwtKey}`] = userInfo.jwtValue;
     }
-   
-   if (config.method == "post" && config.data) {
+    if (config.method == "post" && config.data && config.responseType != "arraybuffer") {
         // 获取所有的 value
         let values = Object.values(config.data);
         let hasArray = values.find(val => Object.prototype.toString.call(val) == '[object Array]');
         hasArray ? null : config.data = Qs.stringify(config.data);
     }
+
     return config;
+
 }, (error) => {
     return Promise.resolve({
         iworkuCode: '201',
@@ -39,10 +40,16 @@ axios.interceptors.response.use((response) => {
                 router.push({ path: '/login' });
             }
         } else {
-            Message({
-                content: response.data.iworkuErrorMsg,
-                type: 'error'
-            });
+            console.log(response);
+            if (response.config.responseType == "arraybuffer") {
+                // 导入文件时不报错
+            } else {
+                Message({
+                    content: response.data.iworkuErrorMsg,
+                    type: 'error'
+                });
+            }
+
         }
     }
     return response.data;

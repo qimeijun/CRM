@@ -14,13 +14,17 @@
       <el-button type="primary" @click="addShow=true">{{$t("projectInfo.importTarget.add")}}</el-button>
       <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
       <!-- 结束项目 -->
-      <el-button 
-      v-show="itemStatus!=2"
+      <el-button
+        v-show="itemStatus!=2"
         class="commonality-endbtn"
         @click="onDeleteMember(itemid)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button v-show="itemStatus==2" class="commonality-endbtn" @click="onRestartMember(itemid)">重启项目</el-button>
+      <el-button
+        v-show="itemStatus==2"
+        class="commonality-endbtn"
+        @click="onRestartMember(itemid)"
+      >重启项目</el-button>
     </div>
     <div class="commonality_top">
       <!-- 分类 start -->
@@ -110,11 +114,12 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link
-                    :to="`/target/detail/info/${scope.row.id}`"
-                  >{{$t("project.view")}}</router-link>
+                  <router-link :to="`/target/detail/info/${scope.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
-                <li class="table_operation" @click="allocationShow=true; currentTarget=[scope.row]">{{$t("project.allot")}}</li>
+                <li
+                  class="table_operation"
+                  @click="allocationShow=true; currentTarget=[scope.row]"
+                >{{$t("project.allot")}}</li>
                 <li
                   class="table_operation"
                   @click="onCancel(scope.row.id)"
@@ -124,6 +129,17 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        style="text-align:center;margin:10px 0;"
+        background
+        layout="prev, pager, next,sizes"
+        :total="total"
+        :page-sizes="[10, 20,30, 40]"
+        :page-size.sync="size"
+        :current-page.sync="currentPage"
+        @size-change="getCommonality(itemid,1)"
+        @current-change="getCommonality(itemid,currentPage)"
+      ></el-pagination>
     </div>
     <!-- 分配 start -->
     <el-dialog
@@ -137,7 +153,11 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ChangeAdministrator operate="add" :params="{id: itemid, type: 'assignMemberForTarget'}" @getManager="onAssignMember"></ChangeAdministrator>
+        <ChangeAdministrator
+          operate="add"
+          :params="{id: itemid, type: 'assignMemberForTarget'}"
+          @getManager="onAssignMember"
+        ></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 分配 end -->
@@ -187,6 +207,9 @@ export default {
   },
   data() {
     return {
+      total: 0,
+      size: 10,
+      currentPage: 1,
       targetTypeList: [],
       props: {
         lazy: true,
@@ -240,7 +263,7 @@ export default {
       tag: "",
       targetType: "",
       seek: "",
-      itemStatus:1,
+      itemStatus: 1,
       allocationShow: false,
       addShow: false,
       importShow: false,
@@ -302,18 +325,19 @@ export default {
           id: id,
           type: 1,
           pageNum: page,
+          pageSize: this.size,
           clientType: this.targetType,
           labelId: this.tag[1],
           keyWord: `${this.seek}`
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            console.log("项目公海", res);
             this.tableData = res.datas;
+            this.total = res.total;
           }
         });
     },
-     // 获取项目状态
+    // 获取项目状态
     getItemStatus(id) {
       this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
         if (res.iworkuCode == 200) {
@@ -388,7 +412,7 @@ export default {
           });
         });
     },
-    handleSelectionChange(list){
+    handleSelectionChange(list) {
       this.currentTarget = list;
     },
     // 给目标公司分配工作人员
@@ -400,21 +424,23 @@ export default {
       this.currentTarget.map(val => {
         params.push(val.id);
       });
-      this.$http.post('/target/company/private/list/update', {
-        idList: params,
-        type: 1,
-        userId: data.id
-      }).then(res => {
-        if (res.iworkuCode == 200) {
-          this.allocationShow = false;
-          this.$imessage({
-            content: this.$t("public.tips.success"),
-            type: "success"
-          });
-          this.currentTarget = [];
-          this.getCommonality(this.itemid, 1);
-        }
-      })
+      this.$http
+        .post("/target/company/private/list/update", {
+          idList: params,
+          type: 1,
+          userId: data.id
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.allocationShow = false;
+            this.$imessage({
+              content: this.$t("public.tips.success"),
+              type: "success"
+            });
+            this.currentTarget = [];
+            this.getCommonality(this.itemid, 1);
+          }
+        });
     }
   }
 };

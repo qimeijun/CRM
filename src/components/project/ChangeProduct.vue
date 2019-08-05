@@ -61,7 +61,7 @@
           <el-col class="video-content" :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
             <video
               v-show="productFrom.videoList[0].nodeFiles"
-              :src="`${$global.avatarURI}${productFrom.videoList[0].nodeFiles}`"
+              :src="`${$global.avatarURI}${productFrom.videoList[0].nodeFiles?productFrom.videoList[0].nodeFiles:''}`"
             ></video>
             <el-upload
               :action="$global.qiniuURL"
@@ -188,7 +188,13 @@ export default {
         id: "",
         productName: "",
         imgList: [],
-        videoList: [],
+        videoList: [
+             {
+            nodeDescription: "",
+            nodeFiles: "",
+            nodeType: 2
+          }
+        ],
         attachmentList: [],
         studyList: []
       },

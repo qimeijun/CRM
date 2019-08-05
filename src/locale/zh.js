@@ -279,6 +279,7 @@ export default {
         },
         remind: {
             title: "日程提醒",
+            modify: "修改提醒",
             add: "添加提醒",
             loading: "加载中...",
             noMore: "没有更多了",
@@ -303,6 +304,7 @@ export default {
                 people: "请输入日程内容",
             },
             save: "保存",
+            modify: "编辑"
         }
     },
     tag: {

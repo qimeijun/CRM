@@ -279,6 +279,7 @@ export default {
         },
         remind: {
             title: "Schedule reminder",
+            modify: "Edit reminder",
             add: "Add a reminder",
             loading: "Loading...",
             noMore: "No More",
@@ -303,6 +304,7 @@ export default {
                 people: "People",
             },
             save: "Save",
+            modify: "Modify"
         }
     },
     tag: {

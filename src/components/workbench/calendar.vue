@@ -5,67 +5,67 @@
       <h3>{{$t("workBench.calendar.title")}}</h3>
     </div>
     <div class="calendar_content">
-      <el-calendar :first-day-of-week="7" class="">
+      <el-calendar :first-day-of-week="7" class="" v-model="calenderValue">
         <template #dateCell="{date, data}">
           <p @click="getDate(data)">
             <span style="line-height:20px;">{{ data.day.split('-').slice(1).join('月')}}日</span>
             <span
               v-for="(item,index) in firstlist"
               :key="'first'+index"
-              :style="data.day>=item.start&&data.day<=item.end?'background-color:'+item.color:''"
-              :class="[data.day>=item.start&&data.day<=item.end? 'time--selected ' :firstlist[index+1]&&data.day<firstlist[index+1].start?'time--blank':'',data.day==item.start?'time--start':'',data.day==item.end?'time--end':'']"
+              :style="data.day>=item.scheduleBeginDate&&data.day<=item.scheduleEndDate?'background-color:'+item.scheduleShowColour:''"
+              :class="[data.day>=item.scheduleBeginDate&&data.day<=item.scheduleEndDate? 'time--selected ' :firstlist[index+1]&&data.day<firstlist[index+1].scheduleBeginDate?'time--blank':'',data.day==item.scheduleBeginDate?'time--start':'',data.day==item.scheduleEndDate?'time--end':'']"
             >
               <!-- 第一行备注弹出框 start -->
               <el-popover
-                v-if="data.day==item.start"
+                v-if="data.day==item.scheduleBeginDate"
                 placement="bottom"
                 width="300"
                 trigger="click"
               >
                 <p>
                   <i class="el-icon-date calendar_icon"></i>
-                  <span>{{item.start}}-{{item.end}}</span>
+                  <span>{{item.scheduleBeginDate}}-{{item.scheduleEndDate}}</span>
                 </p>
                 <p>
                   <i class="el-icon-tickets calendar_icon"></i>
-                  <i class="calendar_dot" :style="'background-color:'+item.color"></i>
-                  <span>{{item.title}}</span>
+                  <i class="calendar_dot" :style="'background-color:'+item.scheduleShowColour"></i>
+                  <span>{{item.scheduleContent}}</span>
                 </p>
                 <div style="text-align:right;">
-                  <el-button type="text">{{$t("workBench.calendar.btn.redact")}}</el-button>
-                  <el-button type="text">{{$t("workBench.calendar.btn.delete")}}</el-button>
+                  <el-button type="text" @click="modifyRemindVisibleDialog=true;currentRemind=item;">{{$t("workBench.calendar.btn.redact")}}</el-button>
+                  <el-button type="text" @click="onDeleteReminder(item)">{{$t("workBench.calendar.btn.delete")}}</el-button>
                 </div>
-                <span slot="reference">{{item.title}}</span>
+                <span slot="reference">{{item.scheduleContent}}</span>
               </el-popover>
               <!-- 第一行备注弹出框 end -->
             </span>
             <span
               v-for="(item,index) in secondlist"
               :key="'second'+index"
-              :style="data.day>=item.start&&data.day<=item.end?'background-color:'+item.color:''"
-              :class="[data.day>=item.start&&data.day<=item.end? 'time--selected ' : '',data.day==item.start?'time--start':'',data.day==item.end?'time--end':'']"
+              :style="data.day>=item.scheduleBeginDate&&data.day<=item.scheduleEndDate?'background-color:'+item.scheduleShowColour:''"
+              :class="[data.day>=item.scheduleBeginDate&&data.day<=item.scheduleEndDate? 'time--selected ' : '',data.day==item.scheduleBeginDate?'time--start':'',data.day==item.scheduleEndDate?'time--end':'']"
             >
               <!-- 第二行备注弹出框 start -->
               <el-popover
-                v-if="data.day==item.start"
+                v-if="data.day==item.scheduleBeginDate"
                 placement="bottom"
                 width="300"
                 trigger="click"
               >
                 <p>
                   <i class="el-icon-date calendar_icon"></i>
-                  <span>{{item.start}}-{{item.end}}</span>
+                  <span>{{item.scheduleBeginDate}}-{{item.scheduleEndDate}}</span>
                 </p>
                 <p>
                   <i class="el-icon-tickets calendar_icon"></i>
-                  <i class="calendar_dot" :style="'background-color:'+item.color"></i>
-                  <span>{{item.title}}</span>
+                  <i class="calendar_dot" :style="'background-color:'+item.scheduleShowColour"></i>
+                  <span>{{item.scheduleContent}}</span>
                 </p>
                 <div style="text-align:right;">
-                  <el-button type="text">{{$t("workBench.calendar.btn.redact")}}</el-button>
-                  <el-button type="text">{{$t("workBench.calendar.btn.delete")}}</el-button>
+                  <el-button type="text" @click="modifyRemindVisibleDialog=true;currentRemind=item;">{{$t("workBench.calendar.btn.redact")}}</el-button>
+                  <el-button type="text" @click="onDeleteReminder(item)">{{$t("workBench.calendar.btn.delete")}}</el-button>
                 </div>
-                <span slot="reference">{{item.title}}</span>
+                <span slot="reference">{{item.scheduleContent}}</span>
               </el-popover>
               <!-- 第二行备注弹出框 end -->
             </span>
@@ -86,20 +86,20 @@
               >
                 <p>
                   <i class="el-icon-date calendar_icon"></i>
-                  <span>{{item.start}}-{{item.end}}</span>
+                  <span>{{item.scheduleBeginDate}}-{{item.scheduleEndDate}}</span>
                 </p>
                 <p>
                   <i class="el-icon-tickets calendar_icon"></i>
-                  <i class="calendar_dot" :style="'background-color:'+item.color"></i>
-                  <span>{{item.title}}</span>
+                  <i class="calendar_dot" :style="'background-color:'+item.scheduleShowColour"></i>
+                  <span>{{item.scheduleContent}}</span>
                 </p>
                 <div style="text-align:right;">
-                  <el-button type="text">{{$t("workBench.calendar.btn.redact")}}</el-button>
-                  <el-button type="text">{{$t("workBench.calendar.btn.delete")}}</el-button>
+                  <el-button type="text" @click="modifyRemindVisibleDialog=true;currentRemind=item;">{{$t("workBench.calendar.btn.redact")}}</el-button>
+                  <el-button type="text" @click="onDeleteReminder(item)">{{$t("workBench.calendar.btn.delete")}}</el-button>
                 </div>
                 <p slot="reference">
-                  <i class="calendar_dot" :style="'background-color:'+item.color"></i>
-                  <el-button type="text">{{item.title}}</el-button>
+                  <i class="calendar_dot" :style="'background-color:'+item.scheduleShowColour"></i>
+                  <el-button type="text">{{item.scheduleContent}}</el-button>
                 </p>
               </el-popover>
               <!-- 详情弹出框 end -->
@@ -110,57 +110,68 @@
         </template>
       </el-calendar>
     </div>
+
+    <!-- 添加表单 -->
+    <el-dialog
+        :title="$t('workBench.remind.modify')"
+        :visible.sync="modifyRemindVisibleDialog"
+        :close-on-click-modal="false"
+        width="30%"
+      >
+      <ModifyRemind :itemid="itemid" :remindInfo="currentRemind" @onSuccess="onModifySuccess"></ModifyRemind>
+    </el-dialog>
   </div>
 </template>
 <script>
 export default {
+  props: {
+    itemid: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
+  },
+  components: {
+    ModifyRemind: () => import("@/components/workbench/AddRemind.vue")
+  },
   data() {
     return {
-      datelist: [
-        {
-          color: "#E50054FF",
-          start: "2019-07-23",
-          end: "2019-07-24",
-          title: "拜访1"
-        },
-        {
-          color: "#E50054FF",
-          start: "2019-07-24",
-          end: "2019-07-27",
-          title: "拜访2"
-        },
-        {
-          color: "#4937EAFF",
-          start: "2019-07-26",
-          end: "2019-07-28",
-          title: "拜访3"
-        },
-        {
-          color: "#4937EAFF",
-          start: "2019-07-26",
-          end: "2019-07-27",
-          title: "拜访4"
-        },
-        {
-          color: "#E50054FF",
-          start: "2019-07-25",
-          end: "2019-07-26",
-          title: "拜访5"
-        }
-      ],
+      datelist: [],
+      calenderValue: new Date(),
       secondlist: [],
       firstlist: [],
-      list: []
+      list: [],
+      modifyRemindVisibleDialog: false,
+      currentRemind: {}
     };
   },
   created() {
-    let listobj = this.filtDateList(this.datelist);
-    this.firstlist = listobj.first;
-    this.secondlist = listobj.second;
-    this.list = listobj.list;
+    // let listobj = this.filtDateList(this.datelist);
+    // this.firstlist = listobj.first;
+    // this.secondlist = listobj.second;
+    // this.list = listobj.list;
   },
   methods: {
-    //   打开隐藏备注
+    // 根据日期获取日程提醒 list 
+    getScheduleByDate() {
+      let month = this.calenderValue.getMonth() + 1;
+      month < 10 ? month = `0${month}` : null;
+      this.$http.post('/user/workbench/schedule/withoutpaginglist', {
+        scheduleDate: `${this.calenderValue.getFullYear()}-${month}`,
+        scheduleDatePattern: "yyyy-MM",
+        DESC: 'schedule_begin_date'
+      }).then(res => {
+        if (res.iworkuCode == 200 && res.datas) {
+          console.log("日历", res.datas);
+          let listobj = this.filtDateList(res.datas);
+          this.firstlist = listobj.first;
+          this.secondlist = listobj.second;
+          this.list = listobj.list;
+        } 
+      });
+    }, 
+    // 打开隐藏备注
     getDate(date) {},
     // 数据筛分
     filtDateList(data) {
@@ -170,12 +181,12 @@ export default {
       let endA = "";
       let endB = "";
       for (let i = 0; i < data.length; i++) {
-        if (data[i].start > endA) {
+        if (data[i].scheduleBeginDate > endA) {
           first.push(data[i]);
-          endA = data[i].end;
-        } else if (data[i].start > endB) {
+          endA = data[i].scheduleEndDate;
+        } else if (data[i].scheduleBeginDate > endB) {
           second.push(data[i]);
-          endB = data[i].end;
+          endB = data[i].scheduleEndDate;
         } else {
           list.push(data[i]);
         }
@@ -190,15 +201,41 @@ export default {
         }
       });
       return list;
+    },
+    /**
+     *  修改成功
+     */
+    onModifySuccess(data) {
+      this.getScheduleByDate();
+    },
+    // 删除日程
+    onDeleteReminder(item) {
+      if (item.id) {
+        this.$http.post('/user/workbench/workbench/delete', {id: item.id}).then(res => {
+          if (res.iworkuCode == 200) {
+            this.$imessage({
+              content: this.$t("public.tips.success"),
+              type: "success"
+            });
+            // 重新查询数据
+            this.getScheduleByDate();
+          }
+        });
+      }
+    },
+  },
+  watch: {
+    calenderValue: {
+      handler(newVal) {
+        this.getScheduleByDate();
+      },
+      immediate: true
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-// .workbench-calendar{
-//     height: 400px;
-// }
 .calendar_content {
   .time--selected {
     background-color: #1989fa;

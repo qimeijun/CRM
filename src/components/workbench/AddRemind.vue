@@ -108,7 +108,14 @@
         type="primary"
         :loading="submitBtnLoading"
         @click="onSubmit('dateForm')"
-      >{{$t("workBench.addremind.save")}}</el-button>
+      >
+      <template v-if="dateForm.id">
+        {{$t("workBench.addremind.modify")}}
+      </template>
+      <template v-else>
+        {{$t("workBench.addremind.save")}}
+      </template>
+      </el-button>
     </div>
 
     <!-- 添加成员 dialog start -->
@@ -134,10 +141,22 @@ import { mapGetters } from "vuex";
 import { getRemindColor } from "@/plugins/configuration.js";
 export default {
   props: {
+    /**
+     *  当前这个项目的编号
+     */
     itemid: {
       type: String,
       default() {
         return "";
+      }
+    },
+    /**
+     *  如果是修改日程提醒，这就是修改之前的信息
+     */
+    remindInfo: {
+      type: Object,
+      default() {
+        return {}
       }
     }
   },
@@ -149,16 +168,21 @@ export default {
       remindTypes: [
         {
           value: "1",
-          label: "提醒"
+          label: "前一天提醒"
         },
         {
           value: "2",
+          label: "前两天提醒"
+        },
+        {
+          value: "3",
           label: "不提醒"
         }
       ],
       colorTypes: [],
       targetList: [],
       dateForm: {
+        id: "",
         scheduleContent: "",
         scheduleShowColour: "#D50000",
         time: [],
@@ -276,7 +300,32 @@ export default {
             scheduleContent:this.dateForm.scheduleContent,
             scheduleShowColour:this.dateForm.scheduleShowColour,
             scheduleType: this.dateForm.remind,
-            userScheduleParticipateList:[]
+            userScheduleParticipateList:[],
+            targetCompanyId: this.dateForm.targetCompanyId,
+            scheduleNoticeEmail: this.dateForm.scheduleNoticeEmail
+          }
+          // 提醒日期
+          switch (this.dateForm.remind) {
+            case this.remindTypes[0].value:
+              // 提前一天
+              let date_v1 = new Date(this.dateForm.time[0]);
+              date_v1 = new Date(date_v1.getTime() - (1 * 24 * 60 * 60 * 1000));
+              let month_v1 = date_v1.getMonth() + 1;
+              month_v1 < 10 ? month_v1 = `0${month_v1}` : null;
+              let day_v1 = date_v1.getDate();
+              day_v1 < 10 ? day_v1 = `0${day_v1}` : null;
+              params.sendEmailTime = `${date_v1.getFullYear()}-${month_v1}-${day_v1}`;
+              break;
+            case this.remindTypes[1].value:
+              // 提前两天
+              let date_v2 = new Date(this.dateForm.time[0]);
+              date_v2 = new Date(date_v2.getTime() - (2 * 24 * 60 * 60 * 1000));
+              let month_v2 = date_v2.getMonth() + 1;
+              month_v2 < 10 ? month_v2 = `0${month_v2}` : null;
+              let day_v2 = date_v2.getDate();
+              day_v2 < 10 ? day_v2 = `0${day_v2}` : null;
+              params.sendEmailTime = `${date_v2.getFullYear()}-${month_v2}-${day_v2}`;
+              break;
           }
           this.dateForm.selectUsers.map(val => {
             params.userScheduleParticipateList.push({
@@ -284,16 +333,32 @@ export default {
             });
           });
           this.submitBtnLoading = true;
-          this.$http.post('/user/workbench/schedule/save', params).then(res => {
-            this.submitBtnLoading = false;
-            if (res.iworkuCode == 200) {
-              this.$imessage({
-                content: this.$t("public.tips.success"),
-                type: "success"
-              });
-              this.$emit("onSuccess");
-            }
-          });
+          if (this.dateForm.id) {
+            // 修改
+            params.id = this.dateForm.id;
+            this.$http.post('/user/workbench/schedule/update', params).then(res => {
+              this.submitBtnLoading = false;
+              if (res.iworkuCode == 200) {
+                this.$imessage({
+                  content: this.$t("public.tips.success"),
+                  type: "success"
+                });
+                this.$emit("onSuccess", params);
+              }
+            });
+          } else {
+            // 添加
+            this.$http.post('/user/workbench/schedule/save', params).then(res => {
+              this.submitBtnLoading = false;
+              if (res.iworkuCode == 200) {
+                this.$imessage({
+                  content: this.$t("public.tips.success"),
+                  type: "success"
+                });
+                this.$emit("onSuccess");
+              }
+            });
+          }
         }
       });
     },
@@ -330,6 +395,32 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.getTargetList();
+        }
+      },
+      immediate: true
+    },
+    remindInfo: {
+      handler(newVal) {
+        if (newVal && newVal.id) {
+          this.dateForm.id = newVal.id;
+          this.dateForm.scheduleContent = newVal.scheduleContent;
+          this.dateForm.scheduleShowColour = newVal.scheduleShowColour;
+          this.dateForm.time = [newVal.scheduleBeginDate, newVal.scheduleEndDate];
+          this.dateForm.scheduleNoticeEmail = newVal.scheduleNoticeEmail;
+          this.dateForm.remind = `${newVal.scheduleType}`;
+          this.dateForm.targetCompanyId = newVal.targetCompanyId;
+          this.dateForm.targetOwnerId = "";
+          this.dateForm.selectUsers = [];
+          newVal.sheduleParticipate.map(val => {
+            this.dateForm.selectUsers.push({
+              userNameZh: val.userNameZh,
+              userNameEn: val.userNameEn,
+              userProfileImage: val.userProfileImage,
+              id: val.userId
+            })
+          });
+          // 获取拥有者
+          this.onChangeTarget(this.dateForm.targetCompanyId);
         }
       },
       immediate: true

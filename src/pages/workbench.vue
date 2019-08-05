@@ -48,7 +48,7 @@
           <el-row>
             <el-col>
               <!-- 日程安排 -->
-              <Calendar></Calendar>
+              <Calendar :itemid="itemid"></Calendar>
             </el-col>
           </el-row>
         </div>
@@ -86,7 +86,6 @@ export default {
         .post("/customer/item/withoutpaginglist")
         .then(res => {
           if (res.iworkuCode == 200) {
-            console.log(res);
             this.itemList = res.datas;
             this.itemid = res.datas ? res.datas[0].itemId : "";
           }

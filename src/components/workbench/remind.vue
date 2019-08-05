@@ -8,9 +8,10 @@
       <el-dialog
         :title="$t('workBench.remind.dialogTitle')"
         :visible.sync="dialogFormVisible"
+        :close-on-click-modal="false"
         width="30%"
       >
-        <AddRemind></AddRemind>
+        <AddRemind :itemid="itemid" @onSuccess="onAddSuccess"></AddRemind>
       </el-dialog>
     </div>
     <!-- 日程列表 -->
@@ -18,17 +19,22 @@
       <el-scrollbar style="height:100%;">
         <div v-infinite-scroll="load" infinite-scroll-disabled="disabled">
           <div class="remind_list_item" v-for="(item,index) in list" :key="index">
-            <i :style="'background-color:'+item.color"></i>
+            <i :style="'background-color:'+item.scheduleShowColour"></i>
             <div class="item_img">
-              <el-avatar size="medium" :src="`${$global.avatarURI}${item.img}`"></el-avatar>
-              <!-- <img :src="'https://vodcn.iworku.com/'+item.img" alt /> -->
+              <el-avatar size="medium" :src="`${$global.avatarURI}${item.addUserProfileImage}`"></el-avatar>
               <br />
-              <span>{{item.name}}</span>
+              <span>{{$lang == $global.lang.en ? item.addUserNameEn : item.addUserNameZh}}</span>
             </div>
             <p class="item_p">
-              <span>{{item.title}}</span>
+              <span>{{item.scheduleContent}}</span>
               <br />
-              <span>{{item.time.start}}-{{item.time.end}}，{{$t("workBench.remind.addPeople")}}：{{item.people}}</span>
+              <span>{{item.scheduleBeginDate}}-{{item.scheduleEndDate}}，{{$t("workBench.remind.addPeople")}}：
+                <template v-if="item.sheduleParticipate && item.sheduleParticipate.length > 0">
+                  <template v-for="(s, i) in item.sheduleParticipate">
+                    {{ $lang == $global.lang.en ? s.userNameEn : s.userNameZh }} <i style="color: #959595;" :key="i" v-if="(i + 1) < item.sheduleParticipate.length">、</i>
+                  </template>
+                </template>
+              </span>
             </p>
           </div>
           <p v-if="loading">{{$t("workBench.remind.loading")}}</p>
@@ -53,100 +59,7 @@ export default {
   },
   data() {
     return {
-      list: [
-        {
-          color: "#00C853FF",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#FFEA00FF",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#FF6D00FF",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#D50000FF",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#00C853FF",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#00C853FF",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        },
-        {
-          color: "#00C853FF",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: "Pualthin",
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        }
-      ],
-      remindTypes: [
-        {
-          value: "选项1",
-          label: "不提醒"
-        },
-        {
-          value: "选项2",
-          label: "提前一天"
-        },
-        {
-          value: "选项3",
-          label: "提前两天"
-        }
-      ],
-      colorTypes: [
-        {
-          value: "#D50000FF",
-          label: "重要且紧急",
-          color: "#D50000FF"
-        },
-        {
-          value: "#FF6D00FF",
-          label: "重要不紧急",
-          color: "#FF6D00FF"
-        },
-        {
-          value: "#FFEA00FF",
-          label: "不紧急",
-          color: "#FFEA00FF"
-        },
-        {
-          value: "#00C853FF",
-          label: "不重要",
-          color: "#00C853FF"
-        }
-      ],
+      list: [],
       dialogFormVisible: false,
       dateForm: {
         title: "",
@@ -155,7 +68,11 @@ export default {
         email: "",
         remind: ""
       },
-      page: 1,
+      page: {
+        pageSize: 10,
+        pageNum: 1,
+        totalPage: 0
+      },
       loading: false
     };
   },
@@ -174,29 +91,32 @@ export default {
     getremindList() {
       this.$http
         .post("/user/workbench/schedule/withpaginglist", {
-          pageNum: this.page,
-          pageSize: 2
+          pageNum: this.page.pageNum,
+          pageSize: this.page.pageSize
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            console.log("richen",res);
+            this.loading = false;
             this.list=res.datas;
+            this.page.pageNum > 1 ? this.list.push(...res.datas) : this.list = res.datas;
+            this.page.totalPage = res.pages;
           }
         });
     },
     load() {
-      this.loading = true;
-      setTimeout(() => {
-        this.list.push({
-          color: "#00C853FF",
-          img: "FufyNI07_QLDRxAj1IAVbf2rrKp5",
-          name: this.page++,
-          title: "拜访 Công ty TNHH Ngư",
-          time: { start: "2019/04/30", end: "2019/05/04" },
-          people: "Gary.P"
-        });
-        this.loading = false;
-      }, 2000);
+      this.page.pageNum++;
+      if (this.page.totalPage > this.page.pageNum) {
+        this.loading = true;
+        this.getremindList();
+      }
+    },
+    /**
+     *  添加提醒成功
+     */
+    onAddSuccess() {
+      this.dialogFormVisible = false;
+      this.page.pageNum = 1;
+      this.getremindList();
     }
   }
 };

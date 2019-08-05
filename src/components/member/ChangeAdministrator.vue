@@ -39,7 +39,6 @@
         </div>
         <i v-if="selectAdminstrator == index" class="el-icon-success"></i>
       </li>
-
     </ul>
     <div class="change-administrator__btn">
       <!-- <span v-if="operate == 'add'" style="cursor: pointer;" @click="$emit('addProjectAdministrator')">{{ $t("changeAdministrator.btn.addMember") }}</span> -->

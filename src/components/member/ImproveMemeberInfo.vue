@@ -103,9 +103,9 @@
                 v-model="memberForm.role"
                 :placeholder="$t('member.placeholder.role')"
               >
-                <el-option :label="$t('public.role.regionalManager')" :value="$global.userRole.regionalManager"></el-option>
-                <el-option :label="$t('public.role.projectManager')" :value="$global.userRole.projectManager"></el-option>
-                <el-option :label="$t('public.role.member')" :value="$global.userRole.member"></el-option>
+                <el-option v-if="userInfo.userRole == $global.userRole.superAdministrator" :label="$t('public.role.regionalManager')" :value="$global.userRole.regionalManager"></el-option>
+                <el-option v-if="[$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)" :label="$t('public.role.projectManager')" :value="$global.userRole.projectManager"></el-option>
+                <el-option v-if="[$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole)" :label="$t('public.role.member')" :value="$global.userRole.member"></el-option>
               </el-select>
             </el-form-item>
             <!-- 角色 end -->

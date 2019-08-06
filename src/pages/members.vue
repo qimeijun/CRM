@@ -12,9 +12,13 @@
             :placeholder="$t('memberManagement.searchInput')"
           >
           <i slot="suffix" style="cursor: pointer;" @click="getRegionData" class="el-input__icon el-icon-search"></i></el-input>
-          <!-- 添加成员按钮: 成员、客户 不能添加 -->
+          <!-- 
+            功能： 添加成员按钮
+            权限：
+              1、成员、客户 不能添加
+           -->
           <el-button
-            v-if="userInfo.userRole != $global.userRole.member || userInfo.userRole != $global.userRole.customer"
+            v-if="userInfo.userRole != $global.userRole.member && userInfo.userRole != $global.userRole.customer"
             class="member__top-search-btn"
             type="primary"
             icon="el-icon-plus"

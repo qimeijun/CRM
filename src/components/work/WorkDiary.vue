@@ -6,8 +6,12 @@
                 功能：添加工作日志
                 权限：
                     1、当前登录人就是这个查看对象
+                    2、公海中的目标公司不能添加日志
              -->
-            <el-button v-if="(type == 'member' && id == userInfo.id) || type == 'project' || type == 'target'" type="primary" @click="onAddDiary">{{ $t("memberInfo.btn.addDiary") }}</el-button>
+             <template v-if="isAllowAdd">
+                 <el-button v-if="(type == 'member' && id == userInfo.id) || type == 'project' || type == 'target'" type="primary" @click="onAddDiary">{{ $t("memberInfo.btn.addDiary") }}</el-button>
+             </template>
+            
         </div>
         
         <!-- 顶部按钮 end -->
@@ -96,6 +100,12 @@ export default {
             type: String,
             default() {
                 return "";
+            }
+        },
+        isAllowAdd: {
+            type: Boolean,
+            default() {
+                return true
             }
         }
     },

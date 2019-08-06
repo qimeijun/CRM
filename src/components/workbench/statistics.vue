@@ -20,37 +20,36 @@ export default {
       year: "",
       month: "",
       weekList: [],
-      numberList:[]
+      numberList: []
     };
   },
   computed: {
     ...mapGetters("ipublic", ["userInfo"])
   },
- 
-async created() { 
- 
+  async created() {
     let date = new Date();
     this.year = date.getFullYear();
     this.month = date.getMonth() + 1;
-    let datas= await this.$http
-        .post("/user/team/user/rel/task/month/number", {
-          userId: this.userInfo.id
-        })
-        .then(res => {
-          if (res.iworkuCode == 200) {
-            console.log("工作台统计",res)
-            return res.datas;
-          }else{
-            return []
-          }
-        });
-            this.weekList=datas.map(o => {
-              return this.$lang==this.$global.lang.en?`${o.week}st Week`:`第${o.week}周`;
-            });
-            this.numberList=datas.map(o=>{
-              return o.count
-            });
-              console.log(datas,this.weekList, this.numberList);
+    let datas = await this.$http
+      .post("/user/team/user/rel/task/month/number", {
+        userId: this.userInfo.id
+      })
+      .then(res => {
+        if (res.iworkuCode == 200) {
+          console.log("工作台统计", res);
+          return res.datas;
+        } else {
+          return [];
+        }
+      });
+    this.weekList = datas.map(o => {
+      return this.$lang == this.$global.lang.en
+        ? `${o.week}st Week`
+        : `第${o.week}周`;
+    });
+    this.numberList = datas.map(o => {
+      return o.count;
+    });
     // 基于准备好的dom，初始化echarts实例
     let myChart = echarts.init(document.getElementById("variables"));
     // 指定图表的配置项和数据
@@ -66,7 +65,7 @@ async created() {
       xAxis: [
         {
           type: "category",
-          data:this.weekList, 
+          data: this.weekList,
           axisTick: {
             alignWithLabel: true
           }
@@ -99,12 +98,10 @@ async created() {
         }
       ]
     };
-    myChart.setOption(option,true);
+    myChart.setOption(option, true);
   },
   methods: {
-    getStatistics() {
-      
-    }
+    getStatistics() {}
   }
 };
 </script>

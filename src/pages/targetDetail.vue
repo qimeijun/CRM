@@ -1,7 +1,7 @@
 <template>
   <section class="target-details">
     <div class="target-details__top">
-      <PageHeader :url="`/project/detail/private`"></PageHeader>
+      <PageHeader url=""></PageHeader>
       <div class="target-details__top-name">{{$t("target.title")}}</div>
     </div>
     <div class="target-details__content">

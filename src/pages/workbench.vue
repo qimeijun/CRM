@@ -82,6 +82,7 @@ export default {
   methods: {
     // 获取项目列表
     getItemList() {
+      console.log(123123);
       this.$http
         .post("/customer/item/withoutpaginglist")
         .then(res => {

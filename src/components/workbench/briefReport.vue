@@ -24,7 +24,11 @@
         width="30%"
       >
         <el-scrollbar class="scrollbar">
-          <AddWorkDiary :id="itemid" type="project" @onOperateSuccess=""></AddWorkDiary>
+          <AddWorkDiary
+            :id="itemid"
+            type="project"
+            @onOperateSuccess="addWorkDiaryDialogVisible=false;getBriefReport(itemid,1);"
+          ></AddWorkDiary>
         </el-scrollbar>
       </el-dialog>
     </div>
@@ -92,6 +96,13 @@ export default {
       return this.loading || this.noMore;
     }
   },
+  watch: {
+    itemid: function(newVal){
+      if (newVal) {
+        this.getBriefReport(newVal, 1);
+      }
+    }
+  },
   methods: {
     getBriefReport(id, page) {
       this.$http
@@ -102,10 +113,9 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            console.log(222, res.datas);
             this.list = [...this.list, ...res.datas];
             this.loading = false;
-            this.page=page+1;
+            this.page = page + 1;
             if (res.datas.length < 6) {
               this.noMore = true;
             }
@@ -124,11 +134,10 @@ export default {
       this.$router.push({ path });
     },
     // 添加日志成功回调
-    onOperateSuccess(){
-      this.addWorkDiaryDialogVisible=false;
-      getBriefReport(this.itemid, 1);
+    onOperateSuccess() {
+      this.addWorkDiaryDialogVisible = false;
+      this.getBriefReport(this.itemid, 1);
     }
-
   }
 };
 </script>
@@ -171,7 +180,7 @@ export default {
     .item_img {
       text-align: center;
       margin: 0 12px;
-      width:100px;
+      width: 100px;
       img {
         width: 35px;
         height: 35px;

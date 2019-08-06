@@ -7,7 +7,7 @@
     </div>
     <div class="member_list" v-for="(item, index) in memberlist" :key="'member'+index">
       <i :style="`background-color:${item.roleColor}`">
-        <template >{{item.roleName}}</template>
+        <template >{{$lang==$global.lang.en?item.roleNameEn:item.roleName}}</template>
         </i>
       <p class="list_img">
         <el-avatar size="medium" :src="$global.avatarURI+item.userProfileImage"></el-avatar>
@@ -80,19 +80,18 @@ export default {
     getMemberList(){
       this.$http.post('/user/item/user/rel/withoutpaginglist',{itemId:this.itemid}).then(res=>{
         if(res.iworkuCode==200){
-          console.log(res.datas);
           this.memberlist=res.datas.map(o=>{
             let roleColor;
-            switch(o.roleName){
-              case "区域经理":{
+            switch(o.userRole){
+              case this.$global.userRole.regionalManager:{
                 roleColor=this.memberColors[0];
                 break;
               };
-              case "项目经理":{
+              case this.$global.userRole.projectManager:{
                 roleColor=this.memberColors[1];
                 break;
               };
-              case "成员":{
+              case this.$global.userRole.member:{
                 roleColor=this.memberColors[2];
                 break;
               };

@@ -1,7 +1,7 @@
 <template>
   <section class="target-details">
     <div class="target-details__top">
-      <PageHeader url="/project/detail/private"></PageHeader>
+      <PageHeader url=""></PageHeader>
       <div class="target-details__top-name">{{$t("target.title")}}</div>
     </div>
     <div class="target-details__content">
@@ -10,7 +10,7 @@
           <li
             v-for="(item, index) in menuList"
             :key="index"
-            :class="activeMenu == item.value ? 'target-details__menu-active' : ''"
+            :class="activeMenu == item.value ?'target-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
           >
             <router-link :to="`/target/detail/${item.route}/${targetid}/${itemid}`">{{ item.name }}</router-link>
@@ -58,6 +58,7 @@ export default {
   },
   created() {
     this.activeMenu = this.$route.name;
+    // console.log(this.$router.back(-1))
   },
   components: {
     PageHeader

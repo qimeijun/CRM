@@ -85,7 +85,7 @@
                 <el-option
                   v-for="(item,index) in industryList"
                   :key="'industry'+index"
-                  :label="$lang==$global.lang.en?item.nameEn:nameZh"
+                  :label="$lang==$global.lang.en?item.nameEn:item.nameZh"
                   :value="item.value"
                 ></el-option>
               </el-select>

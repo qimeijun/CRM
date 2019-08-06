@@ -139,6 +139,17 @@
           </template>
         </el-table-column>
       </el-table>
+              <el-pagination
+        style="text-align:center;margin:10px 0;"
+        background
+        layout="prev, pager, next,sizes"
+        :total="total"
+        :page-sizes="[10, 20,30, 40]"
+        :page-size.sync="size"
+        :current-page.sync="currentPage"
+        @size-change="getPrivate(itemid,1)"
+        @current-change="getPrivate(itemid,currentPage)"
+      ></el-pagination>
     </div>
     <!-- 移交管理员的dialog start-->
     <el-dialog
@@ -189,7 +200,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ImportTarget @close="importShow=false"></ImportTarget>
+        <ImportTarget :itemid="itemid" @close="importShow=false"></ImportTarget>
       </el-scrollbar>
     </el-dialog>
     <!-- 导入目标公司 end-->
@@ -207,6 +218,9 @@ export default {
   },
   data() {
     return {
+       total: 0,
+      size: 10,
+      currentPage: 1,
       targetTypeList: [],
       memberList: [],
       props: {
@@ -382,7 +396,7 @@ export default {
           id: id,
           type: 2,
           pageNum: page,
-          pageSize: 10,
+          pageSize: this.size,
           clientType: this.tag[1],
           labelId: this.targetType,
           keyWord: this.seek,
@@ -392,6 +406,8 @@ export default {
           if (res.iworkuCode == 200) {
             console.log("项目私海", res);
             this.tableData = res.datas;
+            this.total=res.total;
+
           }
         });
     },

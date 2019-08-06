@@ -3,30 +3,51 @@
   <section class="member-info">
     <div class="member-info__user">
       <div class="member-info__details">
-        <el-avatar :size="100" :src="`${$global.avatarURI}${userInfo.userProfileImage}`"></el-avatar>
+        <el-avatar :size="100" :src="`${$global.avatarURI}${userInformation.userProfileImage}`"></el-avatar>
         <div class="member-info__details-left">
-          <p class="member-info__details-left-name">{{ userInfo.userNameZh }}</p>
-          <p class="el-icon-location">{{ $lang == $global.lang.en ? userInfo.userCountryEn : userInfo.userCountryZh }}</p>
-          <p class="member-info__details-left-gender">{{ userInfo.userGender == '2' ?  $t("member.gender.male") : $t("member.gender.female") }}</p>
+          <p class="member-info__details-left-name">{{ userInformation.userNameZh }}</p>
+          <p class="el-icon-location">{{ $lang == $global.lang.en ? userInformation.userCountryEn : userInformation.userCountryZh }}</p>
+          <p class="member-info__details-left-gender">{{ userInformation.userGender == '2' ?  $t("member.gender.male") : $t("member.gender.female") }}</p>
         </div>
-        <el-button
-          class="member-info__details-left-btn"
-          type="primary"
-          @click="modifyMemberDialogVisible=true"
-        >{{ $t("memberInfo.btn.modify") }}</el-button>
+        <!-- 
+          功能：基本信息编辑
+          权限
+            1、当前登录人的级别比正在查看信息的这个任高就可以修改
+            2、当前登录人就是查看信息的这个任
+         -->
+        <template v-if="userInfo.id == userInformation.id || (userInformation.userRole == $global.userRole.regionalManager && userInfo.userRole == $global.userRole.superAdministrator) 
+                        || (userInformation.userRole == $global.userRole.projectManager && [$global.userRole.regionalManager, $global.userRole.superAdministrator].includes(userInfo.userRole))
+                        || (userInformation.userRole == $global.userRole.member && [$global.userRole.projectManager, $global.userRole.regionalManager, $global.userRole.superAdministrator].includes(userInfo.userRole))">
+          <el-button
+            class="member-info__details-left-btn"
+            type="primary"
+            @click="modifyMemberDialogVisible=true"
+          >{{ $t("memberInfo.btn.modify") }}</el-button>
+        </template>
+        
       </div>
       <div class="member-info__account">
         <div>
           <p class="member-info__account-title">{{ $t("memberInfo.account") }}</p>
-          <p class="member-info__account-value">{{ userInfo.userEmail }}</p>
+          <p class="member-info__account-value">{{ userInformation.userEmail }}</p>
           <p class="member-info__account-title">{{ $t("memberInfo.password") }}</p>
           <p class="member-info__account-value">***********</p>
         </div>
+        <!-- 
+          功能：修改密码
+          权限
+            1、当前登录人的级别比正在查看信息的这个任高就可以修改
+            2、当前登录人就是查看信息的这个任
+         -->
+        <template v-if="userInfo.id == userInformation.id || (userInformation.userRole == $global.userRole.regionalManager && userInfo.userRole == $global.userRole.superAdministrator) 
+                        || (userInformation.userRole == $global.userRole.projectManager && [$global.userRole.regionalManager, $global.userRole.superAdministrator].includes(userInfo.userRole))
+                        || (userInformation.userRole == $global.userRole.member && [$global.userRole.projectManager, $global.userRole.regionalManager, $global.userRole.superAdministrator].includes(userInfo.userRole))">
         <el-button
           class="member-info__details-left-btn"
           type="primary"
           @click="modifyPasswordDialogVisible=true"
         >{{ $t("memberInfo.btn.password") }}</el-button>
+        </template>
       </div>
     </div>
     <div class="member-info__statistics">
@@ -58,7 +79,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <UpdateMemberInfo :user="userInfo" @onOperateSuccess="modifyMemberDialogVisible=false;getUserInfo();"></UpdateMemberInfo>
+        <UpdateMemberInfo :user="userInformation" @onOperateSuccess="modifyMemberDialogVisible=false;getUserInfo();"></UpdateMemberInfo>
       </el-scrollbar>
     </el-dialog>
     <!-- 修改成员信息 dialog end -->
@@ -74,14 +95,15 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <UpdatePassword :user="userInfo" @onOperateSuccess="modifyPasswordDialogVisible=false;"></UpdatePassword>
+        <UpdatePassword :user="userInformation" @onOperateSuccess="modifyPasswordDialogVisible=false;"></UpdatePassword>
       </el-scrollbar>
     </el-dialog>
     <!-- 修改成员密码 dialog end -->
   </section>
 </template>
 <script>
-import echarts from "echarts";
+import echarts from "echarts"
+import { mapGetters } from "vuex"
 export default {
   components: {
     UpdateMemberInfo: () => import("@/components/member/ImproveMemeberInfo.vue"),
@@ -92,9 +114,12 @@ export default {
       modifyMemberDialogVisible: false,
       modifyPasswordDialogVisible: false,
       id: this.$route.params.id,
-      userInfo: {},
+      userInformation: {},
       weeks: ['1st Week', '2nd Week', '3rd Week', '4th Week', '5th Week']
     };
+  },
+  computed: {
+    ...mapGetters("ipublic", ["userInfo"])
   },
   created() {
     this.getUserInfo();
@@ -108,7 +133,7 @@ export default {
     getUserInfo() {
       this.$http.get(`/user/info/infobypk/${this.id}`).then(res => {
         if (res.iworkuCode == 200) {
-          this.userInfo = res.datas;
+          this.userInformation = res.datas;
         }
       });
     },

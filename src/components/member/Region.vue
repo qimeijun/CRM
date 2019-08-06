@@ -2,7 +2,10 @@
   <div class="member__content">
     <div class="member__content-top">
       <span>{{ $t("member.regional") }}</span>
-      <el-button type="primary" size="mini" @click="isUpdateManager=!isUpdateManager;">
+      <!-- 管理区域管理员按钮
+           限制：
+            1、只有超级管理员才能管理 -->
+      <el-button v-if="userInfo.userRole == $global.userRole.superAdministrator" type="primary" size="mini" @click="isUpdateManager=!isUpdateManager;">
         <template v-if="isUpdateManager">{{ $t("member.btn.ok") }}</template>
         <template v-else>{{ $t("member.btn.regional") }}</template>
       </el-button>
@@ -21,14 +24,19 @@
         </div>
         <i v-if="isUpdateManager" class="el-icon-error" @click="onDeleteManager(item, index)"></i>
       </div>
-      <!-- 添加区域经理 start -->
-      <!-- 最多只能添加4个区域经理 -->
-      <div 
-        v-if="regionalData && regionalData.regionalManagerList && regionalData.regionalManagerList.length < 4"
-        class="member__regional-content member__regional-content-add"
-        @click="onAddManager"
-      >{{ $t("member.btn.addRegional") }}</div>
-      <!-- 添加区域经理 start-->
+      <!-- 
+          功能：添加区域经理 start 
+          限制：1、最多只能添加4个区域经理
+                2、只有管理员才能添加
+      -->
+      <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
+        <div 
+          v-if="regionalData && regionalData.regionalManagerList && regionalData.regionalManagerList.length < 4"
+          class="member__regional-content member__regional-content-add"
+          @click="onAddManager"
+        >{{ $t("member.btn.addRegional") }}</div>
+      </template>
+      <!-- 添加区域经理 end-->
     </div>
     <!-- 区域经理 end -->
 
@@ -77,6 +85,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex"
 export default {
   props: {
     data: {
@@ -96,6 +105,9 @@ export default {
       regionalData: {},
       teamList: []
     };
+  },
+  computed: {
+    ...mapGetters("ipublic", ["userInfo"])
   },
   methods: {
     /**

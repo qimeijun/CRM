@@ -1,5 +1,5 @@
 <template>
-    <WorkDiary type="target"></WorkDiary>
+    <WorkDiary type="target" :id="$route.params.targetid" :itemid="$route.params.itemid"></WorkDiary>
 </template>
 <script>
 export default {

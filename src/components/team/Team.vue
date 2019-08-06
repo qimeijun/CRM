@@ -18,19 +18,25 @@
             :style="(teamInfo.teamColor && teamInfo.teamColor.includes(';')) ? `background:linear-gradient(315deg,${teamInfo.teamColor.split(';')[0]} 0%,${teamInfo.teamColor.split(';')[1]} 100%);` : `background-color: ${teamInfo.teamColor}`"
           >
             <div class="operate">
-              <el-dropdown @command="onHandleCommand" style="color: white;">
+              <!-- 
+                功能：团队操作
+                权限：
+                  1、成员：不能有任何操作
+                  2、拥有这个团队的项目经理：能操作所有
+                  3、区域经理和超级管理员：能冻结团队 -->
+              <el-dropdown v-if="userInfo.userRole != $global.userRole.member && userInfo.userRole != $global.userRole.customer" @command="onHandleCommand" style="color: white;">
                 <span class="el-dropdown-link">
                   {{ $t("memberInfo.operate") }}
                   <i class="el-icon-caret-bottom el-icon--right"></i>
                 </span>
                 <el-dropdown-menu class="iworku-popper" slot="dropdown">
                   <!-- 只有项目经理才能修改和移交 -->
-                  <template v-if="userInfo.userRole == $global.userRole.projectManager">
+                  <template v-if="userInfo.userRole == $global.userRole.projectManager && userInfo.id == teamInfo.projectManager.id">
                     <el-dropdown-item command="modify">{{ $t("memberInfo.teamOperate[0]") }}</el-dropdown-item>
                     <el-dropdown-item command="handOver">{{ $t("memberInfo.teamOperate[1]") }}</el-dropdown-item>
                   </template>
                   <!-- 只要是管理员就有权冻结 -->
-                  <el-dropdown-item v-if="userInfo.userRole != $global.userRole.member" command="frozen">{{ $t("memberInfo.teamOperate[2]") }}</el-dropdown-item>
+                  <el-dropdown-item command="frozen">{{ $t("memberInfo.teamOperate[2]") }}</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -83,8 +89,12 @@
                     <li v-if="item.userRole == $global.userRole.projectManager && userInfo.userRole == item.userRole"
                       @click="handOverAdministratorDialogVisible=true;"
                     >{{ $t("memberInfo.teamMemberOperate[1]") }}</li>
-                    <!-- 删除:  成员  -->
-                    <li v-if="item.userRole == $global.userRole.member" @click="onDeleteMember(item, index)">{{ $t("memberInfo.teamMemberOperate[2]") }}</li>
+                    <!-- 
+                      功能：成员删除
+                      权限：
+                        1、只有成员和客户角色没有权限删除
+                      -->
+                    <li v-if="item.userRole == $global.userRole.member && (userInfo.userRole != $global.userRole.member && userInfo.userRole != $global.userRole.customer)" @click="onDeleteMember(item, index)">{{ $t("memberInfo.teamMemberOperate[2]") }}</li>
                   </ul>
                 </Operate>
               </div>

@@ -33,11 +33,21 @@
       </el-table-column>
       <el-table-column prop="day" :label="$t('memberInfo.projectTable[4]')" sortable width="120"></el-table-column>
       <el-table-column prop="addTimeStr" :label="$t('memberInfo.projectTable[5]')" sortable width="200"></el-table-column>
+      <!-- 
+        功能：将这个人移出项目
+        权限：
+          1、登录人的级别比当前查看人的级别高就可以操作
+          v-if=""
+       -->
+      <template v-if="(userRole == $global.userRole.member && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole)) 
+                      || (userRole == $global.userRole.projectManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)) 
+                      || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator].includes(userInfo.userRole))">
       <el-table-column :label="$t('memberInfo.projectTable[6]')" width="120">
         <template slot-scope="scope">
           <span class="member-project__delete" @click="onDelete(scope.row, scope.$index)">{{ $t("memberInfo.btn.shiftOutProject") }}</span>
         </template>
       </el-table-column>
+      </template>
     </el-table>
     <el-pagination
       style="text-align: center; margin-top: 20px;"
@@ -88,6 +98,7 @@
   </section>
 </template>
 <script>
+import { mapGetters } from "vuex"
 export default {
     components: {
         Operate: () => import("@/components/lib/Operate.vue"),
@@ -108,6 +119,12 @@ export default {
       },
       currentProjectManger: {}
     };
+  },
+  computed: {
+    ...mapGetters("ipublic", ["userInfo"]),
+    userRole() {
+      return this.$store.getters["members/memberInfo"].userRole
+    }
   },
   created() {
     this.getProject();

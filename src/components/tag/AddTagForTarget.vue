@@ -168,13 +168,13 @@ export default {
                             content: this.$t("public.tips.success"),
                             type: "success"
                         });
-                        this.$emit("onConfirmTag", [...this.selectTagMap.values()]);
+                        this.$emit("onConfirmTag", [...this.selectTagMap.values(), ...alreadExist]);
                     }
                 });
             } else if (this.type == 'target') {
                 addTagList.map(val => {
                     params.push({
-                        labelId: val,
+                        labelId: val.id,
                         targetCompanyId: this.id,
                         type: 1
                     });
@@ -194,7 +194,7 @@ export default {
                             content: this.$t("public.tips.success"),
                             type: "success"
                         });
-                        this.$emit("onConfirmTag", [...this.selectTagMap.values()]);
+                        this.$emit("onConfirmTag", [...this.selectTagMap.values(), ...alreadExist]);
                     }
                 });
             }

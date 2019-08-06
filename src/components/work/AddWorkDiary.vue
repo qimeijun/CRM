@@ -186,6 +186,15 @@ export default {
         }
     },
     /**
+     *  当时目标公司添加日志时，需要额外传入项目公司id
+     */
+    itemid: {
+        type: String,
+        default() {
+            return "";
+        }
+    },
+    /**
      *  编辑工作日志时，原来的工作日志内容
      */
     diaryInfo: {
@@ -292,6 +301,7 @@ export default {
       });
     },
     onChangeProject(item) {
+      this.diaryForm.targetCompany = null;
       this.getTarget(item);
     },
     /**
@@ -306,7 +316,8 @@ export default {
             followItemId: this.diaryForm.projectName,
             followNodeType: this.diaryForm.type,
             followFiles: this.diaryForm.attachment.join(";"),
-            followLog: this.diaryForm.chatLog.join(";")
+            followLog: this.diaryForm.chatLog.join(";"),
+            followTargetCompany: this.diaryForm.targetCompany
           };
           // 订单
           if (this.diaryForm.type == 4) {
@@ -458,6 +469,16 @@ export default {
       handler(newVal) {
         if (newVal && newVal.id) {
           this.getModifyDiary(newVal);
+        }
+      },
+      immediate: true
+    },
+    itemid: {
+      handler(newVal) {
+        if (newVal && this.type == 'target') {
+          this.diaryForm.projectName = newVal;
+          this.diaryForm.targetCompany = this.id;
+          this.getTarget(newVal);
         }
       },
       immediate: true

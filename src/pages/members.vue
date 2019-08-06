@@ -12,7 +12,9 @@
             :placeholder="$t('memberManagement.searchInput')"
           >
           <i slot="suffix" style="cursor: pointer;" @click="getRegionData" class="el-input__icon el-icon-search"></i></el-input>
+          <!-- 添加成员按钮: 成员、客户 不能添加 -->
           <el-button
+            v-if="userInfo.userRole != $global.userRole.member || userInfo.userRole != $global.userRole.customer"
             class="member__top-search-btn"
             type="primary"
             icon="el-icon-plus"
@@ -79,6 +81,7 @@
   </el-scrollbar>
 </template>
 <script>
+import { mapGetters } from "vuex"
 export default {
   components: {
     // 添加新成员
@@ -103,6 +106,9 @@ export default {
       currentRegionId: null,
       isAddProjectManager: false
     };
+  },
+  computed: {
+    ...mapGetters('ipublic', ['userInfo'])
   },
   created() {
     this.getRegionData();

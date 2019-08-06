@@ -130,7 +130,7 @@
       width="30%"
     >
       <el-scrollbar>
-        <AddNotifyUser :userId="dateForm.targetOwnerId" @getUser="getSelectUser"></AddNotifyUser>
+        <AddNotifyUser :userId="dateForm.targetOwnerId" :oldUser="dateForm.selectUsers" @getUser="getSelectUser"></AddNotifyUser>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加成员 dialog end -->

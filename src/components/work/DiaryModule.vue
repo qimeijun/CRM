@@ -24,8 +24,27 @@
                         {{ $t("workDiary.operate") }}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu class="diary-module-drop-list" slot="dropdown">
-                        <el-dropdown-item command="modify">{{ $t("workDiary.btn.modifyDiary") }}</el-dropdown-item>
-                        <el-dropdown-item command="leave">{{ $t("workDiary.btn.leaveMessageNow") }}</el-dropdown-item>
+                        <!-- 
+                            功能：编辑日志
+                            权限：
+                                1、自己
+                                2、上级
+                         -->
+                         <template v-if="(item.followAddUser == userInfo.id) || (userRole == $global.userRole.member && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole)) 
+                                        || (userRole == $global.userRole.projectManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)) 
+                                        || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator].includes(userInfo.userRole))">
+                            <el-dropdown-item command="modify">{{ $t("workDiary.btn.modifyDiary") }}</el-dropdown-item>
+                         </template>
+                         <!-- 
+                             功能：留言
+                             权限：
+                                1、上级
+                                2、客户
+                          -->
+                        <template v-if="userInfo.userRole != $global.userRole.member && item.followAddUser != userInfo.id">
+                            <el-dropdown-item command="leave">{{ $t("workDiary.btn.leaveMessageNow") }}</el-dropdown-item>
+                        </template>
+                        
                         <!-- <el-dropdown-item command="delete">{{ $t("workDiary.btn.delete") }}</el-dropdown-item> -->
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -92,7 +111,13 @@
                 </div>
                 <!-- <el-button v-if="item && item.nodeList && item.nodeList == 0" type="primary" size="mini" style="margin-top: 20px;">{{ $t("workDiary.btn.leaveMessage") }}</el-button> -->
                 <!-- v-if="item && item.nodeList && item.nodeList == 0" -->
-                <LeaveMessage  :parent="item" @onOperateSuccess="onQueryDiary"></LeaveMessage>
+                <!-- 
+                    功能：留言
+                    权限：
+                        1、上级
+                        2、客户
+                 -->
+                <LeaveMessage v-if="userInfo.userRole != $global.userRole.member && item.followAddUser != userInfo.id" :parent="item" @onCloseLeaveMessage="onQueryDiary"></LeaveMessage>
                 <!-- 留言信息 start -->
                 <template v-if="item && item.nodeList && item.nodeList.length > 0">
                     <Message v-for="(nItem, nIndex) in item.nodeList" :key="nIndex" :message="nItem" @onCloseLeaveMessage="onQueryDiary"></Message>
@@ -120,6 +145,7 @@
     </section>
 </template>
 <script>
+import { mapGetters } from "vuex"
 export default {
     props: {
         diary: {
@@ -153,12 +179,18 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapGetters("ipublic", ["userInfo"]),
+        userRole() {
+            return this.$store.getters["members/memberInfo"].userRole
+        }
+    },
     methods: {
         /**
          *  根据ID查询详情
          */
         onQueryDiary() {
-            
+            console.log('sdfsdf');
             this.$http.get(`/customer/followup/info/infobypk/${this.diary.id}`).then(res => {
                 if (res.iworkuCode == 200) {
                     this.item = res.datas;

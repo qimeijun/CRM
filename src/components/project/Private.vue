@@ -121,7 +121,7 @@
               <ul>
                 <li>
                   <router-link
-                     :to="`/target/detail/info/${scope.row.id}`"
+                     :to="`/target/detail/info/${scope.row.id}/${scope.row.itemId}`"
                   >{{$t("project.view")}}</router-link>
                 </li>
                 <!-- 移入公海 -->

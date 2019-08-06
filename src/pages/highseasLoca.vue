@@ -45,7 +45,7 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link :to="`/target/detail/info/${scope.row.targetCompanyId}`">{{$t("target.loca.view")}}</router-link>
+                  <router-link :to="`/target/detail/info/${scope.row.targetCompanyId}/${scope.row.itemId}`">{{$t("target.loca.view")}}</router-link>
                 </li>
               </ul>
             </Operate>

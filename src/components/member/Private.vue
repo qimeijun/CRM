@@ -34,7 +34,17 @@
         style="margin-right: .2rem; width: 20%;"
       ></el-cascader>
       <!-- 标签筛选 end -->
-      <el-button @click="onShiftInPublic('list')">{{ $t("memberInfo.btn.shiftIn") }}</el-button>
+      <!-- 
+        功能：批量移交
+        权限：
+          1、这个用户自己
+          2、上级
+       -->
+       <template v-if="(id == userInfo.id) || (userRole == $global.userRole.member && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole)) 
+                      || (userRole == $global.userRole.projectManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)) 
+                      || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator].includes(userInfo.userRole))">
+        <el-button @click="onShiftInPublic('list')">{{ $t("memberInfo.btn.shiftIn") }}</el-button>
+       </template>
     </div>
     <!-- 顶部筛选 end -->
     <!-- 表格 start -->
@@ -90,8 +100,18 @@
               <li>
                 <router-link to>{{ $t("memberInfo.privateOperate")[0] }}</router-link>
               </li>
-              <li @click="onShiftInPublic('one',scope.row, scope.$index)">{{ $t("memberInfo.privateOperate")[1] }}</li>
-              <li @click="onHandOver(scope.row)">{{ $t("memberInfo.privateOperate")[2] }}</li>
+              <!-- 
+                功能：移入公海 和 移交
+                权限：
+                  1、自己
+                  2、上级
+               -->
+               <template v-if="(id == userInfo.id) || (userRole == $global.userRole.member && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole)) 
+                      || (userRole == $global.userRole.projectManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)) 
+                      || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator].includes(userInfo.userRole))">
+                 <li @click="onShiftInPublic('one',scope.row, scope.$index)">{{ $t("memberInfo.privateOperate")[1] }}</li>
+                  <li @click="onHandOver(scope.row)">{{ $t("memberInfo.privateOperate")[2] }}</li>
+               </template>
             </ul>
           </Operate>
         </template>
@@ -176,6 +196,9 @@ export default {
         { label: this.$t('target.status[2]'), value: '3' }, 
         { label: this.$t('target.status[3]'), value: '4' }
       ]
+    },
+    userRole() {
+      return this.$store.getters["members/memberInfo"].userRole
     }
   },
   created() {

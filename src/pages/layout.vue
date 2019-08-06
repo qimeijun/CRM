@@ -21,15 +21,30 @@
         <i class="iconfont">&#xe604;</i>
         <span slot="title">项目管理</span>
       </el-menu-item>
-      <el-menu-item index="/highseas" route="/highseas">
+      <!-- 
+        功能：公海管理
+        权限：
+          1、超级管理员和区域经理可见
+       -->
+      <el-menu-item v-if="[$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)" index="/highseas" route="/highseas">
         <i class="iconfont">&#xe600;</i>
         <span slot="title">公海管理</span>
       </el-menu-item>
-      <el-menu-item index="/member" route="/member">
+      <!-- 
+        功能：成员管理
+        权限：
+          1、只有客户不可见
+       -->
+      <el-menu-item v-if="userInfo.userRole != $global.userRole.customer" index="/member" route="/member">
         <i class="iconfont">&#xe63f;</i>
         <span slot="title">成员管理</span>
       </el-menu-item>
-      <el-menu-item index="/tag" route="/tag">
+      <!-- 
+        功能：标签管理
+        权限：
+          1、只有客户不可见
+       -->
+      <el-menu-item v-if="userInfo.userRole != $global.userRole.customer" index="/tag" route="/tag">
         <i class="iconfont">&#xe61e;</i>
         <span slot="title">标签管理</span>
       </el-menu-item>
@@ -50,6 +65,7 @@
 <script>
 import Header from "@/components/Header.vue"
 import automaticLogin from '@/plugins/automaticLogin.js'
+import { mapGetters } from "vuex"
 export default {
   name: "crm",
   components: {
@@ -61,6 +77,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("ipublic", ["userInfo"]),
     path() {
       return this.$route.path;
     }

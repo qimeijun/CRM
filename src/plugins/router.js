@@ -97,18 +97,18 @@ const router = new VueRouter({
                     path: '/target/detail', component: () => import('./../pages/targetDetail.vue'),
                     children:[
                         {
-                            path: 'info/:targetid',
+                            path: 'info/:targetid/:itemid',
                             alias: "info",
                             name: "target_information",
                             component: () => import('./../components/target/Information.vue')
                         },
                         {
-                            path: 'probe/:targetid',
+                            path: 'probe/:targetid/:itemid',
                             name: 'target_probe',
                             component: () => import('./../components/target/Probe.vue')
                         },
                         {
-                            path: 'diary/:targetid',
+                            path: 'diary/:targetid/:itemid',
                             name: 'target_diary',
                             component: () => import('./../components/target/WorkDiary.vue')
                         }

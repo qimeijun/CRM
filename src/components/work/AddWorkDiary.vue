@@ -115,7 +115,7 @@
           :on-remove="onChtLogUploadRemove"
           :before-upload="onBeforeUpload"
           :data="uploadData"
-          :file-list="diaryForm.chatLogList"
+          :file-list="diaryForm.chatLogList" 
           class="iworku-upload-card"
         >
           <div class="content">
@@ -210,7 +210,7 @@ export default {
         id: "",
         projectName: "",
         type: "",
-        targetCompany: "",
+        targetCompany: null,
         title: "",
         description: "",
         chatLog: [],
@@ -316,9 +316,11 @@ export default {
             followItemId: this.diaryForm.projectName,
             followNodeType: this.diaryForm.type,
             followFiles: this.diaryForm.attachment.join(";"),
-            followLog: this.diaryForm.chatLog.join(";"),
-            followTargetCompany: this.diaryForm.targetCompany
+            followLog: this.diaryForm.chatLog.join(";")
           };
+          if (this.diaryForm.targetCompany) {
+            params.followTargetCompany = this.diaryForm.targetCompany
+          }
           // 订单
           if (this.diaryForm.type == 4) {
             params.orderCode  = this.diaryForm.orderNo;

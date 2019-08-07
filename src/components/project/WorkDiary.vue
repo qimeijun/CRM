@@ -1,5 +1,5 @@
 <template>
-    <WorkDiary type="project" :id="id" :isAllowAdd="isAllowAdd"></WorkDiary>
+    <WorkDiary type="project" :id="id" :isAllow="isAllow"></WorkDiary>
 </template>
 <script>
 import { mapGetters } from "vuex"
@@ -10,7 +10,7 @@ export default {
     data() {
         return {
             id: this.$route.params.itemid,
-            isAllowAdd: true
+            isAllow: true
         }
     },
     computed: {
@@ -29,10 +29,10 @@ export default {
                     _this.$http.post("/user/info/find/user", {id: result.probjectManager}).then(ures => {
                     if (res.iworkuCode == 200 && _this.userInfo.userRole == _this.$global.userRole.regionalManager) {
                             let index = ures.datas.findIndex(val => _this.userInfo.id == val.userId);
-                            index >= 0 ? _this.isAllowAdd = true : _this.isAllowAdd = false;
+                            index >= 0 ? _this.isAllow = true : _this.isAllow = false;
                         }
                     });
-                }(this, res.datas)) : this.isAllowAdd = false;
+                }(this, res.datas)) : this.isAllow = false;
             }
         });
     }

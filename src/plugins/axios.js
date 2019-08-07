@@ -5,9 +5,15 @@ import router from 'vue-router'
 import Message from './message.js'
 import store from './../store/index.js'
 
+const instance  = axios.create({
+    baseURL: `${process.env.VUE_APP_API_ROOT}`,
+    // 进度条
+    onUploadProgress: function (progressEvent) {
+        return 100 * ( progressEvent.loaded / progressEvent.total);
+    }
+});
 // 请求拦截器
-axios.interceptors.request.use((config) => {
-    config.url = `${process.env.VUE_APP_API_ROOT}${config.url}`;
+instance.interceptors.request.use((config) => {
     let userInfo = store.getters['ipublic/userInfo'];
     // jwt 验证
     if (userInfo.jwtValue) {
@@ -31,7 +37,7 @@ axios.interceptors.request.use((config) => {
 });
 
 // 响应拦截器
-axios.interceptors.response.use((response) => {
+instance.interceptors.response.use((response) => {
     if (response.data.iworkuCode != '200') {
         if (response.data.iworkuCode == '403') {
             // 如果没有存储用户信息，那就让用户跳转到登录页面
@@ -70,4 +76,4 @@ function getCookie(name) {
     else
         return null;
 }
-Vue.prototype.$http = axios;
+Vue.prototype.$http = instance;

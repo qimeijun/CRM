@@ -1,6 +1,6 @@
 <template>
 <!-- 单个日志 -->
-    <section class="diary-module">
+    <section class="diary-module" v-if="!isDeleteDiary">
         <div class="diary-module__left">
             <div class="time" :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">
                 <p>{{ timeInfo.year }}</p>
@@ -19,7 +19,7 @@
                 <span>
                     {{ item.followItemIdName }}
                 </span>
-                <el-dropdown @command="onHandleCommand" style="color: white; cursor: pointer;">
+                <el-dropdown v-if="isAllowOperate" @command="onHandleCommand" style="color: white; cursor: pointer;">
                     <span class="el-dropdown-link">
                         {{ $t("workDiary.operate") }}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
@@ -30,9 +30,7 @@
                                 1、自己
                                 2、上级
                          -->
-                         <template v-if="(item.followAddUser == userInfo.id) || (userRole == $global.userRole.member && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole)) 
-                                        || (userRole == $global.userRole.projectManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)) 
-                                        || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator].includes(userInfo.userRole))">
+                         <template v-if="(item.followAddUser == userInfo.id) && isAllow">
                             <el-dropdown-item command="modify">{{ $t("workDiary.btn.modifyDiary") }}</el-dropdown-item>
                          </template>
                          <!-- 
@@ -44,8 +42,13 @@
                         <template v-if="userInfo.userRole != $global.userRole.member && item.followAddUser != userInfo.id">
                             <el-dropdown-item command="leave">{{ $t("workDiary.btn.leaveMessageNow") }}</el-dropdown-item>
                         </template>
-                        
-                        <!-- <el-dropdown-item command="delete">{{ $t("workDiary.btn.delete") }}</el-dropdown-item> -->
+                        <!-- 
+                            功能：删除
+                            权限：
+                                1、超级管理员
+                                2、区域管理员
+                         -->
+                        <el-dropdown-item v-if="$global.userRole.superAdministrator == userInfo.userRole" command="delete">{{ $t("workDiary.btn.delete") }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -117,7 +120,7 @@
                         1、上级
                         2、客户
                  -->
-                <LeaveMessage v-if="userInfo.userRole != $global.userRole.member && item.followAddUser != userInfo.id" :parent="item" @onCloseLeaveMessage="onQueryDiary"></LeaveMessage>
+                <LeaveMessage v-if="isAllowOperate && (userInfo.userRole != $global.userRole.member && item.followAddUser != userInfo.id)" :parent="item" @onCloseLeaveMessage="onQueryDiary"></LeaveMessage>
                 <!-- 留言信息 start -->
                 <template v-if="item && item.nodeList && item.nodeList.length > 0">
                     <Message v-for="(nItem, nIndex) in item.nodeList" :key="nIndex" :message="nItem" @onCloseLeaveMessage="onQueryDiary"></Message>
@@ -153,7 +156,31 @@ export default {
             default() {
                 return {};
             }
-        }
+        },
+        isAllow: {
+            type: Boolean,
+            default() {
+                return true
+            }
+        },
+        // 项目ID、目标公司ID、成员ID
+        id: {
+            type: String,
+            default() {
+                return "";
+            }
+        },
+        /**
+         * project 项目公司
+         * target  目标公司
+         * member  成员
+         */
+        type: {
+            type: String,
+            default() {
+                return 'project';
+            }
+        },
     },
     components: {
         Attachment: () => import('@/components/lib/Attachment.vue'),
@@ -176,7 +203,9 @@ export default {
                 month: 'Jun',
                 hour: "12",
                 minute: "12"
-            }
+            },
+            isAllowOperate: true,
+            isDeleteDiary: false
         }
     },
     computed: {
@@ -190,7 +219,6 @@ export default {
          *  根据ID查询详情
          */
         onQueryDiary() {
-            console.log('sdfsdf');
             this.$http.get(`/customer/followup/info/infobypk/${this.diary.id}`).then(res => {
                 if (res.iworkuCode == 200) {
                     this.item = res.datas;
@@ -208,6 +236,7 @@ export default {
                 case 'leave':
                     break;
                 case 'delete':
+                    this.deleteDiary();
                     break;
             }
         },
@@ -234,6 +263,20 @@ export default {
                     this.translateContent = res.datas && res.datas.result;
                 }  
             });
+        },
+        /**
+         *  删除日志
+         */
+        deleteDiary() {
+            this.$http.post('/customer/followup/info/delete', {followId: this.diary.id}).then(res => {
+                if (res.iworkuCode == 200) {
+                    this.isDeleteDiary = true;
+                    this.$imessage({
+                        content: this.$t("public.tips.success"),
+                        type: "success"
+                    });
+                }
+            });
         }
     },
     watch: {
@@ -251,6 +294,23 @@ export default {
                     this.timeInfo.hour = time.getHours();
                     this.timeInfo.minute = time.getMinutes();
                     this.timeInfo.month = this.monthEnglish[month];
+                }
+            },
+            immediate: true
+        },
+        id: {
+            async handler(newVal) {
+                if (newVal && this.type == 'target') {
+                    let res = await this.$http.get(`/target/company/infobypk/${newVal}`);
+                    if (res.iworkuCode == 200 && res.datas && res.datas.targetCompany.ownUser == 2 && this.userInfo.userRole == this.$global.userRole.regionalManager) {
+                        
+                        this.$http.post("/user/info/find/user", {id: res.datas.targetCompany.itemProjectManager}).then(ures => {
+                            if (ures.iworkuCode == 200 && res.datas) {
+                                let index = ures.datas.findIndex(val => this.userInfo.id == val.userId);
+                                index > -1 ? this.isAllowOperate = true : this.isAllowOperate = false;
+                            }
+                        });
+                    }
                 }
             },
             immediate: true

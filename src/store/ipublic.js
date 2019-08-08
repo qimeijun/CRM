@@ -24,7 +24,9 @@ export default {
         // 日程提醒颜色
         remindColor:[],
         // 目标公司重要程度
-        grade:[]
+        grade:[],
+        // 目标公司状态
+        targetStatus: []
     },
     // 提交
     mutations: {
@@ -56,6 +58,9 @@ export default {
         $_remove_userInfo(state) {
             session.remove('user');
             state.userInfo = {};
+        },
+        $_set_targetStatus(state, value) {
+            state.targetStatus = value;
         }
     },
     // 提交到 mutations 中
@@ -93,6 +98,9 @@ export default {
             } else {
                 return state.userInfo;
             }
+        },
+        targetStatus:state => {
+            return state.targetStatus;
         }
     }
 };

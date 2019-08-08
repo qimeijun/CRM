@@ -25,7 +25,7 @@ export default {
             this.$http.post("/user/info/find/user", {
                 id: this.id
             }).then(res => {
-                if (rse.iworkuCode == 200 && res.datas) {
+                if (res.iworkuCode == 200 && res.datas) {
                     let index = res.datas.findIndex(val => val.userId == this.userInfo.id);
                     index > -1 ? this.isAllow = true : this.isAllow = false;
                 }

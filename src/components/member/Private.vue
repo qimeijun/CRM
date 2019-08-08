@@ -37,12 +37,12 @@
       <!-- 
         功能：批量移交
         权限：
-          1、这个用户自己
-          2、上级
+          1、超级管理员
+          2、区域经理
+          3、项目经理
        -->
-       <template v-if="(id == userInfo.id) || (userRole == $global.userRole.member && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole)) 
-                      || (userRole == $global.userRole.projectManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)) 
-                      || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator].includes(userInfo.userRole))">
+       <template v-if="((userRole == $global.userRole.member || userRole == $global.userRole.projectManager) && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole))
+                      || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole))">
         <el-button @click="onShiftInPublic('list')">{{ $t("memberInfo.btn.shiftIn") }}</el-button>
        </template>
     </div>
@@ -56,11 +56,11 @@
       @selection-change="onHandleSelectionChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="targetCompanyName" :label="$t('memberInfo.priviteTable[0]')"></el-table-column>
+      <el-table-column prop="targetCompanyName" :label="$t('memberInfo.priviteTable.targetCompany')"></el-table-column>
       <el-table-column
         prop="name"
-        :label="$t('memberInfo.priviteTable[1]')"
-        :filters="[{ text: $t('target.importanceStatus[5]'), value: '5' }, { text: $t('target.importanceStatus[4]'), value: '4' }, { text: $t('target.importanceStatus[3]'), value: '3' }, { text: $t('target.importanceStatus[2]'), value: '2' }, { text: $t('target.importanceStatus[1]'), value: '1' }, { text: $t('target.importanceStatus[0]'), value: '' }]"
+        :label="$t('memberInfo.priviteTable.importance')"
+        :filters="filterImportanceList"
         :filter-method="filterImportance"
         filter-placement="bottom-end"
         style="text-align: center;"
@@ -83,34 +83,43 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="updateTimeStr" :label="$t('memberInfo.priviteTable[2]')" width="200"></el-table-column>
+      <el-table-column prop="updateTimeStr" :label="$t('memberInfo.priviteTable.updateTime')" width="200"></el-table-column>
       <el-table-column
         prop="statusNameZh"
-        :label="$t('memberInfo.priviteTable[3]')"
-        :filters="[{ text: $t('target.status[0]'), value: '1' }, { text: $t('target.status[1]'), value: '2' }, { text: $t('target.status[2]'), value: '3' }, { text: $t('target.status[3]'), value: '4' }]"
+        :label="$t('memberInfo.priviteTable.status')"
+        :filters="filterStatusList"
         :filter-method="filterStatus"
         filter-placement="bottom-end"
       ></el-table-column>
-      <el-table-column prop="addTimeStr" :label="$t('memberInfo.priviteTable[4]')"></el-table-column>
-      <el-table-column prop="division" :label="$t('memberInfo.priviteTable[5]')"></el-table-column>
-      <el-table-column :label="$t('memberInfo.priviteTable[6]')" width="120">
+      <el-table-column prop="addTimeStr" :label="$t('memberInfo.priviteTable.createTime')"></el-table-column>
+      <el-table-column prop="division" :label="$t('memberInfo.priviteTable.informationIntegrity')"></el-table-column>
+      <el-table-column :label="$t('memberInfo.priviteTable.operate')" width="120">
         <template slot-scope="scope">
           <Operate>
             <ul class="member-private__operate">
               <li>
-                <router-link to>{{ $t("memberInfo.privateOperate")[0] }}</router-link>
+                <router-link :to="`/target/detail/info/${scope.row.id}/${scope.row.itemId}`">{{ $t("memberInfo.privateOperate")[0] }}</router-link>
               </li>
               <!-- 
-                功能：移入公海 和 移交
+                功能：移入公海
+                权限：
+                  1、超级管理员
+                  2、区域经理
+                  3、项目经理
+               -->
+               <li v-if="((userRole == $global.userRole.member || userRole == $global.userRole.projectManager) && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole))
+                      || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole))" @click="onShiftInPublic('one',scope.row, scope.$index)">{{ $t("memberInfo.privateOperate")[1] }}</li>
+               <!-- 
+                功能：移交
                 权限：
                   1、自己
-                  2、上级
+                  2、超级管理员
+                  3、区域经理
+                  4、项目经理
                -->
-               <template v-if="(id == userInfo.id) || (userRole == $global.userRole.member && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole)) 
-                      || (userRole == $global.userRole.projectManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)) 
+               <template v-if="(id == userInfo.id) || ((userRole == $global.userRole.member || userRole == $global.userRole.projectManager) && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole))
                       || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator].includes(userInfo.userRole))">
-                 <li @click="onShiftInPublic('one',scope.row, scope.$index)">{{ $t("memberInfo.privateOperate")[1] }}</li>
-                  <li @click="onHandOver(scope.row)">{{ $t("memberInfo.privateOperate")[2] }}</li>
+                 <li @click="onHandOver(scope.row)">{{ $t("memberInfo.privateOperate")[2] }}</li>
                </template>
             </ul>
           </Operate>
@@ -148,8 +157,8 @@
   </section>
 </template>
 <script>
-let ids = 0;
 import { mapGetters } from 'vuex'
+import { getGrade, getTargetStatus } from "@/plugins/configuration.js"
 export default {
   components: {
     Operate: () => import("@/components/lib/Operate.vue"),
@@ -171,7 +180,9 @@ export default {
       },
       selectTableList: [],
       currentUserInfo: {},
-      currentTarget: {}
+      currentTarget: {},
+      filterImportanceList: [],
+      filterStatusList: []
     };
   },
   computed: {
@@ -189,19 +200,21 @@ export default {
         return newVal;
       }
     },
-    statusList() {
-      return [
-        { label: this.$t('target.status[0]'), value: '1' }, 
-        { label: this.$t('target.status[1]'), value: '2' }, 
-        { label: this.$t('target.status[2]'), value: '3' }, 
-        { label: this.$t('target.status[3]'), value: '4' }
-      ]
+    statusList: {
+      get: function () {
+        return [];
+      },
+      set: function (newVal) {
+        return newVal;
+      }
     },
     userRole() {
       return this.$store.getters["members/memberInfo"].userRole
     }
   },
   created() {
+    this.getImportance();
+    this.getStatus();
     this.getFilterByLabel();
     this.getTarget();
     this.getUserInfo();
@@ -371,6 +384,28 @@ export default {
           // this.page.pageNum = 1;
           this.getTarget();
         }
+      });
+    },
+    async getImportance() {
+      let result = await getGrade(this);
+      result.map(val => {
+        this.filterImportanceList.push({
+          text: this.$lang == this.$global.lang.en ? val.nameEn : val.nameZh,
+          value: val.value
+        })
+      });
+    },
+    async getStatus() {
+      let result = await getTargetStatus(this);
+      result.map(val => {
+        this.statusList.push({
+          label: this.$lang == this.$global.lang.en ? val.nameEn : val.nameZh,
+          value: val.value
+        });
+        this.filterStatusList.push({
+          text: this.$lang == this.$global.lang.en ? val.nameEn : val.nameZh,
+          value: val.value
+        });
       });
     }
   }

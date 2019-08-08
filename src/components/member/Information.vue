@@ -12,7 +12,7 @@
         <!-- 
           功能：基本信息编辑
           权限
-            1、当前登录人的级别比正在查看信息的这个任高就可以修改
+            1、当前登录人的级别比正在查看信息的这个人高就可以修改
             2、当前登录人就是查看信息的这个任
          -->
         <template v-if="userInfo.id == userInformation.id || (userInformation.userRole == $global.userRole.regionalManager && userInfo.userRole == $global.userRole.superAdministrator) 

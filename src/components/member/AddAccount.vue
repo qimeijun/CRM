@@ -59,7 +59,7 @@ export default {
           },
           {
             validator: (rule, value, callback) => {
-              if (value.length < 8 || /^[\u4e00-\u9fa5a-z]+$/gi.test(value)) {
+              if (value.length < 8 || !/^[A-Za-z0-9]+$/gi.test(value)) {
                 callback(new Error(this.$t("member.rules.password[1]")));
               } else {
                 callback();

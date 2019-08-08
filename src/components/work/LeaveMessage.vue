@@ -93,14 +93,18 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.btnLoading = true;
-          this.$http.post('/customer/followup/info/save', {
+          let params = {
             followNodeType: 6, // 回复
             followParent: this.parent.id,
             followContent: this.messageForm.content,
             followFiles: this.messageForm.attachment.join(";"),
             followTitle: this.parent.followTitle,
             followItemId: this.parent.followItemId
-          }).then(res => {
+          }
+          if (this.parent.followTargetCompany) {
+            params.followTargetCompany = this.parent.followTargetCompany;
+          }
+          this.$http.post('/customer/followup/info/save', params).then(res => {
             this.btnLoading = false;
             if (res.iworkuCode == 200) {
               this.$imessage({

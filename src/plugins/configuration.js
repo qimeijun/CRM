@@ -133,3 +133,22 @@ export const getGrade= async ({$http, $store, $lang, $global}) => {
     }
     return grade;
 }
+
+
+/**
+ *  目标公司状态   TARGET_COMPANY_STATUS
+ */
+export const getTargetStatus = async ({$http, $store, $lang, $global}) => {
+    let grade = $store.getters['ipublic/targetStatus'];
+    if (grade.length == 0) {
+        let params = {sortname: 'd_stort_en'};
+        $lang == $global.lang.en ? params.sortname = 'd_stort_en' : params.sortname = 'd_stort_zh';
+        let res = await $http.post('/properties/dictionary/withoutpaginglist', { treeCode:"TARGET_COMPANY_STATUS",  ...params});
+        if (res.iworkuCode == 200) {
+            grade = res.datas;
+            $store.commit('ipublic/$_set_targetStatus', res.datas);
+        } else {
+        }
+    }
+    return grade;
+}

@@ -36,12 +36,12 @@
       <!-- 
         功能：将这个人移出项目
         权限：
-          1、登录人的级别比当前查看人的级别高就可以操作
-          v-if=""
+          1、项目经理
+          2、超级管理员
+          3、区域经理
        -->
-      <template v-if="(userRole == $global.userRole.member && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole)) 
-                      || (userRole == $global.userRole.projectManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)) 
-                      || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator].includes(userInfo.userRole))">
+      <template v-if="((userRole == $global.userRole.member || userRole == $global.userRole.projectManager) && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole))
+                      || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole))">
       <el-table-column :label="$t('memberInfo.projectTable[6]')" width="120">
         <template slot-scope="scope">
           <span class="member-project__delete" @click="onDelete(scope.row, scope.$index)">{{ $t("memberInfo.btn.shiftOutProject") }}</span>
@@ -73,28 +73,11 @@
         <AddAdministrator @getManager="getManager" 
             :oldAdminstrator="currentProjectManger" 
             :params="{type: currentProjectManger.type, id: currentProjectManger.itemId}" 
-            @addProjectAdministrator="handOverAdministratorDialogVisible=false;addMemberDialogVisible=true;"
+            @addProjectAdministrator="handOverAdministratorDialogVisible=false;"
             operate="handOver"></AddAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加区域经理 dialog end -->
-    <!-- 添加新的项目经理 dialog start -->
-    <el-dialog
-        class="el-dialog__scroll"
-        :title="$t('selectRegionalManager.title')"
-        :visible.sync="addMemberDialogVisible"
-        top="5vh"
-        :append-to-body="true"
-        :modal="false"
-        :lock-scroll="true"
-        :close-on-click-modal="false"
-        width="30%"
-      >
-        <el-scrollbar>
-          <AddMember></AddMember>
-        </el-scrollbar>
-      </el-dialog>
-    <!-- 添加新的项目经理 dialog end -->
   </section>
 </template>
 <script>
@@ -103,14 +86,11 @@ export default {
     components: {
         Operate: () => import("@/components/lib/Operate.vue"),
         AddAdministrator: () => import('@/components/member/ChangeAdministrator.vue'),
-        // 添加新成员
-        AddMember: () => import("@/components/member/AddMember.vue"),
     },
   data() {
     return {
       tableData: [],
       handOverAdministratorDialogVisible: false,
-      addMemberDialogVisible: false,
       userId: this.$route.params.id,
       page: {
         pageSize: 10,

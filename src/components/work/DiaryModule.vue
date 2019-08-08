@@ -48,12 +48,12 @@
                                 1、超级管理员
                                 2、区域管理员
                          -->
-                        <el-dropdown-item v-if="$global.userRole.superAdministrator == userInfo.userRole" command="delete">{{ $t("workDiary.btn.delete") }}</el-dropdown-item>
+                        <el-dropdown-item v-if="[$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)" command="delete">{{ $t("workDiary.btn.delete") }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
             <div v-if="item.followTargetCompanyName" class="target-company">
-                目标公司：{{ item.followTargetCompanyName }}
+                {{ $t("workDiary.targetCompany") }}：{{ item.followTargetCompanyName }}
             </div>
             <div class="diary-content">
                 <div style="font-size: 16px; color: black; line-height: 35px;">{{ item.followTitle }}</div>
@@ -92,7 +92,7 @@
                 <el-button v-if="item.followContent" @click="onTranslate(item.followContent)" type="primary" size="mini" :disabled="translateContent ? true : false" :loading="translateBtnLoading">{{ $t("workDiary.btn.translate") }}</el-button>
                 <!-- 翻译内容显示 start -->
                 <div v-if="translateContent" style="margin-top: 20px; margin-bottom: 20px; line-height: 20px;word-break: break-all;">
-                    <p style="line-height: 30px;">翻译内容为：</p>
+                    <p style="line-height: 30px;">{{ $t("workDiary.translateTip") }}：</p>
                     {{ translateContent }}
                 </div>
                 <!-- 翻译内容显示 end -->
@@ -112,8 +112,6 @@
                         <Attachment v-for="(aItem, aIndex) in item.followFiles.split(';')" :key="aIndex" :name="aItem"></Attachment>
                     </div>
                 </div>
-                <!-- <el-button v-if="item && item.nodeList && item.nodeList == 0" type="primary" size="mini" style="margin-top: 20px;">{{ $t("workDiary.btn.leaveMessage") }}</el-button> -->
-                <!-- v-if="item && item.nodeList && item.nodeList == 0" -->
                 <!-- 
                     功能：留言
                     权限：

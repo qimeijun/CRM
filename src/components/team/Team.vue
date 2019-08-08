@@ -30,13 +30,36 @@
                   <i class="el-icon-caret-bottom el-icon--right"></i>
                 </span>
                 <el-dropdown-menu class="iworku-popper" slot="dropdown">
-                  <!-- 只有项目经理才能修改和移交 -->
-                  <template v-if="userInfo.userRole == $global.userRole.projectManager && userInfo.id == teamInfo.projectManager.id">
+                  <!-- 
+                    功能：编辑团队信息 和 移交管理员
+                    权限：
+                      1、项目经理
+                      2、超级管理员
+                      3、区域管理员
+                      4、在团队正常的情况下
+                   -->
+                  <template v-if="teamInfo.teamSatus == 1 && [$global.userRole.projectManager, $global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)">
                     <el-dropdown-item command="modify">{{ $t("memberInfo.teamOperate[0]") }}</el-dropdown-item>
                     <el-dropdown-item command="handOver">{{ $t("memberInfo.teamOperate[1]") }}</el-dropdown-item>
                   </template>
-                  <!-- 只要是管理员就有权冻结 -->
-                  <el-dropdown-item command="frozen">{{ $t("memberInfo.teamOperate[2]") }}</el-dropdown-item>
+                  <!-- 
+                    功能：将团队冻结
+                    权限：
+                      1、超级管理员
+                      2、区域管理员
+                   -->
+                  <el-dropdown-item v-if="teamInfo.teamSatus == 1 && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)" command="frozen">
+                    {{ $t("memberInfo.teamOperate[2]") }}
+                  </el-dropdown-item>
+                  <!-- 
+                    功能：激活团队
+                    权限
+                      1、超级管理员
+                      2、区域管理员
+                   -->
+                  <el-dropdown-item v-if="teamInfo.teamSatus == 2 && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)" command="active">
+                    {{ $t("memberInfo.teamOperate[3]") }}
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -54,7 +77,7 @@
           <template v-if="teamInfo && teamInfo.userInfoList && teamInfo.userInfoList.length > 0">
             <template v-for="(item, index) in teamInfo.userInfoList">
             <li
-              v-if="item.isDelete !== true"
+              v-if="item && item.isDelete !== true"
               :key="index"
               style="background-color: white;"
             >
@@ -86,15 +109,22 @@
                       {{ $t("memberInfo.teamMemberOperate[0]") }}
                     </li>
                     <!-- 团队移交 对象是项目经理，并且当前登录用户是这个团队的项目经理 -->
-                    <li v-if="item.userRole == $global.userRole.projectManager && userInfo.userRole == item.userRole"
+                    <!-- 
+                      功能：团队移交
+                      权限：
+                        1、超级管理员、区域经理、项目经理
+                        2、团队正常的情况下
+                     -->
+                    <li v-if="teamInfo.teamSatus == 1 && (item.userRole == $global.userRole.projectManager) && (userInfo.userRole == item.userRole || [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole))"
                       @click="handOverAdministratorDialogVisible=true;"
                     >{{ $t("memberInfo.teamMemberOperate[1]") }}</li>
                     <!-- 
                       功能：成员删除
                       权限：
                         1、只有成员和客户角色没有权限删除
+                        2、团队正常的情况下
                       -->
-                    <li v-if="item.userRole == $global.userRole.member && (userInfo.userRole != $global.userRole.member && userInfo.userRole != $global.userRole.customer)" @click="onDeleteMember(item, index)">{{ $t("memberInfo.teamMemberOperate[2]") }}</li>
+                    <li v-if="teamInfo.teamSatus == 1 && item.userRole == $global.userRole.member && !([$global.userRole.member, $global.userRole.customer].includes(userInfo.userRole))" @click="onDeleteMember(item, index)">{{ $t("memberInfo.teamMemberOperate[2]") }}</li>
                   </ul>
                 </Operate>
               </div>
@@ -262,6 +292,9 @@ export default {
   },
   computed: {
     ...mapGetters('ipublic', ['userInfo']),
+    memberInfo() {
+      return this.$store.getters["members/memberInfo"]
+    }
   },
   created() {
     this.getTeamInfo();
@@ -271,7 +304,7 @@ export default {
     getTeamInfo() {
       this.$http.get(`/user/team/infobypk/${this.teamId}`).then(res => {
         if (res.iworkuCode == 200) {
-          res.datas.userInfoList.unshift(res.datas.projectManager);
+          res.datas.userInfoList && res.datas.userInfoList.unshift(res.datas.projectManager);
           this.teamInfo = res.datas;
         }
       });
@@ -281,7 +314,7 @@ export default {
      *  只有项目经理才能添加
      */
     addTeam() {
-      if (this.userInfo.userRole == this.$global.userRole.projectManager) {
+      if (this.userInfo.userRole == this.$global.userRole.projectManager && this.memberInfo.userId == this.userInfo.id) {
         this.addTeamDialogVisible = true;
       }
     },
@@ -298,6 +331,9 @@ export default {
           break;
         case "frozen":
           this.onFrozenTeam();
+          break;
+        case "active":
+          this.onActiveTeam();
           break;
       }
     },
@@ -319,6 +355,21 @@ export default {
     onFrozenTeam() {
       this.$http.post('/user/team/update', {id: this.teamInfo.id, teamSatus: 2}).then(res => {
         if (res.iworkuCode == 200) {
+          this.getTeamInfo();
+          this.$imessage({
+            content: this.$t("public.tips.success"),
+            type: "success"
+          });
+        }
+      });
+    },
+    /**
+     *  激活团队
+     */
+    onActiveTeam() {
+      this.$http.post('/user/team/update', {id: this.teamInfo.id, teamSatus: 1}).then(res => {
+        if (res.iworkuCode == 200) {
+          this.getTeamInfo();
           this.$imessage({
             content: this.$t("public.tips.success"),
             type: "success"

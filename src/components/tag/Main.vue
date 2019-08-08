@@ -27,14 +27,17 @@
       <div class="tag-main__operate">
         <div class="tag-main__operate-top">
           <!-- 添加标签 start -->
-          <el-input
-            v-if="pagination.total < 20"
-            class="add-input"
-            :placeholder="$t('tag.addTagPlaceholder')"
-            v-model="addTagName"
-          >
-            <i slot="suffix" class="el-input__icon el-icon-circle-plus" @click="addTag"></i>
-          </el-input>
+          <template v-if="(type == 'project' && userInfo.userRole != $global.userRole.member) || type == 'target'">
+            <el-input
+              v-if="pagination.total < 20"
+              class="add-input"
+              :placeholder="$t('tag.addTagPlaceholder')"
+              v-model="addTagName"
+            >
+              <i slot="suffix" class="el-input__icon el-icon-circle-plus" @click="addTag"></i>
+            </el-input>
+          </template>
+          
           <!-- 添加标签 end -->
           <!-- 操作选择 start -->
           <el-button :style="pagination.total >= 20 ? `margin-left: auto`: null" v-if="tagRename && tagRename.id" type="primary" size="mini" @click="onConfirmTagRename">{{ $t("tag.btn.ok") }}</el-button>

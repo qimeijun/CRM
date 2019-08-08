@@ -16,6 +16,7 @@
         v-for="(item, index) in regionalData.regionalManagerList"
         :key="index"
         class="member__regional-content"
+        @click="onDetail(item)"
       >
         <el-avatar :size="50" :src="`${$global.avatarURI}${item.userProfileImage}`"></el-avatar>
         <div class="member__regional-content-right">
@@ -131,6 +132,19 @@ export default {
             this.regionalData.regionalManagerList.splice(index, 1);
           }
         });
+    },
+    /**
+     *  查看区域经理的详情
+     */
+    onDetail(item) {
+      // 存储用户信息
+      this.$store.commit('members/$_set_memberInfo', {
+        teamId: item.teamId, 
+        userId: item.id, 
+        username: item.userNameZh,
+        userRole: item.userRole
+      });
+      this.$router.push({ path: `/member/detail/info/${item.id}` });
     }
   },
   watch: {
@@ -196,6 +210,7 @@ export default {
       align-items: center;
       background-color: $--default-light-gray-2;
       border-radius: $--default-border-radius;
+      cursor: pointer;
     }
     &-content-right {
       margin-left: 0.1rem;

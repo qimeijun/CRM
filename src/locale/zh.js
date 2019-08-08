@@ -56,7 +56,9 @@ export default {
             price: "订单金额",
             description: "订单描述"
         },
-        orderType: ["正常", "异常"]
+        orderType: ["正常", "异常"],
+        translateTip: "翻译内容为",
+        targetCompany: "目标公司"
     },
     member: {
         add: "添加新成员",
@@ -165,7 +167,15 @@ export default {
     },
     memberInfo: {
         menu: ["资料", "团队", "跟进项目", "私海客户", "工作日志"],
-        priviteTable: ["目标公司", "重要程度", "更新时间", "状态", "创建时间", "资料完整度", "操作"],
+        priviteTable: {
+            targetCompany: "目标公司",
+            importance: "重要程度",
+            updateTime: "更新时间",
+            status: "状态",
+            createTime: "创建时间",
+            informationIntegrity: "资料完整度",
+            operate: "操作"
+        },
         projectTable: ["项目名称", "状态", "管理员", "标签", "进行天数", "添加时间", "操作"],
         btn: {
             shiftIn: "移入公海",
@@ -187,7 +197,7 @@ export default {
             content: ["你确定要将此成员移出项目吗？", "无法移出!", "此成员尚有目标公司正在跟进，请移交任务在移出!", "此成员为项目经理，移出前必须分配新的项目经理!"]
         },
         operate: "操作",
-        teamOperate: ["编辑团队", "移交团队", "冻结团队"],
+        teamOperate: ["编辑团队", "移交团队", "冻结团队", "激活团队"],
         teamMemberOperate: ["View", "Handover Team", "Delete"],
         noTeam: "暂无团队",
         account: "账号",

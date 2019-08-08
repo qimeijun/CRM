@@ -32,7 +32,7 @@
                 </div>
             </div>
             </template>
-            <LeaveMessage v-if="isShowLeaveMessageForm" :parent="currentParentMessage" @onOperateSuccess="onCloseLeaveMessage"></LeaveMessage>
+            <LeaveMessage v-if="isShowLeaveMessageForm" :parent="currentParentMessage" @onCloseLeaveMessage="onCloseLeaveMessage"></LeaveMessage>
         </div>
     </section>
 </template>
@@ -69,6 +69,7 @@ export default {
          */
         onCloseLeaveMessage() {
             this.isShowLeaveMessageForm = false;
+            this.$emit("onCloseLeaveMessage")
         },
         /**
          *  显示留言表单

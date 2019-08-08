@@ -56,7 +56,9 @@ export default {
             price: "Order Price",
             description: "Order Description"
         },
-        orderType: ["Normal", "Abnormal"]
+        orderType: ["Normal", "Abnormal"],
+        translateTip: "Translated content is",
+        targetCompany: "target Company"
     },
     member: {
         add: "Add New Member",
@@ -165,7 +167,16 @@ export default {
     },
     memberInfo: {
         menu: ["Information", "Team", "Follow Up Project", "Private customer", "Work Log"],
-        priviteTable: ["Tartget Company", "Importance", "Update Time", "Status", "Create Time", "Information Integrity", "Operate"],
+        // priviteTable: ["Tartget Company", "Importance", "Update Time", "Status", "Create Time", "Information Integrity", "Operate"],
+        priviteTable: {
+            targetCompany: "Tartget Company",
+            importance: "Importance",
+            updateTime: "Update Time",
+            status: "Status",
+            createTime: "Create Time",
+            informationIntegrity: "Information Integrity",
+            operate: "Operate"
+        },
         projectTable: ["Project Name", "Status", "Administrator", "Tag", "Number of days", "Add Time", "Operate"],
         btn: {
             shiftIn: "Move into public",
@@ -187,7 +198,7 @@ export default {
             content: ["Are you sure you want to move this member out of the project?", "Can't move out!", "This member still has the target company to follow up, please hand over the task and move it.!", "This member is the project manager and must be assigned a new project manager before moving out.!"]
         },
         operate: "Operate",
-        teamOperate: ["Edit Team", "Handover Team", "Freeze Team"],
+        teamOperate: ["Edit Team", "Handover Team", "Freeze Team", "Activation team"],
         teamMemberOperate: ["View", "Handover Team", "Delete"],
         noTeam: "No Team",
         account: "Account",

@@ -2,7 +2,13 @@
     <section class="work-diary">
         <!-- 顶部按钮 start -->
         <div style="position: fixed; top: 1rem; right: .2rem;">
-            <el-button type="primary" @click="onAddDiary">{{ $t("memberInfo.btn.addDiary") }}</el-button>
+            <!-- 
+                功能：添加工作日志
+                权限：
+                    1、当前登录人就是这个查看对象
+                    2、公海中的目标公司不能添加日志
+             -->
+            <el-button v-if="isAllow && ((type == 'member' && id == userInfo.id) || type == 'project' || type == 'target')" type="primary" @click="onAddDiary">{{ $t("memberInfo.btn.addDiary") }}</el-button>
         </div>
         
         <!-- 顶部按钮 end -->
@@ -20,7 +26,7 @@
             <el-scrollbar style="height: calc(100vh - 3.08rem);" >
             <div style="margin-top: 20px;" v-infinite-scroll="load" :infinite-scroll-immediate="false" :infinite-scroll-distance="100">
                 <template v-if="workDiarList && workDiarList.length > 0">
-                    <DiaryModule v-for="(item, index) in workDiarList" :key="index" :diary="item"></DiaryModule>
+                    <DiaryModule v-for="(item, index) in workDiarList" :key="index" :diary="item" :isAllow="isAllow" :id="id" :type="type"></DiaryModule>
                 </template>
                 <template v-else>
                     <div style="height: calc(100vh - 3.3rem); background-color: white; border-radius: 8px; line-height: 200px; text-align: center;">
@@ -56,13 +62,14 @@
         :close-on-click-modal="false"
         width="30%">
         <el-scrollbar class="scrollbar">
-            <AddWorkDiary :id="id" :type="type" @onOperateSuccess="addWorkDiaryDialogVisible=false;getWorkDiary(activeMenu)"></AddWorkDiary>
+            <AddWorkDiary :id="id" :type="type" :itemid="itemid" @onOperateSuccess="addWorkDiaryDialogVisible=false; page.pageNum=1;getWorkDiary(activeMenu)"></AddWorkDiary>
         </el-scrollbar>
         </el-dialog>
         <!-- 添加工作日志 dialog end -->
     </section>
 </template>
 <script>
+import { mapGetters } from "vuex"
 export default {
     props: {
         // 项目ID、目标公司ID、成员ID
@@ -81,6 +88,21 @@ export default {
             type: String,
             default() {
                 return 'project';
+            }
+        },
+        /**
+         *  当时目标公司添加日志时，需要额外传入项目公司id
+         */
+        itemid: {
+            type: String,
+            default() {
+                return "";
+            }
+        },
+        isAllow: {
+            type: Boolean,
+            default() {
+                return true
             }
         }
     },
@@ -104,6 +126,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters("ipublic", ["userInfo"]),
         menuList() {
             return [
                 {
@@ -132,10 +155,16 @@ export default {
          *  根据ID 查询工作日志
          */
         getWorkDiary(diaryType) {
+            let type;
+            if (diaryType == this.menuList[1].value) {
+                type = 1;
+            } else if (diaryType == this.menuList[2].value) {
+                type = 2;
+            } 
             if (this.type == 'member') {
                 this.$http.post('/customer/followup/info/user/withpaginglist', {
                     userId: this.id,
-                    followType: diaryType,
+                    followType: type,
                     pageSize: this.page.pageSize,
                     pageNum: this.page.pageNum
                 }).then(res => {
@@ -146,10 +175,16 @@ export default {
                     }
                 });
             } else {
-                this.$http.post('/customer/followup/info/withoutpaginglist', {
-                    followItemId: this.id,
-                    followType: diaryType
-                }).then(res => {
+                let params = {
+                    followType: type
+                }
+                if (this.type == 'target') {
+                    params.followTargetCompanyId = this.id;
+                    params.followItemId = this.itemid;
+                } else if (this.type == 'project') {
+                    params.followItemId = this.id;
+                }
+                this.$http.post('/customer/followup/info/withoutpaginglist', params).then(res => {
                     if (res.iworkuCode == 200) {
                         this.page.pageNum > 1 ? this.workDiarList.push(...res.datas) : this.workDiarList = res.datas || [];
                         this.page.total = res.total;
@@ -187,13 +222,7 @@ export default {
         onChangeMenu(item) {
             this.activeMenu = item.value;
             this.page.pageNum = 1;
-            if (item.value == 'project') {
-                this.getWorkDiary(1)
-            } else if (item.value == 'target') {
-                this.getWorkDiary(2);
-            } else {
-                this.getWorkDiary();
-            }
+            this.getWorkDiary(item.value);
         },
         /**
          * 添加工作日志
@@ -254,7 +283,7 @@ export default {
             handler(newval) {
                 if (newval) {
                     this.getCalendarList();
-                    this.getWorkDiary();
+                    this.getWorkDiary(this.activeMenu);
                 }
             },
             immediate: true

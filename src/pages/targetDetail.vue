@@ -13,7 +13,7 @@
             :class="activeMenu == item.value ?'target-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
           >
-            <router-link :to="`/target/detail/${item.route}/${targetid}`">{{ item.name }}</router-link>
+            <router-link :to="`/target/detail/${item.route}/${targetid}/${itemid}`">{{ item.name }}</router-link>
           </li>
         </ul>
       </div>
@@ -65,6 +65,9 @@ export default {
   computed: {
     targetid(){
       return this.$route.params.targetid;
+    },
+    itemid() {
+      return this.$route.params.itemid;
     }
   },
   methods: {
@@ -73,7 +76,7 @@ export default {
      */
     onChangeMenu(item) {
       this.activeMenu = item.value;
-      this.$router.push({ path: `/target/detail/${item.route}/${this.targetid}` });
+      this.$router.push({ path: `/target/detail/${item.route}/${this.targetid}/${this.itemid}` });
     }
   }
 };

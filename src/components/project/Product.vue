@@ -4,17 +4,21 @@
     <div style="position:fixed; top: 1rem; right: .2rem;">
       <!-- 结束项目 -->
       <el-button
-      v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
+        v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer"
         class="product-endbtn"
         @click="onDeleteMember(itemid,2)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button v-show="itemStatus==2&&userInfo.userRole!=$global.userRole.member" class="product-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+      <el-button
+        v-show="itemStatus==2&&userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer"
+        class="product-endbtn"
+        @click="onRestartMember(itemid,3)"
+      >重启项目</el-button>
     </div>
     <div class="product_top">
       <h3>{{$t("projectInfo.menu[1]")}}</h3>
       <el-button
-      v-show="userInfo.userRole!=$global.userRole.member"
+        v-show="userInfo.userRole!=$global.userRole.member"
         type="primary"
         @click="show = true;"
       >{{$t("projectInfo.product.view")}}</el-button>
@@ -22,8 +26,8 @@
     <div class="product_content">
       <h4>{{product.productName}}</h4>
       <div class="content_img">
-        <PhotosView :imgList="product.imgList"></PhotosView>
-        <VideoView :videoList="product.videoList"></VideoView>
+        <PhotosView v-show="product.imgList.length>0" :imgList="product.imgList"></PhotosView>
+        <VideoView v-show="product.videoList.length>0" :videoList="product.videoList"></VideoView>
       </div>
       <h4>{{$t("projectInfo.product.accessory")}}</h4>
       <div>
@@ -92,7 +96,7 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            this.product.id=res.datas[0].id;
+            this.product.id = res.datas[0].id;
             this.product.productName = res.datas[0].productName;
             // 整理图片
             this.product.imgList = res.datas[0].productNodeList.filter(o => {
@@ -173,7 +177,7 @@ export default {
           this.$http
             .post("/customer/item/update/status", {
               itemId: id,
-              itemStatus:1
+              itemStatus: 1
             })
             .then(res => {});
           this.$message({

@@ -168,7 +168,7 @@ export default {
                             content: this.$t("public.tips.success"),
                             type: "success"
                         });
-                        this.$emit("onConfirmTag", [...this.selectTagMap.values()]);
+                        this.$emit("onConfirmTag", [...this.selectTagMap.values(), ...alreadExist]);
                     }
                 });
             } else if (this.type == 'target') {
@@ -194,7 +194,7 @@ export default {
                             content: this.$t("public.tips.success"),
                             type: "success"
                         });
-                        this.$emit("onConfirmTag", [...this.selectTagMap.values()]);
+                        this.$emit("onConfirmTag", [...this.selectTagMap.values(), ...alreadExist]);
                     }
                 });
             }

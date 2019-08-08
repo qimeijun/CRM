@@ -1,7 +1,8 @@
 <template>
   <section class="layout">
     <!-- 菜单 -->
-      <el-menu
+    <el-menu
+      v-if="userInfo.userRole!=$global.userRole.customer"
       class="iworku-menu"
       :style="isCollapse?'':'padding-left: 0.23rem;'"
       active-background-color="#ffffff"
@@ -21,17 +22,77 @@
         <i class="iconfont">&#xe604;</i>
         <span slot="title">项目管理</span>
       </el-menu-item>
-      <el-menu-item index="/highseas" route="/highseas">
+      <!-- 
+        功能：公海管理
+        权限：
+          1、超级管理员和区域经理可见
+      -->
+      <el-menu-item
+        v-if="[$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)"
+        index="/highseas"
+        route="/highseas"
+      >
         <i class="iconfont">&#xe600;</i>
         <span slot="title">公海管理</span>
       </el-menu-item>
-      <el-menu-item index="/member" route="/member">
+      <!-- 
+        功能：成员管理
+        权限：
+          1、只有客户不可见
+      -->
+      <el-menu-item
+        v-if="userInfo.userRole != $global.userRole.customer"
+        index="/member"
+        route="/member"
+      >
         <i class="iconfont">&#xe63f;</i>
         <span slot="title">成员管理</span>
       </el-menu-item>
-      <el-menu-item index="/tag" route="/tag">
+      <!-- 
+        功能：标签管理
+        权限：
+          1、只有客户不可见
+      -->
+      <el-menu-item v-if="userInfo.userRole != $global.userRole.customer" index="/tag" route="/tag">
         <i class="iconfont">&#xe61e;</i>
         <span slot="title">标签管理</span>
+      </el-menu-item>
+      <el-button
+        type="text"
+        class="menu-button"
+        :icon="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'"
+        @click="isCollapse=!isCollapse"
+      ></el-button>
+    </el-menu>
+    <!-- 客户页面菜单 -->
+    <el-menu
+      v-else
+      class="iworku-menu"
+      :style="isCollapse?'':'padding-left: 0.23rem;'"
+      active-background-color="#ffffff"
+      text-color="#FFFFFF"
+      :collapse="isCollapse"
+      :router="true"
+      :default-active="pathName"
+    >
+      <div class="menu-logo">
+        <img src="@/assets/logo.png" fit="contain" />
+      </div>
+      <el-menu-item index="customer_information" :route="`/customer/info/${itemid}/${adminId}`">
+        <i class="iconfont">&#xe627;</i>
+        <span slot="title">公司资料</span>
+      </el-menu-item>
+      <el-menu-item index="customer_product" :route="`/customer/product/${itemid}/${adminId}`">
+        <i class="iconfont">&#xe641;</i>
+        <span slot="title">产品信息</span>
+      </el-menu-item>
+      <el-menu-item index="customer_target" :route="`/customer/target/${itemid}/${adminId}`">
+        <i class="iconfont">&#xe620;</i>
+        <span slot="title">目标公司</span>
+      </el-menu-item>
+      <el-menu-item index="customer_diary" :route="`/customer/diary/${itemid}/${adminId}`">
+        <i class="iconfont">&#xe610;</i>
+        <span slot="title">工作日志</span>
       </el-menu-item>
       <el-button
         type="text"
@@ -48,8 +109,9 @@
 </template>
 
 <script>
-import Header from "@/components/Header.vue"
-import automaticLogin from '@/plugins/automaticLogin.js'
+import Header from "@/components/Header.vue";
+import automaticLogin from "@/plugins/automaticLogin.js";
+import { mapGetters } from "vuex";
 export default {
   name: "crm",
   components: {
@@ -57,16 +119,36 @@ export default {
   },
   data() {
     return {
-      isCollapse: true
+      isCollapse: true,
+      itemid: "",
+      adminId: ""
     };
   },
   computed: {
+    ...mapGetters("ipublic", ["userInfo"]),
     path() {
       return this.$route.path;
+    },
+    pathName(){
+      return this.$route.name;
     }
   },
   created() {
     automaticLogin(this);
+    if (this.userInfo.userRole == this.$global.userRole.customer) {
+      this.getProject();
+    }
+  },
+  methods: {
+    getProject() {
+      this.$http.post("/customer/item/withpaginglist").then(res => {
+        if (res.iworkuCode == 200) {
+          this.itemid = res.datas[0].itemId;
+          this.adminId = res.datas[0].probjectManager;
+          this.$router.push({ path: `/customer/info/${this.itemid}/${this.adminId}` });
+        }
+      });
+    }
   }
 };
 </script>
@@ -134,9 +216,9 @@ export default {
 }
 .iworku-menu .el-menu-item.is-active {
   background-color: white;
-  color: #4937EA;
+  color: #4937ea;
 }
-.iworku-menu .el-menu-item.is-active i{
-  color: #4937EA;
+.iworku-menu .el-menu-item.is-active i {
+  color: #4937ea;
 }
 </style>

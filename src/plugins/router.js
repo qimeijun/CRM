@@ -97,18 +97,18 @@ const router = new VueRouter({
                     path: '/target/detail', component: () => import('./../pages/targetDetail.vue'),
                     children:[
                         {
-                            path: 'info/:targetid',
+                            path: 'info/:targetid/:itemid',
                             alias: "info",
                             name: "target_information",
                             component: () => import('./../components/target/Information.vue')
                         },
                         {
-                            path: 'probe/:targetid',
+                            path: 'probe/:targetid/:itemid',
                             name: 'target_probe',
                             component: () => import('./../components/target/Probe.vue')
                         },
                         {
-                            path: 'diary/:targetid',
+                            path: 'diary/:targetid/:itemid',
                             name: 'target_diary',
                             component: () => import('./../components/target/WorkDiary.vue')
                         }
@@ -133,6 +133,32 @@ const router = new VueRouter({
                     path: '/notice',
                     name: 'notice',
                     component: () => import('./../pages/notice.vue')
+                },
+                {
+                    path:"/customer",component: () => import('./../pages/Customer.vue'),
+                    children: [
+                        {
+                            path: 'info/:itemid/:adminId',
+                            name: "customer_information",
+                            component: () => import('./../components/project/Information.vue')
+                        },
+                        {
+                            path: 'product/:itemid/:adminId',
+                            name: "customer_product",
+                            component: () => import('./../components/project/Product.vue')
+                        },
+                        {
+                            path: 'target/:itemid/:adminId',
+                            name: "customer_target",
+                            component: () => import('./../components/project/CustomerTargetTable.vue')
+                        },
+                        {
+                            path: 'diary/:itemid/:adminId',
+                            name: 'customer_diary',
+                            component: () => import('./../components/project/WorkDiary.vue')
+                        },
+                    ]
+
                 }
             ]
         }, {

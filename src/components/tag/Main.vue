@@ -11,7 +11,13 @@
           @click="onChangeGroup(item)"
         >{{ item.groupNameEn }}</li>
       </ul>
+      <!-- 
+        功能：分组管理
+        权限：
+          1、超级管理员、区域管理、项目经理
+       -->
       <el-button
+        v-if="userInfo.userRole != $global.userRole.member && userInfo.userRole != $global.userRole.customer"
         type="primary"
         @click="groupManageDialogVisible=true;"
       >{{ $t("tag.btn.groupMange") }}</el-button>
@@ -121,6 +127,7 @@
   </section>
 </template>
 <script>
+import { mapGetters } from "vuex"
 export default {
   props: {
     /**
@@ -147,6 +154,8 @@ export default {
       companyList: [],
       activeGroup: null,
       activeTag: null,
+      // 当前选中的标签的添加人， 删除标签权限需要
+      currentTagAddUser: null,
       addTagName: "",
       isShowOperateMenu: false,
       tagRename: {name: "", id: ""},
@@ -164,18 +173,41 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("ipublic", ["userInfo"]),
     operateList: {
       get: function() {
         return [
+          /**
+           * 功能: 标签移动分组
+           * 权限：
+           *  1、超级管理员、区域经理、项目经理
+           *  
+           */
           {
             value: "move",
             label: this.$t("tag.operateList[0]"),
+            disabled: (this.userInfo.userRole == this.$global.userRole.customer || this.userInfo.userRole == this.$global.userRole.member),
             children: []
           },
+          /**
+           * 功能： 标签重命名
+           * 权限：
+           *  1、区域经理
+           *  2、超级管理员
+           */
           {
             value: "rename",
-            label: this.$t("tag.operateList[1]")
+            label: this.$t("tag.operateList[1]"),
+            disabled: ![this.$global.userRole.superAdministrator, this.$global.userRole.regionalManager].includes(this.userInfo.userRole)
           },
+          /**
+           *  功能：标签删除
+           *  权限：
+           *   1、成员只能删除自己添加的
+           *   2、超级管理员、区域经理、项目经理可以随意
+           *  
+           *  参见 onChangeTag 方法里面的 disabled 属性
+           */
           {
             value: "delete",
             label: this.$t("tag.operateList[2]")
@@ -238,8 +270,7 @@ export default {
           this.tagList = res.datas;
           this.pagination.total = res.total;
           this.pagination.allPage = res.pages;
-          res.datas.length > 0 ? (this.activeTag ? null : this.activeTag = res.datas[0].id) : null;
-          this.getCompany();
+          res.datas.length > 0 ? (this.activeTag ? null : this.onChangeTag(res.datas[0])) : null;
         }
       });
     },
@@ -294,6 +325,9 @@ export default {
      */
     onChangeTag(item) {
       this.activeTag = item.id;
+      // 权限设置
+      this.operateList[2].disabled = !((item.addUserId == this.userInfo.id && this.userInfo.userRole == this.$global.userRole.member) ||
+                                        ([this.$global.userRole.superAdministrator, this.$global.userRole.regionalManager, this.$global.userRole.projectManager].includes(this.userInfo.userRole)));
       this.companyPage.pageNum = 1;
       // 查看引用当前标签的公司
       this.getCompany();

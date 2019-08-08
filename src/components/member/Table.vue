@@ -21,14 +21,34 @@
                   <li class="member-table-list__click" @click="onRoute">
                     {{ $t("memberManagement.operate[0]") }}
                   </li>
-                  <li v-if="item.userRole == $global.userRole.projectManager" class="member-table-list__click" @click="onHandAdministrator(item)">
+                  <!-- 功能：管理员移交
+                       权限： 
+                          1、当前登录人是项目经理
+                          2、当前登录人就是这个项目经理
+                   -->
+                  <li v-if="item.userRole == $global.userRole.projectManager && userInfo.id == item.id" class="member-table-list__click" @click="onHandAdministrator(item)">
                       {{ $t("memberManagement.operate[1]") }}
                   </li>
-                  <!-- 删除： 成员、项目经理（没有任何的员工前提下） -->
-                  <li v-if="((item.userRole == $global.userRole.member) || (item.userRole == $global.userRole.projectManager && item.userList && item.userList.length == 0))"
-                      class="member-table-list__click"
-                      @click="onDeleteMember(item)"
-                  >{{ $t("memberManagement.operate[2]") }}</li>
+                  <!-- 人员删除： 
+                       权限：
+                         1、只有超级管理员、区域管理员、项目经理能删除成员
+                         1、删除项目经理 需要在没有任何的员工前提下 并且只有超级管理员、区域管理员才可以删除
+                         -->
+                  
+                  <template v-if="userInfo.userRole == $global.userRole.superAdministrator || userInfo.userRole == $global.userRole.regionalManager">
+                    <template v-if="item.userRole == $global.userRole.member || (item.userRole == $global.userRole.projectManager && (item.userList && item.userList.length == 0))">
+                      <li class="member-table-list__click"
+                            @click="onDeleteMember(item)"
+                        >{{ $t("memberManagement.operate[2]") }}</li>
+                    </template>
+                  </template>
+                  <template v-if="userInfo.userRole == $global.userRole.projectManager">
+                    <template v-if="item.userRole == $global.userRole.member">
+                      <li class="member-table-list__click"
+                            @click="onDeleteMember(item)"
+                        >{{ $t("memberManagement.operate[2]") }}</li>
+                    </template>
+                  </template>
                 </ul>
             </Operate>
             </div>
@@ -50,6 +70,7 @@
     </div>
 </template>
 <script>
+import { mapGetters } from "vuex"
 export default {
   components: {
     Operate: () => import("@/components/lib/Operate.vue"),
@@ -83,6 +104,9 @@ export default {
           changeAdministratorDialogVisible: false,
           isDelete: false
       }
+  },
+  computed: {
+    ...mapGetters("ipublic", ["userInfo"])
   },
   methods: {
     /**
@@ -162,7 +186,8 @@ export default {
       this.$store.commit('members/$_set_memberInfo', {
         teamId: this.item.teamId, 
         userId: this.item.id, 
-        username: this.item.userNameZh
+        username: this.item.userNameZh,
+        userRole: this.item.userRole
       });
       this.$router.push({ path: `/member/detail/info/${this.item.id}` });
     }

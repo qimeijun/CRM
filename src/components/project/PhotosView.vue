@@ -1,7 +1,7 @@
 <template>
   <section class="iworku-photosview">
     <p class="photosview_img" @click="photosShow=true">
-      <img :src="`${$global.avatarURI}${imgList.length>0?imgList[0].nodeFiles:''}`" alt />
+      <img v-if="imgList.length>0" :src="`${$global.avatarURI}${imgList[0].nodeFiles}`" alt />
       <span>1/{{imgList.length}} &nbsp;</span>
     </p>
     <div v-if="photosShow" class="photosview_mask">

@@ -115,7 +115,7 @@
           :on-remove="onChtLogUploadRemove"
           :before-upload="onBeforeUpload"
           :data="uploadData"
-          :file-list="diaryForm.chatLogList"
+          :file-list="diaryForm.chatLogList" 
           class="iworku-upload-card"
         >
           <div class="content">
@@ -186,6 +186,15 @@ export default {
         }
     },
     /**
+     *  当时目标公司添加日志时，需要额外传入项目公司id
+     */
+    itemid: {
+        type: String,
+        default() {
+            return "";
+        }
+    },
+    /**
      *  编辑工作日志时，原来的工作日志内容
      */
     diaryInfo: {
@@ -201,7 +210,7 @@ export default {
         id: "",
         projectName: "",
         type: "",
-        targetCompany: "",
+        targetCompany: null,
         title: "",
         description: "",
         chatLog: [],
@@ -292,6 +301,7 @@ export default {
       });
     },
     onChangeProject(item) {
+      this.diaryForm.targetCompany = null;
       this.getTarget(item);
     },
     /**
@@ -308,6 +318,9 @@ export default {
             followFiles: this.diaryForm.attachment.join(";"),
             followLog: this.diaryForm.chatLog.join(";")
           };
+          if (this.diaryForm.targetCompany) {
+            params.followTargetCompany = this.diaryForm.targetCompany
+          }
           // 订单
           if (this.diaryForm.type == 4) {
             params.orderCode  = this.diaryForm.orderNo;
@@ -458,6 +471,16 @@ export default {
       handler(newVal) {
         if (newVal && newVal.id) {
           this.getModifyDiary(newVal);
+        }
+      },
+      immediate: true
+    },
+    itemid: {
+      handler(newVal) {
+        if (newVal && this.type == 'target') {
+          this.diaryForm.projectName = newVal;
+          this.diaryForm.targetCompany = this.id;
+          this.getTarget(newVal);
         }
       },
       immediate: true

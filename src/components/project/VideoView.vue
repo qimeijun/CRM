@@ -1,14 +1,14 @@
 <template>
   <section class="iworku-videoview">
     <p class="videoview_video">
-      <video :src="`${$global.avatarURI}${videoList.length>0?videoList[0].nodeFiles:''}`"></video>
+      <video v-if="videoList.length>0" :src="`${$global.avatarURI}${videoList[0].nodeFiles}`"></video>
       <i class="el-icon-video-play" @click="onClickmask()"></i>
     </p>
     <div v-show="photosShow" class="videoview_mask">
       <i class="el-icon-close" @click="onClickmask()"></i>
       <div class="mask_content">
         <p>
-          <video ref="productVideo" :src="`${$global.avatarURI}${videoList.length>0?videoList[0].nodeFiles:''}`" controls></video>
+          <video  v-if="videoList.length>0" ref="productVideo" :src="`${$global.avatarURI}${videoList[0].nodeFiles}`" controls></video>
         </p>
       </div>
     </div>

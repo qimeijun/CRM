@@ -1,14 +1,18 @@
 <template>
   <section class="project-detail-info">
     <div style="position:fixed; top: 1rem; right: .2rem;">
-          <!-- 结束项目 -->
+      <!-- 结束项目 -->
       <el-button
-      v-show="info.itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
+        v-show="info.itemStatus!=2&&userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer"
         class="info-endbtn"
         @click="onDeleteMember(itemid)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button v-show="info.itemStatus==2&&userInfo.userRole!=$global.userRole.member" class="info-endbtn" @click="onRestartMember(itemid)">重启项目</el-button>
+      <el-button
+        v-show="info.itemStatus==2&&userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer"
+        class="info-endbtn"
+        @click="onRestartMember(itemid)"
+      >重启项目</el-button>
     </div>
     <!-- 资料展示 start -->
     <div class="info_top">
@@ -16,10 +20,14 @@
         <h3>{{$t("projectInfo.menu[0]")}}</h3>
         <div>
           <!-- 修改密码 -->
-          <el-button v-show="userInfo.userRole!=$global.userRole.member"  type="text" @click="passwordshow=true">{{$t("password.modify")}}</el-button>
+          <el-button
+            v-show="userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer"
+            type="text"
+            @click="passwordshow=true"
+          >{{$t("password.modify")}}</el-button>
           <!-- 编辑 -->
           <el-button
-          v-show="userInfo.userRole!=$global.userRole.member"
+            v-show="userInfo.userRole!=$global.userRole.member"
             type="primary"
             size="small"
             @click="show = true;infoFrom={...info}"
@@ -157,7 +165,7 @@ export default {
       show: false,
       passwordshow: false,
       industryList: [],
-      adminUser:{},
+      adminUser: {},
       infoFrom: {
         id: "",
         itemName: "",
@@ -242,7 +250,6 @@ export default {
       return this.$route.params.itemid;
     },
     ...mapGetters("ipublic", ["userInfo"])
-    
   },
   async created() {
     // 获取项目ID
@@ -258,7 +265,7 @@ export default {
       this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
         if (res.iworkuCode == 200) {
           this.info = {
-            itemStatus:res.datas.itemStatus,
+            itemStatus: res.datas.itemStatus,
             id: res.datas.id,
             itemName: res.datas.itemName,
             companyName: res.datas.companyName,
@@ -269,13 +276,14 @@ export default {
             companyTel: res.datas.companyTel,
             companyProfile: res.datas.companyProfile,
             companyStrength: res.datas.companyStrength,
-            companyIndustryEn:res.datas.companyIndustryEn,
-            companyIndustryZh:res.datas.companyIndustryZh
+            companyIndustryEn: res.datas.companyIndustryEn,
+            companyIndustryZh: res.datas.companyIndustryZh
           };
           // 客户账号
-          this.adminUser={
-            id:res.additionalParameters.id,
-            userAccount:res.additionalParameters.userAccount}
+          this.adminUser = {
+            id: res.additionalParameters.id,
+            userAccount: res.additionalParameters.userAccount
+          };
         }
       });
     },
@@ -285,7 +293,7 @@ export default {
         if (valid) {
           let params = this[formName];
           this.$http.post("/customer/company/update", params).then(res => {
-            if(res.iworkuCode==200){
+            if (res.iworkuCode == 200) {
               // 重新获取资料
               this.getInfo(this.itemid);
             }
@@ -293,7 +301,7 @@ export default {
         }
       });
     },
-       // 结束项目
+    // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
         title: "提示",
@@ -358,12 +366,12 @@ export default {
             message: "取消操作"
           });
         });
-    },
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
-.info-endbtn{
+.info-endbtn {
   color: $--default-color;
 }
 .project-detail-info {

@@ -6,7 +6,7 @@
                 <span class="user">{{ message.followAddUserNameZh || message.followAddUserNameEn }}: </span>
                 <div>
                     <span class="time">{{ message.followAddTimeStr }}</span>
-                    <span @click="onShowLeaveMesssageForm(message)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
+                    <span v-if="message.followAddUser != userInfo.id" @click="onShowLeaveMesssageForm(message)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
                 </div>
             </div>
             <div class="content">
@@ -21,8 +21,7 @@
                     <span class="user">{{ item.followAddUserNameZh || item.followAddUserNameEn }}: </span>
                     <div>
                         <span class="time">{{ item.followAddTimeStr }}</span>
-                        <span @click="onShowLeaveMesssageForm(item)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
-                        
+                        <span v-if="item.followAddUser != userInfo.id" @click="onShowLeaveMesssageForm(item)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
                     </div>
                 </div>
                 <div class="content">
@@ -38,6 +37,7 @@
     </section>
 </template>
 <script>
+import { mapGetters } from "vuex"
 export default {
     props: {
         /**
@@ -59,6 +59,9 @@ export default {
             isShowLeaveMessageForm: false,
             currentParentMessage: {}
         }
+    },
+    computed: {
+        ...mapGetters("ipublic", ["userInfo"])
     },
     methods: {
         /**

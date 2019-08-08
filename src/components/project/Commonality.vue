@@ -114,7 +114,9 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link :to="`/target/detail/info/${scope.row.id}`">{{$t("project.view")}}</router-link>
+                  <router-link
+                    :to="`/target/detail/info/${scope.row.id}/${scope.row.itemId}`"
+                  >{{$t("project.view")}}</router-link>
                 </li>
                 <li
                 v-show="userInfo.userRole!=$global.userRole.member&&allotType!=null&&scope.row.status!=4"
@@ -357,6 +359,7 @@ export default {
           if (res.iworkuCode == 200) {
             this.tableData = res.datas;
             this.total = res.total;
+            this.currentPage = page;
           }
         });
     },

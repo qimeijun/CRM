@@ -58,7 +58,6 @@ export default {
   },
   created() {
     this.activeMenu = this.$route.name;
-    // console.log(this.$router.back(-1))
   },
   components: {
     PageHeader

@@ -15,13 +15,13 @@
       <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
       <!-- 结束项目 -->
       <el-button
-        v-show="itemStatus!=2"
+        v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
         class="commonality-endbtn"
         @click="onDeleteMember(itemid)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
       <el-button
-        v-show="itemStatus==2"
+        v-show="itemStatus==2&&userInfo.userRole!=$global.userRole.member"
         class="commonality-endbtn"
         @click="onRestartMember(itemid)"
       >重启项目</el-button>
@@ -55,7 +55,7 @@
         @change="getCommonality(itemid, 1)"
       ></el-cascader>
       <!-- 标签 end -->
-      <el-button type="primary" @click="allocationShow=true">{{$t("project.allot")}}</el-button>
+      <el-button  v-show="userInfo.userRole!=$global.userRole.member" type="primary" @click="allocationShow=true">{{$t("project.allot")}}</el-button>
     </div>
     <div class="commonality_table">
       <el-table
@@ -117,13 +117,27 @@
                   <router-link :to="`/target/detail/info/${scope.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
                 <li
+                v-show="userInfo.userRole!=$global.userRole.member&&allotType!=null&&scope.row.status!=4"
                   class="table_operation"
                   @click="allocationShow=true; currentTarget=[scope.row]"
                 >{{$t("project.allot")}}</li>
                 <li
+                v-show="allotType!=null&&scope.row.status!=4"
                   class="table_operation"
-                  @click="onCancel(scope.row.id)"
+                  @click="onTransfer(scope.row.id)"
+                >{{'移入私海'}}</li>
+                <!-- 作废 -->
+                <li
+                v-show="scope.row.status!=4"
+                  class="table_operation"
+                  @click="onCancel(scope.row.id,4)"
                 >{{$t("project.invalid")}}</li>
+                <!-- 激活 -->
+                <li
+                v-show="scope.row.status==4"
+                  class="table_operation"
+                  @click="onCancel(scope.row.id,1)"
+                >{{"激活"}}</li>
               </ul>
             </Operate>
           </template>
@@ -189,13 +203,14 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ImportTarget :itemid="itemid" @close="importShow=false"></ImportTarget>
+        <ImportTarget :itemid="itemid" @close="importShow=false" @getList="getCommonality(itemid, 1)"></ImportTarget>
       </el-scrollbar>
     </el-dialog>
     <!-- 导入目标公司 end-->
   </section>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import { getTargetType } from "@/plugins/configuration.js";
 export default {
   components: {
@@ -264,6 +279,7 @@ export default {
       targetType: "",
       seek: "",
       itemStatus: 1,
+      allotType:null,
       allocationShow: false,
       addShow: false,
       importShow: false,
@@ -273,7 +289,8 @@ export default {
   computed: {
     itemid() {
       return this.$route.params.itemid;
-    }
+    },
+     ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
     // 获取公司类型
@@ -282,11 +299,17 @@ export default {
     this.getItemStatus(this.itemid);
   },
   methods: {
-    onCancel(id) {
+   // 激活作废  type: 4作废  1激活
+    onCancel(id,type) {
+      let messageText;
+      if (type == 4) {
+        messageText = "您确定要将这个目标公司作废吗？";
+      } else if (type == 1) {
+        messageText = "您确定要将这个目标公司激活吗？";
+      }
       this.$msgbox({
         title: "提示",
-        message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要将选中的目标公司作废吗？</p>",
+        message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${messageText}</p>`,
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         showCancelButton: true,
@@ -295,20 +318,20 @@ export default {
       })
         .then(() => {
           // 确定
-          this.$http
-            .post("/target/company/status/update", {
-              id: id,
-              status: 4 //目标公司状态（ 1.待跟进 2跟进中 3.未跟进 4.作废）
-            })
-            .then(res => {
-              if (res.iworkuCode == 200) {
-                this.$message({
-                  type: "success",
-                  message: "已作废"
-                });
-                this.getCommonality(this.itemid, 1);
-              }
-            });
+            this.$http
+              .post("/target/company/status/update", {
+                id: id,
+                status: type //目标公司状态（ 1.待跟进 2跟进中 3.未跟进 4.作废）
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  this.$message({
+                    type: "success",
+                    message: "操作成功"
+                  });
+                  this.getCommonality(this.itemid, 1);
+                }
+              });
         })
         .catch(() => {
           // 取消
@@ -341,8 +364,8 @@ export default {
     getItemStatus(id) {
       this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
         if (res.iworkuCode == 200) {
-          console.log(res.datas);
           this.itemStatus = res.datas.itemStatus;
+          this.allotType=res.datas.probjectManager
         }
       });
     },
@@ -441,7 +464,23 @@ export default {
             this.getCommonality(this.itemid, 1);
           }
         });
+    },
+    // 移入私海
+    onTransfer(targetid){
+      this.$http.post("/target/company/private/update",{
+        id:targetid,
+        type:1
+      }).then(res=>{
+           if (res.iworkuCode == 200) {
+            this.$imessage({
+              content: this.$t("public.tips.success"),
+              type: "success"
+            });
+            this.getCommonality(this.itemid, 1);
+          }
+      })
     }
+    
   }
 };
 </script>

@@ -3,7 +3,7 @@
     <div class="member_top">
       <h3>{{$t("projectInfo.member.title")}}</h3>
       <span>共{{memberlist.length}}人</span>
-      <el-button type="primary" size="small" @click="addMemberDialogVisible=true">{{$t("projectInfo.member.add")}}</el-button>
+      <el-button v-show="userInfo.userRole!=$global.userRole.member" type="primary" size="small" @click="addMemberDialogVisible=true">{{$t("projectInfo.member.add")}}</el-button>
     </div>
     <div class="member_list" v-for="(item, index) in memberlist" :key="'member'+index">
       <i :style="`background-color:${item.roleColor}`">
@@ -30,7 +30,7 @@
     <!-- 添加成员 dialog start -->
     <el-dialog
       class="el-dialog__scroll"
-      :title="$t('selectRegionalManager.title')"
+      :title="'添加项目成员'"
       :visible.sync="addMemberDialogVisible"
       top="5vh"
       :append-to-body="true"
@@ -46,6 +46,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import {getProjectUserApi} from "@/plugins/axios.js"
 export default {
   props: {
@@ -71,7 +72,8 @@ export default {
   computed: {
     itemid() {
       return this.$route.params.itemid;
-    }
+    },
+     ...mapGetters("ipublic", ["userInfo"])
   },
   created() {
     this.getMemberList()
@@ -101,7 +103,6 @@ export default {
               ...o
             }
           });
-           console.log(this.memberlist)
         }
       })
     },

@@ -25,7 +25,11 @@
       <!-- 标签选择 end -->
 
       <!-- 添加新项目按钮 start -->
-      <AddProject @getList="getProject(1);"></AddProject>
+       <!-- 
+            功能：添加新项目
+            限制：成员不可添加 
+      -->
+      <AddProject v-show="userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.projectManager" @getList="getProject(1);"></AddProject>
       <!-- 添加新项目按钮 end -->
     </div>
     <div>
@@ -78,17 +82,17 @@
                 </li>
                 <!-- 结束项目 -->
                 <li
-                v-show="scope.row.itemStatus!=2"
+                v-show="scope.row.itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
                   class="table_delete"
                   @click="onDeleteMember(scope.row.itemId)"
                 >{{$t("projectInfo.endProject")}}</li>
                 <!-- 重启项目 -->
                 <li
-                  v-show="scope.row.itemStatus==2"
+                  v-show="scope.row.itemStatus==2&&userInfo.userRole!=$global.userRole.member"
                   class="table_delete"
                   @click="onRestartMember(scope.row.itemId)"
                 >重启项目</li>
-                <li v-show="scope.row.itemStatus!=2" class="table_delete" @click="allocationShow=true; allotProject=scope.row">
+                <li v-show="scope.row.itemStatus!=2&&(userInfo.userRole==$global.userRole.regionalManager||userInfo.userRole==$global.userRole.superAdministrator)" class="table_delete" @click="allocationShow=true; allotProject=scope.row">
                   分配
                 </li>
               </ul>
@@ -127,6 +131,7 @@
   </section>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import { getItemStatus } from "@/plugins/configuration.js";
 export default {
   components: {
@@ -189,10 +194,12 @@ export default {
       allotProject: {}
     };
   },
+  computed: {
+    ...mapGetters("ipublic", ["userInfo"])
+  },
   async created() {
     // 获取项目状态字典
     this.itemStatusList = await getItemStatus(this);
-    console.log("项目状态", this.itemStatusList);
     this.getProject(1);
   },
   methods: {
@@ -206,7 +213,6 @@ export default {
           pageSize: this.size
         })
         .then(res => {
-          console.log("项目", res);
           if (res.iworkuCode == 200) {
             this.tableData = res.datas;
             this.total = res.total;

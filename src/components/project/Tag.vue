@@ -2,17 +2,21 @@
   <div class="iworku-card project-detail-tag">
     <div class="tag_top">
       <h3>{{$t("projectInfo.tag.title")}}</h3>
-      <el-button
-        v-if="!closable"
-        type="text"
-        @click="closable=true"
-      >{{$t("projectInfo.tag.detele")}}</el-button>
-      <el-button
-        v-else
-        size="small"
-        type="primary"
-        @click="closable=false;"
-      >{{$t("projectInfo.tag.ok")}}</el-button>
+      <template
+       v-if="disableType"
+      >
+        <el-button
+          v-if="!closable"
+          type="text"
+          @click="closable=true;"
+        >{{$t("projectInfo.tag.detele")}}</el-button>
+        <el-button
+          v-else
+          size="small"
+          type="primary"
+          @click="closable=false"
+        >{{$t("projectInfo.tag.ok")}}</el-button>
+      </template>
     </div>
     <p class="tag_p">
       <!-- <span v-for="(item, index) in taglist" :key="'tag'+index">{{item}}</span> -->
@@ -25,6 +29,7 @@
         @close="closeTag(index)"
       >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh}}</el-tag>
       <el-button
+        v-show="disableType&&!closable"
         size="medium"
         class="tag_p_button"
         circle
@@ -45,13 +50,19 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <AddTagForTarget :type="type" :id="id" :defaultTag="[...taglist]" @onConfirmTag="addTagList"></AddTagForTarget>
+        <AddTagForTarget
+          :type="type"
+          :id="id"
+          :defaultTag="[...taglist]"
+          @onConfirmTag="addTagList"
+        ></AddTagForTarget>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加标签弹窗 end -->
   </div>
 </template>
 <script>
+
 export default {
   props: {
     /**
@@ -62,6 +73,12 @@ export default {
       type: String,
       default() {
         return "project";
+      }
+    },
+    disableType: {
+      type: Boolean,
+      default() {
+        return true;
       }
     },
     // 目标公司ID还是项目公司ID
@@ -86,6 +103,7 @@ export default {
   created() {
     this.getTagList(this.id);
   },
+ 
   methods: {
     // 删除标签
     closeTag(index) {
@@ -101,7 +119,6 @@ export default {
     },
     // 获取项目/目标公司标签
     getTagList(id) {
-      console.log(id);
       if (this.type == "project") {
         // 项目
         this.$http
@@ -111,7 +128,6 @@ export default {
           .then(res => {
             if (res.iworkuCode == 200) {
               this.taglist = res.datas;
-              console.log("标签", res.datas);
             }
           });
       } else {
@@ -128,10 +144,9 @@ export default {
       }
     },
     // 添加标签回调
-    addTagList(list){
-      console.log(list);
-         this.taglist=list;
-         this.shwo=false;
+    addTagList(list) {
+      this.taglist = list;
+      this.show = false;
     }
   }
 };

@@ -5,7 +5,7 @@
       <h3>1</h3>
       <span class="importTarget-margin">{{$t("projectInfo.importTarget.textTip[0]")}}</span>
       <i class="el-icon-paperclip"></i>
-      <a href="/assets/file/客户模板.xls" download="客户模板.xls">客户模板.xls</a>
+      <a :href="$global.avatarURI+'Customer%20information.xlsx'" download="客户模板.xls">客户模板.xls</a>
       <!-- <input type="file" ref="file" > -->
     </div>
     <!-- 二 -->
@@ -15,7 +15,7 @@
         <el-upload
           ref="upload"
           class="importTarget-margin importTarget_upload"
-          action="http://172.25.4.159:8769/api-crm/target/company/resolve"
+          action=" "
           :on-change="onChangeFile"
           :show-file-list="false"
           :auto-upload="false"
@@ -118,7 +118,6 @@ export default {
     },
     // 自定义上传
     onUpload() {
-      console.log(22, this.fileList);
       let params = new FormData();
       params.append("file", this.fileList[0].raw);
       params.append("isCover", this.updateData.isCover);
@@ -156,6 +155,7 @@ export default {
            this.fileList=[];
            this.fileName="";
            this.$emit('close');
+           this.$emit("getList");
 
            
         });

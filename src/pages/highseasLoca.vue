@@ -81,7 +81,6 @@ export default {
           }).then(res=>{
               if(res.iworkuCode==200){
                  this.tableData=res.datas;
-                 console.log("所在",res)
               }
           })
       }

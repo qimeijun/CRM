@@ -197,16 +197,12 @@ export default {
         .post("/target/company/admin/withpaginglist", params)
         .then(res => {
           if (res.iworkuCode == 200) {
-            console.log("大公海", res);
             this.tableData = res.datas;
             this.total = res.total;
             this.page = page;
           }
         });
     },
-    handleClick(row) {
-      console.log(row);
-    }
   }
 };
 </script>

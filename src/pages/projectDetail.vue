@@ -10,6 +10,7 @@
         <ul>
           <li
             v-for="(item, index) in menuList"
+            v-show="allotType!=null||(allotType==null&&item.value!='private')"
             :key="index"
             :class="activeMenu == item.value ? 'project-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
@@ -25,8 +26,8 @@
             <router-view></router-view>
           </el-col>
           <el-col v-if="activeMenu==='information'||activeMenu==='product'" :span="8">
-            <Tag type="project" :id="itemid"></Tag>
-            <Member :id="adminId"></Member>
+            <Tag type="project" :id="itemid" :disableType="userInfo.userRole!=$global.userRole.member"></Tag>
+            <Member v-show="allotType!=null" :id="adminId"></Member>
           </el-col>
         </el-row>
       </el-scrollbar>
@@ -35,6 +36,7 @@
   </section>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import PageHeader from "@/components/lib/PageHeader.vue";
 import Tag from "@/components/project/Tag.vue";
 import Member from "@/components/project/Member.vue";
@@ -45,6 +47,7 @@ export default {  components: {
   },
   data() {
     return {
+      allotType:null,
       activeMenu: "information",
       menuList: [
         // 资料
@@ -82,7 +85,7 @@ export default {  components: {
   },
   created() {
     this.activeMenu = this.$route.name;
-    console.log(this.activeMenu)
+    this.getItemStatus(this.itemid);
   },
   computed: {
     itemid(){
@@ -90,7 +93,9 @@ export default {  components: {
     },
     adminId() {
       return this.$route.params.adminId;
-    }
+    },
+    ...mapGetters("ipublic", ["userInfo"])
+  
   },
 
   methods: {
@@ -100,6 +105,14 @@ export default {  components: {
     onChangeMenu(item) {
       this.activeMenu = item.value;
       this.$router.push({ path: `/project/detail/${item.route}/${this.itemid}/${this.adminId}` });
+    },
+    // 获取项目状态
+    getItemStatus(id) {
+      this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
+        if (res.iworkuCode == 200) {
+          this.allotType=res.datas.probjectManager
+        }
+      });
     },
   }
 };

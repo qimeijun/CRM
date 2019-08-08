@@ -46,7 +46,6 @@
       <!-- 第二步关键人 start -->
       <el-form
         :model="keymenForm"
-        :rules="rules"
         v-if="activeName===2"
         ref="keymenForm"
         label-position="top"
@@ -75,7 +74,6 @@
       <!-- 第三步其他 start -->
       <el-form
         :model="otherForm"
-        :rules="rules"
         v-if="activeName===3"
         ref="otherForm"
         label-position="top"
@@ -203,7 +201,6 @@ export default {
     onSubmitForm(formName, number) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
           if (number === 4) {
             this.$emit("close");
             let params = {

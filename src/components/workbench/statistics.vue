@@ -36,7 +36,6 @@ export default {
       })
       .then(res => {
         if (res.iworkuCode == 200) {
-          console.log("工作台统计", res);
           return res.datas;
         } else {
           return [];

@@ -3,12 +3,12 @@
     <div style="position:fixed; top: 1rem; right: .2rem;">
           <!-- 结束项目 -->
       <el-button
-      v-show="info.itemStatus!=2"
+      v-show="info.itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
         class="info-endbtn"
         @click="onDeleteMember(itemid)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button v-show="info.itemStatus==2" class="info-endbtn" @click="onRestartMember(itemid)">重启项目</el-button>
+      <el-button v-show="info.itemStatus==2&&userInfo.userRole!=$global.userRole.member" class="info-endbtn" @click="onRestartMember(itemid)">重启项目</el-button>
     </div>
     <!-- 资料展示 start -->
     <div class="info_top">
@@ -16,9 +16,10 @@
         <h3>{{$t("projectInfo.menu[0]")}}</h3>
         <div>
           <!-- 修改密码 -->
-          <el-button type="text" @click="passwordshow=true">{{$t("password.modify")}}</el-button>
+          <el-button v-show="userInfo.userRole!=$global.userRole.member"  type="text" @click="passwordshow=true">{{$t("password.modify")}}</el-button>
           <!-- 编辑 -->
           <el-button
+          v-show="userInfo.userRole!=$global.userRole.member"
             type="primary"
             size="small"
             @click="show = true;infoFrom={...info}"
@@ -34,7 +35,7 @@
         <p>
           <span>{{$t("project.from.tmt")}}</span>
           <br />
-          <span>{{info.companyIndustry}}</span>
+          <span>{{$lang==$global.lang.en?info.companyIndustryEn:info.companyIndustryZh}}</span>
         </p>
         <p>
           <span>{{$t("project.from.site")}}</span>
@@ -67,14 +68,13 @@
       <p>{{info.companyStrength}}</p>
     </div>
     <!-- 资料展示 end -->
-
     <div class="info_redact">
       <!-- 编辑资料弹窗 start -->
       <el-dialog class="el-dialog__scroll" title="修改资料" :visible.sync="show" width="600px">
         <el-scrollbar class="scrollbar">
           <h1>{{$t("project.from.secondTitle")}}</h1>
           <el-form :model="infoFrom" ref="infoFrom" :rules="infoRules" label-position="top">
-            <el-form-item :label="$t('project.from.projectTitle')">
+            <el-form-item :label="$t('project.from.projectTitle')" prop="itemName">
               <el-input v-model="infoFrom.itemName" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item :label="$t('project.from.companyName')" prop="companyName">
@@ -139,12 +139,13 @@
       </el-dialog>
       <!-- 编辑资料弹窗 end -->
       <el-dialog :title="$t('password.modify')" :visible.sync="passwordshow" width="600px">
-        <UpdatePassword></UpdatePassword>
+        <UpdatePassword :user="adminUser"></UpdatePassword>
       </el-dialog>
     </div>
   </section>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import { getIndustry } from "@/plugins/configuration.js";
 export default {
   components: {
@@ -156,6 +157,7 @@ export default {
       show: false,
       passwordshow: false,
       industryList: [],
+      adminUser:{},
       infoFrom: {
         id: "",
         itemName: "",
@@ -186,21 +188,21 @@ export default {
         companyIndustry: [
           {
             required: true,
-            message: "请输入密码",
+            message: "请选择公司类型",
             trigger: "blur"
           }
         ],
         companyAddress: [
           {
             required: true,
-            message: "请输入密码",
+            message: "请输入公司地址",
             trigger: "blur"
           }
         ],
         companyWebsite: [
           {
             required: true,
-            message: "请输入密码",
+            message: "请输入公司网站地址",
             trigger: "blur"
           }
         ],
@@ -238,7 +240,9 @@ export default {
   computed: {
     itemid() {
       return this.$route.params.itemid;
-    }
+    },
+    ...mapGetters("ipublic", ["userInfo"])
+    
   },
   async created() {
     // 获取项目ID
@@ -252,7 +256,6 @@ export default {
     // 获取项目公司资料
     getInfo(id) {
       this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
-        console.log("资料", res.datas);
         if (res.iworkuCode == 200) {
           this.info = {
             itemStatus:res.datas.itemStatus,
@@ -265,8 +268,14 @@ export default {
             companyEmail: res.datas.companyEmail,
             companyTel: res.datas.companyTel,
             companyProfile: res.datas.companyProfile,
-            companyStrength: res.datas.companyStrength
+            companyStrength: res.datas.companyStrength,
+            companyIndustryEn:res.datas.companyIndustryEn,
+            companyIndustryZh:res.datas.companyIndustryZh
           };
+          // 客户账号
+          this.adminUser={
+            id:res.additionalParameters.id,
+            userAccount:res.additionalParameters.userAccount}
         }
       });
     },
@@ -274,10 +283,8 @@ export default {
     updateInfo(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this[formName]);
           let params = this[formName];
           this.$http.post("/customer/company/update", params).then(res => {
-            console.log("修改公司资料", res);
             if(res.iworkuCode==200){
               // 重新获取资料
               this.getInfo(this.itemid);

@@ -19,10 +19,16 @@
       <!-- 项目下拉菜单 end -->
 
       <!-- 添加新项目按钮 start -->
-      <AddProject></AddProject>
+      <!-- 
+            功能：添加新项目
+            限制：成员不可添加 
+      -->
+      <AddProject
+        v-show="userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.projectManager"
+      ></AddProject>
       <!-- 添加新项目按钮 end -->
     </div>
-    <div style="height: calc(100vh - 1.8rem);">
+    <div v-show="itemid" style="height: calc(100vh - 1.8rem);">
       <el-scrollbar style="height:100%;">
         <div class="workbench_content">
           <el-row :gutter="10">
@@ -54,6 +60,7 @@
         </div>
       </el-scrollbar>
     </div>
+    <p style="text-align:center;margin-top:calc((100vh - 1.8rem)/3); 0;font-size:24px;" v-show="!itemid">暂未参与项目</p>
   </div>
 </template>
 <script>
@@ -82,15 +89,14 @@ export default {
   methods: {
     // 获取项目列表
     getItemList() {
-      console.log(123123);
-      this.$http
-        .post("/customer/item/withoutpaginglist")
-        .then(res => {
-          if (res.iworkuCode == 200) {
-            this.itemList = res.datas;
-            this.itemid = res.datas ? res.datas[0].itemId : "";
+      this.$http.post("/customer/item/withoutpaginglist").then(res => {
+        if (res.iworkuCode == 200) {
+          this.itemList = res.datas;
+          if (res.datas.length > 0) {
+            this.itemid = res.datas[0].itemId;
           }
-        });
+        }
+      });
     }
   }
 };

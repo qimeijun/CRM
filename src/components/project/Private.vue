@@ -14,16 +14,17 @@
       <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
       <!-- 结束项目 -->
       <el-button
-        v-show="itemStatus!=2"
+        v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
         class="private-endbtn"
         @click="onDeleteMember(itemid)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button v-show="itemStatus==2" class="private-endbtn" @click="onRestartMember(itemid)">重启项目</el-button>
+      <el-button v-show="itemStatus==2&&userInfo.userRole!=$global.userRole.member" class="private-endbtn" @click="onRestartMember(itemid)">重启项目</el-button>
     </div>
     <div class="private_top">
       <!-- 选择成员 start -->
       <el-select
+        v-show="userInfo.userRole!=$global.userRole.member"
         filterable
         clearable
         class="top_select"
@@ -120,9 +121,7 @@
             <Operate>
               <ul>
                 <li>
-                  <router-link
-                     :to="`/target/detail/info/${scope.row.id}`"
-                  >{{$t("project.view")}}</router-link>
+                  <router-link :to="`/target/detail/info/${scope.row.id}`">{{$t("project.view")}}</router-link>
                 </li>
                 <!-- 移入公海 -->
                 <li
@@ -139,7 +138,7 @@
           </template>
         </el-table-column>
       </el-table>
-              <el-pagination
+      <el-pagination
         style="text-align:center;margin:10px 0;"
         background
         layout="prev, pager, next,sizes"
@@ -200,13 +199,14 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ImportTarget :itemid="itemid" @close="importShow=false"></ImportTarget>
+        <ImportTarget :itemid="itemid" @close="importShow=false" @getList="getPrivate(itemid, 1)"></ImportTarget>
       </el-scrollbar>
     </el-dialog>
     <!-- 导入目标公司 end-->
   </section>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import { getTargetType } from "@/plugins/configuration.js";
 export default {
   components: {
@@ -218,7 +218,7 @@ export default {
   },
   data() {
     return {
-       total: 0,
+      total: 0,
       size: 10,
       currentPage: 1,
       targetTypeList: [],
@@ -280,14 +280,16 @@ export default {
   computed: {
     itemid() {
       return this.$route.params.itemid;
-    }
+    },
+    ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
-    // 获取公司类型
+    this.member=this.userInfo.id;
     this.targetTypeList = await getTargetType(this);
     this.getPrivate(this.itemid, 1);
     this.getItemStatus(this.itemid);
     this.getMemberList(this.itemid);
+    
   },
   methods: {
     // 移入公海
@@ -391,34 +393,32 @@ export default {
     },
     // 获取私海列表
     getPrivate(id, page) {
-      this.$http
-        .post("/target/company/withpaginglist", {
-          id: id,
-          type: 2,
-          pageNum: page,
-          pageSize: this.size,
-          clientType: this.tag[1],
-          labelId: this.targetType,
-          keyWord: this.seek,
-          memberId: this.member
-        })
-        .then(res => {
-          if (res.iworkuCode == 200) {
-            console.log("项目私海", res);
-            this.tableData = res.datas;
-            this.total=res.total;
-
-          }
-        });
+      let params = {
+        id: id,
+        type: 2,
+        pageNum: page,
+        pageSize: this.size,
+        clientType: this.tag[1],
+        labelId: this.targetType,
+        keyWord: this.seek,
+        memberId: this.member
+      };
+      // if(this.userInfo.userRole==this.$global.userRole.member){
+      //      params.memberId=this.userInfo.id;
+      // }
+      this.$http.post("/target/company/withpaginglist", params).then(res => {
+        if (res.iworkuCode == 200) {
+          this.tableData = res.datas;
+          this.total = res.total;
+        }
+      });
     },
     handleSelectionChange(list) {
-      console.log(list);
     },
     // 获取项目状态
     getItemStatus(id) {
       this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
         if (res.iworkuCode == 200) {
-          console.log(res.datas);
           this.itemStatus = res.datas.itemStatus;
         }
       });
@@ -438,7 +438,7 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            this.changeAdministratorDialogVisible=false;
+            this.changeAdministratorDialogVisible = false;
             this.getPrivate(this.itemid, 1);
             this.$imessage({
               content: this.$t("public.tips.success"),
@@ -455,7 +455,6 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            console.log("项目成员", res);
             this.memberList = res.datas;
           }
         });

@@ -40,7 +40,6 @@ axios.interceptors.response.use((response) => {
                 router.push({ path: '/login' });
             }
         } else {
-            console.log(response);
             if (response.config.responseType == "arraybuffer") {
                 // 导入文件时不报错
             } else {

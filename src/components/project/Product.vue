@@ -4,16 +4,17 @@
     <div style="position:fixed; top: 1rem; right: .2rem;">
       <!-- 结束项目 -->
       <el-button
-      v-show="itemStatus!=2"
+      v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
         class="product-endbtn"
         @click="onDeleteMember(itemid,2)"
       >{{$t("projectInfo.endProject")}}</el-button>
       <!-- 重启项目 -->
-      <el-button v-show="itemStatus==2" class="product-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
+      <el-button v-show="itemStatus==2&&userInfo.userRole!=$global.userRole.member" class="product-endbtn" @click="onRestartMember(itemid,3)">重启项目</el-button>
     </div>
     <div class="product_top">
       <h3>{{$t("projectInfo.menu[1]")}}</h3>
       <el-button
+      v-show="userInfo.userRole!=$global.userRole.member"
         type="primary"
         @click="show = true;"
       >{{$t("projectInfo.product.view")}}</el-button>
@@ -49,6 +50,7 @@
   </section>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   components: {
     Attachment: () => import("@/components/lib/Attachment.vue"),
@@ -72,7 +74,8 @@ export default {
   computed: {
     itemid() {
       return this.$route.params.itemid;
-    }
+    },
+    ...mapGetters("ipublic", ["userInfo"])
   },
   created() {
     if (this.itemid) {
@@ -88,7 +91,6 @@ export default {
           itemId: id
         })
         .then(res => {
-          console.log("产品", res);
           if (res.iworkuCode == 200) {
             this.product.id=res.datas[0].id;
             this.product.productName = res.datas[0].productName;
@@ -117,7 +119,6 @@ export default {
     getItemStatus(id) {
       this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
         if (res.iworkuCode == 200) {
-          console.log(res.datas);
           this.itemStatus = res.datas.itemStatus;
         }
       });

@@ -2,32 +2,58 @@
   <!-- 资料 -->
   <div class="target-info">
     <div style="position: fixed; top: 1rem; right: .2rem;">
+      <!-- 
+        功能：移入公海、移交、分配、
+        限制：1.所在项目未分配时  没有这三个功能
+              2.项目分配后：
+                   <1>目标公司在个人私海时 移交和移入公海功能(人员:项目成员)
+                   <2>目标公司在公海时 分配功能（项目成员中的项目经理及所属区域经理）
+      -->
+      <!-- 移入公海 -->
       <el-button
-        v-show="companyForm.ownUser==2"
+        v-show="companyForm.ownUser==2&&companyForm.itemProjectManager!=null&&itemRole"
         type="primary"
         @click="onExplantation(targetid)"
       >移入公海</el-button>
+      <!-- 移交 -->
       <el-button
-        v-show="companyForm.ownUser==2"
+        v-show="companyForm.ownUser==2&&companyForm.itemProjectManager!=null&&itemRole"
         type="primary"
         @click="changeAdministratorDialogVisible=true"
       >移交</el-button>
+      <!-- 分配 -->
       <el-button
-        v-show="companyForm.ownUser==1"
+        v-show="companyForm.ownUser==1&&companyForm.itemProjectManager!=null&&itemRole&&userInfo.userRole!=$global.userRole.member"
         type="primary"
         @click="allocationShow=true"
       >{{$t("project.allot")}}</el-button>
+      <!-- 
+      功能：作废/激活
+      限制：1.项目未分配时：超管和所有区域经理
+           2.项目分配后 项目成员
+      -->
+      <!-- 作废 -->
       <el-button
-        v-show="companyForm.status!=4"
+        v-show="companyForm.status!=4&&(itemRole||companyForm.itemProjectManager==null)"
         class="top_button"
         @click="onCancel(4)"
       >{{$t("project.invalid")}}</el-button>
-      <el-button v-show="companyForm.status==4" class="top_button" @click="onCancel(1)">激活</el-button>
+      <!-- 激活 -->
+      <el-button
+        v-show="companyForm.status==4&&(itemRole||companyForm.itemProjectManager==null)"
+        class="top_button"
+        @click="onCancel(1)"
+      >激活</el-button>
     </div>
+    <!--     
+        功能：三个资料的编辑功能 及标签编辑功能
+        限制：1.在所属项目未分配时 超管和所有区域经理都可编辑 （只有超管和区域经理可进页面）
+              2. 在所属项目分配后 项目成员  
+    -->
 
     <el-row>
       <el-col>
-        <Tag type="target" :id="targetid"></Tag>
+        <Tag type="target" :id="targetid" :disableType="companyForm.itemProjectManager==null||itemRole"></Tag>
       </el-col>
     </el-row>
     <el-row :gutter="10">
@@ -37,6 +63,7 @@
           <div class="info_div_top">
             <h3>{{$t("target.info.companyTitle")}}</h3>
             <el-button
+              v-show="companyForm.itemProjectManager==null||itemRole"
               type="primary"
               size="mini"
               @click="show=true;showType='company'"
@@ -61,6 +88,7 @@
           <div class="info_div_top">
             <h3>{{$t("target.info.otherTitle")}}</h3>
             <el-button
+            v-show="companyForm.itemProjectManager==null||itemRole"
               type="primary"
               size="mini"
               @click="show=true;showType='other'"
@@ -145,6 +173,7 @@
           <div class="info_div_top">
             <h3>{{$t("target.info.keymenTitle")}}</h3>
             <el-button
+            v-show="companyForm.itemProjectManager==null||itemRole"
               type="primary"
               size="mini"
               @click="show=true;showType='keymen'"
@@ -236,6 +265,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   components: {
     // 标签组件
@@ -256,16 +286,19 @@ export default {
       companyForm: {},
       keymenForm: {},
       otherForm: {},
+      roleMeberList: [],
       show: false,
       changeAdministratorDialogVisible: false,
-      allocationShow:false,
+      allocationShow: false,
+      itemRole: false, //用户是否为项目成员或超管
       showType: ""
     };
   },
   computed: {
     targetid() {
       return this.$route.params.targetid;
-    }
+    },
+    ...mapGetters("ipublic", ["userInfo"])
   },
   created() {
     this.getTargetInfo(this.targetid);
@@ -380,12 +413,12 @@ export default {
     // 获取目标公司资料
     getTargetInfo(id) {
       this.$http.get(`/target/company/infobypk/${id}`).then(res => {
-        console.log("目标公司", res);
         if (res.iworkuCode == 200) {
           this.companyForm = res.datas.targetCompany;
           this.keymenForm = res.datas.targetCompanyKeyPerson;
           this.otherForm = res.datas.targetCompanyNodeInfo;
           this.overview = res.additionalParameters;
+          this.getMemberList(this.companyForm.itemId);
         }
       });
     },
@@ -435,6 +468,34 @@ export default {
               type: "success"
             });
             this.getTargetInfo(this.targetid);
+          }
+        });
+    },
+    // 判断用户是否为项目成员
+    filterMeberList(id) {
+      let role = this.roleMeberList.filter(o => {
+        if (id == o.id) {
+          return o;
+        }
+      });
+      if (role.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    // 获取所在项目成员
+    getMemberList(itemid) {
+      this.$http
+        .post("/user/item/user/rel/withoutpaginglist", { itemId: itemid })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.roleMeberList = res.datas;
+            // 项目成员或超管
+            this.itemRole =
+              this.filterMeberList(this.userInfo.id) ||
+              this.userInfo.userRole ==
+                this.$global.userRole.superAdministrator;
           }
         });
     }

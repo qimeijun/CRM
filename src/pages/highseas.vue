@@ -18,10 +18,6 @@ export default {
     return {};
   },
   methods: {
-    onClickSeek() {
-      console.log(this.seek);
-    },
-    onClickTag() {}
   }
 };
 </script>

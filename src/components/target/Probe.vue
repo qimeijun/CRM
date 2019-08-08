@@ -2,7 +2,11 @@
   <!-- 调研报告 -->
   <section>
     <div style="position: fixed; top: 1rem; right: .2rem;">
-      <el-button type="primary" @click="show=true">{{$t("target.probe.upload")}}</el-button>
+      <!-- 
+      功能：上传调研报告、修改、删除
+      限制：只有在目标公司被移入私海后有功能（人员：项目成员）
+      -->
+      <el-button v-show="companyForm.ownUser==2&&itemRole" type="primary" @click="show=true">{{$t("target.probe.upload")}}</el-button>
     </div>
     <div class="target-probe">
       <div class="iworku-card probe-item" v-for="(item,index) in probelist" :key="'probe'+index">
@@ -16,7 +20,7 @@
               >&nbsp;{{$lang==$global.lang.en?item.addUserCountryNameEn:item.addUserCountryNameZh}}</i>
             </p>
           </div>
-          <Operate>
+          <Operate v-show="companyForm.ownUser==2&&itemRole">
             <ul>
               <li
                 class="probe_btn"
@@ -72,6 +76,7 @@
   </section>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   components: {
     Operate: () => import("@/components/lib/Operate.vue"),
@@ -83,7 +88,8 @@ export default {
   computed: {
     targetid() {
       return this.$route.params.targetid;
-    }
+    },
+     ...mapGetters("ipublic", ["userInfo"])
   },
   data() {
     return {
@@ -93,11 +99,16 @@ export default {
       updateFile: {
         file: "",
         id: ""
-      }
+      },
+      companyForm: {},
+      additionalParameters: {},
+      itemRole: false, //用户是否为项目成员或超管
+      roleMeberList:[]
     };
   },
   created() {
     this.getProbe();
+    this.getTargetInfo(this.targetid);
   },
   methods: {
     // 获取调研报告
@@ -107,7 +118,6 @@ export default {
           targetCompanyId: this.targetid
         })
         .then(res => {
-          console.log(res);
           this.probelist = res.datas;
         });
     },
@@ -133,11 +143,11 @@ export default {
             .post("/target/company/research/update", params)
             .then(res => {
               if (res.iworkuCode == 200) {
+                this.getProbe();
                 this.$imessage({
                   content: "已删除调研报告",
                   type: "success" // 错误提示 error
                 });
-                this.getProbe();
               }
             });
         })
@@ -159,14 +169,52 @@ export default {
     },
     // 关闭新增弹窗
     closeShow() {
-      this.show = false;
       this.getProbe();
+      this.show = false;
     },
     // 关闭修改弹窗
     closeUpdateShow() {
-      this.updateShow = false;
       this.getProbe();
-    }
+      this.updateShow = false;
+    },
+    // 获取目标公司资料
+    getTargetInfo(id) {
+      this.$http.get(`/target/company/infobypk/${id}`).then(res => {
+        if (res.iworkuCode == 200) {
+          this.companyForm = res.datas.targetCompany;
+          this.additionalParameters = res.additionalParameters;
+          this.getMemberList(this.companyForm.itemId);
+        }
+      });
+    },
+     // 获取所在项目成员
+    getMemberList(itemid) {
+      this.$http
+        .post("/user/item/user/rel/withoutpaginglist", { itemId: itemid })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.roleMeberList = res.datas;
+            // 项目成员或超管
+            this.itemRole =
+              this.filterMeberList(this.userInfo.id) ||
+              this.userInfo.userRole ==
+                this.$global.userRole.superAdministrator;
+          }
+        });
+    },
+      // 判断用户是否为项目成员
+    filterMeberList(id) {
+      let role = this.roleMeberList.filter(o => {
+        if (id == o.id) {
+          return o;
+        }
+      });
+      if (role.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   }
 };
 </script>

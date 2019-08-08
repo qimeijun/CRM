@@ -368,6 +368,15 @@ export default {
             required: true,
             message: "请输入账号",
             trigger: "blur"
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (!/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(value)) {
+                callback(new Error(this.$t("member.rules.account[1]")));
+              } else {
+                callback();
+              }
+            }
           }
         ],
         accountPassword: [
@@ -460,6 +469,7 @@ export default {
         if (valid) {
           this.activeName = number;
           if (this.activeName == 4) {
+            
             let params = {
               account: this.firstForm.account,
               accountPassword: this.firstForm.accountPassword,
@@ -480,6 +490,8 @@ export default {
                 ...this.thirdlyForm.learnList
               ]
             };
+            // 去掉空元素
+            params.productNodeList=params.productNodeList.filter(o=>{if(o.nodeFiles){return o}})
             this.activeName = 1;
             this.$http.post("/customer/company/save", params).then(res => {
               if (res.iworkuCode == 200) {
@@ -588,7 +600,6 @@ export default {
     },
     // 获取图片上传进度
     getImgProgress(event, file, fileList) {
-      console.log(event, file, fileList);
       this.imgProgress = parseInt(file.percentage);
     },
     videoformat(percentage) {

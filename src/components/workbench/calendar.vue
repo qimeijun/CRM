@@ -203,12 +203,10 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200 && res.datas) {
-            console.log("日历", res.datas);
             let listobj = this.filtDateList(res.datas);
             this.firstlist = listobj.first;
             this.secondlist = listobj.second;
             this.list = listobj.list;
-            console.log("sheng", this.list);
           }
         });
     },

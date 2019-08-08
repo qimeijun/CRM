@@ -174,7 +174,7 @@ export default {
             } else if (this.type == 'target') {
                 addTagList.map(val => {
                     params.push({
-                        labelId: val,
+                        labelId: val.id,
                         targetCompanyId: this.id,
                         type: 1
                     });

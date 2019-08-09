@@ -126,7 +126,7 @@ export default {
               if (res.iworkuCode == 200) {
                 this.$store.commit("ipublic/$_set_userInfo", res.datas);
                 if (
-                  res.datas.userRole == "c25bb273-a1f6-11e9-b080-946e68be8353"
+                  res.datas.userRole == this.$global.userRole.customer
                 ) {
                   this.$router.push({ path: "/customer" });
                 } else {

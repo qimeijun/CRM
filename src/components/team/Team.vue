@@ -1,7 +1,14 @@
 <template>
   <section class="member-team">
     <!-- 顶部按钮 start -->
-    <div style="position: fixed; top: 1rem; right: .2rem;">
+    <!-- 
+      功能：添加成员
+      权限：
+        1、这个团队的项目经理
+        2、超级管理员
+        3、区域经理
+     -->
+    <div v-if="teamInfo.teamSatus == 1 && ([$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole) || userInfo.id == teamInfo.projectManager.id)" style="position: fixed; top: 1rem; right: .2rem;">
         <el-button type="primary" @click="addMemberDialogVisible=true;">{{ $t("memberManagement.btn.addMember") }}</el-button>
     </div>
     <!-- 顶部按钮 start -->
@@ -137,9 +144,9 @@
         </ul>
       </div>
     </div>
-    <div class="member-team__statistics" style="background-color: white;">
+    <div class="member-team__statistics" :style="(!teamId || teamId == 'null') ? `background-color: #d4d4d4;` : `background-color: white;`">
       <div class="member-team__statistics-filter">
-        <el-dropdown @command="onChangeStatisticsType">
+        <el-dropdown v-if="teamId && teamId != 'null'" @command="onChangeStatisticsType">
           <span class="el-dropdown-link" style="cursor: pointer;color: black;">
             {{ statisticsSelectParams.type == 'performance' ? $t("memberInfo.teamStatistics[0]") : $t("memberInfo.teamStatistics[1]") }}
             <i
@@ -151,7 +158,7 @@
             <el-dropdown-item command="compare">{{ $t("memberInfo.teamStatistics[1]") }}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <div style="display: flex; align-items: center;">
+        <div v-if="teamId && teamId != 'null'" style="display: flex; align-items: center;">
             <!-- 时间类型， 年份或者月份 -->
           <el-dropdown @command="onChangeTime">
             <span class="el-dropdown-link" style="cursor: pointer; color: black;">
@@ -302,6 +309,9 @@ export default {
   methods: {
     // 获取团队信息
     getTeamInfo() {
+      if (!this.teamId || this.teamId == 'null') {
+        return false;
+      }
       this.$http.get(`/user/team/infobypk/${this.teamId}`).then(res => {
         if (res.iworkuCode == 200) {
           res.datas.userInfoList && res.datas.userInfoList.unshift(res.datas.projectManager);

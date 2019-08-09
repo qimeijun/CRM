@@ -565,5 +565,16 @@ export default {
     },
     page404: {
         btn: "试试返回首页"
+    },
+    layout: {
+        workBench: "工作台",
+        project: "项目管理",
+        public: "公海管理",
+        member: "成员管理",
+        tag: "标签管理",
+        comapnyInfo: "公司资料",
+        companyProduct: "产品信息",
+        target: "目标公司",
+        workDiary: "工作日志"
     }
 }

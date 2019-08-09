@@ -21,7 +21,10 @@ export default {
          *  权限设置：
          *  1、如果当前登录的用户是区域经理或者是项目管理员，就查询登录用户是否是这个用户的上级
          */
-        if (this.userInfo.userRole != this.$global.userRole.member && this.userInfo.userRole != this.$global.userRole.customer) {
+        if (this.userInfo.id == this.id ) {
+            // 用户自己
+            this.isAllow = true;
+        } else if (this.userInfo.userRole != this.$global.userRole.member && this.userInfo.userRole != this.$global.userRole.customer) {
             this.$http.post("/user/info/find/user", {
                 id: this.id
             }).then(res => {

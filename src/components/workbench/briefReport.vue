@@ -113,7 +113,7 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            this.list = [...this.list, ...res.datas];
+            page > 1 ? this.list.push(...res.datas) : this.list = res.datas;
             this.loading = false;
             this.page = page + 1;
             if (res.datas.length < 6) {

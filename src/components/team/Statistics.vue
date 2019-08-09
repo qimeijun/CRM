@@ -75,6 +75,9 @@ export default {
      * 成员对比业绩图
      */
     async getStatisticsCompareLine() {
+      if (!this.id || this.id == 'null') {
+        return false
+      }
       let title = [this.champion, this.selectMember.userNameZh];
       let option = {
         color: ["#8D43FF", "#4DD0E1"],
@@ -186,6 +189,9 @@ export default {
      *  所有成员的业绩表
      */
     async getStatisticsAllPerformance() {
+      if (!this.id || this.id == 'null') {
+        return false
+      }
       let option = {
         tooltip: {
           show: false

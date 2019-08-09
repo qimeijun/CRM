@@ -27,7 +27,7 @@
     ></el-input>
     <ul class="change-administrator__list">
       <li v-for="(item, index) in adminstratorList" :key="index" @click="onSelect(item, index)">
-        <div :class="['inner', selectAdminstrator == index ? 'selected': '']">
+        <div :class="['inner', selectAdminstrator == index ? 'selected': '']" :style="item.id == oldAdminstrator.id ? `display: none;` : ''">
           <div class="change-administrator__list-left">
             <el-avatar :size="50" :src="`${$global.avatarURI}${item.userProfileImage}`"></el-avatar>
             <div class="change-administrator__list-left-user">

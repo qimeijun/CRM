@@ -71,7 +71,7 @@ export default {
       page: {
         pageSize: 10,
         pageNum: 1,
-        totalPage: 0
+        totalPage: 1
       },
       loading: false
     };
@@ -83,9 +83,6 @@ export default {
     disabled() {
       return this.loading || this.noMore;
     }
-  },
-  created() {
-    this.getremindList();
   },
   methods: {
     getremindList() {
@@ -105,9 +102,11 @@ export default {
     },
     load() {
       this.page.pageNum++;
-      if (this.page.totalPage > this.page.pageNum) {
+      if (this.page.totalPage >= this.page.pageNum) {
         this.loading = true;
         this.getremindList();
+      } else {
+        this.page.pageNum = 1;
       }
     },
     /**
@@ -117,6 +116,16 @@ export default {
       this.dialogFormVisible = false;
       this.page.pageNum = 1;
       this.getremindList();
+    }
+  },
+  watch: {
+    itemid: {
+      handler(newVal) {
+        if (newVal) {
+          this.getremindList();
+        }
+      },
+      immediate: true
     }
   }
 };

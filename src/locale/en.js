@@ -566,5 +566,16 @@ export default {
     },
     page404: {
         btn: "Try back to the home page"
+    },
+    layout: {
+        workBench: "Work Bench",
+        project: "Project",
+        public: "Public",
+        member: "Member",
+        tag: "Tag",
+        comapnyInfo: "Company Inforation",
+        companyProduct: "Product",
+        target: "Target Company",
+        workDiary: "Work Diary"
     }
 }

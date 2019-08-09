@@ -1,13 +1,18 @@
 <template>
-    <section v-if="isShow" class="message">
-        <div class="cont">
-            <img class="img" v-if="type == 'success'" src="./../../assets/img/succeed.gif" alt="">
-            <img class="img" v-else src="./../../assets/img/fault.gif" alt="">
-            <div class="content">
-                {{ content }}
+    <section ref="iworku-message" v-if="isShow" class="iworku-c-message">
+        <div class="message">
+            <div class="cont">
+                <img class="img" v-if="type == 'success'" src="./../../assets/img/succeed.gif" alt="">
+                <img class="img" v-else src="./../../assets/img/fault.gif" alt="">
+                <div class="content">
+                    {{ content }}
+                </div>
             </div>
+            <span class="close" @click="addClose">{{ $lang == $global.lang.en ? 'close' : '关闭' }}</span>
         </div>
-        <span class="close" @click="addClose">{{ $lang == $global.lang.en ? 'close' : '关闭' }}</span>
+        <!-- 底部遮罩 start -->
+        <div class="mask" @click="addClose"></div>
+        <!-- 底部遮罩 end -->
     </section>
 </template>
 <script>
@@ -45,6 +50,20 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.iworku-c-message {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    .mask {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        z-index: 9998;
+    }
+}
+
 .message {
     position: fixed;
     top: 25%;

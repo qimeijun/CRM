@@ -13,7 +13,7 @@
           功能：基本信息编辑
           权限
             1、当前登录人的级别比正在查看信息的这个人高就可以修改
-            2、当前登录人就是查看信息的这个任
+            2、当前登录人就是查看信息的这个人
          -->
         <template v-if="userInfo.id == userInformation.id || (userInformation.userRole == $global.userRole.regionalManager && userInfo.userRole == $global.userRole.superAdministrator) 
                         || (userInformation.userRole == $global.userRole.projectManager && [$global.userRole.regionalManager, $global.userRole.superAdministrator].includes(userInfo.userRole))
@@ -85,7 +85,7 @@
     <!-- 修改成员信息 dialog end -->
     <!-- 修改成员密码 dialog start -->
     <el-dialog
-      :title="$t('selectRegionalManager.title')"
+      :title="$t('password.modify')"
       :visible.sync="modifyPasswordDialogVisible"
       top="5vh"
       :append-to-body="true"

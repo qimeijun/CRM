@@ -11,16 +11,16 @@
       :router="true"
       :default-active="path"
     >
-      <div class="menu-logo">
+      <div class="menu-logo" @click="$router.push({ path: '/' })">
         <img src="@/assets/logo.png" fit="contain" />
       </div>
       <el-menu-item index="/" route="/">
         <i class="iconfont">&#xe627;</i>
-        <span slot="title">工作台</span>
+        <span slot="title">{{ $t("layout.workBench") }}</span>
       </el-menu-item>
       <el-menu-item index="/projectmanage" route="/projectmanage">
         <i class="iconfont">&#xe604;</i>
-        <span slot="title">项目管理</span>
+        <span slot="title">{{ $t("layout.project") }}</span>
       </el-menu-item>
       <!-- 
         功能：公海管理
@@ -33,7 +33,7 @@
         route="/highseas"
       >
         <i class="iconfont">&#xe600;</i>
-        <span slot="title">公海管理</span>
+        <span slot="title">{{ $t("layout.public") }}</span>
       </el-menu-item>
       <!-- 
         功能：成员管理
@@ -41,21 +41,20 @@
           1、只有客户不可见
       -->
       <el-menu-item
-        v-if="userInfo.userRole != $global.userRole.customer"
         index="/member"
         route="/member"
       >
         <i class="iconfont">&#xe63f;</i>
-        <span slot="title">成员管理</span>
+        <span slot="title">{{ $t("layout.member") }}</span>
       </el-menu-item>
       <!-- 
         功能：标签管理
         权限：
           1、只有客户不可见
       -->
-      <el-menu-item v-if="userInfo.userRole != $global.userRole.customer" index="/tag" route="/tag">
+      <el-menu-item index="/tag" route="/tag">
         <i class="iconfont">&#xe61e;</i>
-        <span slot="title">标签管理</span>
+        <span slot="title">{{ $t("layout.tag") }}</span>
       </el-menu-item>
       <el-button
         type="text"
@@ -75,24 +74,24 @@
       :router="true"
       :default-active="pathName"
     >
-      <div class="menu-logo">
+      <div class="menu-logo" @click="$router.push({ path: `/customer/info/${itemid}/${adminId}` })">
         <img src="@/assets/logo.png" fit="contain" />
       </div>
       <el-menu-item index="customer_information" :route="`/customer/info/${itemid}/${adminId}`">
         <i class="iconfont">&#xe627;</i>
-        <span slot="title">公司资料</span>
+        <span slot="title">{{ $t("layout.comapnyInfo") }}</span>
       </el-menu-item>
       <el-menu-item index="customer_product" :route="`/customer/product/${itemid}/${adminId}`">
         <i class="iconfont">&#xe641;</i>
-        <span slot="title">产品信息</span>
+        <span slot="title">{{ $t("layout.companyProduct") }}</span>
       </el-menu-item>
       <el-menu-item index="customer_target" :route="`/customer/target/${itemid}/${adminId}`">
         <i class="iconfont">&#xe620;</i>
-        <span slot="title">目标公司</span>
+        <span slot="title">{{ $t("layout.target") }}</span>
       </el-menu-item>
       <el-menu-item index="customer_diary" :route="`/customer/diary/${itemid}/${adminId}`">
         <i class="iconfont">&#xe610;</i>
-        <span slot="title">工作日志</span>
+        <span slot="title">{{ $t("layout.workDiary") }}</span>
       </el-menu-item>
       <el-button
         type="text"
@@ -171,6 +170,7 @@ export default {
     height: 0.25rem;
     margin-left: 0.06rem;
     margin-right: 0.06rem;
+    cursor: pointer;
     img {
       max-height: 0.25rem;
       max-width: 100%;

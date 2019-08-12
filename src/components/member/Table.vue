@@ -12,7 +12,8 @@
             </div>
             <div>{{ $lang == $global.en ? item.roleName : item.roleName }}</div>
             <div>{{ item.team }}</div>
-            <div>{{ item.targetCompanyProcessingCount || 0}}</div>
+            <div>{{ item.itemCount || 0}}</div>
+            <!-- targetCompanyProcessingCount -->
             <div>{{ item.targetCompanyCount || 0 }}</div>
             <div style="flex: .8">{{ item.addTimeStr }}</div>
             <div style="flex: .3">
@@ -187,7 +188,8 @@ export default {
         teamId: this.item.teamId, 
         userId: this.item.id, 
         username: this.item.userNameZh,
-        userRole: this.item.userRole
+        userRole: this.item.userRole,
+        status: this.item.userStatus
       });
       this.$router.push({ path: `/member/detail/info/${this.item.id}` });
     }

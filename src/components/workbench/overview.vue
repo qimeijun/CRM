@@ -67,6 +67,11 @@ export default {
       }
     }
   },
+  created() {
+    if(this.itemid){
+      this.getItemNumber(this.itemid);
+    }
+  },
   methods: {
     getItemNumber(id) {
       this.$http

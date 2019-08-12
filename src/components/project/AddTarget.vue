@@ -202,10 +202,9 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (number === 4) {
-            this.$emit("close");
             let params = {
               targetCompanyName: this.companyForm.name,
-              targetCompanyCountry: this.companyForm.name,
+              targetCompanyCountry: this.companyForm.country,
               itemId: this.itemid,
               targetCompanyAddress: this.companyForm.site,
               targetCompanyWebsite: this.companyForm.url,
@@ -225,6 +224,7 @@ export default {
             };
             this.$http.post("/target/company/save", params).then(res => {
               if (res.iworkuCode == 200) {
+                this.$emit("close");
               }
             });
           } else {

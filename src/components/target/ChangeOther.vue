@@ -24,7 +24,13 @@
       </el-form-item>
       <el-form-item :label="$t('target.form.importance')" prop="rate">
         <!-- <el-input v-model="form.nodeGrade"></el-input> -->
-        <el-rate v-model="form.nodeGrade" :colors="gradeColors" show-text :texts="gradeTexts" :max="4"></el-rate>
+        <el-rate
+          v-model="form.nodeGrade"
+          :colors="gradeColors"
+          show-text
+          :texts="gradeTexts"
+          :max="4"
+        ></el-rate>
       </el-form-item>
       <el-form-item :label="$t('target.form.introduce')" prop="introduce">
         <el-input type="textarea" :rows="4" v-model="form.nodeProfile"></el-input>
@@ -39,7 +45,7 @@
   </div>
 </template>
 <script>
-import { getTargetType,getGrade } from "@/plugins/configuration.js";
+import { getTargetType, getGrade } from "@/plugins/configuration.js";
 export default {
   props: {
     otherForm: {
@@ -51,18 +57,19 @@ export default {
   },
   async created() {
     this.form = { ...this.otherForm };
-    this.form.nodeGrade=this.form.nodeGrade-0;
+    this.form.nodeGrade = this.form.nodeGrade - 0;
     this.targetTypeList = await getTargetType(this);
     let gradeList = await getGrade(this);
-    this.gradeTexts=gradeList.map(o=>{
-      return this.$lang==this.$global.lang.en?o.nameEn:o.nameZh;
-    })
+    this.gradeTexts = gradeList.map(o => {
+      return this.$lang == this.$global.lang.en ? o.nameEn : o.nameZh;
+    });
+    this.gradeTexts.splice(0, 1);
   },
   data() {
     return {
       targetTypeList: [],
-      gradeColors:['#E50054','#E50054','#E50054'],
-      gradeTexts:[],
+      gradeColors: ["#E50054", "#E50054", "#E50054"],
+      gradeTexts: [],
       form: {},
       rules: {}
     };
@@ -85,13 +92,11 @@ export default {
             nodeProfile: this.form.nodeProfile,
             nodeRemarks: this.form.nodeRemarks
           };
-          this.$http
-            .post("/target/company/node/update", params)
-            .then(res => {
-              if (res.iworkuCode == 200) {
-                this.$emit("closeShow");
-              }
-            });
+          this.$http.post("/target/company/node/update", params).then(res => {
+            if (res.iworkuCode == 200) {
+              this.$emit("closeShow");
+            }
+          });
         }
       });
     }

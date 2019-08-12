@@ -25,7 +25,7 @@ export default {
          */
         this.$http.get(`/customer/item/infobypk/${this.id}`).then(res => {
             if (res.iworkuCode == 200 && res.datas) {
-                res.datas.probjectManager ? (function (_this, result) {
+                res.datas.probjectManager&&res.datas.itemStatus!=2 ? (function (_this, result) {
                     _this.$http.post("/user/info/find/user", {id: result.probjectManager}).then(ures => {
                     if (res.iworkuCode == 200 && _this.userInfo.userRole == _this.$global.userRole.regionalManager) {
                             let index = ures.datas.findIndex(val => _this.userInfo.id == val.userId);

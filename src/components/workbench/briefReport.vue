@@ -99,6 +99,7 @@ export default {
   watch: {
     itemid: function(newVal){
       if (newVal) {
+        this.list=[]
         this.getBriefReport(newVal, 1);
       }
     }

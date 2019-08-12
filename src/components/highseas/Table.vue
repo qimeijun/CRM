@@ -7,7 +7,7 @@
         v-model="seek"
         @keyup.enter.native="getHighseas(1)"
       >
-        <i slot="suffix" class="el-input__icon el-icon-search"></i>
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="getHighseas(1)"></i>
       </el-input>
     </div>
     <div class="highseas_filtration">
@@ -65,8 +65,8 @@
           :label="$t('highseas.table.target')"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column prop="count" :label="$t('highseas.table.projectNum')" width="150"></el-table-column>
-        <el-table-column prop="orderCount" :label="$t('highseas.table.orderNum')" width="150"></el-table-column>
+        <el-table-column prop="count" :label="$t('highseas.table.projectNum')" width="150" sortable></el-table-column>
+        <el-table-column prop="orderCount" :label="$t('highseas.table.orderNum')" width="150" sortable></el-table-column>
         <el-table-column :label="$t('highseas.table.operate')" width="80">
           <template slot-scope="scope">
             <Operate>
@@ -128,7 +128,7 @@ export default {
           if (node.level == 0) {
             // 获取项目标签分组
             this.$http
-              .post("/customer/item/label/group/withoutpaginglist", {
+              .post("/target/label/group/withoutpaginglist", {
                 groupStatus: 1
               })
               .then(res => {
@@ -148,7 +148,7 @@ export default {
           } else {
             // 获取项目各组标签
             this.$http
-              .post(`/customer/item/label/withoutpaginglist`, {
+              .post(`/target/label/withoutpaginglist`, {
                 labelGroupId: node.value
               })
               .then(res => {
@@ -210,6 +210,9 @@ export default {
 <style lang="scss" scoped>
 .top_seek {
   width: 3.13rem;
+  .el-icon-search{
+    cursor: pointer;
+  }
 }
 .highseas_filtration {
   display: flex;

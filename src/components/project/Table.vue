@@ -64,8 +64,8 @@
             >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="day" :label="$t('project.tableHeader[5]')" width="120"></el-table-column>
-        <el-table-column prop="addTimeStr" :label="$t('project.tableHeader[6]')" width="120">
+        <el-table-column prop="day" :label="$t('project.tableHeader[5]')" width="120" sortable></el-table-column>
+        <el-table-column prop="addTimeStr" :label="$t('project.tableHeader[6]')" width="120" sortable>
           <template slot-scope="scope">
             <p>{{scope.row.addTimeStr.split(' ')[0]}}</p>
           </template>
@@ -93,7 +93,7 @@
                   @click="onRestartMember(scope.row.itemId)"
                 >重启项目</li>
                 <li v-show="scope.row.itemStatus!=2&&(userInfo.userRole==$global.userRole.regionalManager||userInfo.userRole==$global.userRole.superAdministrator)" class="table_delete" @click="allocationShow=true; allotProject=scope.row">
-                  分配
+                  {{scope.row.probjectManager==null?'分配':'再分配'}}
                 </li>
               </ul>
             </Operate>

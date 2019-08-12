@@ -30,7 +30,7 @@
         placeholder="全部标签"
       ></el-cascader>
       <!-- 标签 end -->
-       <el-input
+      <el-input
         class="table-seek"
         placeholder="搜索目标公司名称、ID、地址、关键人"
         v-model="seek"
@@ -48,9 +48,10 @@
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="status"
+          prop="grade"
           :label="$t('projectInfo.commonality.tableHeader[1]')"
           width="200"
+           sortable
         >
           <template slot-scope="scope">
             <el-rate :value="scope.row.grade-0" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
@@ -61,20 +62,26 @@
           prop="updateTimeStr"
           :label="$t('projectInfo.commonality.tableHeader[2]')"
           width="120"
+          sortable
         >
           <template slot-scope="scope">
             <p>{{scope.row.updateTimeStr?scope.row.updateTimeStr.split(' ')[0]:''}}</p>
           </template>
         </el-table-column>
         <el-table-column
-          :prop="$lang==$global.lang.en?'statusNameEn':'statusNameZh'"
+          prop="status"
           :label="$t('projectInfo.commonality.tableHeader[3]')"
           width="150"
-        ></el-table-column>
+          sortable
+        >
+        <template slot-scope="scope">
+         <p>{{$lang==$global.lang.en?scope.row.statusNameEn:scope.row.statusNameZh}}</p>
+        </template></el-table-column>
         <el-table-column
           prop="addTimeStr"
           :label="$t('projectInfo.commonality.tableHeader[4]')"
           width="120"
+          sortable
         >
           <template slot-scope="scope">
             <p>{{scope.row.addTimeStr?scope.row.addTimeStr.split(' ')[0]:''}}</p>
@@ -83,7 +90,8 @@
         <el-table-column
           prop="division"
           :label="$t('projectInfo.commonality.tableHeader[5]')"
-          width="120"
+          width="140"
+          sortable
         ></el-table-column>
         <el-table-column :label="$t('projectInfo.commonality.tableHeader[6]')" width="60">
           <template slot-scope="scope">
@@ -195,12 +203,14 @@ export default {
       this.$http
         .post("/target/company/all/withpaginglist", {
           id: this.itemid,
+          keyWord: this.seek,
+          labelId: this.tag[1],
+          clientType: this.targetType,
           pageNum: page,
           pageSize: this.size
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            console.log(res);
             this.tableData = res.datas;
             this.total = res.total;
             this.currentPage = page;

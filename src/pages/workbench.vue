@@ -38,7 +38,7 @@
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 本月工作 -->
-              <Statistics></Statistics>
+              <Statistics :itemid="itemid"></Statistics>
             </el-col>
             <!-- </el-row>
             <el-row>-->

@@ -6,7 +6,11 @@
       功能：上传调研报告、修改、删除
       限制：只有在目标公司被移入私海后有功能（人员：项目成员）
       -->
-      <el-button v-show="companyForm.ownUser==2&&itemRole" type="primary" @click="show=true">{{$t("target.probe.upload")}}</el-button>
+      <el-button
+        v-show="itemStatus!=2&&companyForm.status!=4&&companyForm.ownUser==2&&itemRole&&(additionalParameters.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(additionalParameters.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&additionalParameters.targetCompanyUserInfo.id==userInfo.id))"
+        type="primary"
+        @click="show=true"
+      >{{$t("target.probe.upload")}}</el-button>
     </div>
     <div class="target-probe">
       <div class="iworku-card probe-item" v-for="(item,index) in probelist" :key="'probe'+index">
@@ -20,7 +24,7 @@
               >&nbsp;{{$lang==$global.lang.en?item.addUserCountryNameEn:item.addUserCountryNameZh}}</i>
             </p>
           </div>
-          <Operate v-show="companyForm.ownUser==2&&itemRole">
+          <Operate v-show="companyForm.status!=4&&companyForm.ownUser==2&&itemRole&&(additionalParameters.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(additionalParameters.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&additionalParameters.targetCompanyUserInfo.id==userInfo.id))">
             <ul>
               <li
                 class="probe_btn"
@@ -89,7 +93,7 @@ export default {
     targetid() {
       return this.$route.params.targetid;
     },
-     ...mapGetters("ipublic", ["userInfo"])
+    ...mapGetters("ipublic", ["userInfo"])
   },
   data() {
     return {
@@ -103,7 +107,8 @@ export default {
       companyForm: {},
       additionalParameters: {},
       itemRole: false, //用户是否为项目成员或超管
-      roleMeberList:[]
+      roleMeberList: [],
+      itemStatus:2
     };
   },
   created() {
@@ -184,10 +189,11 @@ export default {
           this.companyForm = res.datas.targetCompany;
           this.additionalParameters = res.additionalParameters;
           this.getMemberList(this.companyForm.itemId);
+          this.getItemStatus(this.companyForm.itemId);
         }
       });
     },
-     // 获取所在项目成员
+    // 获取所在项目成员
     getMemberList(itemid) {
       this.$http
         .post("/user/item/user/rel/withoutpaginglist", { itemId: itemid })
@@ -202,7 +208,7 @@ export default {
           }
         });
     },
-      // 判断用户是否为项目成员
+    // 判断用户是否为项目成员
     filterMeberList(id) {
       let role = this.roleMeberList.filter(o => {
         if (id == o.id) {
@@ -214,6 +220,14 @@ export default {
       } else {
         return false;
       }
+    },
+       // 获取项目状态
+    getItemStatus(id) {
+      this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
+        if (res.iworkuCode == 200) {
+          this.itemStatus = res.datas.itemStatus;
+        }
+      });
     },
   }
 };

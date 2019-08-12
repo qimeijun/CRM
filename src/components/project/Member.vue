@@ -3,7 +3,7 @@
     <div class="member_top">
       <h3>{{$t("projectInfo.member.title")}}</h3>
       <span>共{{memberlist.length}}人</span>
-      <el-button v-show="userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer" type="primary" size="small" @click="addMemberDialogVisible=true">{{$t("projectInfo.member.add")}}</el-button>
+      <el-button v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer" type="primary" size="small" @click="addMemberDialogVisible=true">{{$t("projectInfo.member.add")}}</el-button>
     </div>
     <div class="member_list" v-for="(item, index) in memberlist" :key="'member'+index">
       <i :style="`background-color:${item.roleColor}`">
@@ -55,6 +55,12 @@ export default {
       type: String,
       default() {
         return "";
+      }
+    },
+    itemStatus:{
+      type:Number,
+      default(){
+        return 2
       }
     }
   },

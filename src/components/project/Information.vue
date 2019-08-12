@@ -217,28 +217,21 @@ export default {
         companyEmail: [
           {
             required: true,
-            message: "请输入密码",
+            message: "请输入公司邮箱",
             trigger: "blur"
           }
         ],
         companyTel: [
           {
             required: true,
-            message: "请输入密码",
+            message: "请输入公司电话",
             trigger: "blur"
           }
         ],
         companyProfile: [
           {
             required: true,
-            message: "请输入密码",
-            trigger: "blur"
-          }
-        ],
-        companyStrength: [
-          {
-            required: true,
-            message: "请输入密码",
+            message: "请输入公司介绍",
             trigger: "blur"
           }
         ]
@@ -320,11 +313,13 @@ export default {
               itemId: id,
               itemStatus: 2
             })
-            .then(res => {});
-          this.$message({
-            type: "success",
-            message: "已结束项目"
-          });
+            .then(res => {
+              this.getInfo(this.itemid);
+              this.$message({
+                type: "success",
+                message: "已结束项目"
+              });
+            });
         })
         .catch(() => {
           // 取消
@@ -353,11 +348,13 @@ export default {
               itemId: id,
               itemStatus: 1
             })
-            .then(res => {});
-          this.$message({
-            type: "success",
-            message: "已重启项目"
-          });
+            .then(res => {
+              this.getInfo(this.itemid);
+              this.$message({
+                type: "success",
+                message: "已重启项目"
+              });
+            });
         })
         .catch(() => {
           // 取消

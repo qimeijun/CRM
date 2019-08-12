@@ -19,72 +19,97 @@
           <div class="head__notice">
             <div class="top">
               <span>{{ $t("notice.box") }}</span>
-              <span v-if="noticeList && noticeList.length > 0" style="color: #4937EA; cursor: pointer;" @click="onReadAll">{{ $t("notice.read") }}</span>
+              <span
+                v-if="noticeList && noticeList.length > 0"
+                style="color: #4937EA; cursor: pointer;"
+                @click="onReadAll"
+              >{{ $t("notice.read") }}</span>
             </div>
             <ul class="list" v-if="noticeList && noticeList.length > 0">
-              <li v-for="(item, index) in noticeList" :class="[item.messageStatus == 2 ? 'read': '']" :key="index">
-                [{{ item.title }}]{{ item.content }}
-              </li>
+              <li
+                v-for="(item, index) in noticeList"
+                :class="[item.messageStatus == 2 ? 'read': '']"
+                :key="index"
+              >[{{ item.title }}]{{ item.content }}</li>
             </ul>
             <ul v-else>
-              <li style="height: 100px; line-height: 100px; text-align: center;">{{ $t("public.tips.noData") }}</li>
+              <li
+                style="height: 100px; line-height: 100px; text-align: center;"
+              >{{ $t("public.tips.noData") }}</li>
             </ul>
             <div class="check-all">
-              <span style="cursor: pointer;" @click="$router.push({ path: '/notice' });">{{ $t("notice.checkAll") }}</span>
+              <span
+                style="cursor: pointer;"
+                @click="$router.push({ path: '/notice' });"
+              >{{ $t("notice.checkAll") }}</span>
             </div>
           </div>
-          <el-badge slot="reference" :is-dot="noticeList && noticeList.length > 0" class="head__right__message">
+          <el-badge
+            slot="reference"
+            :is-dot="noticeList && noticeList.length > 0"
+            class="head__right__message"
+          >
             <i class="el-icon-message-solid"></i>
           </el-badge>
         </el-popover>
       </li>
-      
+
       <!-- 头像 -->
       <li class="head__avatar">
         <el-popover placement="bottom" width="300" trigger="hover">
           <div class="head__person">
             <div class="top">
-               <el-avatar :size="50"> 
-                 <img :src="`${$global.avatarURI}${userInfo.userProfileImage}`" alt="">
-               </el-avatar>
-               <div class="right">
-                 <div class="">
-                   <span style="font-size: 16px; padding-right: .05rem;">{{ userInfo.userNameZh }}</span>
-                   <span>{{ userInfo.roleName }}</span>
-                 </div>
-                 <div>{{ userInfo.userEmail }}</div>
-               </div>
+              <el-avatar :size="50">
+                <img v-if="userInfo.userProfileImage!=null" :src="`${$global.avatarURI}${userInfo.userProfileImage}`" alt />
+                <span v-else style="font-size:24px; font-weight: bold;">{{userInfo.userNameZh?userInfo.userNameZh.slice("")[0]:''}}</span>
+              </el-avatar>
+              <div class="right">
+                <div class>
+                  <span style="font-size: 16px; padding-right: .05rem;">{{ userInfo.userNameZh }}</span>
+                  <span v-show="userInfo.userRole!=$global.userRole.customer">{{ userInfo.roleName }}</span>
+                </div>
+                <div>{{ userInfo.userEmail }}</div>
+              </div>
             </div>
             <div class="content">
               <ul class="menu">
                 <li @click="$router.push({ path: '/' })">{{ $t('workBench.title') }}</li>
-                <li class="account" @click="$router.push({ path: '/setting' })">{{ $t("head.account") }}</li>
+                <li
+                  class="account"
+                  @click="$router.push({ path: '/setting' })"
+                >{{ $t("head.account") }}</li>
                 <li @click="onLogout">{{ $t("head.logout") }}</li>
               </ul>
               <ul class="today">
                 <li style="font-size: 14px; font-weight: 600;">{{ $t("head.today") }}</li>
                 <template v-if="todayTaskList && todayTaskList.length > 0">
-                <li class="list" v-for="(item, index) in todayTaskList" :key="index">{{ item.scheduleContent }}</li>
+                  <li
+                    class="list"
+                    v-for="(item, index) in todayTaskList"
+                    :key="index"
+                  >{{ item.scheduleContent }}</li>
                 </template>
-                <li v-else class="list" >{{ $t("public.tips.noData") }}</li>
+                <li v-else class="list">{{ $t("public.tips.noData") }}</li>
               </ul>
             </div>
           </div>
-          <img
-            class="head__avatar__img"
-            :src="`${$global.avatarURI}${userInfo.userProfileImage}`"
-            :alt="userInfo.userProfileImage"
-            slot="reference"
-          />
+          <el-avatar :size="50" class="head__avatar__img" slot="reference">
+            <img
+              v-if="userInfo.userProfileImage!=null"
+              :src="`${$global.avatarURI}${userInfo.userProfileImage}`"
+              :alt="userInfo.userProfileImage"
+            />
+            <span v-else style="font-size:24px; font-weight: bold;">{{userInfo.userNameZh?userInfo.userNameZh.slice("")[0]:''}}</span>
+          </el-avatar>
         </el-popover>
       </li>
     </ul>
   </section>
 </template>
 <script>
-import Vue from "vue"
-import { mapGetters } from 'vuex'
-import WebsocketHeartbeatJs from 'websocket-heartbeat-js';
+import Vue from "vue";
+import { mapGetters } from "vuex";
+import WebsocketHeartbeatJs from "websocket-heartbeat-js";
 export default {
   data() {
     return {
@@ -95,7 +120,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('ipublic', ['userInfo'])
+    ...mapGetters("ipublic", ["userInfo"])
   },
   created() {
     this.getNewNotice();
@@ -109,10 +134,10 @@ export default {
     onChangeLang() {
       if (this.$lang == "en") {
         Vue.config.lang = "zh";
-        window.localStorage.setItem('lang', 'zh');
+        window.localStorage.setItem("lang", "zh");
       } else {
         Vue.config.lang = "en";
-        window.localStorage.setItem('lang', 'en');
+        window.localStorage.setItem("lang", "en");
       }
     },
     /**
@@ -125,10 +150,10 @@ export default {
      *  将全部消息设置为已读
      */
     onReadAll() {
-      this.$http.post('/user/message/status/update').then(res => {
+      this.$http.post("/user/message/status/update").then(res => {
         if (res.iworkuCode == 200) {
           // 将消息状态修改为已读
-          this.noticeList.map(val => val.messageStatus = 2);
+          this.noticeList.map(val => (val.messageStatus = 2));
           this.$imessage({
             type: "success",
             content: this.$t("public.tips.success")
@@ -140,22 +165,24 @@ export default {
      *  获取最新的5条站内信
      */
     getNewNotice() {
-      this.$http.post('/user/message/withpaginglist', {
-        pageSize: 5,
-        pageNum: 1
-      }).then(res => {
-        if (res.iworkuCode == 200) {
-          this.noticeList = res.datas;
-        }
-      });
+      this.$http
+        .post("/user/message/withpaginglist", {
+          pageSize: 5,
+          pageNum: 1
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.noticeList = res.datas;
+          }
+        });
     },
     /**
      *  账号退出
      */
     onLogout() {
-      this.$store.commit('ipublic/$_remove_userInfo', {});
-      this.websocket.onreconnect = function () {}
-      this.$router.push({ path: '/login' });
+      this.$store.commit("ipublic/$_remove_userInfo", {});
+      this.websocket.onreconnect = function() {};
+      this.$router.push({ path: "/login" });
     },
     /**
      *  连接 websocket
@@ -163,17 +190,17 @@ export default {
     connectSocket() {
       let _this = this;
       this.websocket = new WebsocketHeartbeatJs({
-          url: `${process.env.VUE_APP_WEBSOCKET}${this.userInfo.id}`
+        url: `${process.env.VUE_APP_WEBSOCKET}${this.userInfo.id}`
       });
-      this.websocket.onopen = function () {
-          _this.websocket.send('hello server');
-      }
-      this.websocket.onmessage = function (e) {
-          let res = JSON.parse(e.data);
-          if (res.status == 3) {
-              _this.getNewNotice();
-          }
-      }
+      this.websocket.onopen = function() {
+        _this.websocket.send("hello server");
+      };
+      this.websocket.onmessage = function(e) {
+        let res = JSON.parse(e.data);
+        if (res.status == 3) {
+          _this.getNewNotice();
+        }
+      };
     },
     /**
      *  获取今日工作
@@ -181,27 +208,29 @@ export default {
     getTodayTask() {
       let time = new Date();
       let month = time.getMonth() + 1;
-      month < 10 ? month = `0${month}` : null;
+      month < 10 ? (month = `0${month}`) : null;
       let date = time.getDate();
-      date < 10 ? date = `0${date}` : null;
+      date < 10 ? (date = `0${date}`) : null;
 
-      this.$http.post('/user/workbench/schedule/withpaginglist', {
-        scheduleDate: `${time.getFullYear()}-${month}-${date}`,
-        scheduleDatePattern: 'yyyy-MM-dd',
-        userId: this.userInfo.id,
-        pageSize: 5,
-        pageNum: 1
-      }).then(res => {
-        if (res.iworkuCode == 200) {
-          this.todayTaskList = res.datas;
-        }
-      });
+      this.$http
+        .post("/user/workbench/schedule/withpaginglist", {
+          scheduleDate: `${time.getFullYear()}-${month}-${date}`,
+          scheduleDatePattern: "yyyy-MM-dd",
+          userId: this.userInfo.id,
+          pageSize: 5,
+          pageNum: 1
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.todayTaskList = res.datas;
+          }
+        });
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-$border-color: #EBEAEE;
+$border-color: #ebeaee;
 .head {
   display: flex;
   justify-content: space-between;
@@ -255,15 +284,15 @@ $border-color: #EBEAEE;
   &__notice {
     padding: 10px 0;
     .top {
-      padding-left: .15rem;
-      padding-right: .15rem;
-      padding-bottom: .1rem;
+      padding-left: 0.15rem;
+      padding-right: 0.15rem;
+      padding-bottom: 0.1rem;
       display: flex;
       justify-content: space-between;
       border-bottom: 1px solid $border-color;
     }
     .list {
-      padding-left: .15rem;
+      padding-left: 0.15rem;
       line-height: 40px;
       font-size: 15px;
       border-bottom: 1px solid $border-color;
@@ -274,7 +303,7 @@ $border-color: #EBEAEE;
       }
     }
     .read {
-      color: #BBBBBB;
+      color: #bbbbbb;
     }
     .check-all {
       margin-top: 10px;
@@ -286,32 +315,32 @@ $border-color: #EBEAEE;
   &__person {
     padding: 10px 0;
     .top {
-      margin-left: .15rem;
-      margin-right: .15rem;
-      padding-bottom: .1rem;
-      margin-bottom: .1rem;
+      margin-left: 0.15rem;
+      margin-right: 0.15rem;
+      padding-bottom: 0.1rem;
+      margin-bottom: 0.1rem;
       display: flex;
       align-content: flex-start;
       border-bottom: 1px solid $border-color;
       .right {
-        margin-left: .1rem;
+        margin-left: 0.1rem;
         color: #1e1e1e;
         font-size: 12px;
       }
     }
     .content {
-      padding-left: .15rem;
-      padding-right: .15rem;
-      margin-bottom: .2rem;
+      padding-left: 0.15rem;
+      padding-right: 0.15rem;
+      margin-bottom: 0.2rem;
       display: flex;
       align-content: flex-start;
       .menu {
         flex: 1;
         flex-shrink: 0;
-        margin-right: .1rem;
+        margin-right: 0.1rem;
         border-right: 1px solid $border-color;
         li {
-          padding: .15rem 0;
+          padding: 0.15rem 0;
           cursor: pointer;
         }
         .account {
@@ -322,10 +351,10 @@ $border-color: #EBEAEE;
       .today {
         flex: 3;
         overflow: hidden;
-        text-overflow:ellipsis;
+        text-overflow: ellipsis;
         white-space: nowrap;
         li {
-          padding: .08rem 0;
+          padding: 0.08rem 0;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -339,6 +368,5 @@ $border-color: #EBEAEE;
       }
     }
   }
-
 }
 </style>

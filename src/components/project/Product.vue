@@ -20,7 +20,7 @@
       <el-button
         v-show="userInfo.userRole!=$global.userRole.member"
         type="primary"
-        @click="show = true;"
+        @click="show = true;getProduct(itemid);"
       >{{$t("projectInfo.product.view")}}</el-button>
     </div>
     <div class="product_content">

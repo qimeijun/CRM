@@ -134,7 +134,7 @@
           <template slot-scope="scope">
             <Operate>
               <ul>
-                <li>
+                <li @click="SetHistoryPath()">
                   <router-link
                     :to="`/target/detail/info/${scope.row.id}/${scope.row.itemId}`"
                   >{{$t("project.view")}}</router-link>
@@ -237,6 +237,7 @@
   </section>
 </template>
 <script>
+import session from '@/plugins/session.js'
 import { mapGetters } from "vuex";
 import { getTargetType } from "@/plugins/configuration.js";
 export default {
@@ -515,6 +516,9 @@ export default {
             this.getCommonality(this.itemid, 1);
           }
         });
+    },
+    SetHistoryPath(){
+      session.set("historyPath",this.$route.fullPath);
     }
   }
 };

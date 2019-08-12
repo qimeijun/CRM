@@ -13,8 +13,8 @@
       </el-input>
       <!-- 标签选择 start -->
       <el-cascader
-      filterable
-      clearable
+        filterable
+        clearable
         class="top_select"
         v-model="tag"
         :show-all-levels="false"
@@ -25,11 +25,14 @@
       <!-- 标签选择 end -->
 
       <!-- 添加新项目按钮 start -->
-       <!-- 
+      <!-- 
             功能：添加新项目
             限制：成员不可添加 
       -->
-      <AddProject v-show="userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.projectManager" @getList="getProject(1);"></AddProject>
+      <AddProject
+        v-show="userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.projectManager"
+        @getList="getProject(1);"
+      ></AddProject>
       <!-- 添加新项目按钮 end -->
     </div>
     <div>
@@ -43,7 +46,7 @@
         ></el-table-column>
         <el-table-column prop="probjectManager" :label="$t('project.tableHeader[3]')" width="200">
           <template slot-scope="scope">
-            <p  v-show="scope.row.probjectManager!==null">
+            <p v-show="scope.row.probjectManager!==null">
               <el-avatar
                 class="table_img"
                 size="medium"
@@ -65,7 +68,12 @@
           </template>
         </el-table-column>
         <el-table-column prop="day" :label="$t('project.tableHeader[5]')" width="120" sortable></el-table-column>
-        <el-table-column prop="addTimeStr" :label="$t('project.tableHeader[6]')" width="120" sortable>
+        <el-table-column
+          prop="addTimeStr"
+          :label="$t('project.tableHeader[6]')"
+          width="120"
+          sortable
+        >
           <template slot-scope="scope">
             <p>{{scope.row.addTimeStr.split(' ')[0]}}</p>
           </template>
@@ -82,7 +90,7 @@
                 </li>
                 <!-- 结束项目 -->
                 <li
-                v-show="scope.row.itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
+                  v-show="scope.row.itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
                   class="table_delete"
                   @click="onDeleteMember(scope.row.itemId)"
                 >{{$t("projectInfo.endProject")}}</li>
@@ -92,9 +100,11 @@
                   class="table_delete"
                   @click="onRestartMember(scope.row.itemId)"
                 >重启项目</li>
-                <li v-show="scope.row.itemStatus!=2&&(userInfo.userRole==$global.userRole.regionalManager||userInfo.userRole==$global.userRole.superAdministrator)" class="table_delete" @click="allocationShow=true; allotProject=scope.row">
-                  {{scope.row.probjectManager==null?'分配':'再分配'}}
-                </li>
+                <li
+                  v-show="scope.row.itemStatus!=2&&(userInfo.userRole==$global.userRole.regionalManager||userInfo.userRole==$global.userRole.superAdministrator)"
+                  class="table_delete"
+                  @click="allocationShow=true; allotProject=scope.row"
+                >{{scope.row.probjectManager==null?'分配':'再分配'}}</li>
               </ul>
             </Operate>
           </template>
@@ -112,7 +122,7 @@
         @current-change="getProject(currentPage)"
       ></el-pagination>
     </div>
-       <!-- 分配 start -->
+    <!-- 分配 start -->
     <el-dialog
       class="el-dialog__scroll"
       :title="$t('project.allot')"
@@ -124,7 +134,11 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ChangeAdministrator operate="add" :params="{type: 'addProjectManager'}" @getManager="getManager"></ChangeAdministrator>
+        <ChangeAdministrator
+          operate="add"
+          :params="{type: 'addProjectManager'}"
+          @getManager="getManager"
+        ></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 分配 end -->
@@ -137,8 +151,8 @@ export default {
   components: {
     Operate: () => import("@/components/lib/Operate.vue"),
     AddProject: () => import("@/components/project/addProject.vue"),
-     ChangeAdministrator: () =>
-      import("@/components/member/ChangeAdministrator.vue"),
+    ChangeAdministrator: () =>
+      import("@/components/member/ChangeAdministrator.vue")
   },
   data() {
     return {
@@ -149,7 +163,7 @@ export default {
       size: 10,
       currentPage: 1,
       itemStatusList: [],
-      allocationShow:false,
+      allocationShow: false,
       props: {
         lazy: true,
         lazyLoad: (node, resolve) => {
@@ -164,7 +178,10 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label:this.$lang==this.$global.lang.en?o.groupNameEn:o.groupNameZh
+                      label:
+                        this.$lang == this.$global.lang.en
+                          ? o.groupNameEn
+                          : o.groupNameZh
                     };
                   });
                   resolve(taglist);
@@ -181,7 +198,10 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label: this.$lang==this.$global.lang.en?o.labelNameEn:o.labelNameZh,
+                      label:
+                        this.$lang == this.$global.lang.en
+                          ? o.labelNameEn
+                          : o.labelNameZh,
                       leaf: true
                     };
                   });
@@ -216,6 +236,7 @@ export default {
           if (res.iworkuCode == 200) {
             this.tableData = res.datas;
             this.total = res.total;
+            this.currentPage=page;
           }
         });
     },
@@ -238,11 +259,13 @@ export default {
               itemId: id,
               itemStatus: 2
             })
-            .then(res => {});
-          this.$message({
-            type: "success",
-            message: "已结束项目"
-          });
+            .then(res => {
+              this.getProject(this.currentPage);
+              this.$message({
+                type: "success",
+                message: "已结束项目"
+              });
+            });
         })
         .catch(() => {
           // 取消
@@ -252,7 +275,7 @@ export default {
           });
         });
     },
-     // 重启项目
+    // 重启项目
     onRestartMember(id) {
       this.$msgbox({
         title: "提示",
@@ -271,11 +294,13 @@ export default {
               itemId: id,
               itemStatus: 1
             })
-            .then(res => {});
-          this.$message({
-            type: "success",
-            message: "已重启项目"
-          });
+            .then(res => {
+              this.getProject(this.currentPage);
+              this.$message({
+                type: "success",
+                message: "已重启项目"
+              });
+            });
         })
         .catch(() => {
           // 取消
@@ -290,20 +315,22 @@ export default {
       if (!data.id || !this.allotProject.itemId) {
         return false;
       }
-      this.$http.post('/user/item/user/rel/project/manager/save', {
-        itemId: this.allotProject.itemId,
-        userId: data.id
-      }).then(res => {
-        if (res.iworkuCode == 200) {
-          this.allocationShow = false;
-          this.allotProject = {};
-          this.getProject(this.currentPage);
-          this.$imessage({
-            content: this.$t("public.tips.success"),
-            type: "success"
-          });
-        }
-      });
+      this.$http
+        .post("/user/item/user/rel/project/manager/save", {
+          itemId: this.allotProject.itemId,
+          userId: data.id
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            this.allocationShow = false;
+            this.allotProject = {};
+            this.getProject(this.currentPage);
+            this.$imessage({
+              content: this.$t("public.tips.success"),
+              type: "success"
+            });
+          }
+        });
     }
   }
 };

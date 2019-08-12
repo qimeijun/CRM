@@ -138,7 +138,7 @@
           <template slot-scope="scope">
             <Operate>
               <ul>
-                <li>
+                <li @click="SetHistoryPath()">
                   <router-link
                     :to="`/target/detail/info/${scope.row.id}/${scope.row.itemId}`"
                   >{{$t("project.view")}}</router-link>
@@ -228,6 +228,7 @@
   </section>
 </template>
 <script>
+import session from '@/plugins/session.js'
 import { mapGetters } from "vuex";
 import { getTargetType } from "@/plugins/configuration.js";
 export default {
@@ -434,7 +435,6 @@ export default {
         if (res.iworkuCode == 200) {
           this.tableData = res.datas;
           this.total = res.total;
-          console.log(res);
         }
       });
     },
@@ -482,6 +482,9 @@ export default {
             this.memberList = res.datas;
           }
         });
+    },
+     SetHistoryPath(){
+      session.set("historyPath",this.$route.fullPath);
     }
   }
 };

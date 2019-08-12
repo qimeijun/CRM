@@ -1,7 +1,7 @@
 <template>
   <section class="target-details">
     <div class="target-details__top">
-      <PageHeader url=""></PageHeader>
+      <PageHeader :url="backPath"></PageHeader>
       <div class="target-details__top-name">{{$t("target.title")}}</div>
     </div>
     <div class="target-details__content">
@@ -32,11 +32,13 @@
   </section>
 </template>
 <script>
+import session from '@/plugins/session.js'
 import PageHeader from "@/components/lib/PageHeader.vue";
 export default {
   data() {
     return {
       activeMenu: "target_information",
+      backPath:"/",
       menuList: [
         {
           name: this.$t("target.menu[0]"),
@@ -58,6 +60,7 @@ export default {
   },
   created() {
     this.activeMenu = this.$route.name;
+    this.backPath=session.get('historyPath');
   },
   components: {
     PageHeader

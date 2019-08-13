@@ -15,7 +15,7 @@
             <div>{{ item.itemCount || 0}}</div>
             <!-- targetCompanyProcessingCount -->
             <div>{{ item.targetCompanyCount || 0 }}</div>
-            <div style="flex: .8">{{ item.addTimeStr }}</div>
+            <div style="flex: .8">{{ $global.localTime({ time: item.addTimeStr }) }}</div>
             <div style="flex: .3">
             <Operate>
                 <ul>

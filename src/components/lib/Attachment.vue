@@ -11,10 +11,11 @@
                 <template v-else>
                     <i class="el-icon-paperclip"></i>
                 </template>
-                <i v-if="isDelete" class="el-icon-error" @click.stop="onDelete"></i>
+                
             </div>
             <p class="name">{{ name }}</p>
         </a>
+        <i v-if="isDelete" class="el-icon-error" @click.stop="onDelete"></i>
     </section>
 </template>
 <script>
@@ -61,6 +62,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .attachment {
+    position: relative;
     display: inline-block;
     margin-right: .2rem;
     width: 45px;
@@ -77,15 +79,7 @@ export default {
         line-height: 55px;
         background-color: #59cc6b;
         font-weight: 600;
-        .el-icon-error {
-            position: absolute;
-            color: black;
-            font-size: 14px;
-            top: -5px;
-            right: -7px;
-            font-weight: 600;
-            cursor: pointer;
-        }
+        
     }
     .white {
         position: absolute;
@@ -110,6 +104,16 @@ export default {
         overflow: hidden;
         text-overflow:ellipsis;
         white-space: nowrap;
+    }
+
+    .el-icon-error {
+        position: absolute;
+        color: black;
+        font-size: 14px;
+        top: -5px;
+        right: -5px;
+        font-weight: 600;
+        cursor: pointer;
     }
 }
 </style>

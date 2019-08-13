@@ -180,9 +180,11 @@ export default {
      *  账号退出
      */
     onLogout() {
-      this.$store.commit("ipublic/$_remove_userInfo", {});
-      this.websocket.onreconnect = function() {};
-      this.$router.push({ path: "/login" });
+      this.$router.push({ path: '/login' });
+      document.cookie = `password=;path=/; expires=Thu, 01-Jan-70 00:00:01 GMT`;
+      document.cookie = `username=;path=/; expires=Thu, 01-Jan-70 00:00:01 GMT`;
+      this.websocket.onreconnect = function () {}
+      this.$router.push({ path: '/login' });
     },
     /**
      *  连接 websocket

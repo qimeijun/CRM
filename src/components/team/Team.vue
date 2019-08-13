@@ -108,7 +108,7 @@
                 <span>{{ item.roleName }}</span>
                 <div style="line-height: 30px;">
                   <span style="display: block;color:#7B7B7B;">{{ $t("memberInfo.joinTime") }}</span>
-                  <span>{{ item.addTimeStr }}</span>
+                  <span>{{ $global.localTime({ time: item.addTimeStr }) }}</span>
                 </div>
                 <Operate>
                   <ul class="member-team__operate">

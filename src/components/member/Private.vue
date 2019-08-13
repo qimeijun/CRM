@@ -13,6 +13,7 @@
       <el-select
         v-model="searchStatus"
         filterable
+        clearable
         placeholder=""
         @change="getTarget(); page.pageNum=1;"
         style="margin-right: .2rem; width: 20%;"
@@ -27,6 +28,7 @@
       <!-- 标签筛选 start -->
       <el-cascader
         v-model="searchTag"
+        clearable
         :props="labelList"
         :show-all-levels="false"
         placeholder=""
@@ -83,7 +85,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="updateTimeStr" :label="$t('memberInfo.priviteTable.updateTime')" width="200"></el-table-column>
+      <el-table-column prop="updateTimeStr" :label="$t('memberInfo.priviteTable.updateTime')" width="200">
+        <template slot-scope="scope">
+          {{ $global.localTime({ time: scope.row.updateTimeStr }) }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="statusNameZh"
         :label="$t('memberInfo.priviteTable.status')"
@@ -91,7 +97,11 @@
         :filter-method="filterStatus"
         filter-placement="bottom-end"
       ></el-table-column>
-      <el-table-column prop="addTimeStr" :label="$t('memberInfo.priviteTable.createTime')"></el-table-column>
+      <el-table-column prop="addTimeStr" :label="$t('memberInfo.priviteTable.createTime')">
+        <template slot-scope="scope">
+          {{ $global.localTime({ time: scope.row.addTimeStr }) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="division" :label="$t('memberInfo.priviteTable.informationIntegrity')"></el-table-column>
       <el-table-column :label="$t('memberInfo.priviteTable.operate')" width="120">
         <template slot-scope="scope">

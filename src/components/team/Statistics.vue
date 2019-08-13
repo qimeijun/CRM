@@ -156,6 +156,7 @@ export default {
         let month = this.params.month;
         month < 10 ? month = `0${month}` : null;
         params.text = `${this.params.year}-${month}`
+        // params.text = this.$global.interTime(new Date(`${this.params.year}/${month}`), type="month")
       }
       let res = await this.$http.post('/user/team/user/rel/vs/number', params);
       if (res.iworkuCode == 200 && this.params.timeType == 'year' && res.additionalParameters && res.additionalParameters.champion && res.datas) {
@@ -243,6 +244,7 @@ export default {
         let month = this.params.month;
         month < 10 ? month = `0${month}` : null;
         params.text = `${this.params.year}-${month}`
+        // params.text = this.$global.interTime(new Date(`${this.params.year}/${month}`), type="month")
       }
       let res = await this.$http.post('/user/team/user/rel/number', params);
       if (res.iworkuCode == 200) {

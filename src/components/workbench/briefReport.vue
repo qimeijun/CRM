@@ -44,12 +44,16 @@
                 v-else-if="item.followNodeType == '3'"
               >{{ $t('workDiary.diarType.monthly') }}</template>
               <template v-else-if="item.followNodeType == '4'">{{ $t('workDiary.diarType.order') }}</template>
+       
             </i>
             <div class="item_img">
               <el-avatar
                 size="medium"
-                :src="`${$global.avatarURI}${item.followAddUserProfileImage}`"
-              ></el-avatar>
+                
+              >
+              <img v-if="item.followAddUserProfileImage" :src="`${$global.avatarURI}${item.followAddUserProfileImage}`" >
+              <span v-else style="color:white; font-size:18px;line-height:32px;">{{$lang==$global.lang.en?item.followAddUserNameEn.slice("")[0]:item.followAddUserNameZh.slice("")[0]}}</span>
+              </el-avatar>
               <br />
               <span>{{$lang==$global.lang.en?item.followAddUserNameEn:item.followAddUserNameZh}}</span>
             </div>
@@ -115,6 +119,9 @@ export default {
         .then(res => {
           if (res.iworkuCode == 200) {
             page > 1 ? this.list.push(...res.datas) : this.list = res.datas;
+            this.list.filter(o=>{
+              return o.followNodeType<5
+            })
             this.loading = false;
             this.page = page + 1;
             if (res.datas.length < 6) {

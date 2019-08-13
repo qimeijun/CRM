@@ -21,7 +21,10 @@
           <div class="remind_list_item" v-for="(item,index) in list" :key="index">
             <i :style="'background-color:'+item.scheduleShowColour"></i>
             <div class="item_img">
-              <el-avatar size="medium" :src="`${$global.avatarURI}${item.addUserProfileImage}`"></el-avatar>
+              <el-avatar size="medium" >
+                <img v-if="item.addUserProfileImage" :src="`${$global.avatarURI}${item.addUserProfileImage}`">
+                <span v-else style="color:white; font-size:18px;line-height:32px;">{{$lang == $global.lang.en ? item.addUserNameEn.slice("")[0] : item.addUserNameZh.slice("")[0]}}</span>
+              </el-avatar>
               <br />
               <span>{{$lang == $global.lang.en ? item.addUserNameEn : item.addUserNameZh}}</span>
             </div>

@@ -17,10 +17,10 @@
         label-width="80px"
       >
         <el-form-item :label="$t('target.form.companyName')" prop="name">
-          <el-input v-model="companyForm.name" placeholder="请输入公司名称"></el-input>
+          <el-input v-model="companyForm.name" :placeholder="$t('target.placeholder.companyName')"></el-input>
         </el-form-item>
         <el-form-item style="width:250px;" :label="$t('target.form.country')" prop="country">
-          <el-select filterable v-model="companyForm.country">
+          <el-select filterable v-model="companyForm.country" :placeholder="$t('target.placeholder.country')">
             <el-option
               v-for="(item,index) in countryList"
               :key="'country'+index"
@@ -52,7 +52,7 @@
         label-width="80px"
       >
         <el-form-item :label="$t('target.form.keymenName')">
-          <el-input v-model="keymenForm.name" placeholder="请输入关键人名"></el-input>
+          <el-input v-model="keymenForm.name" :placeholder="$t('target.placeholder.keymenName')"></el-input>
         </el-form-item>
         <el-form-item :label="$t('target.form.position')">
           <el-input v-model="keymenForm.position"></el-input>
@@ -80,10 +80,10 @@
         label-width="80px"
       >
         <el-form-item :label="$t('target.form.source')">
-          <el-input v-model="otherForm.source" placeholder="请输入"></el-input>
+          <el-input v-model="otherForm.source" ></el-input>
         </el-form-item>
         <el-form-item :label="$t('target.form.clientType')">
-          <el-select v-model="otherForm.type">
+          <el-select v-model="otherForm.type"  :placeholder="$t('target.placeholder.type')">
             <el-option
               v-for="(item,index) in targetTypeList"
               :key="'position'+index"
@@ -164,14 +164,14 @@ export default {
         name: [
           {
             required: true,
-            message: "请输入名称",
+            message: this.$t('target.placeholder.companyName'),
             trigger: "blur"
           }
         ],
         country: [
           {
             required: true,
-            message: "请选择国家",
+            message: this.$t('target.placeholder.country'),
             trigger: "blur"
           }
         ]

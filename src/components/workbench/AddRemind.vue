@@ -1,7 +1,13 @@
 <template>
   <!-- 添加日程提醒 -->
   <div class="workbench-addremind">
-    <el-form :model="dateForm" :rules="rules" label-position="left" label-width="80px" ref="dateForm">
+    <el-form
+      :model="dateForm"
+      :rules="rules"
+      label-position="left"
+      label-width="80px"
+      ref="dateForm"
+    >
       <!-- 提醒内容 start -->
       <el-form-item label-width="0px" prop="scheduleContent">
         <el-input
@@ -38,10 +44,10 @@
         <el-date-picker
           v-model="dateForm.time"
           type="daterange"
-          range-separator="至"
+          range-separator="-"
           :start-placeholder="$t('workBench.addremind.placeholder.startDate')"
           :end-placeholder="$t('workBench.addremind.placeholder.endDate')"
-          format="yyyy 年 MM 月 dd 日"
+          format="yyyy / MM / dd "
           value-format="yyyy-MM-dd"
         ></el-date-picker>
       </el-form-item>
@@ -71,7 +77,11 @@
       <!-- 邮箱 end -->
       <!-- 目标公司 start -->
       <el-form-item :label="$t('workBench.addremind.form.target')" prop="targetCompanyId">
-        <el-select v-model="dateForm.targetCompanyId" @change="onChangeTarget" :placeholder="'选择目标公司'">
+        <el-select
+          v-model="dateForm.targetCompanyId"
+          @change="onChangeTarget"
+          :placeholder="$t('workBench.addremind.selectTarget')"
+        >
           <template v-if="targetList && targetList.length > 0">
             <el-option
               v-for="item in targetList"
@@ -86,42 +96,37 @@
       <!-- 参与人员 start -->
       <el-form-item :label="$t('workBench.addremind.form.people')" prop="selectUsers">
         <div style="display: flex;justify-content: flex-start;">
-        <div v-for="(item, index) in dateForm.selectUsers" class="notify-user " :key="index">
-          <el-image
-          class="avatar"
-          :title="item.userNameZh"
-          :src="`${$global.avatarURI}${item.userProfileImage}`"
-          :alt="item.userNameZh"
-          ></el-image>
-        </div>
-        <div v-if="userInfo.userRole != $global.userRole.member" class="notify-user">
-          <div @click="selectUserVisibleDialog=true;" style="height: 50px; width: 50px; border-radius: 50%; border: 1px solid grey;text-align: center; cursor: pointer;">
-            <i class="el-icon-plus" style="line-height: 50px; font-size: 30px; "></i>
+          <div v-for="(item, index) in dateForm.selectUsers" class="notify-user" :key="index">
+            <el-image
+              class="avatar"
+              :title="item.userNameZh"
+              :src="`${$global.avatarURI}${item.userProfileImage}`"
+              :alt="item.userNameZh"
+            ></el-image>
           </div>
-        </div>
+          <div v-if="userInfo.userRole != $global.userRole.member" class="notify-user">
+            <div
+              @click="selectUserVisibleDialog=true;"
+              style="height: 50px; width: 50px; border-radius: 50%; border: 1px solid grey;text-align: center; cursor: pointer;"
+            >
+              <i class="el-icon-plus" style="line-height: 50px; font-size: 30px; "></i>
+            </div>
+          </div>
         </div>
       </el-form-item>
       <!-- 参与人员 end -->
     </el-form>
     <div class="addremind_button">
-      <el-button
-        type="primary"
-        :loading="submitBtnLoading"
-        @click="onSubmit('dateForm')"
-      >
-      <template v-if="dateForm.id">
-        {{$t("workBench.addremind.modify")}}
-      </template>
-      <template v-else>
-        {{$t("workBench.addremind.save")}}
-      </template>
+      <el-button type="primary" :loading="submitBtnLoading" @click="onSubmit('dateForm')">
+        <template v-if="dateForm.id">{{$t("workBench.addremind.modify")}}</template>
+        <template v-else>{{$t("workBench.addremind.save")}}</template>
       </el-button>
     </div>
 
     <!-- 添加成员 dialog start -->
     <el-dialog
       class="el-dialog__scroll"
-      title="添加提醒人"
+      :title="$t('workBench.remind.addPeople')"
       :visible.sync="selectUserVisibleDialog"
       top="5vh"
       :append-to-body="true"
@@ -130,7 +135,11 @@
       width="30%"
     >
       <el-scrollbar>
-        <AddNotifyUser :userId="dateForm.targetOwnerId" :oldUser="dateForm.selectUsers" @getUser="getSelectUser"></AddNotifyUser>
+        <AddNotifyUser
+          :userId="dateForm.targetOwnerId"
+          :oldUser="dateForm.selectUsers"
+          @getUser="getSelectUser"
+        ></AddNotifyUser>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加成员 dialog end -->
@@ -156,27 +165,27 @@ export default {
     remindInfo: {
       type: Object,
       default() {
-        return {}
+        return {};
       }
     }
   },
   components: {
-    AddNotifyUser: () => import("@/components/workbench/AddNotifyUser.vue"),
+    AddNotifyUser: () => import("@/components/workbench/AddNotifyUser.vue")
   },
   data() {
     return {
       remindTypes: [
         {
           value: "1",
-          label: "前一天提醒"
+          label: this.$t("workBench.addremind.remindTypes[0]")
         },
         {
           value: "2",
-          label: "前两天提醒"
+          label: this.$t("workBench.addremind.remindTypes[1]")
         },
         {
           value: "3",
-          label: "不提醒"
+          label: this.$t("workBench.addremind.remindTypes[2]")
         }
       ],
       colorTypes: [],
@@ -197,9 +206,9 @@ export default {
       rules: {
         scheduleContent: [
           {
-            validator: (rule, value, callback) => { 
+            validator: (rule, value, callback) => {
               if (!value) {
-                callback(new Error("请输入提醒内容"))
+                callback(new Error(this.$t("workBench.remind.rules.content")));
               } else {
                 callback();
               }
@@ -208,9 +217,9 @@ export default {
         ],
         time: [
           {
-            validator: (rule, value, callback) => { 
+            validator: (rule, value, callback) => {
               if (value.length < 2) {
-                callback(new Error("请选择起始日期"));
+                callback(new Error(this.$t("workBench.addremind.rules.date")));
               } else {
                 callback();
               }
@@ -221,7 +230,9 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!value) {
-                callback(new Error("请选择提醒类型"));
+                callback(
+                  new Error(this.$t("workBench.addremind.rules.remindType"))
+                );
               } else {
                 callback();
               }
@@ -232,7 +243,13 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!value) {
-                callback(new Error("请输入邮箱"));
+                callback(new Error(this.$t("workBench.addremind.rules.email")));
+              } else if (
+                !/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(
+                  value
+                )
+              ) {
+                callback(new Error(this.$t("member.rules.account[1]")));
               } else {
                 callback();
               }
@@ -243,7 +260,9 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!value) {
-                callback(new Error("请选择目标公司"));
+                callback(
+                  new Error(this.$t("workBench.addremind.rules.target"))
+                );
               } else {
                 callback();
               }
@@ -254,7 +273,7 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!value || value.length == 0) {
-                callback("请选择参与人员");
+                callback(this.$t("workBench.addremind.rules.users"));
               } else {
                 callback();
               }
@@ -265,7 +284,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("ipublic", ["userInfo"]),
+    ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
     this.colorTypes = await getRemindColor(this);
@@ -294,36 +313,36 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let params={
-            scheduleBeginDate:this.dateForm.time[0],
-            scheduleEndDate:this.dateForm.time[1],
-            scheduleContent:this.dateForm.scheduleContent,
-            scheduleShowColour:this.dateForm.scheduleShowColour,
+          let params = {
+            scheduleBeginDate: this.dateForm.time[0],
+            scheduleEndDate: this.dateForm.time[1],
+            scheduleContent: this.dateForm.scheduleContent,
+            scheduleShowColour: this.dateForm.scheduleShowColour,
             scheduleType: this.dateForm.remind,
-            userScheduleParticipateList:[],
+            userScheduleParticipateList: [],
             targetCompanyId: this.dateForm.targetCompanyId,
             scheduleNoticeEmail: this.dateForm.scheduleNoticeEmail
-          }
+          };
           // 提醒日期
           switch (this.dateForm.remind) {
             case this.remindTypes[0].value:
               // 提前一天
               let date_v1 = new Date(this.dateForm.time[0]);
-              date_v1 = new Date(date_v1.getTime() - (1 * 24 * 60 * 60 * 1000));
+              date_v1 = new Date(date_v1.getTime() - 1 * 24 * 60 * 60 * 1000);
               let month_v1 = date_v1.getMonth() + 1;
-              month_v1 < 10 ? month_v1 = `0${month_v1}` : null;
+              month_v1 < 10 ? (month_v1 = `0${month_v1}`) : null;
               let day_v1 = date_v1.getDate();
-              day_v1 < 10 ? day_v1 = `0${day_v1}` : null;
+              day_v1 < 10 ? (day_v1 = `0${day_v1}`) : null;
               params.sendEmailTime = `${date_v1.getFullYear()}-${month_v1}-${day_v1}`;
               break;
             case this.remindTypes[1].value:
               // 提前两天
               let date_v2 = new Date(this.dateForm.time[0]);
-              date_v2 = new Date(date_v2.getTime() - (2 * 24 * 60 * 60 * 1000));
+              date_v2 = new Date(date_v2.getTime() - 2 * 24 * 60 * 60 * 1000);
               let month_v2 = date_v2.getMonth() + 1;
-              month_v2 < 10 ? month_v2 = `0${month_v2}` : null;
+              month_v2 < 10 ? (month_v2 = `0${month_v2}`) : null;
               let day_v2 = date_v2.getDate();
-              day_v2 < 10 ? day_v2 = `0${day_v2}` : null;
+              day_v2 < 10 ? (day_v2 = `0${day_v2}`) : null;
               params.sendEmailTime = `${date_v2.getFullYear()}-${month_v2}-${day_v2}`;
               break;
           }
@@ -336,28 +355,32 @@ export default {
           if (this.dateForm.id) {
             // 修改
             params.id = this.dateForm.id;
-            this.$http.post('/user/workbench/schedule/update', params).then(res => {
-              this.submitBtnLoading = false;
-              if (res.iworkuCode == 200) {
-                this.$imessage({
-                  content: this.$t("public.tips.success"),
-                  type: "success"
-                });
-                this.$emit("onSuccess", params);
-              }
-            });
+            this.$http
+              .post("/user/workbench/schedule/update", params)
+              .then(res => {
+                this.submitBtnLoading = false;
+                if (res.iworkuCode == 200) {
+                  this.$imessage({
+                    content: this.$t("public.tips.success"),
+                    type: "success"
+                  });
+                  this.$emit("onSuccess", params);
+                }
+              });
           } else {
             // 添加
-            this.$http.post('/user/workbench/schedule/save', params).then(res => {
-              this.submitBtnLoading = false;
-              if (res.iworkuCode == 200) {
-                this.$imessage({
-                  content: this.$t("public.tips.success"),
-                  type: "success"
-                });
-                this.$emit("onSuccess");
-              }
-            });
+            this.$http
+              .post("/user/workbench/schedule/save", params)
+              .then(res => {
+                this.submitBtnLoading = false;
+                if (res.iworkuCode == 200) {
+                  this.$imessage({
+                    content: this.$t("public.tips.success"),
+                    type: "success"
+                  });
+                  this.$emit("onSuccess");
+                }
+              });
           }
         }
       });
@@ -376,7 +399,7 @@ export default {
       if (this.userInfo.userRole != this.$global.userRole.superAdministrator) {
         this.dateForm.selectUsers = [this.userInfo, ...data];
       } else {
-        this.dateForm.selectUsers = [...data]
+        this.dateForm.selectUsers = [...data];
       }
       this.selectUserVisibleDialog = false;
     },
@@ -405,7 +428,10 @@ export default {
           this.dateForm.id = newVal.id;
           this.dateForm.scheduleContent = newVal.scheduleContent;
           this.dateForm.scheduleShowColour = newVal.scheduleShowColour;
-          this.dateForm.time = [newVal.scheduleBeginDate, newVal.scheduleEndDate];
+          this.dateForm.time = [
+            newVal.scheduleBeginDate,
+            newVal.scheduleEndDate
+          ];
           this.dateForm.scheduleNoticeEmail = newVal.scheduleNoticeEmail;
           this.dateForm.remind = `${newVal.scheduleType}`;
           this.dateForm.targetCompanyId = newVal.targetCompanyId;
@@ -417,7 +443,7 @@ export default {
               userNameEn: val.userNameEn,
               userProfileImage: val.userProfileImage,
               id: val.userId
-            })
+            });
           });
           // 获取拥有者
           this.onChangeTarget(this.dateForm.targetCompanyId);
@@ -439,17 +465,15 @@ export default {
     line-height: 30px;
     color: white;
   }
-  
 }
 
 .addremind_button {
   text-align: right;
 }
 .notify-user {
-    display: inline-block;
-    margin-right: 10px;
-  }
-
+  display: inline-block;
+  margin-right: 10px;
+}
 </style>
 <style lang="scss">
 .workbench-addremind .el-radio-button__inner {
@@ -464,9 +488,9 @@ export default {
 }
 
 .workbench-addremind {
- .avatar {
-    width: 50px; 
-    height: 50px; 
+  .avatar {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
   }
 }

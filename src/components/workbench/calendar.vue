@@ -8,14 +8,8 @@
       <el-calendar :first-day-of-week="7" v-model="calenderValue">
         <template #dateCell="{date, data}">
           <p @click.self="addRemindVisibleDialog=true;currentRemind={scheduleBeginDate:data.day};" style="height:100%;">
-            <span style="line-height:20px;">{{ data.day.split('-').slice(1).join('月')}}日</span>
-            <!-- <span
-              v-for="(item,index) in firstlist"
-              :key="'first'+index"
-              :style="data.day>=item.scheduleBeginDate&&data.day<=item.scheduleEndDate?'background-color:'+item.scheduleShowColour:''"
-              :class="[data.day>=item.scheduleBeginDate&&data.day<=item.scheduleEndDate? 'time--selected ' :firstlist[index+1]&&firstlist[index-1]&&data.day<firstlist[index+1].scheduleBeginDate&&data.day>firstlist[index-1].scheduleEndDate?'time--blank':'',data.day==item.scheduleBeginDate?'time--start':'',data.day==item.scheduleEndDate?'time--end':'']"
-            >-->
-            <!-- <span>{{filterList(firstlist,data)}}</span> -->
+            <span style="line-height:20px;">{{ $lang==$global.lang.en?data.day.split('-').slice(1).join('month'):data.day.split('-').slice(1).join('月')}}{{$lang==$global.lang.en?'day':'日'}}</span>
+  
             <span
               v-if="filterList(firstlist,data).length>0"
               :style="'background-color:'+filterList(firstlist,data)[0].scheduleShowColour"
@@ -131,7 +125,7 @@
                 </p>
               </el-popover>
               <!-- 详情弹出框 end -->
-              <el-button type="text" slot="reference">还有{{getSurplus(data.day).length}}项...</el-button>
+              <el-button type="text" slot="reference">{{$t("workBench.calendar.remaining",{number:getSurplus(data.day).length})}}</el-button>
             </el-popover>
             <!-- 隐藏的提醒按钮 end -->
           </p>

@@ -7,7 +7,7 @@
         clearable
         class="table-seek"
         v-model="targetType"
-        placeholder="全部分类"
+        :placeholder="$t('target.placeholder.type')"
         @change="getTargetList(1)"
       >
         <el-option
@@ -27,12 +27,11 @@
         :show-all-levels="false"
         :props="props"
         @change="getTargetList(1)"
-        placeholder="全部标签"
       ></el-cascader>
       <!-- 标签 end -->
       <el-input
         class="table-seek"
-        placeholder="搜索目标公司名称、ID、地址、关键人"
+        :placeholder="$t('target.placeholder.seek')"
         v-model="seek"
         @keyup.enter.native="getTargetList( 1)"
         @click="getTargetList(1)"

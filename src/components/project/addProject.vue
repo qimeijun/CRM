@@ -98,8 +98,8 @@
             ></el-input>
           </el-form-item>
           <!-- 公司电话 -->
-          <el-form-item :label="'公司电话'" prop="tel">
-            <el-input v-model="secondForm.tel" autocomplete="off" :placeholder="'公司电话'"></el-input>
+          <el-form-item :label="$t('project.from.tel')" prop="tel">
+            <el-input v-model="secondForm.tel" autocomplete="off" :placeholder="$t('project.placeholder.tel')"></el-input>
           </el-form-item>
           <!-- 公司简介 -->
           <el-form-item :label="$t('project.from.intro')" prop="intro">
@@ -153,7 +153,7 @@
                   size="mini"
                   class="deleteimg_btn"
                   @click="onDeleteImg(index)"
-                >删除</el-button>
+                >{{$t("project.btn.detele")}}</el-button>
               </el-col>
               <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20" style="text-align:right;">
                 <el-input v-model="item.nodeDescription"></el-input>
@@ -161,7 +161,7 @@
                   v-show="index===thirdlyForm.imageList.length-1"
                   type="text"
                   @click="imgShow=true"
-                >继续上传</el-button>
+                >{{$t("project.btn.continueUpload")}}</el-button>
               </el-col>
             </el-row>
             <el-row v-show="imgShow">
@@ -220,7 +220,7 @@
                     <i class="el-icon-video-camera-solid"></i>
                     <p>{{$t("project.btn.uploadVideo")}}</p>
                   </el-button>
-                  <el-button v-else class="reupload_btn" type="primary" size="mini">重新上传</el-button>
+                  <el-button v-else class="reupload_btn" type="primary" size="mini">{{$t("project.btn.UploadAgain")}}</el-button>
                 </el-upload>
               </el-col>
               <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20">
@@ -366,7 +366,7 @@ export default {
         account: [
           {
             required: true,
-            message: "请输入账号",
+            message: this.$t("project.rules.account"),
             trigger: "blur"
           },
           {
@@ -382,7 +382,7 @@ export default {
         accountPassword: [
           {
             required: true,
-            message: "请输入密码",
+            message: this.$t("project.rules.accountPassword"),
             trigger: "blur"
           }
         ]
@@ -391,56 +391,65 @@ export default {
         projectTitle: [
           {
             required: true,
-            message: "请输入项目名称",
+            message: this.$t("project.rules.projectTitle"),
             trigger: "blur"
           }
         ],
         companyName: [
           {
             required: true,
-            message: "请输入企业名称",
+            message: this.$t("project.rules.companyName"),
             trigger: "blur"
           }
         ],
         tmt: [
           {
             required: true,
-            message: "请输入行业",
+            message: this.$t("project.rules.tmt"),
             trigger: "blur"
           }
         ],
         site: [
           {
             required: true,
-            message: "请输入地址",
+            message: this.$t("project.rules.site"),
             trigger: "blur"
           }
         ],
         url: [
           {
             required: true,
-            message: "请输入网址",
+            message: this.$t("project.rules.url"),
             trigger: "blur"
           }
         ],
         email: [
           {
             required: true,
-            message: "请输入邮箱",
+            message: this.$t("project.rules.email"),
             trigger: "blur"
+          },
+            {
+            validator: (rule, value, callback) => {
+              if (!/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(value)) {
+                callback(new Error(this.$t("member.rules.account[1]")));
+              } else {
+                callback();
+              }
+            }
           }
         ],
         tel: [
           {
             required: true,
-            message: "请输入电话",
+            message: this.$t("project.rules.tel"),
             trigger: "blur"
           }
         ],
         intro: [
           {
             required: true,
-            message: "请输入简介",
+            message: this.$t("project.rules.intro"),
             trigger: "blur"
           }
         ]
@@ -449,7 +458,7 @@ export default {
         productName: [
           {
             required: true,
-            message: "请输入产品名称",
+            message: this.$t("project.rules.productName"),
             trigger: "blur"
           }
         ]
@@ -565,7 +574,7 @@ export default {
     async onBeforeAvatarUploadImg(file) {
       const isLt3M = file.size / 1024 / 1024 < 3;
       if (!isLt3M) {
-        this.$message.error("上传图片大小不能超过 3MB!");
+        this.$message.error(this.$t("project.rules.img"));
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);
@@ -576,7 +585,7 @@ export default {
     async onBeforeAvatarUploadVideo(file) {
       const isLt20M = file.size / 1024 / 1024 < 20;
       if (!isLt20M) {
-        this.$message.error("上传视频大小不能超过 20MB!");
+        this.$message.error(this.$t("project.rules.video"));
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);
@@ -587,7 +596,7 @@ export default {
     async onBeforeAvatarUploadAccessory(file) {
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
-        this.$message.error("上传附件大小不能超过 5MB!");
+        this.$message.error(this.$t("project.rules.accessory"));
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);
@@ -603,7 +612,7 @@ export default {
       this.imgProgress = parseInt(file.percentage);
     },
     videoformat(percentage) {
-      return percentage === 100 ? "视频上传成功" : `${percentage}%`;
+      return percentage === 100 ? this.$t("project.rules.uploadSuccess") : `${percentage}%`;
     },
     // 删除附件
     onDeleteAccessory(index) {

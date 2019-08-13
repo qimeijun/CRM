@@ -4,7 +4,7 @@
       <h2>{{$t("workBench.title")}}</h2>
       <!-- 项目下拉菜单 start -->
       <div class="top_div">
-        <el-select class="workbench_top_select" v-model="itemid" placeholder="请选择" filterable>
+        <el-select class="workbench_top_select" v-model="itemid" :placeholder="$t('workBench.btn.selectItem')" filterable>
           <template slot="suffix">
             <i class="el-icon-caret-bottom"></i>
           </template>
@@ -60,7 +60,7 @@
         </div>
       </el-scrollbar>
     </div>
-    <p style="text-align:center;margin-top:calc((100vh - 1.8rem)/3); 0;font-size:24px;" v-show="!itemid">暂未参与项目</p>
+    <p style="text-align:center;margin-top:calc((100vh - 1.8rem)/3); 0;font-size:24px;" v-show="!itemid">{{$t("workBench.noInvolved")}}</p>
   </div>
 </template>
 <script>

@@ -15,13 +15,13 @@
         v-show="itemStatus!=2&&companyForm.status!=4&&companyForm.ownUser==2&&companyForm.itemProjectManager!=null&&itemRole&&(overview.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(overview.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&overview.targetCompanyUserInfo.id==userInfo.id))"
         type="primary"
         @click="onExplantation(targetid)"
-      >移入公海</el-button>
+      >{{$t("project.intoSea")}}</el-button>
       <!-- 移交 -->
       <el-button
         v-show="itemStatus!=2&&companyForm.status!=4&&companyForm.ownUser==2&&companyForm.itemProjectManager!=null&&itemRole&&(overview.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(overview.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&overview.targetCompanyUserInfo.id==userInfo.id))"
         type="primary"
         @click="changeAdministratorDialogVisible=true"
-      >移交</el-button>
+      >{{$t("project.transfer")}}</el-button>
       <!-- 分配 -->
       <el-button
         v-show="itemStatus!=2&&companyForm.status!=4&&companyForm.ownUser==1&&companyForm.itemProjectManager!=null&&itemRole&&userInfo.userRole!=$global.userRole.member"
@@ -45,7 +45,7 @@
         v-show="itemStatus!=2&&companyForm.status!=2&&companyForm.status==4&&(itemRole||companyForm.itemProjectManager==null)"
         class="top_button"
         @click="onCancel(1)"
-      >激活</el-button>
+      >{{$t("project.activation")}}</el-button>
     </div>
     <!--     
         功能：三个资料的编辑功能 及标签编辑功能
@@ -139,7 +139,7 @@
                 <p>
                   <span>{{overview.count}}</span>
                   <br />
-                  <span>日志总数量</span>
+                  <span>{{$t("target.info.logTotal")}}</span>
                 </p>
               </el-col>
               <!-- 月报数量 -->
@@ -148,7 +148,7 @@
                 <p>
                   <span>{{overview.monthlyReportCount}}</span>
                   <br />
-                  <span>月报数量</span>
+                  <span>{{$t("target.info.MonthlyTotal")}}</span>
                 </p>
               </el-col>
               <!-- 周报数量 -->
@@ -157,7 +157,7 @@
                 <p>
                   <span>{{overview.weeklyCount}}</span>
                   <br />
-                  <span>周报数量</span>
+                  <span>{{$t("target.info.weeksTotal")}}</span>
                 </p>
               </el-col>
               <!-- 订单数量 -->
@@ -166,7 +166,7 @@
                 <p>
                   <span>{{overview.orderLog}}</span>
                   <br />
-                  <span>订单数量</span>
+                  <span>{{$t("target.info.orderTotal")}}</span>
                 </p>
               </el-col>
             </el-row>
@@ -205,7 +205,7 @@
     <!-- 编辑弹窗 start -->
     <el-dialog
       class="el-dialog__scroll"
-      title="编辑"
+      :title="$t('target.info.editorTitle')"
       :visible.sync="show"
       top="5vh"
       :append-to-body="true"
@@ -314,11 +314,11 @@ export default {
     // 移入公海
     onExplantation(id) {
       this.$msgbox({
-        title: "提示",
+        title: this.$t("projectStatus.title"),
         message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>目标公司正在跟进中，您确定要移入公海吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('targetStatus.intoSea')}</p>`,
+        confirmButtonText:  this.$t("projectStatus.btn.determine"),
+        cancelButtonText:  this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -344,23 +344,23 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "取消移入公海"
+            message: this.$t("targetStatus.catch"),
           });
         });
     },
     // 激活作废  type: 4作废  1激活
     onCancel(type) {
       let messageText;
-      if (type == 4) {
-        messageText = "您确定要将这个目标公司作废吗？";
+     if (type == 4) {
+        messageText =this.$t("targetStatus.Private.messageText");
       } else if (type == 1) {
-        messageText = "您确定要将这个目标公司激活吗？";
+        messageText = this.$t("targetStatus.invalid.messageText");
       }
       this.$msgbox({
-        title: "提示",
+        title: this.$t("targetStatus.title"),
         message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${messageText}</p>`,
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+        confirmButtonText: this.$t("targetStatus.btn.determine"),
+        cancelButtonText: this.$t("targetStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -385,7 +385,7 @@ export default {
                       if (res.iworkuCode == 200) {
                         this.$message({
                           type: "success",
-                          message: "操作成功"
+                          message: this.$t("targetStatus.success")
                         });
                         this.getTargetInfo(this.targetid);
                       }
@@ -402,7 +402,7 @@ export default {
                 if (res.iworkuCode == 200) {
                   this.$message({
                     type: "success",
-                    message: "操作成功"
+                    message: this.$t("targetStatus.success")
                   });
                   this.getTargetInfo(this.targetid);
                 }
@@ -413,7 +413,7 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "已取消操作"
+            message: this.$t("targetStatus.catch")
           });
         });
     },

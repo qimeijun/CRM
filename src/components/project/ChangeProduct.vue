@@ -14,7 +14,7 @@
               size="mini"
               class="deleteimg_btn"
               @click="onDeleteImg(index)"
-            >删除</el-button>
+            >{{$t("project.btn.detele")}}</el-button>
           </el-col>
           <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20" style="text-align:right;">
             <el-input v-model="item.nodeDescription"></el-input>
@@ -22,7 +22,7 @@
               v-show="index===productFrom.imgList.length-1"
               type="text"
               @click="imgShow=true"
-            >继续上传</el-button>
+            >{{$t("project.btn.continueUpload")}}</el-button>
           </el-col>
         </el-row>
         <el-row v-show="imgShow||productFrom.imgList.length==0">
@@ -77,7 +77,7 @@
                 <i class="el-icon-video-camera-solid"></i>
                 <p>{{$t("project.btn.uploadVideo")}}</p>
               </el-button>
-              <el-button v-else class="reupload_btn" type="primary" size="mini">重新上传</el-button>
+              <el-button v-else class="reupload_btn" type="primary" size="mini">{{$t("project.btn.UploadAgain")}}</el-button>
             </el-upload>
           </el-col>
           <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20">
@@ -288,7 +288,7 @@ export default {
     async onBeforeAvatarUploadImg(file) {
       const isLt3M = file.size / 1024 / 1024 < 3;
       if (!isLt3M) {
-        this.$message.error("上传图片大小不能超过 3MB!");
+        this.$message.error(this.$t("project.rules.img"));
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);
@@ -299,7 +299,7 @@ export default {
     async onBeforeAvatarUploadVideo(file) {
       const isLt20M = file.size / 1024 / 1024 < 20;
       if (!isLt20M) {
-        this.$message.error("上传视频大小不能超过 20MB!");
+        this.$message.error(this.$t("project.rules.video"));
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);
@@ -310,7 +310,7 @@ export default {
     async onBeforeAvatarUploadAccessory(file) {
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
-        this.$message.error("上传附件大小不能超过 5MB!");
+        this.$message.error(this.$t("project.rules.accessory"));
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);
@@ -326,7 +326,7 @@ export default {
       this.imgProgress = parseInt(file.percentage);
     },
     videoformat(percentage) {
-      return percentage === 100 ? "视频上传成功" : `${percentage}%`;
+      return percentage === 100 ? this.$t("project.rules.uploadSuccess") : `${percentage}%`;
     },
     // 删除附件
     onDeleteAccessory(index) {

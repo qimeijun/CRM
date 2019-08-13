@@ -4,7 +4,7 @@
     <div style="position:fixed; top: 1rem; right: .2rem; display:flex;">
       <el-input
         class="commonality-seek"
-        placeholder="请输入内容"
+        :placeholder="$t('target.placeholder.seek')"
         v-model="seek"
         @keyup.enter.native="getCommonality(itemid, 1)"
         @click="getCommonality(itemid, 1)"
@@ -32,7 +32,7 @@
         v-show="itemStatus==2&&userInfo.userRole!=$global.userRole.member"
         class="commonality-endbtn"
         @click="onRestartMember(itemid)"
-      >重启项目</el-button>
+      >{{$t("projectInfo.restartProject")}}</el-button>
     </div>
     <div class="commonality_top">
       <!-- 分类 start -->
@@ -41,7 +41,7 @@
         clearable
         class="top_select"
         v-model="targetType"
-        placeholder="请选择"
+        :placeholder="$t('target.placeholder.type')"
         @change="getCommonality(itemid, 1)"
       >
         <el-option
@@ -101,7 +101,7 @@
           sortable
         >
           <template slot-scope="scope">
-            <p>{{scope.row.updateTimeStr?scope.row.updateTimeStr.split(' ')[0]:''}}</p>
+            <p>{{$global.localTime({time:scope.row.updateTimeStr,hour:false})}}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -121,7 +121,7 @@
           sortable
         >
           <template slot-scope="scope">
-            <p>{{scope.row.addTimeStr?scope.row.addTimeStr.split(' ')[0]:''}}</p>
+            <p>{{$global.localTime({time:scope.row.addTimeStr,hour:false})}}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -148,7 +148,7 @@
                   v-show="itemStatus!=2&&allotType!=null&&scope.row.status!=4"
                   class="table_operation"
                   @click="onTransfer(scope.row.id)"
-                >{{'移入私海'}}</li>
+                >{{$t("project.Private")}}</li>
                 <!-- 作废 -->
                 <li
                   v-show="itemStatus!=2&&scope.row.status!=4"
@@ -160,7 +160,7 @@
                   v-show="itemStatus!=2&&scope.row.status==4"
                   class="table_operation"
                   @click="onCancel(scope.row.id,1)"
-                >{{"激活"}}</li>
+                >{{$t("project.activation")}}</li>
               </ul>
             </Operate>
           </template>
@@ -331,15 +331,15 @@ export default {
     onCancel(id, type) {
       let messageText;
       if (type == 4) {
-        messageText = "您确定要将这个目标公司作废吗？";
+        messageText =this.$t("targetStatus.Private.messageText");
       } else if (type == 1) {
-        messageText = "您确定要将这个目标公司激活吗？";
+        messageText = this.$t("targetStatus.invalid.messageText");
       }
       this.$msgbox({
-        title: "提示",
+        title: this.$t("targetStatus.title"),
         message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${messageText}</p>`,
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+        confirmButtonText: this.$t("targetStatus.btn.determine"),
+        cancelButtonText: this.$t("targetStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -355,7 +355,7 @@ export default {
               if (res.iworkuCode == 200) {
                 this.$message({
                   type: "success",
-                  message: "操作成功"
+                  message: this.$t("targetStatus.success")
                 });
                 this.getCommonality(this.itemid, 1);
               }
@@ -365,7 +365,7 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "已取消操作"
+            message: this.$t("targetStatus.catch")
           });
         });
     },
@@ -401,11 +401,11 @@ export default {
     // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
-        title: "提示",
+        title: this.$t("projectStatus.title"),
         message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要结束此项目吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('projectStatus.end.messageText')}</p>`,
+        confirmButtonText: this.$t("projectStatus.btn.determine"),
+        cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -422,7 +422,7 @@ export default {
               this.getItemStatus(this.itemid);
               this.$message({
                 type: "success",
-                message: "已结束项目"
+                message: this.$t("projectStatus.end.success"),
               });
             });
         })
@@ -430,18 +430,18 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("projectStatus.catch"),
           });
         });
     },
     // 重启项目
     onRestartMember(id) {
       this.$msgbox({
-        title: "提示",
+        title:this.$t("projectStatus.title"),
         message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要重启此项目吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('projectStatus.restart.messageText')}</p>`,
+        confirmButtonText:  this.$t("projectStatus.btn.determine"),
+        cancelButtonText:  this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -458,7 +458,7 @@ export default {
               this.getItemStatus(this.itemid);
               this.$message({
                 type: "success",
-                message: "已重启项目"
+                message: this.$t("projectStatus.restart.success"),
               });
             });
         })
@@ -466,7 +466,7 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("projectStatus.catch"),
           });
         });
     },

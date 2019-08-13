@@ -13,7 +13,7 @@
         v-show="itemStatus==2&&userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer"
         class="product-endbtn"
         @click="onRestartMember(itemid,3)"
-      >重启项目</el-button>
+      >{{$t("projectInfo.restartProject")}}</el-button>
     </div>
     <div class="product_top">
       <h3>{{$t("projectInfo.menu[1]")}}</h3>
@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="product_redact">
-      <el-dialog title="修改资料" :visible.sync="show" width="600px">
+      <el-dialog :title="$t('project.updateTitle')" :visible.sync="show" width="600px">
         <ChangeProduct :product="product" @close="show = false"></ChangeProduct>
       </el-dialog>
     </div>

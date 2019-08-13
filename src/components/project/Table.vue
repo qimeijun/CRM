@@ -50,8 +50,10 @@
               <el-avatar
                 class="table_img"
                 size="medium"
-                :src="`${$global.avatarURI}${scope.row.probjectManagerProfileImage}`"
-              ></el-avatar>
+              >
+              <img v-if="scope.row.probjectManagerProfileImage" :src="`${$global.avatarURI}${scope.row.probjectManagerProfileImage}`" >
+              <span v-else>{{$lang==$global.lang.en?scope.row.probjectManagerNameEn.slice("")[0]:scope.row.probjectManagerNameZh.slice("")[0]}}</span>
+              </el-avatar>
               <!-- <img  :src="'https://vodcn.iworku.com/'+scope.row.img" alt /> -->
               <span>{{$lang==$global.lang.en?scope.row.probjectManagerNameEn:scope.row.probjectManagerNameZh}}</span>
             </p>
@@ -75,7 +77,7 @@
           sortable
         >
           <template slot-scope="scope">
-            <p>{{scope.row.addTimeStr.split(' ')[0]}}</p>
+            <p>{{$global.localTime({time:scope.row.addTimeStr,hour:false})}}</p>
           </template>
         </el-table-column>
         <el-table-column :label="$t('project.tableHeader[7]')" width="60">
@@ -99,12 +101,12 @@
                   v-show="scope.row.itemStatus==2&&userInfo.userRole!=$global.userRole.member"
                   class="table_delete"
                   @click="onRestartMember(scope.row.itemId)"
-                >重启项目</li>
+                >{{$t("projectInfo.restartProject")}}</li>
                 <li
                   v-show="scope.row.itemStatus!=2&&(userInfo.userRole==$global.userRole.regionalManager||userInfo.userRole==$global.userRole.superAdministrator)"
                   class="table_delete"
                   @click="allocationShow=true; allotProject=scope.row"
-                >{{scope.row.probjectManager==null?'分配':'再分配'}}</li>
+                >{{scope.row.probjectManager==null? $t("project.allot"):$t("project.redistribution")}}</li>
               </ul>
             </Operate>
           </template>
@@ -230,7 +232,8 @@ export default {
           keyWord: this.seek,
           itemLabelId: this.tag[1],
           pageNum: page,
-          pageSize: this.size
+          pageSize: this.size,
+          sortname:"item_number"
         })
         .then(res => {
           if (res.iworkuCode == 200) {
@@ -243,11 +246,11 @@ export default {
     // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
-        title: "提示",
+        title: this.$t("projectStatus.title"),
         message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要结束此项目吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('projectStatus.end.messageText')}</p>`,
+        confirmButtonText: this.$t("projectStatus.btn.determine"),
+        cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -263,7 +266,7 @@ export default {
               this.getProject(this.currentPage);
               this.$message({
                 type: "success",
-                message: "已结束项目"
+                message: this.$t("projectStatus.end.success"),
               });
             });
         })
@@ -271,18 +274,18 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("projectStatus.catch"),
           });
         });
     },
     // 重启项目
     onRestartMember(id) {
       this.$msgbox({
-        title: "提示",
+        title:this.$t("projectStatus.title"),
         message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要重启此项目吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('projectStatus.restart.messageText')}</p>`,
+        confirmButtonText:  this.$t("projectStatus.btn.determine"),
+        cancelButtonText:  this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -298,7 +301,7 @@ export default {
               this.getProject(this.currentPage);
               this.$message({
                 type: "success",
-                message: "已重启项目"
+                message: this.$t("projectStatus.restart.success"),
               });
             });
         })
@@ -306,7 +309,7 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("projectStatus.catch"),
           });
         });
     },

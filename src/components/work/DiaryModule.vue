@@ -283,7 +283,7 @@ export default {
                 }
                 // 处理时间
                 if (newVal.followAddTimeStr) {
-                    let time = new Date(newVal.followAddTimeStr);
+                    let time = new Date(this.$global.localTime({ time: newVal.followAddTimeStr }));
                     this.timeInfo.year = time.getFullYear();
                     let month = time.getMonth() + 1;
                     this.timeInfo.day = time.getDate();

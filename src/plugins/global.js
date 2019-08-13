@@ -22,5 +22,30 @@ Vue.prototype.$global = {
         customer: "c25bb273-a1f6-11e9-b080-946e68be8353"
     },
     avatarURI: process.env.VUE_APP_QINIU,
-    encryptionKey: "iworku"
+    encryptionKey: "iworku",
+    localTime: ({ time,  sparator='/', hour=true}) => {
+        /**
+         * time: 时间
+         * sparator： 显示的分隔符, 默认斜杠
+         * hour: 默认值为true，显示小时分秒
+         */
+        if (!time) {
+            return false;
+        }
+        let offset = -(new Date().getTimezoneOffset() * 60 * 1000)
+        let serverTime = new Date(time.replace(/-/g, '/')).getTime()
+        // 将时间转换成时间戳
+        let utcTime = new Date(serverTime + offset)
+        let month = utcTime.getMonth() + 1 > 9 ? utcTime.getMonth() : `0${utcTime.getMonth() + 1}`
+        let date = utcTime.getDate() > 9 ? utcTime.getDate() : `0${utcTime.getDate()}`
+        
+        let result = `${utcTime.getFullYear()}${sparator}${month}${sparator}${date}`;
+        if (hour) {
+            let hours = utcTime.getHours() > 9 ? utcTime.getHours() : `0${utcTime.getHours()}`
+            let minutes = utcTime.getMinutes() > 9 ? utcTime.getMinutes() : `0${utcTime.getMinutes()}`
+            let seconds = utcTime.getSeconds() > 9 ? utcTime.getSeconds() : `0${utcTime.getSeconds()}`
+            result += ` ${hours}:${minutes}:${seconds}`
+        }
+        return result
+    }
 }

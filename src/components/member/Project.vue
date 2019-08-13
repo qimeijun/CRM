@@ -32,7 +32,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="day" :label="$t('memberInfo.projectTable[4]')" sortable width="120"></el-table-column>
-      <el-table-column prop="addTimeStr" :label="$t('memberInfo.projectTable[5]')" sortable width="200"></el-table-column>
+      <el-table-column prop="addTimeStr" :label="$t('memberInfo.projectTable[5]')" sortable width="200">
+        <template slot-scope="scope">
+          {{ $global.localTime({ time: scope.row.addTimeStr }) }}
+        </template>
+      </el-table-column>
       <!-- 
         功能：将这个人移出项目
         权限：

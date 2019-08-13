@@ -16,7 +16,7 @@
                     <div style="margin-bottom: 10px; color: #BBBBBB;">
                         <!-- <span v-if="activeMenu > 0">{{ menuList[parseInt(activeMenu)].name }}</span> -->
                         <span>{{ item.title }}</span>
-                        <time class="time">{{ item.addTimeStr }}</time>
+                        <time class="time"> {{ $global.localTime({ time: item.addTimeStr }) }}</time>
                     </div>
                     <div style="color: #1E1E1E;">
                         {{ item.content }}

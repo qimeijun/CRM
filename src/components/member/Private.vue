@@ -85,7 +85,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="updateTimeStr" :label="$t('memberInfo.priviteTable.updateTime')" width="200"></el-table-column>
+      <el-table-column prop="updateTimeStr" :label="$t('memberInfo.priviteTable.updateTime')" width="200">
+        <template slot-scope="scope">
+          {{ $global.localTime({ time: scope.row.updateTimeStr }) }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="statusNameZh"
         :label="$t('memberInfo.priviteTable.status')"
@@ -93,7 +97,11 @@
         :filter-method="filterStatus"
         filter-placement="bottom-end"
       ></el-table-column>
-      <el-table-column prop="addTimeStr" :label="$t('memberInfo.priviteTable.createTime')"></el-table-column>
+      <el-table-column prop="addTimeStr" :label="$t('memberInfo.priviteTable.createTime')">
+        <template slot-scope="scope">
+          {{ $global.localTime({ time: scope.row.addTimeStr }) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="division" :label="$t('memberInfo.priviteTable.informationIntegrity')"></el-table-column>
       <el-table-column :label="$t('memberInfo.priviteTable.operate')" width="120">
         <template slot-scope="scope">

@@ -4,7 +4,7 @@
     <div style="position:fixed; top: 1rem; right: .2rem; display:flex;">
       <el-input
         class="private-seek"
-        placeholder="请输入内容"
+        :placeholder="$t('target.placeholder.seek')"
         v-model="seek"
         @keyup.enter.native="getPrivate(itemid, 1)"
       >
@@ -31,7 +31,7 @@
         v-show="itemStatus==2&&userInfo.userRole!=$global.userRole.member"
         class="private-endbtn"
         @click="onRestartMember(itemid)"
-      >重启项目</el-button>
+      >{{$t("projectInfo.restartProject")}}</el-button>
     </div>
     <div class="private_top">
       <!-- 选择成员 start -->
@@ -41,7 +41,6 @@
         clearable
         class="top_select"
         v-model="member"
-        placeholder="选择成员"
         @change="getPrivate(itemid, 1)"
       >
         <el-option
@@ -57,7 +56,7 @@
         clearable
         class="top_select"
         v-model="targetType"
-        placeholder="请选择"
+        :placeholder="$t('target.placeholder.type')"
         @change="getPrivate(itemid, 1)"
       >
         <el-option
@@ -317,11 +316,11 @@ export default {
     // 移入公海
     onCancel(item, index) {
       this.$msgbox({
-        title: "提示",
+        title: this.$t("projectStatus.title"),
         message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>目标公司正在跟进中，您确定要移入公海吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('targetStatus.intoSea')}</p>`,
+        confirmButtonText:  this.$t("projectStatus.btn.determine"),
+        cancelButtonText:  this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -345,16 +344,20 @@ export default {
         })
         .catch(() => {
           // 取消移入公海
+          this.$message({
+            type: "info",
+            message: this.$t("targetStatus.catch"),
+          });
         });
     },
     // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
-        title: "提示",
+        title: this.$t("projectStatus.title"),
         message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要结束此项目吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('projectStatus.end.messageText')}</p>`,
+        confirmButtonText: this.$t("projectStatus.btn.determine"),
+        cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -371,7 +374,7 @@ export default {
               this.getItemStatus(this.itemid);
               this.$message({
                 type: "success",
-                message: "已结束项目"
+                message: this.$t("projectStatus.end.success"),
               });
             });
         })
@@ -379,18 +382,18 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("projectStatus.catch"),
           });
         });
     },
     // 重启项目
     onRestartMember(id) {
       this.$msgbox({
-        title: "提示",
+        title:this.$t("projectStatus.title"),
         message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要重启此项目吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('projectStatus.restart.messageText')}</p>`,
+        confirmButtonText:  this.$t("projectStatus.btn.determine"),
+        cancelButtonText:  this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -407,7 +410,7 @@ export default {
               this.getItemStatus(this.itemid);
               this.$message({
                 type: "success",
-                message: "已重启项目"
+                message: this.$t("projectStatus.restart.success"),
               });
             });
         })
@@ -415,7 +418,7 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("projectStatus.catch"),
           });
         });
     },

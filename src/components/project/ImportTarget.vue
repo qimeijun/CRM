@@ -5,8 +5,8 @@
       <h3>1</h3>
       <span class="importTarget-margin">{{$t("projectInfo.importTarget.textTip[0]")}}</span>
       <i class="el-icon-paperclip"></i>
-      <a :href="$global.avatarURI+'Customer%20information.xlsx'" download="客户模板.xls">客户模板.xls</a>
-      <!-- <input type="file" ref="file" > -->
+      <a :href="$global.avatarURI+'Customer%20information.xlsx'" :download="$t('projectInfo.importTarget.templateName')">{{$t('projectInfo.importTarget.templateName')}}</a>
+      
     </div>
     <!-- 二 -->
     <div class="importTarget_div">
@@ -67,7 +67,7 @@
       center
     >
       <div class="importTarget_dialog">
-        <p>{{importState==1?'导入完成！':importState==2?'上传内容存在重复，请下载并修改后重新上传！':$t("projectInfo.importTarget.textTip[2]")}}</p>
+        <p>{{importState==1?$t("projectInfo.importTarget.textTip[3]"):importState==2?$t("projectInfo.importTarget.textTip[4]"):$t("projectInfo.importTarget.textTip[2]")}}</p>
         <el-progress :percentage="fileImport" color="#E50054"></el-progress>
         <a class="repeatFile_a" :href="repeatFileURL" :download="repeatFileName">{{repeatFileName}}</a>
       </div>
@@ -109,7 +109,7 @@ export default {
     onChangeFile(file, fileList) {
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
-        this.$message.error("上传表格大小不能超过 5MB!");
+        this.$message.error(this.$t("projectInfo.importTarget.textTip[1]"));
       } else {
         this.fileName = file.name;
         this.btnDisabled = false;
@@ -146,7 +146,7 @@ export default {
             this.importState=1;
             this.$emit("close");
             this.$imessage({
-              content: "导入成功",
+              content: this.$t("projectInfo.importTarget.textTip[3]"),
               type: "success"
             });
             this.dialogVisible=false;

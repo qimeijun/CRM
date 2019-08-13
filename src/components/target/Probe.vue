@@ -42,7 +42,7 @@
       <!-- 上传报告 start -->
       <el-dialog
         class="el-dialog__scroll"
-        title="上传报告"
+        :title="$t('target.probe.upload')"
         :visible.sync="show"
         top="5vh"
         :append-to-body="true"
@@ -58,7 +58,7 @@
       <!-- 修改报告 start -->
       <el-dialog
         class="el-dialog__scroll"
-        title="修改报告"
+        :title="$t('target.probe.update')"
         :visible.sync="updateShow"
         top="5vh"
         :append-to-body="true"
@@ -129,11 +129,11 @@ export default {
     // 删除调研报告
     deleteProbe(id) {
       this.$msgbox({
-        title: "提示",
+        title: this.$t("projectStatus.title"),
         message:
           "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要删除调研报告吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+        confirmButtonText: this.$t("projectStatus.btn.determine"),
+        cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -150,7 +150,7 @@ export default {
               if (res.iworkuCode == 200) {
                 this.getProbe();
                 this.$imessage({
-                  content: "已删除调研报告",
+                  content: this.$t("public.tips.success"),
                   type: "success" // 错误提示 error
                 });
               }
@@ -160,7 +160,7 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("targetStatus.catch"),
           });
         });
     },

@@ -6,7 +6,7 @@
       <h3>1</h3>
       <span class="upload-report-margin">{{$t("target.probe.textTip[0]")}}</span>
       <i class="el-icon-paperclip"></i>
-      <a href target="_blank">调研报告模板.xls</a>
+      <a :href="$global.avatarURI+'Customer%20information.xlsx'" :download="$t('target.probe.templateName')" target="_blank">{{$t('target.probe.templateName')}}</a>
     </div>
     <!-- 二 -->
     <div class="upload-report_div">
@@ -36,7 +36,7 @@
       </div>
     </div>
     <div class="upload-report_button">
-      <el-button :disabled="btnDisabled" size="small" type="primary" @click="submitFile()">完成</el-button>
+      <el-button :disabled="btnDisabled" size="small" type="primary" @click="submitFile()">{{$t("target.probe.ok")}}</el-button>
     </div>
   </div>
 </template>
@@ -91,7 +91,7 @@ export default {
     async updatebtnShow(file) {
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
-        this.$message.error("上传视频大小不能超过 5MB!");
+        this.$message.error(this.$t("target.probe.textTip[1]"));
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);
@@ -133,7 +133,7 @@ export default {
           .then(res => {
             if (res.iworkuCode == 200) {
               this.$imessage({
-                content: "修改完成",
+                content: this.$t("target.probe.updateContent"),
                 type: "success" // 错误提示 error
               });
               this.$emit("close");
@@ -149,7 +149,7 @@ export default {
           .then(res => {
             if (res.iworkuCode == 200) {
               this.$imessage({
-                content: "导入完成",
+                content: this.$t("target.probe.addContent"),
                 type: "success" // 错误提示 error
               });
               // 重置数据

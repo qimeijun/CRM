@@ -24,8 +24,10 @@
               <el-avatar
                 class="table_img"
                 size="medium"
-                :src="`${$global.avatarURI}${scope.row.userProfileImage}`"
-              ></el-avatar>
+              >
+              <img v-if="scope.row.userProfileImage" :src="`${$global.avatarURI}${scope.row.userProfileImage}`" >
+              <span v-else>{{$lang==$global.lang.en?scope.row.userNameEn.slice("")[0]:scope.row.userNameZh.slice("")[0]}}</span>
+              </el-avatar>
               <span>{{$lang==$global.lang.en?scope.row.userNameEn:scope.row.userNameZh}}</span>
             </p>
           </template>

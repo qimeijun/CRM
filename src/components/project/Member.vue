@@ -2,7 +2,7 @@
   <div class="iworku-card project-detail-member">
     <div class="member_top">
       <h3>{{$t("projectInfo.member.title")}}</h3>
-      <span>共{{memberlist.length}}人</span>
+      <span>{{$t("projectInfo.member.population",{number:memberlist.length})}}</span>
       <el-button v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer" type="primary" size="small" @click="addMemberDialogVisible=true">{{$t("projectInfo.member.add")}}</el-button>
     </div>
     <div class="member_list" v-for="(item, index) in memberlist" :key="'member'+index">
@@ -10,7 +10,10 @@
         <template >{{$lang==$global.lang.en?item.roleNameEn:item.roleName}}</template>
         </i>
       <p class="list_img">
-        <el-avatar size="medium" :src="$global.avatarURI+item.userProfileImage"></el-avatar>
+        <el-avatar size="medium" >
+          <img v-if="item.userProfileImage" :src="$global.avatarURI+item.userProfileImage">
+          <span v-else>{{$lang==$global.en?item.userNameEn.slice("")[0]:item.userNameZh.slice("")[0]}}</span>
+        </el-avatar>
         <br />
         <span>{{$lang==$global.en?item.userNameEn:item.userNameZh}}</span>
       </p>
@@ -30,7 +33,7 @@
     <!-- 添加成员 dialog start -->
     <el-dialog
       class="el-dialog__scroll"
-      :title="'添加项目成员'"
+      :title="this.$t('projectInfo.member.dialogTitle')"
       :visible.sync="addMemberDialogVisible"
       top="5vh"
       :append-to-body="true"

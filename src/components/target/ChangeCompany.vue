@@ -54,14 +54,14 @@ export default {
         targetCompanyName: [
           {
             required: true,
-            message: "请输入名称",
+            message: this.$t("target.placeholder.companyName"),
             trigger: "blur"
           }
         ],
         targetCompanyCountry: [
           {
             required: true,
-            message: "请选择国家",
+            message: this.$t("target.placeholder.country"),
             trigger: "blur"
           }
         ]

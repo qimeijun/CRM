@@ -12,7 +12,7 @@
         v-show="info.itemStatus==2&&userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer"
         class="info-endbtn"
         @click="onRestartMember(itemid)"
-      >重启项目</el-button>
+      >{{$t("projectInfo.restartProject")}}</el-button>
     </div>
     <!-- 资料展示 start -->
     <div class="info_top">
@@ -61,7 +61,7 @@
           <span>{{info.companyEmail}}</span>
         </p>
         <p>
-          <span>{{'公司电话'}}</span>
+          <span>{{$t('project.from.tmt')}}</span>
           <br />
           <span>{{info.companyTel}}</span>
         </p>
@@ -78,7 +78,7 @@
     <!-- 资料展示 end -->
     <div class="info_redact">
       <!-- 编辑资料弹窗 start -->
-      <el-dialog class="el-dialog__scroll" title="修改资料" :visible.sync="show" width="600px">
+      <el-dialog class="el-dialog__scroll" :title="$t('project.updateTitle')" :visible.sync="show" width="600px">
         <el-scrollbar class="scrollbar">
           <h1>{{$t("project.from.secondTitle")}}</h1>
           <el-form :model="infoFrom" ref="infoFrom" :rules="infoRules" label-position="top">
@@ -89,7 +89,7 @@
               <el-input v-model="infoFrom.companyName" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item :label="$t('project.from.tmt')" prop="companyIndustry">
-              <el-select v-model="infoFrom.companyIndustry" placeholder="请选择行业">
+              <el-select v-model="infoFrom.companyIndustry" :placeholder="$t('project.placeholder.tmt')">
                 <el-option
                   v-for="(item,index) in industryList"
                   :key="'industry'+index"
@@ -113,8 +113,8 @@
               ></el-input>
             </el-form-item>
             <!-- 公司电话 -->
-            <el-form-item :label="'公司电话'" prop="companyTel">
-              <el-input v-model="infoFrom.companyTel" autocomplete="off" :placeholder="'请输入公司电话'"></el-input>
+            <el-form-item :label="$t('project.from.tel')" prop="companyTel">
+              <el-input v-model="infoFrom.companyTel" autocomplete="off" :placeholder="$t('project.placeholder.tel')"></el-input>
             </el-form-item>
             <!-- 公司简介 -->
             <el-form-item :label="$t('project.from.intro')" prop="companyProfile">
@@ -182,56 +182,65 @@ export default {
         itemName: [
           {
             required: true,
-            message: "请输入项目名称",
+            message: this.$t("project.rules.projectTitle"),
             trigger: "blur"
           }
         ],
         companyName: [
           {
             required: true,
-            message: "请输入公司名称",
+            message: this.$t("project.rules.companyName"),
             trigger: "blur"
           }
         ],
         companyIndustry: [
           {
             required: true,
-            message: "请选择公司类型",
+            message: this.$t("project.rules.tmt"),
             trigger: "blur"
           }
         ],
         companyAddress: [
           {
             required: true,
-            message: "请输入公司地址",
+            message: this.$t("project.rules.site"),
             trigger: "blur"
           }
         ],
         companyWebsite: [
           {
             required: true,
-            message: "请输入公司网站地址",
+            message: this.$t("project.rules.url"),
             trigger: "blur"
           }
         ],
         companyEmail: [
           {
             required: true,
-            message: "请输入公司邮箱",
+            message: this.$t("project.rules.email"),
             trigger: "blur"
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (!/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(value)) {
+                callback(new Error(this.$t("member.rules.account[1]")));
+              } else {
+                callback();
+              }
+            }
           }
         ],
         companyTel: [
           {
             required: true,
-            message: "请输入公司电话",
+            message: this.$t("project.rules.tel"),
             trigger: "blur"
           }
         ],
         companyProfile: [
           {
             required: true,
-            message: "请输入公司介绍",
+            message: this.$t("project.rules.intro"),
             trigger: "blur"
           }
         ]
@@ -297,11 +306,11 @@ export default {
     // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
-        title: "提示",
-        message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要结束此项目吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+        title: this.$t("projectStatus.title"),
+         message:
+          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('projectStatus.end.messageText')}</p>`,
+        confirmButtonText: this.$t("projectStatus.btn.determine"),
+        cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -317,7 +326,7 @@ export default {
               this.getInfo(this.itemid);
               this.$message({
                 type: "success",
-                message: "已结束项目"
+                 message: this.$t("projectStatus.end.success"),
               });
             });
         })
@@ -325,18 +334,18 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("projectStatus.catch"),
           });
         });
     },
     // 重启项目
     onRestartMember(id) {
       this.$msgbox({
-        title: "提示",
+         title:this.$t("projectStatus.title"),
         message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要重启此项目吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('projectStatus.restart.messageText')}</p>`,
+        confirmButtonText:  this.$t("projectStatus.btn.determine"),
+        cancelButtonText:  this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -352,7 +361,7 @@ export default {
               this.getInfo(this.itemid);
               this.$message({
                 type: "success",
-                message: "已重启项目"
+                message: this.$t("projectStatus.restart.success"),
               });
             });
         })
@@ -360,7 +369,7 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("projectStatus.catch"),
           });
         });
     }

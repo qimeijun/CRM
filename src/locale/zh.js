@@ -255,8 +255,10 @@ export default {
     },
     workBench: {
         title: "工作台",
+        noInvolved:"暂未参与项目",
         btn: {
-            addProject: "添加新项目"
+            addProject: "添加新项目",
+            selectItem:"请选择项目"
         },
         briefreport: {
             title: "日程简报",
@@ -282,6 +284,7 @@ export default {
         },
         calendar: {
             title: "日程安排",
+            remaining:"还有{number}项...",
             btn: {
                 redact: "编辑",
                 delete: "删除",
@@ -294,7 +297,8 @@ export default {
             loading: "加载中...",
             noMore: "没有更多了",
             dialogTitle: "添加日程提醒",
-            addPeople: "添加人"
+            addPeople: "添加提醒人",
+           
         },
         addremind: {
             form: {
@@ -312,6 +316,16 @@ export default {
                 email: "提醒内容和时间将发送至本邮箱",
                 target: "请输入日程内容",
                 people: "请输入日程内容",
+            },
+            selectTarget:"选择目标公司",
+            remindTypes:["前一天提醒","前两天提醒","不提醒"],
+            rules:{
+                content:"请输入提醒内容",
+                date:"请选择起始日期",
+                remindType:"请选择提醒类型",
+                email:"请输入邮箱",
+                target:"请选择目标公司",
+                users:"请选择参与人员"
             },
             save: "保存",
             modify: "编辑"
@@ -390,10 +404,14 @@ export default {
         title: "项目管理",
         add: "添加新项目",
         allot: "分配",
+        redistribution: "再分配",
         invalid: "作废",
+        activation: "激活",
         transfer: "移交",
         intoSea: "移入公海",
+        Private: "移入私海",
         view: "查看详情",
+        updateTitle:"修改资料",
         placeholder: {
             seek: "搜索项目名称、地址",
             tag: "选择标签",
@@ -403,6 +421,7 @@ export default {
             site: "请输入地址",
             url: "Https://",
             email: "请输入电子邮箱",
+            tel:"请输入公司电话",
             intro: "请输入公司简介",
             strength: "请说明优势",
             productName: "请输入产品名称",
@@ -420,6 +439,7 @@ export default {
             site: "地址",
             url: "网址",
             email: "电子邮箱",
+            tel:"公司电话",
             intro: "公司简介",
             strength: "优势",
             productName: "产品名称",
@@ -428,6 +448,23 @@ export default {
             accessory: "附件(产品目录)",
             study: "学习资料"
         },
+        rules:{
+            account:"请输入账号",
+            accountPassword:"请输入密码",
+            projectTitle:"请输入项目名称",
+            companyName:"请输入企业名称",
+            tmt:"请选择行业",
+            site:"请输入地址",
+            url:"请输入网址",
+            email:"请输入邮箱",
+            tel:"请输入电话",
+            intro:"请输入简介",
+            productName:"请输入产品名称",
+            img:"上传图片大小不能超过 3MB!en",
+            video:"上传视频大小不能超过 20MB!en",
+            accessory:"上传附件大小不能超过 5MB!en",
+            uploadSuccess:"视频上传成功",
+        },
         btn: {
             uploadImg: "上传图片",
             uploadVideo: "上传视频",
@@ -435,7 +472,11 @@ export default {
             perfect: "完善资料",
             continue: "继续完善",
             ok: "完成",
-            edit: "编辑"
+            edit: "编辑",
+            detele:"删除",
+            continueUpload:"继续上传",
+            UploadAgain:"重新上传"
+
         },
         tableHeader: ["ID", "项目名称", "状态", "管理员", "标签", "进行天数", "添加时间", "操作"],
         status: ["进行中", "已结束", "重启项目", "新项目"]
@@ -443,12 +484,15 @@ export default {
     projectInfo: {
         title: "项目详情",
         endProject: "结束项目",
+        restartProject: "重启项目",
         menu: ["资料", "产品", "公海客户", "成员私海", "工作日志"],
         member: {
             title: "工作成员",
             add: "添加成员",
             target: ["目标公司", "家"],
-            time: ["进行时间", "天"]
+            time: ["进行时间", "天"],
+            population:"共{number}人",
+            dialogTitle:"添加项目成员"
         },
         commonality: {
             tableHeader: ["目标公司", "重要程度", "更新时间", "状态", "创建时间", "资料完整度", "操作"]
@@ -456,11 +500,12 @@ export default {
         importTarget: {
             add: "新增目标公司",
             import: "导入目标公司",
-            textTip: ["按导入模板，填写表格", "表格大小控制在 5M 以内", "目标公司正在导入中，请耐心等待···"],
+            templateName:"客户模板.xls",
+            textTip: ["按导入模板，填写表格", "表格大小控制在 5M 以内", "目标公司正在导入中，请耐心等待···","导入完成！","上传内容存在重复，请下载并修改后重新上传！"],
             uploadBtn: ["点击上传", "重新上传", "一键导入"],
             dialogTitle: "提示",
             noimport: "不导入",
-            coverage: "覆盖"
+            coverage: "覆盖",
         },
         tag: {
             title: "标签",
@@ -544,17 +589,34 @@ export default {
             introduce: "介绍",
             remark: "备注",
             btn: "编辑",
+            editorTitle:"编辑",
+            logTotal:"日志总数量",
+            MonthlyTotal:"月报数量",
+            weeksTotal:"周报数量",
+            orderTotal:"订单数量"
+        },
+        placeholder:{
+            companyName:"请输入公司名称",
+            country:"请选择国家",
+            keymenName:"请输入关键人名",
+            type:"请选择公司类型",
+            seek:"搜索目标公司名称、ID、地址、关键人",
+            
         },
         next: "下一步",
         finish: "完成添加",
         probe: {
+            templateName:"调研报告模板.xls",
             upload: "上传报告",
             update: "修改报告",
             delete: "删除",
             title: "调研报告",
             textTip: ["按上传模板，填写表格", "表格大小控制在 5M 以内", "目标公司正在导入中，请耐心等待···"],
             uploadBtn: ["点击上传", "重新上传", "开始上传"],
-            dialogTitle: "提示"
+            dialogTitle: "提示",
+            updateContent:"修改完成",
+            addContent:"导入完成",
+            ok:"完成"
         },
         loca: {
             tableHeader: ["ID", "项目名称", "状态", "管理员", "标签", "进行天数", "添加时间", "操作"],
@@ -562,6 +624,43 @@ export default {
         },
         status: ["待跟进", "跟进中", "未跟进", "作废"],
         importanceStatus: ["待跟进", "资料完善", "有跟进记录", "一般意向客户", "重点跟进客户", "已有成交客户"]
+    },
+    targetStatus:{
+        title:"提示",
+        success:"操作成功",
+        catch:"已取消操作",
+        Private:{
+            messageText:"您确定要将这个目标公司作废吗？"
+        },
+        invalid:{
+            messageText:"您确定要将这个目标公司激活吗？"
+        },
+        intoSea:{
+            messageText:"目标公司正在跟进中，您确定要移入公海吗？"
+        },
+        probe:{
+            messageText:"您确定要删除调研报告吗？"
+        },
+        btn:{
+            determine:"确定",
+            cancel:"取消"
+        }
+    },
+    projectStatus:{
+        title:"提示",
+        catch:"取消操作",
+        end:{
+            messageText:"您确定要结束此项目吗？",
+            success:"已结束项目"
+        },
+        restart:{
+            messageText:"您确定要重启此项目吗？",
+            success:"已重启项目"
+        },
+        btn:{
+            determine:"确定",
+            cancel:"取消"
+        }
     },
     page404: {
         btn: "试试返回首页"

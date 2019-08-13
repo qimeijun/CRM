@@ -154,6 +154,8 @@ export default {
      */
     onLogout() {
       this.$store.commit('ipublic/$_remove_userInfo', {});
+      document.cookie = `password=;path=/; expires=Thu, 01-Jan-70 00:00:01 GMT`;
+      document.cookie = `username=;path=/; expires=Thu, 01-Jan-70 00:00:01 GMT`;
       this.websocket.onreconnect = function () {}
       this.$router.push({ path: '/login' });
     },

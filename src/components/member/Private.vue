@@ -13,6 +13,7 @@
       <el-select
         v-model="searchStatus"
         filterable
+        clearable
         placeholder=""
         @change="getTarget(); page.pageNum=1;"
         style="margin-right: .2rem; width: 20%;"
@@ -27,6 +28,7 @@
       <!-- 标签筛选 start -->
       <el-cascader
         v-model="searchTag"
+        clearable
         :props="labelList"
         :show-all-levels="false"
         placeholder=""

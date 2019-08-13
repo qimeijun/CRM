@@ -64,7 +64,8 @@
   </section>
 </template>
 <script>
-import CryptoJS from "crypto-js";
+import CryptoJS from "crypto-js"
+import automaticLogin from "@/plugins/automaticLogin.js"
 export default {
   data() {
     return {
@@ -91,6 +92,9 @@ export default {
       },
       submitBtnLoading: false
     };
+  },
+  async created() {
+    await automaticLogin(this);
   },
   methods: {
     /**

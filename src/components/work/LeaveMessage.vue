@@ -143,7 +143,7 @@ export default {
      *  删除附件
      */
     onDeleteAttachment(index) {
-        this.message.attachment.splice(index, 1);
+        this.messageForm.attachment.splice(index, 1);
     }
   }
 };

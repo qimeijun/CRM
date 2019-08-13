@@ -240,6 +240,7 @@ export default {
             month < 10 ? month = `0${month}` : null;
 
             if (!this.logMap.has(`${time.getFullYear()}-${month}-${date}`)) {
+                this.workDiarList = [];
                 return false;
             }
             let params = {

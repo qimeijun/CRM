@@ -30,16 +30,15 @@
                                 1、自己
                                 2、上级
                          -->
-                         <template v-if="(item.followAddUser == userInfo.id) && isAllow">
+                         <template v-if="(item.followAddUser == userInfo.id) || isAllow">
                             <el-dropdown-item command="modify">{{ $t("workDiary.btn.modifyDiary") }}</el-dropdown-item>
                          </template>
                          <!-- 
                              功能：留言
                              权限：
-                                1、上级
-                                2、客户
+                                1、只要不是自己就可以留言
                           -->
-                        <template v-if="userInfo.userRole != $global.userRole.member && item.followAddUser != userInfo.id">
+                        <template v-if="item.followAddUser != userInfo.id">
                             <el-dropdown-item command="leave">{{ $t("workDiary.btn.leaveMessageNow") }}</el-dropdown-item>
                         </template>
                         <!-- 
@@ -86,8 +85,8 @@
                     </div>
                 </div>
                 <!-- 订单 -->
-                <div style="margin-top: 20px; margin-bottom: 20px; line-height: 20px; word-break: break-all;">
-                    {{ item.followContent }}
+                <div class="dairy-content" style="margin-top: 20px; margin-bottom: 20px; line-height: 20px; word-break: break-all;" >
+                    <div v-html="item.followContent"></div>
                 </div>
                 <el-button v-if="item.followContent" @click="onTranslate(item.followContent)" type="primary" size="mini" :disabled="translateContent ? true : false" :loading="translateBtnLoading">{{ $t("workDiary.btn.translate") }}</el-button>
                 <!-- 翻译内容显示 start -->
@@ -115,10 +114,9 @@
                 <!-- 
                     功能：留言
                     权限：
-                        1、上级
-                        2、客户
+                        1、除了自己，都可以
                  -->
-                <LeaveMessage v-if="isAllowOperate && (userInfo.userRole != $global.userRole.member && item.followAddUser != userInfo.id)" :parent="item" @onCloseLeaveMessage="onQueryDiary"></LeaveMessage>
+                <LeaveMessage v-if="item.followAddUser != userInfo.id" :parent="item" @onCloseLeaveMessage="onQueryDiary"></LeaveMessage>
                 <!-- 留言信息 start -->
                 <template v-if="item && item.nodeList && item.nodeList.length > 0">
                     <Message v-for="(nItem, nIndex) in item.nodeList" :key="nIndex" :message="nItem" @onCloseLeaveMessage="onQueryDiary"></Message>
@@ -343,6 +341,7 @@ $-scope-padding-lr: .2rem;
             border-radius:12px;
             color: $--default-white;
         }
+        
     }
 
     &__right {
@@ -397,4 +396,12 @@ $-scope-padding-lr: .2rem;
         color: $--default-white !important;
     }
 }
+
+.dairy-content {
+    img {
+        margin-bottom: 20px;
+        max-width: 50%;
+        display: block;
+    }
+        } 
 </style>

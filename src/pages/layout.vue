@@ -132,8 +132,8 @@ export default {
       return this.$route.name;
     }
   },
-  created() {
-    automaticLogin(this);
+  async created() {
+    await automaticLogin(this);
     if (this.userInfo.userRole == this.$global.userRole.customer) {
       this.getProject();
     }

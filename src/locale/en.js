@@ -166,8 +166,8 @@ export default {
         }
     },
     memberInfo: {
+        modifyInfo: "Modify",
         menu: ["Information", "Team", "Follow Up Project", "Private customer", "Work Log"],
-        // priviteTable: ["Tartget Company", "Importance", "Update Time", "Status", "Create Time", "Information Integrity", "Operate"],
         priviteTable: {
             targetCompany: "Tartget Company",
             importance: "Importance",
@@ -209,7 +209,8 @@ export default {
         handOverTeam: "Hand Over",
         teamStatistics: ["All Member Performance", '1V1 Performance'],
         teamStatisticsTime: ["Month", "Year"],
-        privateOperate: ["View", "Move into public", "Hand Over"]
+        privateOperate: ["View", "Move into public", "Hand Over"],
+        statistics: ["Single customer", "Follow up with customers", "Private customer"]
     },
     team: {
         add: "Add Team",

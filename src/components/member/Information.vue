@@ -70,12 +70,13 @@
     <!-- 修改成员信息 dialog start -->
     <el-dialog
       class="el-dialog__scroll"
-      :title="$t('selectRegionalManager.title')"
+      :title="$t('memberInfo.modifyInfo')"
       :visible.sync="modifyMemberDialogVisible"
       top="5vh"
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
+      :close-on-click-modal="false"
       width="30%"
     >
       <el-scrollbar class="scrollbar">
@@ -153,15 +154,15 @@ export default {
           data: [
             {
               icon: "circle",
-              name: "成单客户"
+              name: this.$t("memberInfo.statistics[0]")
             },
             {
               icon: "circle",
-              name: "跟进客户"
+              name: this.$t("memberInfo.statistics[1]")
             },
             {
               icon: "circle",
-              name: "私海客户"
+              name: this.$t("memberInfo.statistics[2]")
             }
           ]
         },
@@ -187,21 +188,21 @@ export default {
             data: [
               {
                 value: 0,
-                name: "成单客户",
+                name: this.$t("memberInfo.statistics[0]"),
                 label: {
                   color: "#fff"
                 }
               },
               {
                 value: 0,
-                name: "跟进客户",
+                name: this.$t("memberInfo.statistics[1]"),
                 label: {
                   color: "#fff"
                 }
               },
               {
                 value: 0,
-                name: "私海客户",
+                name: this.$t("memberInfo.statistics[2]"),
                 label: {
                   color: "#1E1E1E"
                 }

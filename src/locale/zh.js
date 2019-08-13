@@ -166,6 +166,7 @@ export default {
         }
     },
     memberInfo: {
+        modifyInfo: "编辑信息",
         menu: ["资料", "团队", "跟进项目", "私海客户", "工作日志"],
         priviteTable: {
             targetCompany: "目标公司",
@@ -198,7 +199,7 @@ export default {
         },
         operate: "操作",
         teamOperate: ["编辑团队", "移交团队", "冻结团队", "激活团队"],
-        teamMemberOperate: ["View", "Handover Team", "Delete"],
+        teamMemberOperate: ["查看详情", "团队移交", "删除"],
         noTeam: "暂无团队",
         account: "账号",
         password: "密码",
@@ -208,7 +209,8 @@ export default {
         handOverTeam: "移交",
         teamStatistics: ["所有成员业绩", '1V1业绩'],
         teamStatisticsTime: ["月份", "年份"],
-        privateOperate: ["查看详情", "移入公海", "移交"]
+        privateOperate: ["查看详情", "移入公海", "移交"],
+        statistics: ["成单客户", "跟进客户", "私海客户"]
     },
     team: {
         add: "添加团队",

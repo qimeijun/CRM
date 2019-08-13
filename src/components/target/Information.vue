@@ -4,26 +4,27 @@
     <div style="position: fixed; top: 1rem; right: .2rem;">
       <!-- 
         功能：移入公海、移交、分配、
-        限制：1.所在项目未分配时  没有这三个功能
+        限制：1.所在项目未分配时或结束项目或被作废  没有这三个功能
               2.项目分配后：
                    <1>目标公司在个人私海时 移交和移入公海功能(人员:项目成员)
                    <2>目标公司在公海时 分配功能（项目成员中的项目经理及所属区域经理）
+                     <3>目标公司分配给区域经理时 移交和移入公海 只能本人操作
       -->
       <!-- 移入公海 -->
       <el-button
-        v-show="companyForm.ownUser==2&&companyForm.itemProjectManager!=null&&itemRole"
+        v-show="itemStatus!=2&&companyForm.status!=4&&companyForm.ownUser==2&&companyForm.itemProjectManager!=null&&itemRole&&(overview.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(overview.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&overview.targetCompanyUserInfo.id==userInfo.id))"
         type="primary"
         @click="onExplantation(targetid)"
       >移入公海</el-button>
       <!-- 移交 -->
       <el-button
-        v-show="companyForm.ownUser==2&&companyForm.itemProjectManager!=null&&itemRole"
+        v-show="itemStatus!=2&&companyForm.status!=4&&companyForm.ownUser==2&&companyForm.itemProjectManager!=null&&itemRole&&(overview.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(overview.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&overview.targetCompanyUserInfo.id==userInfo.id))"
         type="primary"
         @click="changeAdministratorDialogVisible=true"
       >移交</el-button>
       <!-- 分配 -->
       <el-button
-        v-show="companyForm.ownUser==1&&companyForm.itemProjectManager!=null&&itemRole&&userInfo.userRole!=$global.userRole.member"
+        v-show="itemStatus!=2&&companyForm.status!=4&&companyForm.ownUser==1&&companyForm.itemProjectManager!=null&&itemRole&&userInfo.userRole!=$global.userRole.member"
         type="primary"
         @click="allocationShow=true"
       >{{$t("project.allot")}}</el-button>
@@ -31,16 +32,17 @@
       功能：作废/激活
       限制：1.项目未分配时：超管和所有区域经理
            2.项目分配后 项目成员
+           3.目标公司分配给区域经理的话 只有本人可作废
       -->
       <!-- 作废 -->
       <el-button
-        v-show="companyForm.status!=4&&(itemRole||companyForm.itemProjectManager==null)"
+        v-show="itemStatus!=2&&companyForm.status!=2&&companyForm.status!=4&&(itemRole||companyForm.itemProjectManager==null)&&(companyForm.ownUser==1||companyForm.ownUser==2&&(overview.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(overview.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&overview.targetCompanyUserInfo.id==userInfo.id)))"
         class="top_button"
         @click="onCancel(4)"
       >{{$t("project.invalid")}}</el-button>
       <!-- 激活 -->
       <el-button
-        v-show="companyForm.status==4&&(itemRole||companyForm.itemProjectManager==null)"
+        v-show="itemStatus!=2&&companyForm.status!=2&&companyForm.status==4&&(itemRole||companyForm.itemProjectManager==null)"
         class="top_button"
         @click="onCancel(1)"
       >激活</el-button>
@@ -53,7 +55,11 @@
 
     <el-row>
       <el-col>
-        <Tag type="target" :id="targetid" :disableType="companyForm.itemProjectManager==null||itemRole"></Tag>
+        <Tag
+          type="target"
+          :id="targetid"
+          :disableType="companyForm.status!=4&&(companyForm.itemProjectManager==null||itemRole)"
+        ></Tag>
       </el-col>
     </el-row>
     <el-row :gutter="10">
@@ -63,7 +69,7 @@
           <div class="info_div_top">
             <h3>{{$t("target.info.companyTitle")}}</h3>
             <el-button
-              v-show="companyForm.itemProjectManager==null||itemRole"
+              v-show="companyForm.status!=4&&companyForm.itemProjectManager==null||itemRole"
               type="primary"
               size="mini"
               @click="show=true;showType='company'"
@@ -73,7 +79,7 @@
             <h5>{{$t("target.info.companyName")}}</h5>
             <p>{{companyForm.targetCompanyName}}</p>
             <h5>{{$t("target.info.country")}}</h5>
-            <p>{{companyForm.targetCompanyCountry}}</p>
+            <p>{{$lang==$global.lang.en?companyForm.targetCompanyCountryEn:companyForm.targetCompanyCountryZh}}</p>
             <h5>{{$t("target.info.site")}}</h5>
             <p>{{companyForm.targetCompanyAddress}}</p>
             <h5>{{$t("target.info.url")}}</h5>
@@ -88,7 +94,7 @@
           <div class="info_div_top">
             <h3>{{$t("target.info.otherTitle")}}</h3>
             <el-button
-            v-show="companyForm.itemProjectManager==null||itemRole"
+              v-show="companyForm.status!=4&&companyForm.itemProjectManager==null||itemRole"
               type="primary"
               size="mini"
               @click="show=true;showType='other'"
@@ -173,7 +179,7 @@
           <div class="info_div_top">
             <h3>{{$t("target.info.keymenTitle")}}</h3>
             <el-button
-            v-show="companyForm.itemProjectManager==null||itemRole"
+              v-show="companyForm.status!=4&&companyForm.itemProjectManager==null||itemRole"
               type="primary"
               size="mini"
               @click="show=true;showType='keymen'"
@@ -291,7 +297,8 @@ export default {
       changeAdministratorDialogVisible: false,
       allocationShow: false,
       itemRole: false, //用户是否为项目成员或超管
-      showType: ""
+      showType: "",
+      itemStatus:2,
     };
   },
   computed: {
@@ -419,6 +426,7 @@ export default {
           this.otherForm = res.datas.targetCompanyNodeInfo;
           this.overview = res.additionalParameters;
           this.getMemberList(this.companyForm.itemId);
+          this.getItemStatus(this.companyForm.itemId);
         }
       });
     },
@@ -498,7 +506,15 @@ export default {
                 this.$global.userRole.superAdministrator;
           }
         });
-    }
+    },
+     // 获取项目状态
+    getItemStatus(id) {
+      this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
+        if (res.iworkuCode == 200) {
+          this.itemStatus = res.datas.itemStatus;
+        }
+      });
+    },
   }
 };
 </script>

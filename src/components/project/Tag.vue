@@ -2,9 +2,7 @@
   <div class="iworku-card project-detail-tag">
     <div class="tag_top">
       <h3>{{$t("projectInfo.tag.title")}}</h3>
-      <template
-       v-if="disableType"
-      >
+      <template v-if="disableType">
         <el-button
           v-if="!closable"
           type="text"
@@ -53,7 +51,7 @@
         <AddTagForTarget
           :type="type"
           :id="id"
-          :defaultTag="[...taglist]"
+          :defaultTag="JSON.parse(JSON.stringify([...taglist]))"
           @onConfirmTag="addTagList"
         ></AddTagForTarget>
       </el-scrollbar>
@@ -62,7 +60,6 @@
   </div>
 </template>
 <script>
-
 export default {
   props: {
     /**
@@ -103,12 +100,18 @@ export default {
   created() {
     this.getTagList(this.id);
   },
- 
+
   methods: {
     // 删除标签
     closeTag(index) {
+      let url;
+      if (this.type == "project") {
+        url = "/customer/item/label/rel/delete";
+      } else {
+        url = "/target/label/rel/delete";
+      }
       this.$http
-        .post("/customer/item/label/rel/delete", {
+        .post(url, {
           relId: this.taglist[index].id
         })
         .then(res => {
@@ -144,9 +147,9 @@ export default {
       }
     },
     // 添加标签回调
-    addTagList(list) {
-      this.taglist = list;
+    addTagList() {
       this.show = false;
+      this.getTagList(this.id);
     }
   }
 };

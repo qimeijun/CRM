@@ -15,6 +15,14 @@
 import { mapGetters } from "vuex";
 import echarts from "echarts";
 export default {
+  props: {
+    itemid: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
+  },
   data() {
     return {
       year: "",
@@ -27,80 +35,92 @@ export default {
     ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
-    let date = new Date();
-    this.year = date.getFullYear();
-    this.month = date.getMonth() + 1;
-    let datas = await this.$http
-      .post("/user/team/user/rel/task/month/number", {
-        userId: this.userInfo.id
-      })
-      .then(res => {
-        if (res.iworkuCode == 200) {
-          return res.datas;
-        } else {
-          return [];
-        }
-      });
-    this.weekList = datas.map(o => {
-      return this.$lang == this.$global.lang.en
-        ? `${o.week}st Week`
-        : `第${o.week}周`;
-    });
-    this.numberList = datas.map(o => {
-      return o.count;
-    });
-    // 基于准备好的dom，初始化echarts实例
-    let myChart = echarts.init(document.getElementById("variables"));
-    // 指定图表的配置项和数据
-    let option = {
-      color: ["#3398DB"],
-      grid: {
-        left: "0%",
-        right: "0%",
-        bottom: "3%",
-        top: "8%",
-        containLabel: true
-      },
-      xAxis: [
-        {
-          type: "category",
-          data: this.weekList,
-          axisTick: {
-            alignWithLabel: true
-          }
-        }
-      ],
-      yAxis: [
-        {
-          type: "value",
-          position: "right"
-        }
-      ],
-      series: [
-        {
-          name: "直接访问",
-          type: "bar",
-          barWidth: "30%",
-          data: this.numberList,
-          itemStyle: {
-            barBorderRadius: [100, 100, 0, 0]
-          },
-          label: {
-            show: true,
-            position: "top",
-            backgroundColor: "#ffffff",
-            shadowColor: "#0000003f",
-            shadowBlur: 3,
-            shadowOffsetY: 1,
-            padding: [3, 4]
-          }
-        }
-      ]
-    };
-    myChart.setOption(option, true);
+    if (this.itemid) {
+      await this.getEcharts(this.itemid);
+    }
+  },
+  watch: {
+    itemid: function(newVal) {
+      if (newVal !== "") {
+        this.getEcharts(newVal);
+      }
+    }
   },
   methods: {
-    getStatistics() {}
+    async getEcharts(id) {
+      let date = new Date();
+      this.year = date.getFullYear();
+      this.month = date.getMonth() + 1;
+      let datas = await this.$http
+        .post("/user/team/user/rel/task/month/number", {
+          itemId: id
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
+            return res.datas;
+          } else {
+            return [];
+          }
+        });
+        let weekIndex=1;
+      this.weekList = datas.map(o => {
+        return this.$lang == this.$global.lang.en
+          ? `${weekIndex}st Week`
+          : `第${weekIndex++}周`;
+      });
+      this.numberList = datas.map(o => {
+        return o.count;
+      });
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = echarts.init(document.getElementById("variables"));
+      // 指定图表的配置项和数据
+      let option = {
+        color: ["#3398DB"],
+        grid: {
+          left: "0%",
+          right: "0%",
+          bottom: "3%",
+          top: "8%",
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: "category",
+            data: this.weekList,
+            axisTick: {
+              alignWithLabel: true
+            }
+          }
+        ],
+        yAxis: [
+          {
+            type: "value",
+            position: "right"
+          }
+        ],
+        series: [
+          {
+            name: "直接访问",
+            type: "bar",
+            barWidth: "30%",
+            data: this.numberList,
+            itemStyle: {
+              barBorderRadius: [100, 100, 0, 0]
+            },
+            label: {
+              show: true,
+              position: "top",
+              backgroundColor: "#ffffff",
+              shadowColor: "#0000003f",
+              shadowBlur: 3,
+              shadowOffsetY: 1,
+              padding: [3, 4]
+            }
+          }
+        ]
+      };
+      myChart.setOption(option, true);
+    }
   }
 };
 </script>

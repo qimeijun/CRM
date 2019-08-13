@@ -26,8 +26,8 @@
             <router-view></router-view>
           </el-col>
           <el-col v-if="activeMenu==='information'||activeMenu==='product'" :span="8">
-            <Tag type="project" :id="itemid" :disableType="userInfo.userRole!=$global.userRole.member"></Tag>
-            <Member v-show="allotType!=null" :id="adminId"></Member>
+            <Tag type="project" :id="itemid" :disableType="itemStatus!=2&&userInfo.userRole!=$global.userRole.member"></Tag>
+            <Member v-show="allotType!=null" :id="adminId" :itemStatus="itemStatus-0"></Member>
           </el-col>
         </el-row>
       </el-scrollbar>
@@ -49,6 +49,7 @@ export default {  components: {
     return {
       allotType:null,
       activeMenu: "information",
+      itemStatus:2,
       menuList: [
         // 资料
         {
@@ -110,7 +111,8 @@ export default {  components: {
     getItemStatus(id) {
       this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
         if (res.iworkuCode == 200) {
-          this.allotType=res.datas.probjectManager
+          this.allotType=res.datas.probjectManager;
+          this.itemStatus=res.datas.itemStatus;
         }
       });
     },

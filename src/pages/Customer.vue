@@ -4,9 +4,9 @@
     <div class="customer__top">
       <div class="customer__top-name">
         <span v-show="activeMenu=='customer_information'">公司资料</span>
-        <span  v-show="activeMenu=='customer_product'">产品信息</span>
-        <span  v-show="activeMenu=='customer_target'">目标公司</span>
-        <span  v-show="activeMenu=='customer_diary'">工作日志</span>
+        <span v-show="activeMenu=='customer_product'">产品信息</span>
+        <span v-show="activeMenu=='customer_target'">目标公司</span>
+        <span v-show="activeMenu=='customer_diary'">工作日志</span>
       </div>
     </div>
     <div class="customer__content">
@@ -27,7 +27,7 @@
               :id="itemid"
               :disableType="userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer"
             ></Tag>
-            <Member v-show="allotType!=null" :id="adminId"></Member>
+            <Member v-show="adminId!=null" :id="adminId"></Member>
           </el-col>
         </el-row>
       </el-scrollbar>
@@ -47,12 +47,9 @@ export default {
   },
   data() {
     return {
-      allotType: null,
     };
   },
-  created() {
-    this.getItemStatus(this.itemid);
-  },
+
   computed: {
     itemid() {
       return this.$route.params.itemid;
@@ -60,30 +57,12 @@ export default {
     adminId() {
       return this.$route.params.adminId;
     },
-    activeMenu(){
-        return this.$route.name;
+    activeMenu() {
+      return this.$route.name;
     },
     ...mapGetters("ipublic", ["userInfo"])
   },
-
   methods: {
-    /**
-     *  切换菜单
-     */
-    onChangeMenu(item) {
-      this.activeMenu = item.value;
-      this.$router.push({
-        path: `/project/detail/${item.route}/${this.itemid}/${this.adminId}`
-      });
-    },
-    // 获取项目状态
-    getItemStatus(id) {
-      this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
-        if (res.iworkuCode == 200) {
-          this.allotType = res.datas.probjectManager;
-        }
-      });
-    }
   }
 };
 </script>

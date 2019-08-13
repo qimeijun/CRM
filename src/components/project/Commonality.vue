@@ -11,8 +11,16 @@
       >
         <i slot="suffix" class="el-input__icon el-icon-search" @click="getCommonality(itemid, 1)"></i>
       </el-input>
-      <el-button type="primary" @click="addShow=true">{{$t("projectInfo.importTarget.add")}}</el-button>
-      <el-button type="primary" @click="importShow=true">{{$t("projectInfo.importTarget.import")}}</el-button>
+      <el-button
+        v-show="itemStatus!=2"
+        type="primary"
+        @click="addShow=true"
+      >{{$t("projectInfo.importTarget.add")}}</el-button>
+      <el-button
+        v-show="itemStatus!=2"
+        type="primary"
+        @click="importShow=true"
+      >{{$t("projectInfo.importTarget.import")}}</el-button>
       <!-- 结束项目 -->
       <el-button
         v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
@@ -55,7 +63,11 @@
         @change="getCommonality(itemid, 1)"
       ></el-cascader>
       <!-- 标签 end -->
-      <el-button  v-show="userInfo.userRole!=$global.userRole.member" type="primary" @click="allocationShow=true">{{$t("project.allot")}}</el-button>
+      <el-button
+        v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
+        type="primary"
+        @click="allocationShow=true"
+      >{{$t("project.allot")}}</el-button>
     </div>
     <div class="commonality_table">
       <el-table
@@ -72,9 +84,10 @@
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="status"
+          prop="grade"
           :label="$t('projectInfo.commonality.tableHeader[1]')"
           width="200"
+          sortable
         >
           <template slot-scope="scope">
             <el-rate :value="scope.row.grade-0" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
@@ -85,20 +98,27 @@
           prop="updateTimeStr"
           :label="$t('projectInfo.commonality.tableHeader[2]')"
           width="120"
+          sortable
         >
           <template slot-scope="scope">
             <p>{{scope.row.updateTimeStr?scope.row.updateTimeStr.split(' ')[0]:''}}</p>
           </template>
         </el-table-column>
         <el-table-column
-          :prop="$lang==$global.lang.en?'statusNameEn':'statusNameZh'"
+          prop="status"
           :label="$t('projectInfo.commonality.tableHeader[3]')"
           width="150"
-        ></el-table-column>
+          sortable
+        >
+          <template slot-scope="scope">
+            <p>{{$lang==$global.lang.en?scope.row.statusNameEn:scope.row.statusNameZh}}</p>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="addTimeStr"
           :label="$t('projectInfo.commonality.tableHeader[4]')"
           width="120"
+          sortable
         >
           <template slot-scope="scope">
             <p>{{scope.row.addTimeStr?scope.row.addTimeStr.split(' ')[0]:''}}</p>
@@ -107,36 +127,37 @@
         <el-table-column
           prop="division"
           :label="$t('projectInfo.commonality.tableHeader[5]')"
-          width="120"
+          width="140"
+          sortable
         ></el-table-column>
         <el-table-column :label="$t('projectInfo.commonality.tableHeader[6]')" width="60">
           <template slot-scope="scope">
             <Operate>
               <ul>
-                <li>
+                <li @click="SetHistoryPath()">
                   <router-link
                     :to="`/target/detail/info/${scope.row.id}/${scope.row.itemId}`"
                   >{{$t("project.view")}}</router-link>
                 </li>
                 <li
-                v-show="userInfo.userRole!=$global.userRole.member&&allotType!=null&&scope.row.status!=4"
+                  v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member&&allotType!=null&&scope.row.status!=4"
                   class="table_operation"
                   @click="allocationShow=true; currentTarget=[scope.row]"
                 >{{$t("project.allot")}}</li>
                 <li
-                v-show="allotType!=null&&scope.row.status!=4"
+                  v-show="itemStatus!=2&&allotType!=null&&scope.row.status!=4"
                   class="table_operation"
                   @click="onTransfer(scope.row.id)"
                 >{{'移入私海'}}</li>
                 <!-- 作废 -->
                 <li
-                v-show="scope.row.status!=4"
+                  v-show="itemStatus!=2&&scope.row.status!=4"
                   class="table_operation"
                   @click="onCancel(scope.row.id,4)"
                 >{{$t("project.invalid")}}</li>
                 <!-- 激活 -->
                 <li
-                v-show="scope.row.status==4"
+                  v-show="itemStatus!=2&&scope.row.status==4"
                   class="table_operation"
                   @click="onCancel(scope.row.id,1)"
                 >{{"激活"}}</li>
@@ -189,7 +210,7 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <AddTarget @close="addShow=false"></AddTarget>
+        <AddTarget @close="addShow=false;getCommonality(itemid, 1);"></AddTarget>
       </el-scrollbar>
     </el-dialog>
     <!-- 新增目标公司 end -->
@@ -205,13 +226,18 @@
       width="30%"
     >
       <el-scrollbar class="scrollbar">
-        <ImportTarget :itemid="itemid" @close="importShow=false" @getList="getCommonality(itemid, 1)"></ImportTarget>
+        <ImportTarget
+          :itemid="itemid"
+          @close="importShow=false"
+          @getList="getCommonality(itemid, 1)"
+        ></ImportTarget>
       </el-scrollbar>
     </el-dialog>
     <!-- 导入目标公司 end-->
   </section>
 </template>
 <script>
+import session from '@/plugins/session.js'
 import { mapGetters } from "vuex";
 import { getTargetType } from "@/plugins/configuration.js";
 export default {
@@ -281,7 +307,7 @@ export default {
       targetType: "",
       seek: "",
       itemStatus: 1,
-      allotType:null,
+      allotType: null,
       allocationShow: false,
       addShow: false,
       importShow: false,
@@ -292,7 +318,7 @@ export default {
     itemid() {
       return this.$route.params.itemid;
     },
-     ...mapGetters("ipublic", ["userInfo"])
+    ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
     // 获取公司类型
@@ -301,8 +327,8 @@ export default {
     this.getItemStatus(this.itemid);
   },
   methods: {
-   // 激活作废  type: 4作废  1激活
-    onCancel(id,type) {
+    // 激活作废  type: 4作废  1激活
+    onCancel(id, type) {
       let messageText;
       if (type == 4) {
         messageText = "您确定要将这个目标公司作废吗？";
@@ -320,20 +346,20 @@ export default {
       })
         .then(() => {
           // 确定
-            this.$http
-              .post("/target/company/status/update", {
-                id: id,
-                status: type //目标公司状态（ 1.待跟进 2跟进中 3.未跟进 4.作废）
-              })
-              .then(res => {
-                if (res.iworkuCode == 200) {
-                  this.$message({
-                    type: "success",
-                    message: "操作成功"
-                  });
-                  this.getCommonality(this.itemid, 1);
-                }
-              });
+          this.$http
+            .post("/target/company/status/update", {
+              id: id,
+              status: type //目标公司状态（ 1.待跟进 2跟进中 3.未跟进 4.作废）
+            })
+            .then(res => {
+              if (res.iworkuCode == 200) {
+                this.$message({
+                  type: "success",
+                  message: "操作成功"
+                });
+                this.getCommonality(this.itemid, 1);
+              }
+            });
         })
         .catch(() => {
           // 取消
@@ -368,7 +394,7 @@ export default {
       this.$http.get(`/customer/item/infobypk/${id}`).then(res => {
         if (res.iworkuCode == 200) {
           this.itemStatus = res.datas.itemStatus;
-          this.allotType=res.datas.probjectManager
+          this.allotType = res.datas.probjectManager;
         }
       });
     },
@@ -391,11 +417,14 @@ export default {
               itemId: id,
               itemStatus: 2
             })
-            .then(res => {});
-          this.$message({
-            type: "success",
-            message: "已结束项目"
-          });
+            .then(res => {
+              this.getCommonality(this.itemid, 1);
+              this.getItemStatus(this.itemid);
+              this.$message({
+                type: "success",
+                message: "已结束项目"
+              });
+            });
         })
         .catch(() => {
           // 取消
@@ -424,11 +453,14 @@ export default {
               itemId: id,
               itemStatus: 1
             })
-            .then(res => {});
-          this.$message({
-            type: "success",
-            message: "已重启项目"
-          });
+            .then(res => {
+              this.getCommonality(this.itemid, 1);
+              this.getItemStatus(this.itemid);
+              this.$message({
+                type: "success",
+                message: "已重启项目"
+              });
+            });
         })
         .catch(() => {
           // 取消
@@ -469,21 +501,25 @@ export default {
         });
     },
     // 移入私海
-    onTransfer(targetid){
-      this.$http.post("/target/company/private/update",{
-        id:targetid,
-        type:1
-      }).then(res=>{
-           if (res.iworkuCode == 200) {
+    onTransfer(targetid) {
+      this.$http
+        .post("/target/company/private/update", {
+          id: targetid,
+          type: 1
+        })
+        .then(res => {
+          if (res.iworkuCode == 200) {
             this.$imessage({
               content: this.$t("public.tips.success"),
               type: "success"
             });
             this.getCommonality(this.itemid, 1);
           }
-      })
+        });
+    },
+    SetHistoryPath(){
+      session.set("historyPath",this.$route.fullPath);
     }
-    
   }
 };
 </script>

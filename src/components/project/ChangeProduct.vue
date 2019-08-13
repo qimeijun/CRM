@@ -60,8 +60,8 @@
         <el-row>
           <el-col class="video-content" :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
             <video
-              v-show="productFrom.videoList[0].nodeFiles"
-              :src="`${$global.avatarURI}${productFrom.videoList[0].nodeFiles?productFrom.videoList[0].nodeFiles:''}`"
+              v-if="productFrom.videoList[0].nodeFiles!=''"
+              :src="`${$global.avatarURI}${productFrom.videoList[0].nodeFiles}`"
             ></video>
             <el-upload
               :action="$global.qiniuURL"
@@ -73,10 +73,7 @@
               :data="uploadData"
               class="video_upload"
             >
-              <el-button
-                v-if="!productFrom.videoList[0].nodeFiles"
-                class="changeProduct_upload_btn"
-              >
+              <el-button v-if="productFrom.videoList[0].nodeFiles==''" class="changeProduct_upload_btn">
                 <i class="el-icon-video-camera-solid"></i>
                 <p>{{$t("project.btn.uploadVideo")}}</p>
               </el-button>
@@ -176,6 +173,15 @@ export default {
   },
   created() {
     this.productFrom = { ...this.product };
+    if (this.productFrom.videoList.length == 0) {
+      this.productFrom.videoList = [
+        {
+          nodeDescription: "",
+          nodeFiles: "",
+          nodeType: 2
+        }
+      ];
+    }
   },
   data() {
     return {
@@ -189,7 +195,7 @@ export default {
         productName: "",
         imgList: [],
         videoList: [
-             {
+          {
             nodeDescription: "",
             nodeFiles: "",
             nodeType: 2
@@ -220,16 +226,13 @@ export default {
             .then(res => {
               //   删除
               this.deleteList.map(o => {
-                this.$http
-                  .post(
-                    `/third_party/qiniu/delete/${o}`
-                  )
-                  .then(res => {
-                    if (res.iworkuCode == 200) {}
-                  });
+                this.$http.post(`/third_party/qiniu/delete/${o}`).then(res => {
+                  if (res.iworkuCode == 200) {
+                  }
+                });
               });
             });
-            this.$emit("close");
+          this.$emit("close");
         }
       });
     },

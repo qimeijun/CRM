@@ -104,7 +104,7 @@
           sortable
         >
           <template slot-scope="scope">
-            <p>{{scope.row.updateTimeStr?scope.row.updateTimeStr.split(' ')[0]:''}}</p>
+            <p>{{$global.localTime({time:scope.row.updateTimeStr,hour:false})}}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -124,7 +124,7 @@
           sortable
         >
           <template slot-scope="scope">
-            <p>{{scope.row.addTimeStr?scope.row.addTimeStr.split(' ')[0]:''}}</p>
+            <p>{{$global.localTime({time:scope.row.addTimeStr,hour:false})}}</p>
           </template>
         </el-table-column>
         <el-table-column

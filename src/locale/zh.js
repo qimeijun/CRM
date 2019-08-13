@@ -400,7 +400,8 @@ export default {
             orderNum: "成单量",
             operate: "操作",
             details: "查看详情"
-        }
+        },
+        loca:"所在项目"
     },
     project: {
         title: "项目管理",

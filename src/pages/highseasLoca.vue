@@ -3,11 +3,11 @@
   <section class="highseas-loca">
     <div class="highseas-loca__top">
       <PageHeader url="/highseas"></PageHeader>
-      <div class="highseas-loca__top-name">所在项目</div>
+      <div class="highseas-loca__top-name">{{$t("highseas.loca")}}</div>
     </div>
     <div>
       <el-table :data="tableData" style="width: 100%" :show-header="true">
-        <el-table-column fixed prop="id" :label="$t('target.loca.tableHeader[0]')" width="50"></el-table-column>
+        <!-- <el-table-column fixed prop="id" :label="$t('target.loca.tableHeader[0]')" width="50"></el-table-column>  -->
         <el-table-column prop="itemName" :label="$t('target.loca.tableHeader[1]')" min-width="100"></el-table-column>
         <el-table-column
           :prop="$lang==$global.lang.en?'statusNameEn':'statusNameZh'"
@@ -21,12 +21,14 @@
         >
           <template slot-scope="scope">
             <p>
-              <el-avatar
-                class="table_img"
-                size="medium"
-              >
-              <img v-if="scope.row.userProfileImage" :src="`${$global.avatarURI}${scope.row.userProfileImage}`" >
-              <span v-else>{{$lang==$global.lang.en?scope.row.userNameEn.slice("")[0]:scope.row.userNameZh.slice("")[0]}}</span>
+              <el-avatar class="table_img" size="medium">
+                <img
+                  v-if="scope.row.userProfileImage"
+                  :src="`${$global.avatarURI}${scope.row.userProfileImage}`"
+                />
+                <span
+                  v-else
+                >{{$lang==$global.lang.en?scope.row.userNameEn.slice("")[0]:scope.row.userNameZh.slice("")[0]}}</span>
               </el-avatar>
               <span>{{$lang==$global.lang.en?scope.row.userNameEn:scope.row.userNameZh}}</span>
             </p>
@@ -53,7 +55,7 @@
           width="120"
         >
           <template slot-scope="scope">
-            <p>{{scope.row.itemAddTimeStr.split(" ")[0]}}</p>
+            <p>{{$global.localTime({time:scope.row.itemAddTimeStr,hour:false})}}</p>
           </template>
         </el-table-column>
         <el-table-column :label="$t('target.loca.tableHeader[7]')" width="60">

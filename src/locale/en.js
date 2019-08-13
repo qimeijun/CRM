@@ -399,7 +399,8 @@ export default {
             orderNum: "Order",
             operate: "Operate",
             details: "View"
-        }
+        },
+        loca:"所在项目en"
     },
     project: {
         title: "Project Management",

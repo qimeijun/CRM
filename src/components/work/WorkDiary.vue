@@ -238,13 +238,12 @@ export default {
             date < 10 ? date = `0${date}` : null;
             let month = time.getMonth() + 1;
             month < 10 ? month = `0${month}` : null;
-
             if (!this.logMap.has(`${time.getFullYear()}-${month}-${date}`)) {
                 this.workDiarList = [];
                 return false;
             }
             let params = {
-                followDate: `${time.getFullYear()}-${month}-${date}`,
+                followDate: this.$global.interTime(time),
                 pageSize: this.page.pageSize,
                 pageNum: this.page.pageNum
             };

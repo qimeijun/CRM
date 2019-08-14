@@ -23,7 +23,10 @@ Vue.prototype.$global = {
     },
     avatarURI: process.env.VUE_APP_QINIU,
     encryptionKey: "iworku",
-    localTime: ({ time,  sparator='/', hour=true}) => {
+    /**
+     *  将国际时间转换成本地时间
+     */
+    localTime: ({ time,  sparator='/', hour=true}={}) => {
         /**
          * time: 时间
          * sparator： 显示的分隔符, 默认斜杠
@@ -47,5 +50,26 @@ Vue.prototype.$global = {
             result += ` ${hours}:${minutes}:${seconds}`
         }
         return result
+    }, 
+    /**
+     *  将本地时间转换成国际时间
+     *  type: month 返回格式 yyyy-MM
+     *        date 返回格式 yyyy-MM-dd
+     */
+    interTime: (time=new Date(), type='date') => {
+        if (!time) {
+            return false;
+        }
+        let offset = new Date().getTimezoneOffset() * 60000
+        let localTime = new Date(`${time.getFullYear()}/${time.getMonth() + 1}/${time.getDate()} 23:59:59`).getTime();
+        let serverTime = new Date(localTime + offset);
+        let month = serverTime.getMonth() + 1 > 9 ? serverTime.getMonth() + 1 : `0${serverTime.getMonth() + 1}`
+        
+        let result = `${serverTime.getFullYear()}-${month}`;
+        if (type == 'date') {
+            let date = serverTime.getDate() > 9 ? serverTime.getDate() : `0${serverTime.getDate()}`
+            result += `-${date}`
+        }
+        return result;
     }
 }

@@ -216,7 +216,7 @@ export default {
 
       this.$http
         .post("/user/workbench/schedule/withpaginglist", {
-          scheduleDate: `${time.getFullYear()}-${month}-${date}`,
+          scheduleDate: this.$global.interTime(),
           scheduleDatePattern: "yyyy-MM-dd",
           userId: this.userInfo.id,
           pageSize: 5,

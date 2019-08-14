@@ -27,11 +27,11 @@
       >
         <!-- 账号 -->
         <el-form-item :label="$t('project.from.account')" prop="account">
-          <el-input v-model="firstForm.account" autocomplete="off"></el-input>
+          <el-input v-model="firstForm.account" autocomplete="off" :placeholder="$t('member.placeholder.account')"></el-input>
         </el-form-item>
         <!-- 密码 -->
         <el-form-item :label="$t('project.from.password')" prop="accountPassword">
-          <el-input v-model="firstForm.accountPassword" autocomplete="off"></el-input>
+          <el-input v-model="firstForm.accountPassword" autocomplete="off" :placeholder="$t('member.rules.password[1]')"></el-input>
         </el-form-item>
       </el-form>
       <!-- 第一步添加账号 end -->

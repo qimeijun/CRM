@@ -6,7 +6,7 @@
       <div>
         <el-button
           type="text"
-          @click="goPath(`/project/detail/diary/${itemid}`)"
+          @click="goPath(`/project/detail/diary/${itemid}/${adminId}`)"
         >{{$t("workBench.briefreport.btn.all")}}</el-button>
       </div>
       <el-button
@@ -79,6 +79,12 @@ export default {
   },
   props: {
     itemid: {
+      type: String,
+      default() {
+        return "";
+      }
+    },
+    adminId: {
       type: String,
       default() {
         return "";

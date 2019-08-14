@@ -1,11 +1,14 @@
 <template>
   <section class="iworku-highseas">
+     
     <div class="highseas_top">
       <h2>{{$t("highseas.title")}}</h2>
     </div>
     <!-- 公海表格 -->
     <div>
+      <el-scrollbar style="height: calc(100vh - 2rem);">
       <Table></Table>
+      </el-scrollbar>
     </div>
   </section>
 </template>

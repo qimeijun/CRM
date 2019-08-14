@@ -5,6 +5,7 @@
       <PageHeader url="/highseas"></PageHeader>
       <div class="highseas-loca__top-name">{{$t("highseas.loca")}}</div>
     </div>
+    <el-scrollbar style="height: calc(100vh - 2rem);">
     <div>
       <el-table :data="tableData" style="width: 100%" :show-header="true">
         <!-- <el-table-column fixed prop="id" :label="$t('target.loca.tableHeader[0]')" width="50"></el-table-column>  -->
@@ -72,7 +73,19 @@
           </template>
         </el-table-column>
       </el-table>
+       <el-pagination
+        style="text-align:center;"
+        background
+        layout="prev, pager, next,sizes"
+        :total="total"
+        :page-sizes="[10, 20,30, 40]"
+        :page-size.sync="size"
+        :current-page.sync="currentPage"
+        @size-change="getLoca(1)"
+        @current-change="getLoca(currentPage)"
+      ></el-pagination>
     </div>
+    </el-scrollbar>
   </section>
 </template>
 <script>
@@ -84,7 +97,10 @@ export default {
   },
   data() {
     return {
-      tableData: []
+      tableData: [],
+      currentPage:1,
+      size:10,
+      total:0
     };
   },
   computed: {
@@ -93,17 +109,21 @@ export default {
     }
   },
   created() {
-    this.getLoca();
+    this.getLoca(1);
   },
   methods: {
-    getLoca() {
+    getLoca(page) {
       this.$http
         .post("/target/company/admin/item/withpaginglist", {
-          companyName: this.targetName
+          companyName: this.targetName,
+          pageNum:page,
+          pageSize:this.size
         })
         .then(res => {
           if (res.iworkuCode == 200) {
             this.tableData = res.datas;
+            this.total=res.total;
+            this.currentPage=page;
           }
         });
     },

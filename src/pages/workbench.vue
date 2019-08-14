@@ -4,7 +4,7 @@
       <h2>{{$t("workBench.title")}}</h2>
       <!-- 项目下拉菜单 start -->
       <div class="top_div">
-        <el-select class="workbench_top_select" v-model="itemid" :placeholder="$t('workBench.btn.selectItem')" filterable>
+        <el-select class="workbench_top_select" v-model="itemIndex" :placeholder="$t('workBench.btn.selectItem')" filterable>
           <template slot="suffix">
             <i class="el-icon-caret-bottom"></i>
           </template>
@@ -12,7 +12,7 @@
             v-for="(item,index) in itemList"
             :key="index"
             :label="item.itemName"
-            :value="item.itemId"
+            :value="index"
           ></el-option>
         </el-select>
       </div>
@@ -28,39 +28,39 @@
       ></AddProject>
       <!-- 添加新项目按钮 end -->
     </div>
-    <div v-show="itemid" style="height: calc(100vh - 1.8rem);">
+    <div v-if="itemList.length>0" style="height: calc(100vh - 1.8rem);">
       <el-scrollbar style="height:100%;">
         <div class="workbench_content">
           <el-row :gutter="10">
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 项目概览 -->
-              <Overview :itemid="itemid"></Overview>
+              <Overview :itemid="itemList[itemIndex].itemId"></Overview>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 本月工作 -->
-              <Statistics :itemid="itemid"></Statistics>
+              <Statistics :itemid="itemList[itemIndex].itemId"></Statistics>
             </el-col>
             <!-- </el-row>
             <el-row>-->
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 日程提醒 -->
-              <Remind :itemid="itemid"></Remind>
+              <Remind :itemid="itemList[itemIndex].itemId"></Remind>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 日程简报 -->
-              <BriefReport :itemid="itemid"></BriefReport>
+              <BriefReport :itemid="itemList[itemIndex].itemId" :adminId="itemList[itemIndex].probjectManager"></BriefReport>
             </el-col>
           </el-row>
           <el-row>
             <el-col>
               <!-- 日程安排 -->
-              <Calendar :itemid="itemid"></Calendar>
+              <Calendar :itemid="itemList[itemIndex].itemId"></Calendar>
             </el-col>
           </el-row>
         </div>
       </el-scrollbar>
     </div>
-    <p style="text-align:center;margin-top:calc((100vh - 1.8rem)/3); 0;font-size:24px;" v-show="!itemid">{{$t("workBench.noInvolved")}}</p>
+    <p style="text-align:center;margin-top:calc((100vh - 1.8rem)/3); 0;font-size:24px;" v-show="!itemList.length>0">{{$t("workBench.noInvolved")}}</p>
   </div>
 </template>
 <script>
@@ -77,7 +77,7 @@ export default {
   data() {
     return {
       itemList: [],
-      itemid: ""
+      itemIndex:0,
     };
   },
   computed: {
@@ -92,9 +92,9 @@ export default {
       this.$http.post("/customer/item/withoutpaginglist").then(res => {
         if (res.iworkuCode == 200) {
           this.itemList = res.datas;
-          if (res.datas.length > 0) {
-            this.itemid = res.datas[0].itemId;
-          }
+          // if (res.datas.length > 0) {
+          //   this.item = res.datas[0]
+          // }
         }
       });
     }

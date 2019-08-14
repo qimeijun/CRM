@@ -115,6 +115,7 @@ export default {
     ...mapGetters('ipublic', ['userInfo'])
   },
   created() {
+    console.log(this);
     this.getRegionData();
   },
   methods: {

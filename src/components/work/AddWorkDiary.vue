@@ -455,6 +455,8 @@ export default {
             });
           });
         }
+
+        this.getTarget(this.diaryForm.projectName);
     }
   },
   watch: {

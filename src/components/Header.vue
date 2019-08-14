@@ -20,7 +20,7 @@
             <div class="top">
               <span>{{ $t("notice.box") }}</span>
               <span
-                v-if="noticeList && noticeList.length > 0"
+                v-if="unRead"
                 style="color: #4937EA; cursor: pointer;"
                 @click="onReadAll"
               >{{ $t("notice.read") }}</span>
@@ -46,7 +46,7 @@
           </div>
           <el-badge
             slot="reference"
-            :is-dot="noticeList && noticeList.length > 0"
+            :is-dot="unRead"
             class="head__right__message"
           >
             <i class="el-icon-message-solid"></i>
@@ -116,7 +116,9 @@ export default {
       visible: false,
       noticeList: [],
       websocket: {},
-      todayTaskList: []
+      todayTaskList: [],
+      // 默认没有未读消息
+      unRead: false
     };
   },
   computed: {
@@ -154,6 +156,7 @@ export default {
         if (res.iworkuCode == 200) {
           // 将消息状态修改为已读
           this.noticeList.map(val => (val.messageStatus = 2));
+          this.unRead = false;
           this.$imessage({
             type: "success",
             content: this.$t("public.tips.success")
@@ -175,15 +178,21 @@ export default {
             this.noticeList = res.datas;
           }
         });
+        // 获取是否有未读消息
+        this.$http.post("/user/message/status/withpaginglist", { messageStatus: 1 }).then(res => {
+          if (res.iworkuCode == 200 && res.datas) {
+            res.datas.length > 0 ? this.unRead = true : this.unRead = false;
+          }
+        });
     },
     /**
      *  账号退出
      */
     onLogout() {
-      this.$router.push({ path: '/login' });
       document.cookie = `password=;path=/; expires=Thu, 01-Jan-70 00:00:01 GMT`;
       document.cookie = `username=;path=/; expires=Thu, 01-Jan-70 00:00:01 GMT`;
       this.websocket.onreconnect = function () {}
+      this.$store.commit("ipublic/$_remove_userInfo");
       this.$router.push({ path: '/login' });
     },
     /**

@@ -7,6 +7,7 @@
         :placeholder="$t('target.placeholder.seek')"
         v-model="seek"
         @keyup.enter.native="getPrivate(itemid, 1)"
+        @change="getPrivate(itemid, 1)"
       >
         <i slot="suffix" class="el-input__icon el-icon-search" @click="getPrivate(itemid, 1)"></i>
       </el-input>

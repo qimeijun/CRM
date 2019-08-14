@@ -7,7 +7,7 @@
         :placeholder="$t('target.placeholder.seek')"
         v-model="seek"
         @keyup.enter.native="getCommonality(itemid, 1)"
-        @click="getCommonality(itemid, 1)"
+        @change="getCommonality(itemid, 1)"
       >
         <i slot="suffix" class="el-input__icon el-icon-search" @click="getCommonality(itemid, 1)"></i>
       </el-input>

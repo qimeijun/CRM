@@ -46,7 +46,7 @@
         ></el-table-column>
         <el-table-column prop="probjectManager" :label="$t('project.tableHeader[3]')" width="200">
           <template slot-scope="scope">
-            <p v-show="scope.row.probjectManager!==null">
+            <p v-if="scope.row.probjectManager!==null">
               <el-avatar
                 class="table_img"
                 size="medium"

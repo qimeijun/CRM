@@ -21,7 +21,7 @@
           width="200"
         >
           <template slot-scope="scope">
-            <p>
+            <p v-if="scope.row.probjectManager!==null">
               <el-avatar class="table_img" size="medium">
                 <img
                   v-if="scope.row.userProfileImage"

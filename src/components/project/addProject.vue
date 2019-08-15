@@ -8,9 +8,9 @@
       :close-on-click-modal="false"
     >
       <ul class="addProject_ul">
-        <li :class="activeName===1?'addProject_ul_li--current':''">{{$t("project.from.firstTitle")}}</li>
+        <li :class="[activeName===1?'addProject_ul_li--current':'',activeName>1?'addProject_ul_li--isClick':'']" @click="activeName=1">{{$t("project.from.firstTitle")}}</li>
         <li
-          :class="activeName===2?'addProject_ul_li--current':''"
+          :class="[activeName===2?'addProject_ul_li--current':'',activeName>2?'addProject_ul_li--isClick':'']" @click="activeName==3?activeName=2:activeName"
         >{{$t("project.from.secondTitle")}}</li>
         <li
           :class="activeName===3?'addProject_ul_li--current':''"
@@ -18,7 +18,7 @@
       </ul>
       <!-- 第一步添加账号 start -->
       <el-form
-        v-show="activeName===1||activeName===4"
+        v-show="activeName===1"
         :model="firstForm"
         label-width="80px"
         label-position="top"
@@ -38,7 +38,7 @@
       <!-- 第二步项目资料 start -->
       <el-form
         class="addProject_form"
-        v-show="activeName===2||activeName===4"
+        v-show="activeName===2"
         :model="secondForm"
         label-width="80px"
         label-position="top"
@@ -127,7 +127,7 @@
       <!-- 第三步产品资料 start -->
       <el-form
         class="addProject_form"
-        v-show="activeName===3||activeName===4"
+        v-show="activeName===3"
         :model="thirdlyForm"
         label-width="80px"
         label-position="top"
@@ -384,6 +384,16 @@ export default {
             required: true,
             message: this.$t("project.rules.accountPassword"),
             trigger: "blur"
+          },
+           {
+            validator: (rule, value, callback) => {
+              if (value.length < 8 || !/^[A-Za-z0-9]+$/gi.test(value)) {
+                callback(new Error(this.$t("member.rules.password[1]")));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
           }
         ]
       },
@@ -501,10 +511,10 @@ export default {
             };
             // 去掉空元素
             params.productNodeList=params.productNodeList.filter(o=>{if(o.nodeFiles){return o}})
-            this.activeName = 1;
             this.$http.post("/customer/company/save", params).then(res => {
               if (res.iworkuCode == 200) {
-                this.$refs["thirdlyForm"].resetFields();
+                this.activeName = 1;
+                this.$refs.thirdlyForm.resetFields();
                 this.$refs.secondForm.resetFields();
                 this.$refs.firstForm.resetFields();
                 this.show = false;
@@ -701,6 +711,10 @@ export default {
     position: absolute;
     bottom: -4px;
     left: 50%;
+  }
+  .addProject_ul_li--isClick{
+    cursor: pointer;
+    color:black;
   }
 }
 .addProject_form {

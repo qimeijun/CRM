@@ -2,8 +2,8 @@
   <!-- 新增公司资料 -->
   <section>
     <ul class="addTarget_ul">
-      <li :class="activeName===1?'addTarget_ul_li--current':''">{{$t("target.form.companyTitle")}}</li>
-      <li :class="activeName===2?'addTarget_ul_li--current':''">{{$t("target.form.keymenTitle")}}</li>
+      <li :class="[activeName===1?'addTarget_ul_li--current':'',activeName>1?'addTarget_ul_li--isClick':'']"  @click="activeName=1">{{$t("target.form.companyTitle")}}</li>
+      <li :class="[activeName===2?'addTarget_ul_li--current':'',activeName>2?'addTarget_ul_li--isClick':'']" @click="activeName==3?activeName=2:activeName">{{$t("target.form.keymenTitle")}}</li>
       <li :class="activeName===3?'addTarget_ul_li--current':''">{{$t("target.form.otherTitle")}}</li>
     </ul>
     <div>
@@ -11,7 +11,7 @@
       <el-form
         :model="companyForm"
         :rules="companyRules"
-        v-if="activeName===1"
+        v-show="activeName===1"
         ref="companyForm"
         label-position="top"
         label-width="80px"
@@ -20,7 +20,11 @@
           <el-input v-model="companyForm.name" :placeholder="$t('target.placeholder.companyName')"></el-input>
         </el-form-item>
         <el-form-item style="width:250px;" :label="$t('target.form.country')" prop="country">
-          <el-select filterable v-model="companyForm.country" :placeholder="$t('target.placeholder.country')">
+          <el-select
+            filterable
+            v-model="companyForm.country"
+            :placeholder="$t('target.placeholder.country')"
+          >
             <el-option
               v-for="(item,index) in countryList"
               :key="'country'+index"
@@ -46,7 +50,7 @@
       <!-- 第二步关键人 start -->
       <el-form
         :model="keymenForm"
-        v-if="activeName===2"
+        v-show="activeName===2"
         ref="keymenForm"
         label-position="top"
         label-width="80px"
@@ -74,16 +78,16 @@
       <!-- 第三步其他 start -->
       <el-form
         :model="otherForm"
-        v-if="activeName===3"
+        v-show="activeName===3"
         ref="otherForm"
         label-position="top"
         label-width="80px"
       >
         <el-form-item :label="$t('target.form.source')">
-          <el-input v-model="otherForm.source" ></el-input>
+          <el-input v-model="otherForm.source"></el-input>
         </el-form-item>
         <el-form-item :label="$t('target.form.clientType')">
-          <el-select v-model="otherForm.type"  :placeholder="$t('target.placeholder.type')">
+          <el-select v-model="otherForm.type" :placeholder="$t('target.placeholder.type')">
             <el-option
               v-for="(item,index) in targetTypeList"
               :key="'position'+index"
@@ -164,14 +168,14 @@ export default {
         name: [
           {
             required: true,
-            message: this.$t('target.placeholder.companyName'),
+            message: this.$t("target.placeholder.companyName"),
             trigger: "blur"
           }
         ],
         country: [
           {
             required: true,
-            message: this.$t('target.placeholder.country'),
+            message: this.$t("target.placeholder.country"),
             trigger: "blur"
           }
         ]
@@ -224,6 +228,10 @@ export default {
             };
             this.$http.post("/target/company/save", params).then(res => {
               if (res.iworkuCode == 200) {
+                this.activeName = 1;
+                this.$refs.companyForm.resetFields();
+                this.$refs.keymenForm.resetFields();
+                this.$refs.otherForm.resetFields();
                 this.$emit("close");
               }
             });
@@ -281,6 +289,10 @@ export default {
     position: absolute;
     bottom: -4px;
     left: 50%;
+  }
+  .addTarget_ul_li--isClick{
+    cursor: pointer;
+    color:black;
   }
 }
 </style>

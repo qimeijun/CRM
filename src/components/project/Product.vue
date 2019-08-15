@@ -48,7 +48,7 @@
     </div>
     <div class="product_redact">
       <el-dialog :title="$t('project.updateTitle')" :visible.sync="show" width="600px">
-        <ChangeProduct :product="product" @close="show = false"></ChangeProduct>
+        <ChangeProduct :product="product" @close="show = false; getProduct(itemid);"></ChangeProduct>
       </el-dialog>
     </div>
   </section>
@@ -130,11 +130,12 @@ export default {
     // 结束项目
     onDeleteMember(id) {
       this.$msgbox({
-        title: "提示",
-        message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要结束此项目吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+        title: this.$t("projectStatus.title"),
+        message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t(
+          "projectStatus.end.messageText"
+        )}</p>`,
+        confirmButtonText: this.$t("projectStatus.btn.determine"),
+        cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -146,28 +147,34 @@ export default {
               itemId: id,
               itemStatus: 2
             })
-            .then(res => {});
-          this.$message({
-            type: "success",
-            message: "已结束项目"
-          });
+            .then(res => {
+              if (res.iworkuCode == 200) {
+                this.getProduct(this.itemid);
+                this.getItemStatus(this.itemid);
+                this.$message({
+                  type: "success",
+                  message: this.$t("projectStatus.end.success")
+                });
+              }
+            });
         })
         .catch(() => {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("projectStatus.catch")
           });
         });
     },
     // 重启项目
     onRestartMember(id) {
       this.$msgbox({
-        title: "提示",
-        message:
-          "<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>您确定要重启此项目吗？</p>",
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+        title: this.$t("projectStatus.title"),
+        message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t(
+          "projectStatus.restart.messageText"
+        )}</p>`,
+        confirmButtonText: this.$t("projectStatus.btn.determine"),
+        cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -179,17 +186,22 @@ export default {
               itemId: id,
               itemStatus: 1
             })
-            .then(res => {});
-          this.$message({
-            type: "success",
-            message: "已重启项目"
-          });
+            .then(res => {
+              if (res.iworkuCode == 200) {
+                this.getProduct(this.itemid);
+                this.getItemStatus(this.itemid);
+                this.$message({
+                  type: "success",
+                  message: this.$t("projectStatus.restart.success")
+                });
+              }
+            });
         })
         .catch(() => {
           // 取消
           this.$message({
             type: "info",
-            message: "取消操作"
+            message: this.$t("projectStatus.catch")
           });
         });
     }

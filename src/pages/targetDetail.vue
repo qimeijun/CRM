@@ -60,7 +60,7 @@ export default {
   },
   created() {
     this.activeMenu = this.$route.name;
-    this.backPath=session.get('historyPath');
+    this.backPath=session.get('historyPath')||"/";
   },
   components: {
     PageHeader

@@ -25,7 +25,14 @@ instance.interceptors.request.use((config) => {
         let hasArray = values.find(val => Object.prototype.toString.call(val) == '[object Array]');
         hasArray ? null : config.data = Qs.stringify(config.data);
     }
-
+    // 设置语言
+    let lang = window.localStorage.getItem('lang') || 'en';
+    if (lang == 'en') {
+        config.headers['languages'] = 'en_US'
+    } else {
+        config.headers['languages'] = 'zh_CN'
+    }
+    
     return config;
 
 }, (error) => {

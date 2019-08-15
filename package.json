@@ -1,9 +1,10 @@
 {
-  "name": "new-version-crm",
-  "version": "0.1.0",
+  "name": "crm",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
+    "testBuild": "vue-cli-service build --mode development",
     "build": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
     "local": "vue-cli-service serve --mode local"

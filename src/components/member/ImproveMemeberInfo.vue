@@ -256,6 +256,11 @@ export default {
     }
   },
   async created() {
+    // 设置默认值  项目经理只能创建成员
+    if (this.$global.userRole.projectManager == this.userInfo.userRole) {
+      this.memberForm.role = this.$global.userRole.member;
+    } 
+
     if (!this.memberForm.id) {
       this.memberForm.email = this.account;
       this.getTeam();

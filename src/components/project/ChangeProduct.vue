@@ -8,7 +8,7 @@
       <el-form-item :label="$t('project.from.productImg')">
         <el-row v-for="(item,index) in productFrom.imgList" :key="'img'+index">
           <el-col style="position:relative;" :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
-            <img width="80px" :src="`${$global.avatarURI}${item.nodeFiles}`" alt />
+            <img width="80px" style="height:80px;" :src="`${$global.avatarURI}${item.nodeFiles}`" alt />
             <el-button
               type="primary"
               size="mini"
@@ -125,7 +125,7 @@
       </el-form-item>
       <!-- 附件（产品目录） end -->
       <!-- 学习资料 start -->
-      <el-form-item :label="$t('project.from.accessory')">
+      <el-form-item :label="$t('project.from.study')">
         <el-row>
           <el-col style="display:flex;flex-wrap:wrap;">
             <Attachment
@@ -228,11 +228,12 @@ export default {
               this.deleteList.map(o => {
                 this.$http.post(`/third_party/qiniu/delete/${o}`).then(res => {
                   if (res.iworkuCode == 200) {
+                    this.$emit("close");
                   }
                 });
               });
             });
-          this.$emit("close");
+          
         }
       });
     },

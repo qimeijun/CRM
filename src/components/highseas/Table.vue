@@ -113,14 +113,6 @@ export default {
       tag: "",
       countryList: [],
       targetTypeList: [
-        {
-          value: "选项1",
-          label: "分类"
-        },
-        {
-          value: "选项2",
-          label: "分类2"
-        }
       ],
       props: {
         lazy: true,

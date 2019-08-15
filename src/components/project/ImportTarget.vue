@@ -5,8 +5,10 @@
       <h3>1</h3>
       <span class="importTarget-margin">{{$t("projectInfo.importTarget.textTip[0]")}}</span>
       <i class="el-icon-paperclip"></i>
-      <a :href="$global.avatarURI+'Customer%20information.xlsx'" :download="$t('projectInfo.importTarget.templateName')">{{$t('projectInfo.importTarget.templateName')}}</a>
-      
+      <a
+        :href="$global.avatarURI+'Customer%20information.xlsx'"
+        :download="$t('projectInfo.importTarget.templateName')"
+      >{{$t('projectInfo.importTarget.templateName')}}</a>
     </div>
     <!-- 二 -->
     <div class="importTarget_div">
@@ -69,7 +71,12 @@
       <div class="importTarget_dialog">
         <p>{{importState==1?$t("projectInfo.importTarget.textTip[3]"):importState==2?$t("projectInfo.importTarget.textTip[4]"):$t("projectInfo.importTarget.textTip[2]")}}</p>
         <el-progress :percentage="fileImport" color="#E50054"></el-progress>
-        <a class="repeatFile_a" :href="repeatFileURL" :download="repeatFileName">{{repeatFileName}}</a>
+        <a
+          class="repeatFile_a"
+          :href="repeatFileURL"
+          :download="repeatFileName"
+          @click="dialogVisible=false;"
+        >{{repeatFileName}}</a>
       </div>
     </el-dialog>
   </div>
@@ -95,10 +102,10 @@ export default {
       repeatFileName: "",
       btnDisabled: true,
       fileImport: 0,
-      importState:0,
+      importState: 0,
       fileName: "",
       dialogVisible: false,
-      fileList: [],
+      fileList: []
     };
   },
   computed: {
@@ -122,6 +129,8 @@ export default {
       params.append("file", this.fileList[0].raw);
       params.append("isCover", this.updateData.isCover);
       params.append("itemId", this.itemid);
+      this.repeatFileURL = "";
+      this.repeatFileName = "";
       this.getfileImport();
       this.$http
         .post("/target/company/resolve", params, {
@@ -132,7 +141,7 @@ export default {
         })
         .then(res => {
           this.btnDisabled = true;
-          if (res&&this.updateData.isCover==2) {
+          if (res.byteLength!=1 && this.updateData.isCover == 2) {
             let blob = new Blob([res], {
               type: "application/vnd.ms-excel;charset=UTF-8"
             });
@@ -140,24 +149,22 @@ export default {
             this.repeatFileURL = window.URL.createObjectURL(blob);
             this.repeatFileName = fileName;
             this.fileImport = 90;
-            this.importState=2;
+            this.importState = 2;
           } else {
             this.fileImport = 100;
-            this.importState=1;
+            this.importState = 1;
             this.$emit("close");
             this.$imessage({
               content: this.$t("projectInfo.importTarget.textTip[3]"),
               type: "success"
             });
-            this.dialogVisible=false;
+            this.dialogVisible = false;
           }
-           this.btnDisabled = false;
-           this.fileList=[];
-           this.fileName="";
-           this.$emit('close');
-           this.$emit("getList");
-
-           
+          this.btnDisabled = false;
+          this.fileList = [];
+          this.fileName = "";
+          this.$emit("close");
+          this.$emit("getList");
         });
     },
     // 假上传进度

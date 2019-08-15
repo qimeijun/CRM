@@ -61,7 +61,7 @@
     <el-dialog
       :title="$t('projectInfo.importTarget.dialogTitle')"
       :visible.sync="dialogVisible"
-      width="30%"
+      :width="$global.dialogWidth"
       append-to-body
       :show-close="false"
       center

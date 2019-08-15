@@ -51,7 +51,7 @@
         :modal="false"
         :lock-scroll="true"
         :close-on-click-modal="false"
-        width="30%"
+        :width="$global.dialogWidth"
       >
         <el-scrollbar>
           <AddMember :params="isAddProjectManager ? {userRole: $global.userRole.projectManager} : {}" @onOperateSuccess="addMemberDialogVisible=false; isAddProjectManager=false; getRegionData();"></AddMember>
@@ -69,7 +69,7 @@
         :modal="false"
         :lock-scroll="true"
         :close-on-click-modal="false"
-        width="30%"
+        :width="$global.dialogWidth"
       >
         <el-scrollbar>
           <AddAdministrator
@@ -115,7 +115,6 @@ export default {
     ...mapGetters('ipublic', ['userInfo'])
   },
   created() {
-    console.log(this);
     this.getRegionData();
   },
   methods: {

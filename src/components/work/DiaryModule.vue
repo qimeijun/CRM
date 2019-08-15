@@ -98,7 +98,7 @@
                 <!-- 翻译内容显示 start -->
                 <div v-if="translateContent" style="margin-top: 20px; margin-bottom: 20px; line-height: 20px;word-break: break-all;">
                     <p style="line-height: 30px;">{{ $t("workDiary.translateTip") }}：</p>
-                    {{ translateContent }}
+                    <div class="dairy-content" v-html="translateContent"></div>
                 </div>
                 <!-- 翻译内容显示 end -->
                 <!-- 聊天记录 -->
@@ -141,7 +141,7 @@
         :modal="false"
         :lock-scroll="true"
         :close-on-click-modal="false"
-        width="30%">
+        :width="$global.dialogWidth">
         <el-scrollbar class="scrollbar">
             <ModifyWorkDiary :id="$parent.id" :type="$parent.type" :diaryInfo="diary" @onOperateSuccess="modifyWorkDiaryDialogVisible=false;onQueryDiary();"></ModifyWorkDiary>
         </el-scrollbar>

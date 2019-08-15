@@ -20,16 +20,21 @@
               class="add-new-member__avatar"
               accept="image/jpeg, image/gif, image/png, image/bmp"
               :action="$global.qiniuURL"
-              :show-file-list="true"
+              :show-file-list="false"
               :on-success="onUploadAvatarSuccess"
               :before-upload="onBeforeAvatarUpload"
               :data="uploadData"
+              :on-progress="onUploadAvatarProgress"
             >
               <div v-if="memberForm.avatar" style="position: relative;">
                 <el-avatar :size="100" :src="`${$global.avatarURI}${memberForm.avatar}`"></el-avatar>
                 <el-button class="add-new-member__re-upload" type="primary" size="mini">{{ $t('member.btn.reUpload') }}</el-button>
               </div>
               <span v-else class="add-new-member__avatar-upload-icon">{{ $t("member.form.avatar[0]") }}</span>
+              <span v-if="avatarProgress > 0 && avatarProgress <= 100" style="display: block; text-align: right; font-size: 12px;"> 
+                {{ avatarProgress }}%
+                <span :style="`display: block; background-color: #0b9207; height: 4px; margin-top: -10px; border-radius: 8px; width:${avatarProgress}%`"></span>
+              </span>
             </el-upload>
             <span class="add-new-member__avatar-label">
               <template v-if="memberForm.avatar">
@@ -241,7 +246,8 @@ export default {
       submitBtnLoading: false,
       countryList: [],
       uploadData: {},
-      teamList: []
+      teamList: [],
+      avatarProgress: 0
     };
   },
   computed: {
@@ -347,20 +353,23 @@ export default {
      */
     onUploadAvatarSuccess(response) {
       this.memberForm.avatar = response.key;
+      this.avatarProgress = 100;
     },
     /**
      * 图片上传之前，进行格式、大小检测
      */
     async onBeforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      // 获取七牛token
+      // 获取七牛token, 重命名
       this.uploadData.token = await getQiniuToken(this);
       this.uploadData.key = rename(file.name);
-
-      return isLt2M;
+      // 先制造一个假的
+      this.avatarProgress = 10;
+    },
+    /**
+     *  图片上传进度条
+     */
+    onUploadAvatarProgress(event) {
+      this.avatarProgress = event.percent;
     }
   },
   watch: {

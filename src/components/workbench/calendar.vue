@@ -138,7 +138,7 @@
       :title="$t('workBench.remind.modify')"
       :visible.sync="modifyRemindVisibleDialog"
       :close-on-click-modal="false"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <ModifyRemind :itemid="itemid" :remindInfo="currentRemind" @onSuccess="onModifySuccess"></ModifyRemind>
     </el-dialog>
@@ -147,7 +147,7 @@
         :title="$t('workBench.remind.dialogTitle')"
       :visible.sync="addRemindVisibleDialog"
       :close-on-click-modal="false"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <ModifyRemind :itemid="itemid" @onSuccess="onModifySuccess"></ModifyRemind>
     </el-dialog>

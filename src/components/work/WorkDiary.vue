@@ -60,7 +60,7 @@
         :modal="false"
         :lock-scroll="true"
         :close-on-click-modal="false"
-        width="30%">
+        :width="$global.dialogWidth">
         <el-scrollbar class="scrollbar">
             <AddWorkDiary :id="id" :type="type" :itemid="itemid" @onOperateSuccess="addWorkDiaryDialogVisible=false; page.pageNum=1;getWorkDiary(activeMenu)"></AddWorkDiary>
         </el-scrollbar>

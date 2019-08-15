@@ -4,7 +4,7 @@
     <el-dialog
       :title="$t('project.add')"
       :visible.sync="show"
-      width="610px"
+      :width="$global.dialogWidth"
       :close-on-click-modal="false"
     >
       <ul class="addProject_ul">

@@ -157,7 +157,7 @@
       :modal="false"
       :lock-scroll="true"
       :close-on-click-modal="false"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <el-scrollbar>
         <HandOverAdministrator @getManager="getManager" :oldAdminstrator="currentUserInfo" :params="{id: currentTarget.itemId, type: 'handOverTargetByOther'}" operate="handOver"></HandOverAdministrator>

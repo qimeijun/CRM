@@ -15,5 +15,8 @@ module.exports = {
                 data: `@import "~@/assets/style/variables.scss";`
             }
         }
+    },
+    devServer: {
+        port: 3003
     }
 };

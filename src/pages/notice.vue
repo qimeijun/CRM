@@ -83,8 +83,8 @@ export default {
                 pageNum: this.page.pageNum,
                 pageSize: this.page.pageSize
             }).then(res => {
-                if (res.iworkuCode == 200) {
-                    this.page.pageNum > 1 ? this.noticeList.push(res.datas) : this.noticeList = res.datas;
+                if (res.iworkuCode == 200 && res.datas) {
+                    this.page.pageNum > 1 ? this.noticeList.push(...res.datas) : this.noticeList = res.datas;
                     this.page.total = res.total; 
                     this.page.totalPage = res.pages;
                 }

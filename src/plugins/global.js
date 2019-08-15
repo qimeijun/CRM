@@ -71,5 +71,6 @@ Vue.prototype.$global = {
             result += `-${date}`
         }
         return result;
-    }
+    },
+    dialogWidth: "40%"
 }

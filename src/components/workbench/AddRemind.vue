@@ -132,7 +132,7 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <el-scrollbar>
         <AddNotifyUser

@@ -411,6 +411,7 @@ export default {
         activation: "激活en",
         transfer: "Transfer",
         intoSea: " Move to Public",
+        Private: "移入私海en",
         view: "View",
         updateTitle:"修改资料en",
         placeholder: {

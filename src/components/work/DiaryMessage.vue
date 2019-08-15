@@ -5,7 +5,7 @@
             <div class="name">
                 <span class="user">{{ message.followAddUserNameZh || message.followAddUserNameEn }}: </span>
                 <div>
-                    <span class="time">{{ message.followAddTimeStr }}</span>
+                    <span class="time">{{ $global.localTime({ time: message.followAddTimeStr }) }}</span>
                     <span v-if="message.followAddUser != userInfo.id" @click="onShowLeaveMesssageForm(message)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
                 </div>
             </div>
@@ -21,7 +21,7 @@
                     <span class="user">{{ item.followAddUserNameZh || item.followAddUserNameEn }}: </span>
                     <div>
                         <span class="time">{{ item.followAddTimeStr }}</span>
-                        <span v-if="item.followAddUser != userInfo.id" @click="onShowLeaveMesssageForm(item)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
+                        <!-- <span v-if="item.followAddUser != userInfo.id" @click="onShowLeaveMesssageForm(item)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span> -->
                     </div>
                 </div>
                 <div class="content">

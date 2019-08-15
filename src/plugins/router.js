@@ -176,9 +176,12 @@ const router = new VueRouter({
 // 全局前置守卫
 router.beforeEach((to, from, next) => {
     let userInfo = store.getters['ipublic/userInfo'];
+    if (userInfo && userInfo.jwtValue && userInfo.id) {
+        document.title = `${userInfo.userAccount}-${userInfo.roleName}`
+    }
     if (to.name == 'login') {
         (userInfo && userInfo.jwtValue && userInfo.id) ? next({path: '/'}) : next(); 
-    } else {
+    } else { 
         !userInfo.id ? next({ path: '/login' }) : next();
     }
 });

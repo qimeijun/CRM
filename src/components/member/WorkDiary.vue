@@ -7,7 +7,7 @@ export default {
     data() {
         return {
             id: this.$route.params.id,
-            isAllow: true
+            isAllow: false
         }
     },
     computed: {
@@ -24,7 +24,9 @@ export default {
         if (this.userInfo.id == this.id ) {
             // 用户自己
             this.isAllow = true;
-        } else if (this.userInfo.userRole != this.$global.userRole.member && this.userInfo.userRole != this.$global.userRole.customer) {
+        } else if (this.userInfo.userRole == this.$global.userRole.superAdministrator) {
+            this.isAllow = true;
+        } else if (this.userInfo.userRole == this.$global.userRole.projectManager || this.userInfo.userRole == this.$global.userRole.regionalManager) {
             this.$http.post("/user/info/find/user", {
                 id: this.id
             }).then(res => {

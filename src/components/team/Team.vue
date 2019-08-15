@@ -73,7 +73,7 @@
             <div class="user-name">{{ teamInfo.teamName }}</div>
             <div class="leader">Leader: {{ (teamInfo.projectManager && teamInfo.projectManager.userNameZh) }}</div>
             <div class="location">
-              <el-avatar :size="25" :src="teamInfo.teamCountryLogo" style="margin-right:10px;"></el-avatar>
+              <el-avatar :size="25" :src="`${$global.avatarURI}${teamInfo.teamCountryLogo}`" style="margin-right:10px;"></el-avatar>
               {{ $lang == $global.lang.en ? teamInfo.teamCountryEn : teamInfo.teamCountryZh }}
             </div>
           </div>

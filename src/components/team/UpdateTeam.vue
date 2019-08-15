@@ -56,7 +56,7 @@
               <template v-if="team.id">
                 {{ $t("team.btn.confirm") }}
               </template>
-              <template>
+              <template v-else>
                 {{ $t("team.btn.add") }}
               </template>
             </el-button>

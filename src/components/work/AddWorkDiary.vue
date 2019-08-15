@@ -11,7 +11,7 @@
     >
       <!-- 项目 start -->
       <el-form-item :label="`${$t('workDiary.form.projectName')}`" prop="projectName">
-        <el-select v-model="diaryForm.projectName" filterable placeholder @change="onChangeProject">
+        <el-select :disabled="((diaryForm.id && diaryForm.projectName) || ((type=='project' || type=='target') && diaryForm.projectName)) ? true : false" v-model="diaryForm.projectName" filterable placeholder @change="onChangeProject">
           <template v-if="projectList && projectList.length > 0">
             <el-option v-for="(item, index) in projectList" :key="index" :label="item.itemName" :value="item.itemId"></el-option>
           </template>
@@ -32,7 +32,7 @@
 
       <!-- 目标公司 start -->
       <el-form-item :label="`${$t('workDiary.form.targetCompany')}`" prop="targetCompany">
-        <el-select v-model="diaryForm.targetCompany" filterable placeholder>
+        <el-select :disabled="((diaryForm.id && diaryForm.targetCompany) || (type=='target' && diaryForm.targetCompany)) ? true : false" v-model="diaryForm.targetCompany" filterable placeholder>
           <template v-if="targetList && targetList.length > 0">
             <el-option v-for="(item, index) in targetList" :key="index" :label="item.targetCompanyName" :value="item.id"></el-option>
           </template>
@@ -61,8 +61,8 @@
         <!-- 订单类型 正常或者不正常 start -->
         <el-form-item :label="`${$t('workDiary.form.orderType')}`" prop="orderType">
           <el-select v-model="diaryForm.orderType" filterable placeholder>
-            <el-option :label="$t('workDiary.orderType[0]')" value="1"></el-option>
-            <el-option :label="$t('workDiary.orderType[1]')" value="2"></el-option>
+            <el-option :label="$t('workDiary.orderType[0]')" :value="1"></el-option>
+            <el-option :label="$t('workDiary.orderType[1]')" :value="2"></el-option>
           </el-select>
         </el-form-item>
         <!-- 订单类型 end -->
@@ -207,11 +207,11 @@ export default {
   data() {
     return {
       diaryForm: {
-        id: "",
-        projectName: "",
-        type: "",
+        id: null,
+        projectName: null,
+        type: null,
         targetCompany: null,
-        title: "",
+        title: null,
         description: "",
         chatLog: [],
         chatLogPreview: "", // 上传的钩子
@@ -220,7 +220,7 @@ export default {
         // 订单信息
         orderNo: "",
         orderName: "",
-        orderType: '1',
+        orderType: 1,
         orderNum: 0,
         orderPrice: 0,
         orderDescription: "",

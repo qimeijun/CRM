@@ -44,8 +44,9 @@
           2、超级管理员
           3、区域经理
        -->
-      <template v-if="((userRole == $global.userRole.member || userRole == $global.userRole.projectManager) && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole))
-                      || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole))">
+      <template v-if="(userRole == $global.userRole.member  && [$global.userRole.superAdministrator, $global.userRole.regionalManager, $global.userRole.projectManager].includes(userInfo.userRole))
+                      || (userRole == $global.userRole.projectManager && [$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole))
+                      || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator].includes(userInfo.userRole))">
       <el-table-column :label="$t('memberInfo.projectTable[6]')" width="120">
         <template slot-scope="scope">
           <span class="member-project__delete" @click="onDelete(scope.row, scope.$index)">{{ $t("memberInfo.btn.shiftOutProject") }}</span>

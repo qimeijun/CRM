@@ -29,8 +29,13 @@
                             权限：
                                 1、自己
                                 2、上级
+                                3、同等级的不能操作（超级管理员）
                          -->
-                         <template v-if="(item.followAddUser == userInfo.id) || isAllow">
+                         <template v-if="(item.followAddUser == userInfo.id) || (type == 'member' && isAllow) || 
+                                        ((type == 'project' || type == 'target') && isAllow && 
+                                        ((userInfo.userRole == $global.userRole.regionalManager && ![$global.userRole.regionalManager, $global.userRole.superAdministrator].includes(item.followAddUserRole)) ||
+                                        (userInfo.userRole == $global.userRole.projectManager && ![$global.userRole.projectManager, $global.userRole.regionalManager, $global.userRole.superAdministrator].includes(item.followAddUserRole))
+                                        || $global.userRole.superAdministrator == userInfo.userRole))">
                             <el-dropdown-item command="modify">{{ $t("workDiary.btn.modifyDiary") }}</el-dropdown-item>
                          </template>
                          <!-- 
@@ -46,8 +51,9 @@
                             权限：
                                 1、超级管理员
                                 2、区域管理员
+                                3、同样等级不能删除
                          -->
-                        <el-dropdown-item v-if="[$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)" command="delete">{{ $t("workDiary.btn.delete") }}</el-dropdown-item>
+                        <el-dropdown-item v-if="$global.userRole.superAdministrator == userInfo.userRole || ($global.userRole.regionalManager == userInfo.userRole && (userInfo.id == item.followAddUser || ![$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(item.followAddUserRole)))" command="delete">{{ $t("workDiary.btn.delete") }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -77,7 +83,7 @@
                     </div>
                     <div>
                         <span>{{ $t('workDiary.form.orderType') }}:</span>
-                        {{ $t(`workDiary.orderType[${item.orderType}]`) }}
+                        {{ $t(`workDiary.orderType[${parseInt(item.orderType) - 1}]`) }}
                     </div>
                     <div>
                         <span>{{ $t('workDiary.form.orderName') }}:</span>

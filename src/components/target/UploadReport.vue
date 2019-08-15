@@ -6,7 +6,7 @@
       <h3>1</h3>
       <span class="upload-report-margin">{{$t("target.probe.textTip[0]")}}</span>
       <i class="el-icon-paperclip"></i>
-      <a :href="$global.avatarURI+'Customer%20information.xlsx'" :download="$t('target.probe.templateName')" target="_blank">{{$t('target.probe.templateName')}}</a>
+      <a :href="$global.avatarURI+'Research%20Report%20Template.xlsx'" :download="$t('target.probe.templateName')" target="_blank">{{$t('target.probe.templateName')}}</a>
     </div>
     <!-- 二 -->
     <div class="upload-report_div">

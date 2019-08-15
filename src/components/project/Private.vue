@@ -291,7 +291,7 @@ export default {
       multipleSelection: [],
       tag: "",
       targetType: null,
-      member: null,
+      member: "",
       seek: null,
       itemStatus: 2,
       changeAdministratorDialogVisible: false,
@@ -307,7 +307,7 @@ export default {
     ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
-    this.member = this.userInfo.id;
+    this.member = this.userInfo.userRole==this.$global.userRole.superAdministrator?"":this.userInfo.id;
     this.targetTypeList = await getTargetType(this);
     this.getPrivate(this.itemid, 1);
     this.getItemStatus(this.itemid);
@@ -483,7 +483,13 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            this.memberList = res.datas;
+            if(this.userInfo.userRole==this.$global.userRole.regionalManager){
+              this.memberList =res.datas.filter(o=>{
+                return o.userRole!=this.$global.userRole.regionalManager
+              })
+            }else{
+              this.memberList =[{id:"",userNameEn:"ALL",userNameZh:"所有人"},...res.datas] ;
+            }
           }
         });
     },

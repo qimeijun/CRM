@@ -65,7 +65,7 @@ export default {
         let weekIndex=1;
       this.weekList = datas.map(o => {
         return this.$lang == this.$global.lang.en
-          ? `${weekIndex}st Week`
+          ? `${weekIndex++}st Week`
           : `第${weekIndex++}周`;
       });
       this.numberList = datas.map(o => {

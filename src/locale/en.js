@@ -257,10 +257,10 @@ export default {
     },
     workBench: {
         title: "Work Bench",
-        noInvolved:"暂未参与项目en",
+        noInvolved:"Not involved in the project",
         btn: {
             addProject: "Add New Project",
-            selectItem:"请选择项目en"
+            selectItem:"Please select item"
         },
         briefreport: {
             title: "Briefing Schedule",
@@ -286,7 +286,7 @@ export default {
         },
         calendar: {
             title: "Schedule",
-            remaining:"还有{number}项...en",
+            remaining:"There is{number}item...",
             btn: {
                 redact: "Edit",
                 delete: "Delete",
@@ -318,15 +318,15 @@ export default {
                 target: "Select a Target",
                 people: "People",
             },
-            selectTarget:"选择目标公司en",
-            remindTypes:["前一天提醒en","前两天提醒en","不提醒en"],
+            selectTarget:"Select target company",
+            remindTypes:["Reminder the day before","Reminder two days ago","Don't remind"],
             rules:{
-                content:"请输入提醒内容en",
-                date:"请选择起始日期en",
-                remindType:"请选择提醒类型en",
-                email:"请输入邮箱en",
-                target:"请选择目标公司en",
-                users:"请选择参与人员en"
+                content:"Please enter a reminder",
+                date:"Please select a start date",
+                remindType:"Please select the reminder type",
+                email:"Please enter email",
+                target:"Please select the target company",
+                users:"Please select participants"
             },
             save: "Save",
             modify: "Modify"
@@ -400,20 +400,20 @@ export default {
             operate: "Operate",
             details: "View"
         },
-        loca:"所在项目en"
+        loca:"Where the project"
     },
     project: {
         title: "Project Management",
         add: "Add New Projects",
         allot: "Assign",
-        redistribution: "再分配en",
+        redistribution: "redistribution",
         invalid: "Cancel",
-        activation: "激活en",
+        activation: "The activation",
         transfer: "Transfer",
         intoSea: " Move to Public",
         Private: "移入私海en",
         view: "View",
-        updateTitle:"修改资料en",
+        updateTitle:"Modify the data",
         placeholder: {
             seek: "Search Project, Address",
             tag: "Tag",
@@ -423,7 +423,7 @@ export default {
             site: "Address",
             url: "Website",
             email: "Email",
-            tel:"请输入公司电话en",
+            tel:"Please enter your company phone number",
             intro: "Introduction",
             strength: "Advantages",
             productName: "Product",
@@ -441,7 +441,7 @@ export default {
             site: "Address",
             url: "Website",
             email: "Email",
-            tel:"公司电话en",
+            tel:"The phone company",
             intro: "Introduction",
             strength: "Advantages",
             productName: "Product",
@@ -451,21 +451,21 @@ export default {
             study: "Reference Info"
         },
         rules:{
-            account:"请输入账号en",
-            accountPassword:"请输入密码en",
-            projectTitle:"请输入项目名称en",
-            companyName:"请输入企业名称en",
-            tmt:"请选择行业en",
-            site:"请输入地址en",
-            url:"请输入网址en",
-            email:"请输入邮箱en",
-            tel:"请输入电话en",
-            intro:"请输入简介en",
-            productName:"请输入产品名称en",
-            img:"上传图片大小不能超过 3MB!en",
-            video:"上传视频大小不能超过 20MB!en",
-            accessory:"上传附件大小不能超过 5MB!en",
-            uploadSuccess:"视频上传成功en",
+            account:"Please enter your account number",
+            accountPassword:"Please enter password",
+            projectTitle:"Please enter a project name",
+            companyName:"Please enter business name",
+            tmt:"Select industry",
+            site:"Please enter address",
+            url:"Please enter website",
+            email:"Please enter email",
+            tel:"Please enter telephone number",
+            intro:"Please enter introduction",
+            productName:"Please enter product name",
+            img:"Upload image size cannot exceed 3MB!",
+            video:"Upload video size cannot exceed 20MB!",
+            accessory:"Upload attachment size cannot exceed 5MB!",
+            uploadSuccess:"Video uploaded successfully",
         },
         btn: {
             uploadImg: "Upload a Picture",
@@ -476,24 +476,24 @@ export default {
             ok: "Completed",
             edit: "Edit",
             detele:"detele",
-            continueUpload:"继续上传en",
-            UploadAgain:"重新上传en"
+            continueUpload:"Continue to upload",
+            UploadAgain:"Upload again"
         },
         tableHeader: ["ID", "Project", "Status", "Administrator", "Tag", "Working Days", "Add date", "Operate"],
-        status: ["进行中", "已结束", "重启项目", "新项目"]
+        status: ["ongoing", "Has ended", "Restart the project", "The new project"]
     },
     projectInfo: {
         title: "Details",
         endProject: "End the Project",
-        restartProject: "重启项目en",
+        restartProject: "Restart the project",
         menu: ["Info", "Product", "Public Client", "Private", "Work Log"],
         member: {
             title: "Member",
             add: "Add Member",
             target: ["Target", "Home"],
             time: ["Working time", "days"],
-            population:"共{number}人en",
-            dialogTitle:"添加项目成员en"
+            population:"A total of {number} people",
+            dialogTitle:"Add project members"
         },
         commonality: {
             tableHeader: ["Target", "Importance", "Update date", "status", "Creat Time", "Completeness", "Operate"]
@@ -501,8 +501,8 @@ export default {
         importTarget: {
             add: "Add new Target",
             import: "Import Target",
-            templateName:"客户模板.xlsen",
-            textTip: ["Fill in the Form according to the Templat", "Size not exceeding 5M", "Importing , please wait...","导入完成！en","上传内容存在重复，请下载并修改后重新上传！en"],
+            templateName:"Customer information.xls",
+            textTip: ["Fill in the Form according to the Templat", "Size not exceeding 5M", "Importing , please wait...","Import complete!","There are some duplicates in the uploaded content, please download and modify and re-upload!"],
             uploadBtn: ["Upload", "Upload again", "Click to Import"],
             dialogTitle: "Prompt",
             noimport: "Not import",
@@ -591,22 +591,22 @@ export default {
             remark: "Remark",
             btn: "Edit",
             editorTitle:"Edit",
-            logTotal:"日志总数量en",
-            MonthlyTotal:"月报数量en",
-            weeksTotal:"周报数量en",
-            orderTotal:"订单数量en"
+            logTotal:"Total number of logs",
+            MonthlyTotal:"Monthly quantity",
+            weeksTotal:"Weekly number",
+            orderTotal:"The order number"
         },
         placeholder:{
-            companyName:"请输入公司名称en",
-            country:"请选择国家en",
-            keymenName:"请输入关键人名en",
-            type:"请选择公司类型en",
-            seek:"搜索目标公司名称、ID、地址、关键人en"
+            companyName:"Please enter company name",
+            country:"Please select the country",
+            keymenName:"Please enter the key name",
+            type:"Please select the company type",
+            seek:"Search for target company name, ID, address, key person"
         },
         next: "Next",
         finish: "Finish",
         probe: {
-            templateName:"调研报告模板.xlsen",
+            templateName:"Research Report Template.xls",
             upload: "Upload a Report",
             update: "Edit the Report",
             delete: "Delete",
@@ -614,52 +614,52 @@ export default {
             textTip: ["Fill in Form according to Template", "Size not exceeding 5M", "Importing, please Wait···"],
             uploadBtn: ["Click to Upload", "Upload Again", "Upload Now"],
             dialogTitle: "Prompt",
-            updateContent:"修改完成en",
-            addContent:"导入完成en",
+            updateContent:"Modified to complete",
+            addContent:"The import is complete",
             ok:"OK"
         },
         loca: {
             tableHeader: ["ID", "Project", "Status", "Administration", "Tag", "Working days", "Add date", "Operate"],
             view: "View"
         },
-        status: ["待跟进", "跟进中", "未跟进", "作废"],
-        importanceStatus: ["待跟进", "资料完善", "有跟进记录", "一般意向客户", "重点跟进客户", "已有成交客户"]
+        status: ["To follow up", "In the follow up", "Did not follow up", "invalid"],
+        importanceStatus: ["To follow up", "Information to perfect", "Follow up record", "General intended customers", "Focus on customer follow-up", "Existing customers"]
     },
     targetStatus:{
-        title:"提示en",
-        success:"操作成功en",
-        catch:"已取消操作en",
+        title:"prompt",
+        success:"Operation is successful",
+        catch:"Cancelled operation",
         Private:{
-            messageText:"您确定要将这个目标公司作废吗？en"
+            messageText:"Are you sure you want to invalidate the target company?"
         },
         invalid:{
-            messageText:"您确定要将这个目标公司激活吗？en"
+            messageText:"Are you sure you want to activate this target company?"
         },
         intoSea:{
-            messageText:"目标公司正在跟进中，您确定要移入公海吗？en"
+            messageText:"The target company is following up. Are you sure you want to move to the high seas?"
         },
         probe:{
-            messageText:"您确定要删除调研报告吗？en"
+            messageText:"Are you sure you want to delete the research report?"
         },
         btn:{
-            determine:"确定en",
-            cancel:"取消en"
+            determine:"determine",
+            cancel:"cancel"
         }
     },
     projectStatus:{
-        title:"提示en",
-        catch:"取消操作en",
+        title:"prompt",
+        catch:"Cancel the operation",
         end:{
-            messageText:"您确定要结束此项目吗？en",
-            success:"已结束项目en"
+            messageText:"Are you sure you want to end this project?",
+            success:"Closed project"
         },
         restart:{
-            messageText:"您确定要重启此项目吗？en",
-            success:"已重启项目en"
+            messageText:"Are you sure you want to restart this project?",
+            success:"Project restart"
         },
         btn:{
-            determine:"确定en",
-            cancel:"取消en"
+            determine:"determine",
+            cancel:"cancel"
         }
     },
     page404: {

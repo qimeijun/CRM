@@ -318,11 +318,14 @@ export default {
     itemid() {
       return this.$route.params.itemid;
     },
+    adminId(){
+      return this.$route.params.adminId;
+    },
     ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
     // 获取公司类型
-    this.targetTypeList = await getTargetType(this);
+    this.targetTypeList =[ {nameEn: "ALL",nameZh: "全部",value: ""},...await getTargetType(this)];
     this.getCommonality(this.itemid, 1);
     this.getItemStatus(this.itemid);
   },
@@ -518,7 +521,7 @@ export default {
         });
     },
     SetHistoryPath(){
-      session.set("historyPath",this.$route.fullPath);
+      session.set("historyPath",`/project/detail/commonality/${this.itemid}/${this.adminId}`);
     }
   }
 };

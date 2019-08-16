@@ -38,6 +38,9 @@ export default {
             isShow: true
         }
     },
+    created() {
+        setTimeout(()=>{ this.isShow = false;},2*1000)
+    },
     methods: {
         // 关闭弹窗
         addClose() {

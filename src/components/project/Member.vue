@@ -193,8 +193,8 @@ export default {
       display: flex;
       justify-content: space-around;
       flex-grow: 2;
-      font-size: 12px;
-      font-weight: 500;
+      font-size: 14px;
+      font-weight:500;
       color: rgba(123, 123, 123, 1);
       line-height: 17px;
       p :first-of-type {
@@ -202,6 +202,9 @@ export default {
         font-weight: 500;
         color: rgba(30, 30, 30, 1);
         line-height: 25px;
+      }
+      p :last-of-type {
+        font-size: 12px;
       }
     }
   }

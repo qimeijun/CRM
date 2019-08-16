@@ -10,6 +10,7 @@
         >{{$t("workBench.briefreport.btn.all")}}</el-button>
       </div>
       <el-button
+        v-show="itemStatus!=2"
         class="top_button"
         @click="addWorkDiaryDialogVisible = true"
       >{{$t("workBench.briefreport.btn.submit")}}</el-button>
@@ -44,15 +45,18 @@
                 v-else-if="item.followNodeType == '3'"
               >{{ $t('workDiary.diarType.monthly') }}</template>
               <template v-else-if="item.followNodeType == '4'">{{ $t('workDiary.diarType.order') }}</template>
-       
             </i>
             <div class="item_img">
-              <el-avatar
-                size="medium"
-                
-              >
-              <img v-if="item.followAddUserProfileImage" :src="`${$global.avatarURI}${item.followAddUserProfileImage}`" >
-              <span v-else style="color:white; font-size:18px;line-height:32px;">{{$lang==$global.lang.en?item.followAddUserNameEn.slice("")[0]:item.followAddUserNameZh.slice("")[0]}}</span>
+              <el-avatar size="medium">
+                <img
+                  v-if="item.followAddUserProfileImage"
+                  style="object-fit: cover;"
+                  :src="`${$global.avatarURI}${item.followAddUserProfileImage}`"
+                />
+                <span
+                  v-else
+                  style="color:white; font-size:18px;line-height:32px;"
+                >{{$lang==$global.lang.en?item.followAddUserNameEn.slice("")[0]:item.followAddUserNameZh.slice("")[0]}}</span>
               </el-avatar>
               <br />
               <span>{{$lang==$global.lang.en?item.followAddUserNameEn:item.followAddUserNameZh}}</span>
@@ -60,7 +64,7 @@
             <p class="item_p">
               <span>{{item.followTitle}}</span>
               <br />
-              <span>{{item.followAddTimeStr}}</span>
+              <span>{{$global.localTime({time:item.followAddTimeStr,hour:true})}}</span>
             </p>
           </div>
           <p v-if="loading">{{$t("workBench.briefreport.loading")}}</p>
@@ -89,6 +93,12 @@ export default {
       default() {
         return "";
       }
+    },
+    itemStatus: {
+      type: String,
+      default() {
+        return "2";
+      }
     }
   },
   data() {
@@ -107,9 +117,9 @@ export default {
     }
   },
   watch: {
-    itemid: function(newVal){
+    itemid: function(newVal) {
       if (newVal) {
-        this.list=[]
+        this.list = [];
         this.getBriefReport(newVal, 1);
       }
     }
@@ -124,10 +134,10 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            page > 1 ? this.list.push(...res.datas) : this.list = res.datas;
-            this.list.filter(o=>{
-              return o.followNodeType<5
-            })
+            page > 1 ? this.list.push(...res.datas) : (this.list = res.datas);
+            this.list.filter(o => {
+              return o.followNodeType < 5;
+            });
             this.loading = false;
             this.page = page + 1;
             if (res.datas.length < 6) {

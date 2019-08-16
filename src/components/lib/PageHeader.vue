@@ -15,11 +15,8 @@ export default {
   },
   methods: {
     goBack() {
-      if (this.url == "") {
-        this.$router.back(-1);
-      } else {
-        this.$router.push({ path: this.url });
-      }
+      console.log(this.url);
+      this.$router.push({ path: this.url });
     }
   }
 };

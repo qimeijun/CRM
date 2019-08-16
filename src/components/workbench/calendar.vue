@@ -161,6 +161,12 @@ export default {
       default() {
         return "";
       }
+    },
+    timer: {
+      type: String,
+      default() {
+        return "";
+      }
     }
   },
   components: {
@@ -179,10 +185,7 @@ export default {
     };
   },
   created() {
-    // let listobj = this.filtDateList(this.datelist);
-    // this.firstlist = listobj.first;
-    // this.secondlist = listobj.second;
-    // this.list = listobj.list;
+    this.getScheduleByDate();
   },
   methods: {
     // 根据日期获取日程提醒 list
@@ -240,6 +243,7 @@ export default {
       this.getScheduleByDate();
       this.modifyRemindVisibleDialog=false;
       this.addRemindVisibleDialog=false;
+      this.$emit('getlist');
     },
     // 删除日程
     onDeleteReminder(item) {

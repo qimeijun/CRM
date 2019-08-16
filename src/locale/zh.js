@@ -463,9 +463,9 @@ export default {
             tel:"请输入电话",
             intro:"请输入简介",
             productName:"请输入产品名称",
-            img:"上传图片大小不能超过 3MB!en",
-            video:"上传视频大小不能超过 20MB!en",
-            accessory:"上传附件大小不能超过 5MB!en",
+            img:"上传图片大小不能超过 3MB!",
+            video:"上传视频大小不能超过 20MB!",
+            accessory:"上传附件大小不能超过 5MB!",
             uploadSuccess:"视频上传成功",
         },
         btn: {

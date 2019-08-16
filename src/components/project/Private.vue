@@ -304,6 +304,9 @@ export default {
     itemid() {
       return this.$route.params.itemid;
     },
+    adminId(){
+      return this.$route.params.adminId;
+    },
     ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
@@ -493,8 +496,8 @@ export default {
           }
         });
     },
-     SetHistoryPath(){
-      session.set("historyPath",this.$route.fullPath);
+  SetHistoryPath(){
+      session.set("historyPath",`/project/detail/commonality/${this.itemid}/${this.adminId}`);
     }
   }
 };

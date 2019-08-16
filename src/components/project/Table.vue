@@ -36,9 +36,9 @@
       <!-- 添加新项目按钮 end -->
     </div>
     <div>
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column fixed prop="itemNumber" :label="$t('project.tableHeader[0]')" width="50"></el-table-column>
-        <el-table-column prop="itemName" :label="$t('project.tableHeader[1]')" min-width="100"></el-table-column>
+      <el-table :data="tableData" style="width: 100%" @cell-click="goPath">
+        <el-table-column  fixed prop="itemNumber" :label="$t('project.tableHeader[0]')" width="50"></el-table-column>
+        <el-table-column class-name="column--cursor" prop="itemName" :label="$t('project.tableHeader[1]')" min-width="100"></el-table-column>
         <el-table-column
           :prop="$lang==$global.lang.en?'itemStatusEn':'itemStatusZh'"
           :label="$t('project.tableHeader[2]')"
@@ -46,12 +46,12 @@
         ></el-table-column>
         <el-table-column prop="probjectManager" :label="$t('project.tableHeader[3]')" width="200">
           <template slot-scope="scope">
-            <p v-if="scope.row.probjectManager!==null">
+            <p v-if="scope.row.probjectManager!==null" class="column--cursor">
               <el-avatar
                 class="table_img"
                 size="medium"
               >
-              <img v-if="scope.row.probjectManagerProfileImage" :src="`${$global.avatarURI}${scope.row.probjectManagerProfileImage}`" >
+              <img v-if="scope.row.probjectManagerProfileImage" style="object-fit: cover;" :src="`${$global.avatarURI}${scope.row.probjectManagerProfileImage}`" >
               <span v-else>{{$lang==$global.lang.en?scope.row.probjectManagerNameEn.slice("")[0]:scope.row.probjectManagerNameZh.slice("")[0]}}</span>
               </el-avatar>
               <!-- <img  :src="'https://vodcn.iworku.com/'+scope.row.img" alt /> -->
@@ -59,7 +59,7 @@
             </p>
           </template>
         </el-table-column>
-        <el-table-column prop="itemLabelList" :label="$t('project.tableHeader[4]')" max-width="200">
+        <el-table-column class-name="column--cursor" prop="itemLabelList" :label="$t('project.tableHeader[4]')" max-width="200" >
           <template slot-scope="scope">
             <el-tag
               class="table_tag"
@@ -69,7 +69,7 @@
             >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="day" :label="$t('project.tableHeader[5]')" width="120" sortable></el-table-column>
+        <el-table-column prop="day" :label="$t('project.tableHeader[5]')" width="150" sortable></el-table-column>
         <el-table-column
           prop="addTimeStr"
           :label="$t('project.tableHeader[6]')"
@@ -80,7 +80,7 @@
             <p>{{$global.localTime({time:scope.row.addTimeStr,hour:false})}}</p>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('project.tableHeader[7]')" width="60">
+        <el-table-column :label="$t('project.tableHeader[7]')" width="90">
           <template slot-scope="scope">
             <Operate>
               <ul>
@@ -334,6 +334,14 @@ export default {
             });
           }
         });
+    },
+    goPath(row, column, cell, event){
+      if(column.property=="itemName"||column.property=="itemLabelList"){
+        this.$router.push({path:`/project/detail/info/${row.itemId}/${row.probjectManager}`});
+      }else if(column.property=="probjectManager"&&row.probjectManager!=null){
+         this.$router.push({path:`/member/detail/info/${row.probjectManager}`});
+        
+      }
     }
   }
 };
@@ -343,6 +351,7 @@ export default {
 .top_select {
   width: 2.38rem;
   margin: 0 10px;
+  
 }
 .top_seek {
   width: 2.38rem;
@@ -377,5 +386,11 @@ export default {
   background-color: #8d43ff;
   color: white;
   border: 0;
+}
+
+</style>
+<style>
+  .column--cursor{
+  cursor: pointer;
 }
 </style>

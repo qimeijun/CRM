@@ -60,7 +60,7 @@
           <div class="head__person">
             <div class="top">
               <el-avatar :size="50">
-                <img v-if="userInfo.userProfileImage!=null" :src="`${$global.avatarURI}${userInfo.userProfileImage}`" alt />
+                <img v-if="userInfo.userProfileImage!=null" style="object-fit: cover;" :src="`${$global.avatarURI}${userInfo.userProfileImage}`" alt />
                 <span v-else style="font-size:24px; font-weight: bold;">{{userInfo.userNameZh?userInfo.userNameZh.slice("")[0]:''}}</span>
               </el-avatar>
               <div class="right">
@@ -96,6 +96,7 @@
           <el-avatar :size="50" class="head__avatar__img" slot="reference">
             <img
               v-if="userInfo.userProfileImage!=null"
+              style="object-fit: cover;"
               :src="`${$global.avatarURI}${userInfo.userProfileImage}`"
               :alt="userInfo.userProfileImage"
             />

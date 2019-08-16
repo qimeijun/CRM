@@ -29,8 +29,10 @@ instance.interceptors.request.use((config) => {
     let lang = window.localStorage.getItem('lang') || 'en';
     if (lang == 'en') {
         config.headers['languages'] = 'en_US'
-    } else {
+    } else if (lang == 'zh') {
         config.headers['languages'] = 'zh_CN'
+    } else if (lang == 'vi') {
+        config.headers['languages'] = 'vi_VN'
     }
     
     return config;

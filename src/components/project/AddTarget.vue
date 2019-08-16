@@ -91,7 +91,7 @@
             <el-option
               v-for="(item,index) in targetTypeList"
               :key="'position'+index"
-              :label="$lang==$global.lang.en?item.nameEn:item.nameZh"
+              :label="item.name"
               :value="item.value"
             ></el-option>
           </el-select>
@@ -195,7 +195,7 @@ export default {
     // 重要程度
     let gradeList = await getGrade(this);
     this.gradeTexts = gradeList.map(o => {
-      return this.$lang == this.$global.lang.en ? o.nameEn : o.nameZh;
+      return o.name;
     });
   },
   methods: {

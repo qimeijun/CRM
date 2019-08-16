@@ -91,7 +91,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="statusNameZh"
+        prop="statusName"
         :label="$t('memberInfo.priviteTable.status')"
         :filters="filterStatusList"
         :filter-method="filterStatus"
@@ -400,7 +400,7 @@ export default {
       let result = await getGrade(this);
       result.map(val => {
         this.filterImportanceList.push({
-          text: this.$lang == this.$global.lang.en ? val.nameEn : val.nameZh,
+          text: val.name,
           value: val.value
         })
       });
@@ -409,11 +409,11 @@ export default {
       let result = await getTargetStatus(this);
       result.map(val => {
         this.statusList.push({
-          label: this.$lang == this.$global.lang.en ? val.nameEn : val.nameZh,
+          label: val.name,
           value: val.value
         });
         this.filterStatusList.push({
-          text: this.$lang == this.$global.lang.en ? val.nameEn : val.nameZh,
+          text: val.name,
           value: val.value
         });
       });

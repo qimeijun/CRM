@@ -280,7 +280,6 @@ export default {
 .calendar_content {
   .time--selected {
     background-color: #1989fa;
-    // width: 100%;
     width: calc(100% + 24px);
     height: 28px;
     display: block;

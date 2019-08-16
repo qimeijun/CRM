@@ -5,7 +5,8 @@ Vue.prototype.$global = {
     qiniuURL: "https://upload.qiniup.com",
     lang: {
         en: 'en',
-        zh: 'zh'
+        zh: 'zh',
+        vi: 'vi'
     },
     // 默认存储用户信息的时间: 7天；
     userSaveTime: 7,

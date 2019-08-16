@@ -125,7 +125,11 @@ export default {
          *  添加标签
          */
         onAddTag() {
-            this.$router.push({ path: '/tag' });
+            if (this.type == 'target') {
+                this.$router.push({ path: `/tag/target` });
+            } else {
+                this.$router.push({ path: `/tag` });
+            }
         },
         /**
          * 确定所选的标签

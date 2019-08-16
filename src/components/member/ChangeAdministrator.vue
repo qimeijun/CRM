@@ -35,7 +35,7 @@
               <div class="el-icon-location">{{ $lang == $global.en ? item.userCountryEn : item.userCountryZh }}</div>
             </div>
           </div>
-          <span class="change-administrator__list-time">{{ item.addTimeStr }}</span>
+          <span class="change-administrator__list-time">{{ $global.localTime({ time: item.addTimeStr }) }}</span>
         </div>
         <i v-if="selectAdminstrator == index" class="el-icon-success"></i>
       </li>

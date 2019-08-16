@@ -299,12 +299,12 @@ export default {
       this.$http.post(uri, {...params, ...{pageSize: this.companyPage.pageSize, pageNum: this.companyPage.pageNum}}).then(res => {
         if (res.iworkuCode == 200) {
           this.companyList = res.datas;
-          if (this.companyList.length < this.companyPage.pageSize) {
-            let count = this.companyPage.pageSize - this.companyList.length;
-            for (let i = 0; i < count; i++) {
-              this.companyList.push({});
-            }
-          }
+          // if (this.companyList.length < this.companyPage.pageSize) {
+          //   let count = this.companyPage.pageSize - this.companyList.length;
+          //   for (let i = 0; i < count; i++) {
+          //     this.companyList.push({});
+          //   }
+          // } 
           this.companyPage.total = res.total;
         }
       });

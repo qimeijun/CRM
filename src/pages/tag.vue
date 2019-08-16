@@ -45,7 +45,7 @@ export default {
     }
   },
   created() {
-    this.activeMenu = this.$route.name;  
+      this.activeMenu = this.$route.name;
   },
   methods: {
     /**

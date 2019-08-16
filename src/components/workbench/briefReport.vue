@@ -13,20 +13,23 @@
         class="top_button"
         @click="addWorkDiaryDialogVisible = true"
       >{{$t("workBench.briefreport.btn.submit")}}</el-button>
+      <!--  -->
       <el-dialog
+        :visible.sync="addWorkDiaryDialogVisible"
         class="el-dialog__scroll"
         :title="$t('workDiary.add')"
-        :visible.sync="addWorkDiaryDialogVisible"
         top="5vh"
         :append-to-body="true"
         :modal="false"
         :lock-scroll="true"
         :width="$global.dialogWidth"
+        @close="cleanComponents"
       >
         <el-scrollbar class="scrollbar">
-          <AddWorkDiary
-            :id="itemid"
+          <AddWorkDiary 
+            ref="add-work-diary"
             type="project"
+            :id="itemid"
             @onOperateSuccess="addWorkDiaryDialogVisible=false;getBriefReport(itemid,1);"
           ></AddWorkDiary>
         </el-scrollbar>
@@ -151,6 +154,13 @@ export default {
     onOperateSuccess() {
       this.addWorkDiaryDialogVisible = false;
       this.getBriefReport(this.itemid, 1);
+    },
+    /**
+     * 清空子组件的表单
+     */
+    cleanComponents() {
+      this.$refs['add-work-diary'].onResetForm();
+      this.addWorkDiaryDialogVisible = false;
     }
   }
 };

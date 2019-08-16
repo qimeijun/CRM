@@ -10,6 +10,7 @@
         <li
           v-for="(item, index) in menuList"
           :key="index"
+          :style="(memberInfo.userRole == $global.userRole.regionalManager && item.value == 'member-team') ? `display: none` : ''"
           :class="activeMenu == item.value ? 'member-details__menu-active' : ''"
           @click="onChangeMenu(item)"
         >
@@ -41,6 +42,9 @@ export default {
   },
   computed: {
     ...mapGetters("members", ["memberInfo", "unReadDiary"]),
+    userInfo() {
+      return this.$store.getters['ipublic/userInfo']
+    },
     menuList() {
       return [
         {

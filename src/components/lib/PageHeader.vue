@@ -15,7 +15,6 @@ export default {
   },
   methods: {
     goBack() {
-      console.log(this.url);
       this.$router.push({ path: this.url });
     }
   }

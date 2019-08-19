@@ -290,7 +290,7 @@ export default {
       tableData: [],
       multipleSelection: [],
       tag: "",
-      targetType: null,
+      targetType: "",
       member: "",
       seek: null,
       itemStatus: 2,
@@ -311,7 +311,7 @@ export default {
   },
   async created() {
     this.member = this.userInfo.userRole==this.$global.userRole.superAdministrator?"":this.userInfo.id;
-    this.targetTypeList = await getTargetType(this);
+    this.targetTypeList =[ {nameEn: "ALL",nameZh: "全部",value: ""},...await getTargetType(this)];
     this.getPrivate(this.itemid, 1);
     this.getItemStatus(this.itemid);
     this.getMemberList(this.itemid);

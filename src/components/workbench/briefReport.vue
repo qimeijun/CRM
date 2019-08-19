@@ -37,7 +37,7 @@
     <div class="briefreport_list">
       <el-scrollbar style="height:100%;">
         <div v-infinite-scroll="load" infinite-scroll-disabled="disabled">
-          <div class="briefreport_list_item" v-for="(item,index) in list" :key="index">
+          <div class="briefreport_list_item" v-for="(item,index) in list" :key="index" @click="goPath(`/project/detail/diary/${itemid}/${adminId}`)">
             <i :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">
               <template v-if="item.followNodeType == '1'">{{ $t('workDiary.diarType.daily') }}</template>
               <template v-else-if="item.followNodeType == '2'">{{ $t('workDiary.diarType.weekly') }}</template>
@@ -190,6 +190,7 @@ export default {
       align-items: center;
       overflow: hidden;
       margin-bottom: 5px;
+      cursor:pointer;
       i {
         height: 100%;
         writing-mode: tb-rl;

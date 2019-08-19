@@ -290,7 +290,7 @@ export default {
       tableData: [],
       multipleSelection: [],
       tag: "",
-      targetType: null,
+      targetType: "",
       member: "",
       seek: null,
       itemStatus: 2,
@@ -304,11 +304,14 @@ export default {
     itemid() {
       return this.$route.params.itemid;
     },
+    adminId(){
+      return this.$route.params.adminId;
+    },
     ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
     this.member = this.userInfo.userRole==this.$global.userRole.superAdministrator?"":this.userInfo.id;
-    this.targetTypeList = await getTargetType(this);
+    this.targetTypeList =[ {nameEn: "ALL",nameZh: "全部",value: ""},...await getTargetType(this)];
     this.getPrivate(this.itemid, 1);
     this.getItemStatus(this.itemid);
     this.getMemberList(this.itemid);
@@ -493,8 +496,8 @@ export default {
           }
         });
     },
-     SetHistoryPath(){
-      session.set("historyPath",this.$route.fullPath);
+  SetHistoryPath(){
+      session.set("historyPath",`/project/detail/commonality/${this.itemid}/${this.adminId}`);
     }
   }
 };

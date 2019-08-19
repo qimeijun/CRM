@@ -25,6 +25,7 @@
               <el-avatar class="table_img" size="medium">
                 <img
                   v-if="scope.row.userProfileImage"
+                  style="object-fit: cover;"
                   :src="`${$global.avatarURI}${scope.row.userProfileImage}`"
                 />
                 <span
@@ -98,9 +99,9 @@ export default {
   data() {
     return {
       tableData: [],
-      currentPage:1,
-      size:10,
-      total:0
+      currentPage: 1,
+      size: 10,
+      total: 0
     };
   },
   computed: {
@@ -116,19 +117,19 @@ export default {
       this.$http
         .post("/target/company/admin/item/withpaginglist", {
           companyName: this.targetName,
-          pageNum:page,
-          pageSize:this.size
+          pageNum: page,
+          pageSize: this.size
         })
         .then(res => {
           if (res.iworkuCode == 200) {
             this.tableData = res.datas;
-            this.total=res.total;
-            this.currentPage=page;
+            this.total = res.total;
+            this.currentPage = page;
           }
         });
     },
-    SetHistoryPath() {
-      session.set("historyPath", this.$route.fullPath);
+     SetHistoryPath(){
+      session.set("historyPath",`/highseas/loca/${this.targetName}`);
     }
   }
 };

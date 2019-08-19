@@ -15,8 +15,7 @@
             :class="activeMenu == item.value ? 'project-details__menu-active' : ''"
             @click.capture="onChangeMenu(item)"
           >
-            <router-link :to="`/project/detail/${item.route}/${itemid}/${adminId}`">{{ item.name }}</router-link>
-            <!-- <router-link :to="`/project/detail/${item.route}?itemid=${itemid}&adminId=${adminId}`">{{ item.name }}</router-link> -->
+            <router-link :to="`/project/detail/${item.route}/${itemid}/${adminId}`">{{$t(item.name) }}</router-link>
           </li>
         </ul>
       </div>
@@ -53,31 +52,31 @@ export default {  components: {
       menuList: [
         // 资料
         {
-          name: this.$t("projectInfo.menu[0]"),
+          name: "projectInfo.menu[0]",
           value: "information",
           route: "info"
         },
         // 产品
         {
-          name: this.$t("projectInfo.menu[1]"),
+          name: "projectInfo.menu[1]",
           value: "product",
           route: "product"
         },
         // 项目公海
         {
-          name: this.$t("projectInfo.menu[2]"),
+          name: "projectInfo.menu[2]",
           value: "commonality",
           route: "commonality"
         },
         // 私海
         {
-          name: this.$t("projectInfo.menu[3]"),
+          name: "projectInfo.menu[3]",
           value: "private",
           route: "private"
         },
         // 日志
         {
-          name: this.$t("projectInfo.menu[4]"),
+          name: "projectInfo.menu[4]",
           value: "diary",
           route: "diary"
         }

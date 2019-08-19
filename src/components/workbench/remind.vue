@@ -22,7 +22,7 @@
             <i :style="'background-color:'+item.scheduleShowColour"></i>
             <div class="item_img">
               <el-avatar size="medium" >
-                <img v-if="item.addUserProfileImage" :src="`${$global.avatarURI}${item.addUserProfileImage}`">
+                <img v-if="item.addUserProfileImage" style="object-fit: cover;" :src="`${$global.avatarURI}${item.addUserProfileImage}`">
                 <span v-else style="color:white; font-size:18px;line-height:32px;">{{ item.addUserNameZh.slice("")[0] || item.addUserNameEn.slice("")[0]}}</span>
               </el-avatar>
               <br />
@@ -31,7 +31,7 @@
             <p class="item_p">
               <span>{{item.scheduleContent}}</span>
               <br />
-              <span>{{item.scheduleBeginDate}}-{{item.scheduleEndDate}}，{{$t("workBench.remind.addPeople")}}：
+              <span>{{$global.localTime({time:item.scheduleBeginDate,hour:false})}} - {{$global.localTime({time:item.scheduleEndDate,hour:false})}}，{{$t("workBench.remind.addPeople")}}：
                 <template v-if="item.sheduleParticipate && item.sheduleParticipate.length > 0">
                   <template v-for="(s, i) in item.sheduleParticipate">
                     {{ s.userNameZh || s.userNameEn }} <i style="color: #959595;" :key="i" v-if="(i + 1) < item.sheduleParticipate.length">、</i>
@@ -58,6 +58,12 @@ export default {
       default() {
         return "";
       }
+    },
+      timer: {
+      type: String,
+      default() {
+        return "";
+      }
     }
   },
   data() {
@@ -78,6 +84,9 @@ export default {
       },
       loading: false
     };
+  },
+  created() {
+    this.getremindList();
   },
   computed: {
     noMore() {
@@ -119,6 +128,7 @@ export default {
       this.dialogFormVisible = false;
       this.page.pageNum = 1;
       this.getremindList();
+      this.$emit("getlist");
     }
   },
   watch: {

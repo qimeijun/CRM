@@ -4,7 +4,12 @@
       <h2>{{$t("workBench.title")}}</h2>
       <!-- 项目下拉菜单 start -->
       <div class="top_div">
-        <el-select class="workbench_top_select" v-model="itemIndex" :placeholder="$t('workBench.btn.selectItem')" filterable>
+        <el-select
+          class="workbench_top_select"
+          v-model="itemIndex"
+          :placeholder="$t('workBench.btn.selectItem')"
+          filterable
+        >
           <template slot="suffix">
             <i class="el-icon-caret-bottom"></i>
           </template>
@@ -44,26 +49,34 @@
             <el-row>-->
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 日程提醒 -->
-              <Remind :itemid="itemList[itemIndex].itemId"></Remind>
+              <Remind :itemid="itemList[itemIndex].itemId" :timer="timer" @getlist="handleLoad"></Remind>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <!-- 日程简报 -->
-              <BriefReport :itemid="itemList[itemIndex].itemId" :adminId="itemList[itemIndex].probjectManager"></BriefReport>
+              <BriefReport
+                :itemid="itemList[itemIndex].itemId"
+                :itemStatus="itemList[itemIndex].itemStatus"
+                :adminId="itemList[itemIndex].probjectManager"
+              ></BriefReport>
             </el-col>
           </el-row>
           <el-row>
             <el-col>
               <!-- 日程安排 -->
-              <Calendar :itemid="itemList[itemIndex].itemId"></Calendar>
+              <Calendar :itemid="itemList[itemIndex].itemId" :timer="timer" @getlist="handleLoad"></Calendar>
             </el-col>
           </el-row>
         </div>
       </el-scrollbar>
     </div>
-    <p style="text-align:center;margin-top:calc((100vh - 1.8rem)/3); 0;font-size:24px;" v-show="!itemList.length>0">{{$t("workBench.noInvolved")}}</p>
+    <p
+      style="text-align:center;margin-top:calc((100vh - 1.8rem)/3); 0;font-size:24px;"
+      v-show="!itemList.length>0"
+    >{{$t("workBench.noInvolved")}}</p>
   </div>
 </template>
 <script>
+import session from "@/plugins/session.js";
 import { mapGetters } from "vuex";
 export default {
   components: {
@@ -77,14 +90,22 @@ export default {
   data() {
     return {
       itemList: [],
-      itemIndex:0,
+      itemIndex: 0,
+      timer: ""
     };
+  },
+  watch: {
+    itemIndex: function(newVal) {
+      if (newVal != 0) {
+        session.set("workItemId", this.itemList[newVal].itemId);
+      }
+    }
   },
   computed: {
     ...mapGetters("ipublic", ["userInfo"])
   },
-  created() {
-    this.getItemList();
+  async created() {
+    await this.getItemList();
   },
   methods: {
     // 获取项目列表
@@ -92,11 +113,20 @@ export default {
       this.$http.post("/customer/item/withoutpaginglist").then(res => {
         if (res.iworkuCode == 200) {
           this.itemList = res.datas;
-          // if (res.datas.length > 0) {
-          //   this.item = res.datas[0]
-          // }
+          let workItemid = session.get("workItemId");
+          // 获取工作台正在浏览的项目
+          if (workItemid) {
+            for (var i = 0; i < this.itemList.length; i++) {
+              if (this.itemList[i].itemId == workItemid) {
+                this.itemIndex = i;
+              }
+            }
+          }
         }
       });
+    },
+    handleLoad() {
+      this.timer = new Date().getTime();
     }
   }
 };

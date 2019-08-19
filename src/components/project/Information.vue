@@ -43,7 +43,7 @@
         <p>
           <span>{{$t("project.from.tmt")}}</span>
           <br />
-          <span>{{$lang==$global.lang.en?info.companyIndustryEn:info.companyIndustryZh}}</span>
+          <span>{{ info.companyIndustryName }}</span>
         </p>
         <p>
           <span>{{$t("project.from.site")}}</span>

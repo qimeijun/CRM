@@ -23,10 +23,10 @@
             <div class="item_img">
               <el-avatar size="medium" >
                 <img v-if="item.addUserProfileImage" :src="`${$global.avatarURI}${item.addUserProfileImage}`">
-                <span v-else style="color:white; font-size:18px;line-height:32px;">{{$lang == $global.lang.en ? item.addUserNameEn.slice("")[0] : item.addUserNameZh.slice("")[0]}}</span>
+                <span v-else style="color:white; font-size:18px;line-height:32px;">{{ item.addUserNameZh.slice("")[0] || item.addUserNameEn.slice("")[0]}}</span>
               </el-avatar>
               <br />
-              <span>{{$lang == $global.lang.en ? item.addUserNameEn : item.addUserNameZh}}</span>
+              <span>{{ item.addUserNameZh || item.addUserNameEn }}</span>
             </div>
             <p class="item_p">
               <span>{{item.scheduleContent}}</span>
@@ -34,7 +34,7 @@
               <span>{{item.scheduleBeginDate}}-{{item.scheduleEndDate}}，{{$t("workBench.remind.addPeople")}}：
                 <template v-if="item.sheduleParticipate && item.sheduleParticipate.length > 0">
                   <template v-for="(s, i) in item.sheduleParticipate">
-                    {{ $lang == $global.lang.en ? s.userNameEn : s.userNameZh }} <i style="color: #959595;" :key="i" v-if="(i + 1) < item.sheduleParticipate.length">、</i>
+                    {{ s.userNameZh || s.userNameEn }} <i style="color: #959595;" :key="i" v-if="(i + 1) < item.sheduleParticipate.length">、</i>
                   </template>
                 </template>
               </span>

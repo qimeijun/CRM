@@ -11,12 +11,12 @@
         <!-- <el-table-column fixed prop="id" :label="$t('target.loca.tableHeader[0]')" width="50"></el-table-column>  -->
         <el-table-column prop="itemName" :label="$t('target.loca.tableHeader[1]')" min-width="100"></el-table-column>
         <el-table-column
-          :prop="$lang==$global.lang.en?'statusNameEn':'statusNameZh'"
+          prop="statusName"
           :label="$t('target.loca.tableHeader[2]')"
           width="200"
         ></el-table-column>
         <el-table-column
-          :prop="userName"
+          :prop="userNameZh"
           :label="$t('target.loca.tableHeader[3]')"
           width="200"
         >
@@ -29,9 +29,9 @@
                 />
                 <span
                   v-else
-                >{{$lang==$global.lang.en?scope.row.userNameEn.slice("")[0]:scope.row.userNameZh.slice("")[0]}}</span>
+                >{{ scope.row.userNameZh.slice("")[0] || scope.row.userNameEn.slice("")[0] }}</span>
               </el-avatar>
-              <span>{{$lang==$global.lang.en?scope.row.userNameEn:scope.row.userNameZh}}</span>
+              <span>{{scope.row.userNameZh || scope.row.userNameEn }}</span>
             </p>
           </template>
         </el-table-column>
@@ -46,7 +46,7 @@
               v-for="(item,index) in scope.row.itemLabelList.slice(0,10)"
               :key="'tag'+index"
               size="medium"
-            >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh }}</el-tag>
+            >{{ item.labelNameEn }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="day" :label="$t('target.loca.tableHeader[5]')" width="120"></el-table-column>

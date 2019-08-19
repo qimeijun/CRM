@@ -79,7 +79,7 @@
             <h5>{{$t("target.info.companyName")}}</h5>
             <p>{{companyForm.targetCompanyName}}</p>
             <h5>{{$t("target.info.country")}}</h5>
-            <p>{{$lang==$global.lang.en?companyForm.targetCompanyCountryEn:companyForm.targetCompanyCountryZh}}</p>
+            <p>{{ companyForm.targetCompanyCountryName }}</p>
             <h5>{{$t("target.info.site")}}</h5>
             <p>{{companyForm.targetCompanyAddress}}</p>
             <h5>{{$t("target.info.url")}}</h5>
@@ -104,7 +104,7 @@
             <h5>{{$t("target.info.source")}}</h5>
             <p>{{otherForm.nodeCustomerSource}}</p>
             <h5>{{$t("target.info.clientType")}}</h5>
-            <p>{{$lang==$global.lang.en?otherForm.nodeClientTypeEn:otherForm.nodeClientTypeZh}}</p>
+            <p>{{otherForm.nodeClientTypeName}}</p>
             <h5>{{$t("target.info.purchaseScale")}}</h5>
             <p>{{otherForm.nodePurchaseScale}}</p>
             <h5>{{$t("target.info.hsCode")}}</h5>
@@ -115,7 +115,7 @@
               disabled
               :colors="['#E50054','#E50054','#E50054']"
             ></el-rate>
-            <p>{{$lang==$global.lang.en?otherForm.nodeGradeEn:otherForm.nodeGradeZh}}</p>
+            <p>{{ otherForm.nodeGradeName }}</p>
             <h5>{{$t("target.info.introduce")}}</h5>
             <p>{{otherForm.nodeProfile}}</p>
             <h5>{{$t("target.info.remark")}}</h5>

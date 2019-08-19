@@ -6,7 +6,7 @@
         <el-avatar :size="100" :src="`${$global.avatarURI}${userInformation.userProfileImage}`"></el-avatar>
         <div class="member-info__details-left">
           <p class="member-info__details-left-name">{{ userInformation.userNameZh }}</p>
-          <p class="el-icon-location">{{ $lang == $global.lang.en ? userInformation.userCountryEn : userInformation.userCountryZh }}</p>
+          <p class="el-icon-location">{{ userInformation.userCountryName }}</p>
           <p class="member-info__details-left-gender">{{ userInformation.userGender == '2' ?  $t("member.gender.male") : $t("member.gender.female") }}</p>
         </div>
         <!-- 

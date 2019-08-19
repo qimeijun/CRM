@@ -47,7 +47,7 @@
         <el-option
           v-for="item in memberList"
           :key="item.id"
-          :label="$lang==$global.lang.en?item.userNameEn:item.userNameZh"
+          :label="item.userNameZh || item.userNameEn"
           :value="item.id"
         ></el-option>
       </el-select>
@@ -95,7 +95,7 @@
         >
           <template slot-scope="scope">
             <el-rate :value="scope.row.grade-0" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
-            <p>{{$lang==$global.lang.en?scope.row.gradeEn:scope.row.gradeZh}}</p>
+            <p>{{ scope.row.gradeName }}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -115,7 +115,7 @@
           sortable
         >
           <template slot-scope="scope">
-            <p>{{$lang==$global.lang.en?scope.row.statusNameEn:scope.row.statusNameZh}}</p>
+            <p>{{ scope.row.statusName }}</p>
           </template>
         </el-table-column>
         <el-table-column

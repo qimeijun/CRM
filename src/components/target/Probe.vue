@@ -17,11 +17,11 @@
         <div class="item_top">
           <el-avatar size="large" :src="$global.avatarURI+item.addUserProfileImage"></el-avatar>
           <div class="top_content">
-            <h4>{{$lang==$global.lang.en?item.addUserNameEn:item.addUserNameZh}}</h4>
+            <h4>{{ item.addUserNameZh || item.addUserNameEn }}</h4>
             <p>
               <i
                 class="el-icon-location"
-              >&nbsp;{{$lang==$global.lang.en?item.addUserCountryNameEn:item.addUserCountryNameZh}}</i>
+              >&nbsp;{{ item.addUserCountryName}}</i>
             </p>
           </div>
           <Operate v-show="companyForm.status!=4&&companyForm.ownUser==2&&itemRole&&(additionalParameters.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(additionalParameters.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&additionalParameters.targetCompanyUserInfo.id==userInfo.id))">

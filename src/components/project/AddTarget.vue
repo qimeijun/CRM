@@ -28,7 +28,7 @@
             <el-option
               v-for="(item,index) in countryList"
               :key="'country'+index"
-              :label="$lang==$global.lang.en?item.areaNameEn:item.areaNameZh"
+              :label="item.areaName"
               :value="item.id"
             ></el-option>
           </el-select>

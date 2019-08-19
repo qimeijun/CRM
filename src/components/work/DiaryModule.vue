@@ -251,13 +251,15 @@ export default {
                 return false;
             } 
             let params = {};
-            switch (this.$global.lang) {
+            switch (this.$lang) {
                 case 'en':
                     params.to = 'en';
                     break;
                 case 'zh':
                     params.to = 'zh';
                     break;
+                case 'vi':
+                    params.to = 'vi';
                 default:
                     params.to = 'en';
             }

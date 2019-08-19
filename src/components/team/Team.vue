@@ -74,7 +74,7 @@
             <div class="leader">Leader: {{ (teamInfo.projectManager && teamInfo.projectManager.userNameZh) }}</div>
             <div class="location">
               <el-avatar :size="25" :src="`${$global.avatarURI}${teamInfo.teamCountryLogo}`" style="margin-right:10px;"></el-avatar>
-              {{ $lang == $global.lang.en ? teamInfo.teamCountryEn : teamInfo.teamCountryZh }}
+              {{ teamInfo.teamCountryName }}
             </div>
           </div>
         </template>
@@ -102,7 +102,7 @@
                     <span
                       class="el-icon-location"
                       style="display: block;color:#909090"
-                    >{{ $lang == $global.lang.en ? item.userCountryEn : item.userCountryZh }}</span>
+                    >{{ item.userCountryName }}</span>
                   </div>
                 </div>
                 <span>{{ item.roleName }}</span>

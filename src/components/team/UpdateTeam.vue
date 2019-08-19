@@ -14,7 +14,7 @@
             <div>Leader: {{ (team.projectManager && team.projectManager.userNameZh) || userInfo.userNameZh }}</div>
             <div style="display: flex; align-items: center; margin-right: .2rem;">
               <el-avatar :size="20" :src="team.logo"></el-avatar>
-              <span style="margin-left: .1rem;">{{ $lang == $global.lang.en ? (team.teamCountryEn || selectCountry.areaNameEn): (team.teamCountryZh || selectCountry.areaNameZh) }}</span>
+              <span style="margin-left: .1rem;">{{ team.teamCountry || selectCountry.areaName }}</span>
             </div>
           </div>
         </div>
@@ -36,7 +36,7 @@
               @change="onChangeCountry"
             >
             <template v-if="countryList.length > 0">
-              <el-option v-for="(item, index) in countryList" :key="index" :label="$lang == $global.lang.en ? item.areaNameEn : item.areaNameZh" :value="item.id"></el-option>
+              <el-option v-for="(item, index) in countryList" :key="index" :label="item.areaName" :value="item.id"></el-option>
             </template>
             </el-select>
           </el-form-item>

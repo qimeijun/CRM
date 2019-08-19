@@ -8,7 +8,7 @@ import zh from './../locale/zh'
 import en from './../locale/en'
 import vi from './../locale/vi'
 
-import Element from 'element-ui'
+import ElementLocale from 'element-ui/lib/locale'
 
 Vue.use(VueI18n)
 // 获取浏览器 localStorage 中的数据
@@ -29,10 +29,7 @@ const messages = {
     locale: lang, // set locale
     messages, // set locale messages
   })
-  
-Vue.use(Element, {
-    i18n: (key, value) => i18n.t(key, value)
-})
+ElementLocale.i18n((key, value) => i18n.t(key, value))
 
 Vue.prototype.$lang = i18n.locale;
 

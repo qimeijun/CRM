@@ -40,7 +40,7 @@
         <el-table-column  fixed prop="itemNumber" :label="$t('project.tableHeader[0]')" width="50"></el-table-column>
         <el-table-column class-name="column--cursor" prop="itemName" :label="$t('project.tableHeader[1]')" min-width="100"></el-table-column>
         <el-table-column
-          :prop="$lang==$global.lang.en?'itemStatusEn':'itemStatusZh'"
+          prop="itemStatusName"
           :label="$t('project.tableHeader[2]')"
           width="100"
         ></el-table-column>
@@ -52,10 +52,10 @@
                 size="medium"
               >
               <img v-if="scope.row.probjectManagerProfileImage" style="object-fit: cover;" :src="`${$global.avatarURI}${scope.row.probjectManagerProfileImage}`" >
-              <span v-else>{{$lang==$global.lang.en?scope.row.probjectManagerNameEn.slice("")[0]:scope.row.probjectManagerNameZh.slice("")[0]}}</span>
+              <span v-else>{{scope.row.probjectManagerNameZh.slice("")[0] || scope.row.probjectManagerNameEn.slice("")[0]}}</span>
               </el-avatar>
               <!-- <img  :src="'https://vodcn.iworku.com/'+scope.row.img" alt /> -->
-              <span>{{$lang==$global.lang.en?scope.row.probjectManagerNameEn:scope.row.probjectManagerNameZh}}</span>
+              <span>{{scope.row.probjectManagerNameZh || scope.row.probjectManagerNameEn}}</span>
             </p>
           </template>
         </el-table-column>
@@ -66,7 +66,7 @@
               v-for="(item,index) in scope.row.itemLabelList.slice(0,10)"
               :key="index"
               size="medium"
-            >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh }}</el-tag>
+            >{{ item.labelNameEn }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="day" :label="$t('project.tableHeader[5]')" width="150" sortable></el-table-column>
@@ -180,10 +180,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label:
-                        this.$lang == this.$global.lang.en
-                          ? o.groupNameEn
-                          : o.groupNameZh
+                      label: o.groupNameEn
                     };
                   });
                   resolve(taglist);
@@ -200,10 +197,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label:
-                        this.$lang == this.$global.lang.en
-                          ? o.labelNameEn
-                          : o.labelNameZh,
+                      label: o.labelNameEn,
                       leaf: true
                     };
                   });

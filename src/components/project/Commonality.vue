@@ -91,7 +91,7 @@
         >
           <template slot-scope="scope">
             <el-rate :value="scope.row.grade-0" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
-            <p>{{$lang==$global.lang.en?scope.row.gradeEn:scope.row.gradeZh}}</p>
+            <p>{{ scope.row.gradeName }}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -111,7 +111,7 @@
           sortable
         >
           <template slot-scope="scope">
-            <p>{{$lang==$global.lang.en?scope.row.statusNameEn:scope.row.statusNameZh}}</p>
+            <p>{{scope.row.statusName}}</p>
           </template>
         </el-table-column>
         <el-table-column
@@ -268,10 +268,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label:
-                        this.$lang == this.$global.lang.en
-                          ? o.groupNameEn
-                          : o.groupNameZh
+                      label: o.groupNameEn
                     };
                   });
                   resolve(taglist);
@@ -288,10 +285,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label:
-                        this.$lang == this.$global.lang.en
-                          ? o.labelNameEn
-                          : o.labelNameZh,
+                      label: o.labelNameEn,
                       leaf: true
                     };
                   });

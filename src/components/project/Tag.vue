@@ -25,7 +25,7 @@
         :closable="closable"
         :color="closable?tagColor:''"
         @close="closeTag(index)"
-      >{{$lang==$global.lang.en?item.labelNameEn:item.labelNameZh}}</el-tag>
+      >{{ item.labelNameEn }}</el-tag>
       <el-button
         v-show="disableType&&!closable"
         size="medium"

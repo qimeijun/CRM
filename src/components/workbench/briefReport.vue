@@ -50,19 +50,15 @@
               <template v-else-if="item.followNodeType == '4'">{{ $t('workDiary.diarType.order') }}</template>
             </i>
             <div class="item_img">
-              <el-avatar size="medium">
-                <img
-                  v-if="item.followAddUserProfileImage"
-                  style="object-fit: cover;"
-                  :src="`${$global.avatarURI}${item.followAddUserProfileImage}`"
-                />
-                <span
-                  v-else
-                  style="color:white; font-size:18px;line-height:32px;"
-                >{{$lang==$global.lang.en?item.followAddUserNameEn.slice("")[0]:item.followAddUserNameZh.slice("")[0]}}</span>
+              <el-avatar
+                size="medium"
+                
+              >
+              <img v-if="item.followAddUserProfileImage" style="object-fit: cover;" :src="`${$global.avatarURI}${item.followAddUserProfileImage}`" >
+              <span v-else style="color:white; font-size:18px;line-height:32px;">{{ item.followAddUserNameZh.slice("")[0] || item.followAddUserNameEn.slice("")[0]}}</span>
               </el-avatar>
               <br />
-              <span>{{$lang==$global.lang.en?item.followAddUserNameEn:item.followAddUserNameZh}}</span>
+              <span>{{ item.followAddUserNameZh || item.followAddUserNameEn}}</span>
             </div>
             <p class="item_p">
               <span>{{item.followTitle}}</span>

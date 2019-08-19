@@ -23,7 +23,7 @@
         <el-option
           v-for="item in countryList"
           :key="item.id"
-          :label="$lang==$global.lang.en?item.areaNameEn:item.areaNameZh"
+          :label="item.areaName"
           :value="item.id"
         ></el-option>
       </el-select>
@@ -128,10 +128,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label:
-                        this.$lang == this.$global.lang.en
-                          ? o.groupNameEn
-                          : o.groupNameZh
+                      label: o.groupNameEn
                     };
                   });
                   resolve(taglist);
@@ -148,10 +145,7 @@ export default {
                   let taglist = res.datas.map(o => {
                     return {
                       value: o.id,
-                      label:
-                        this.$lang == this.$global.lang.en
-                          ? o.labelNameEn
-                          : o.labelNameZh,
+                      label:o.labelNameEn,
                       leaf: true
                     };
                   });

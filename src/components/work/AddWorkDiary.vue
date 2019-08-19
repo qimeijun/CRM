@@ -135,6 +135,7 @@
         prop="attachment"
       >
         <el-upload
+          ref="attachment-file"
           :action="$global.qiniuURL"
           list-type="picture-card"
           :on-preview="onAttachmentUploadPreview"
@@ -149,6 +150,43 @@
           <div class="content">
             <i style="font-size: 30px; color: white;" class="el-icon-paperclip"></i>
             <span class="text">{{ $t("public.btn.upload") }}</span>
+          </div>
+          <div slot="file" slot-scope="{file}">
+            <!-- 文件缩略图 -->
+            <img
+              v-if="['jpg', 'png', 'jpeg', 'gif'].includes((file.name).substr((file.name).lastIndexOf('.') + 1))"
+              class="el-upload-list__item-thumbnail"
+              :src="file.url" alt=""
+            >
+            <div v-else>
+              <span class="el-upload-list__item-thumbnail el-icon-paperclip" 
+                 :style="`background-color: ${attachColor[Math.floor(Math.random() * 4)]}; display: block; height: 80px; width: 80px; font-size: 35px; line-height: 80px; text-align: center; color: white;`">
+              </span>
+            </div>
+            
+            <!-- 文件是否上传成功的标志 -->
+            <label class="el-upload-list__item-status-label">
+              <i :class="{
+                'el-icon-upload-success': true,
+                'el-icon-check': true
+              }"></i>
+            </label>
+            <!-- 文件上传进度条 -->
+            <el-progress
+              v-if="file.status === 'uploading'"
+              type="circle"
+              :stroke-width="6"
+              :percentage="parseInt(file.percentage, 10)"
+            >
+            </el-progress>
+            <span class="el-upload-list__item-actions">
+              <span
+                class="el-upload-list__item-delete"
+                @click="handleRemove(file)"
+              >
+                <i class="el-icon-delete"></i>
+              </span>
+            </span>
           </div>
         </el-upload>
         <el-dialog :visible.sync="attachmentDialogVisible" title="　" :modal="false">
@@ -265,7 +303,8 @@ export default {
       projectList: [],
       targetList: [],
       uploadData: {},
-      submitBtnLoading: false
+      submitBtnLoading: false,
+      attachColor: ["#F39470", "#2B79E7", "#59CC9A", "#59cc6b"]
     };
   },
   created() {
@@ -465,6 +504,9 @@ export default {
           });
         }
         this.getTarget(this.diaryForm.projectName);
+    },
+    handleRemove(file) {
+        this.$refs['attachment-file'].handleRemove(file);
     }
   },
   watch: {

@@ -95,7 +95,7 @@
               :placeholder="$t('member.placeholder.country')"
             >
             <template v-if="countryList.length > 0">
-              <el-option v-for="(item, index) in countryList" :key="index" :label="$lang == $global.lang.en ? item.areaNameEn : item.areaNameZh" :value="item.id"></el-option>
+              <el-option v-for="(item, index) in countryList" :key="index" :label="item.areaName" :value="item.id"></el-option>
             </template>
             </el-select>
           </el-form-item>

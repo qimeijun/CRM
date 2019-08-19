@@ -1,5 +1,3 @@
-
-const devMode = true;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 // 代码打包
 const CompressionPlugin = require("compression-webpack-plugin")
@@ -32,7 +30,17 @@ if (process.env.NODE_ENV == 'production') {
 module.exports = {
     assetsDir: 'assets',
     configureWebpack: {
-        plugins: plugins
+        plugins: plugins,
+        // 外部扩展   不用下载包，直接引用cdn
+        externals: {
+            "axios": "axios",
+            "echarts": "echarts",
+            "vuex": "Vuex",
+            "vue": "Vue",
+            "vue-router": "VueRouter",
+            "qs": "Qs",
+            "core-js": "core"
+          }
     },
     css: {
         loaderOptions: {

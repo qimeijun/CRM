@@ -9,26 +9,26 @@ import en from './../locale/en'
 import vi from './../locale/vi'
 
 import ElementLocale from 'element-ui/lib/locale'
-
 Vue.use(VueI18n)
 // 获取浏览器 localStorage 中的数据
 let lang = window.localStorage.getItem('lang');
 if (!lang) {
-    lang = 'en';
+  lang = 'en';
 }
 Vue.config.lang = lang;
 
 
 const messages = {
-    zh: Object.assign(zhLocale, zh),
-    en: Object.assign(enLocale, en),
-    vi: Object.assign(viLocale, vi)
-  }
-  // Create VueI18n instance with options
-  const i18n = new VueI18n({
-    locale: lang, // set locale
-    messages, // set locale messages
-  })
+  zh: Object.assign(zhLocale, zh),
+  en: Object.assign(enLocale, en),
+  vi: Object.assign(viLocale, vi)
+}
+
+// Create VueI18n instance with options
+const i18n = new VueI18n({
+  locale: lang, // set locale
+  messages, // set locale messages
+})
 ElementLocale.i18n((key, value) => i18n.t(key, value))
 
 Vue.prototype.$lang = i18n.locale;

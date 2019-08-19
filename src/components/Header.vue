@@ -9,7 +9,7 @@
       <!-- 语言 -->
       <li>
         <el-dropdown style="cursor: pointer;" trigger="click" @command="onChangeLang">
-          <span class="el-dropdown-link">
+          <span class="el-dropdown-link" style="font-size:18px;">
             {{ $lang }}<i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown" class="header_title-lang">

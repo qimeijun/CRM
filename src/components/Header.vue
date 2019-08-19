@@ -8,10 +8,16 @@
       </li>
       <!-- 语言 -->
       <li>
-        <span class="head__right__lang" @click="onChangeLang">
-          <template v-if="$lang == 'en'">ZH</template>
-          <template v-else>EN</template>
-        </span>
+        <el-dropdown style="cursor: pointer;" trigger="click" @command="onChangeLang">
+          <span class="el-dropdown-link">
+            {{ $lang }}<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown" class="header_title-lang">
+            <el-dropdown-item :command="$global.lang.en" :disabled="$global.lang.en == $lang">en</el-dropdown-item>
+            <el-dropdown-item :command="$global.lang.zh" :disabled="$global.lang.zh == $lang">zh</el-dropdown-item>
+            <el-dropdown-item :command="$global.lang.vi" :disabled="$global.lang.vi == $lang">vi</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </li>
       <!-- 站内信 -->
       <li>
@@ -133,16 +139,11 @@ export default {
     /**
      *  切换语言(中文、英语)
      */
-    onChangeLang() {
-      let lang = "en";
-      if (this.$lang == "en") {
-        lang = "zh";
-      } else {
-        lang = "en";
-      }
-      this.$lang = lang;
-      this.$i18n.locale = lang;
-      window.localStorage.setItem("lang", lang);
+    onChangeLang(command) {
+      this.$lang = command;
+      // this.$i18n.locale = command;
+      window.localStorage.setItem("lang", command);
+      this.onRefresh();
     },
     /**
      * 页面刷新
@@ -382,4 +383,12 @@ $border-color: #ebeaee;
     }
   }
 }
+</style>
+<style lang="scss">
+  .header_title-lang {
+    padding: 10px 0 !important;
+    li {
+      padding: 0 20px !important;
+    }
+  }
 </style>

@@ -6,11 +6,11 @@
             <div class="member-table-list-user">
                 <el-avatar :size="50" :src="`${$global.avatarURI}${item.userProfileImage}`"></el-avatar>
                 <div class="member-table-list-user-right">
-                    <span class="user-name">{{ $lang == $global.en ? item.userNameEn : item.userNameZh }}</span>
-                    <span class="el-icon-location">{{ $lang == $global.en ? item.userCountryEn : item.userCountryZh }}</span>
+                    <span class="user-name">{{ item.userNameEn || item.userNameZh }}</span>
+                    <span class="el-icon-location">{{ item.userCountryName }}</span>
                 </div>
             </div>
-            <div>{{ $lang == $global.en ? item.roleName : item.roleName }}</div>
+            <div>{{ item.roleName }}</div>
             <div>{{ item.team }}</div>
             <div>{{ item.itemCount || 0}}</div>
             <!-- targetCompanyProcessingCount -->

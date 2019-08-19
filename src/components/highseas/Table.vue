@@ -23,7 +23,7 @@
         <el-option
           v-for="item in countryList"
           :key="item.id"
-          :label="$lang==$global.lang.en?item.areaNameEn:item.areaNameZh"
+          :label="item.areaName"
           :value="item.id"
         ></el-option>
       </el-select>

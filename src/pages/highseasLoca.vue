@@ -16,7 +16,7 @@
           width="200"
         ></el-table-column>
         <el-table-column
-          :prop="$lang==$global.lang.en?'userNameEn':'userNameZh'"
+          :prop="userName"
           :label="$t('target.loca.tableHeader[3]')"
           width="200"
         >

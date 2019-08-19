@@ -23,7 +23,7 @@
             v-for="item in colorTypes"
             :key="item.id"
             effect="dark"
-            :content="$lang==$global.lang.en?item.nameEn:item.nameZh"
+            :content="item.name"
             placement="top"
           >
             <el-radio-button

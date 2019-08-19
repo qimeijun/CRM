@@ -40,7 +40,7 @@
         <el-table-column fixed prop="itemNumber" :label="$t('project.tableHeader[0]')" width="50"></el-table-column>
         <el-table-column prop="itemName" :label="$t('project.tableHeader[1]')" min-width="100"></el-table-column>
         <el-table-column
-          :prop="$lang==$global.lang.en?'itemStatusEn':'itemStatusZh'"
+          prop="itemStatusName"
           :label="$t('project.tableHeader[2]')"
           width="100"
         ></el-table-column>

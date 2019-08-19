@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="product_redact">
-      <el-dialog :title="$t('project.updateTitle')" :visible.sync="show" width="600px">
+      <el-dialog :title="$t('project.updateTitle')" :visible.sync="show" :width="$global.dialogWidth">
         <ChangeProduct :product="product" @close="show = false; getProduct(itemid);"></ChangeProduct>
       </el-dialog>
     </div>

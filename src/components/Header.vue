@@ -135,13 +135,15 @@ export default {
      *  切换语言(中文、英语)
      */
     onChangeLang() {
+      let lang = "en";
       if (this.$lang == "en") {
-        Vue.config.lang = "zh";
-        window.localStorage.setItem("lang", "zh");
+        lang = "zh";
       } else {
-        Vue.config.lang = "en";
-        window.localStorage.setItem("lang", "en");
+        lang = "en";
       }
+      this.$lang = lang;
+      this.$i18n.locale = lang;
+      window.localStorage.setItem("lang", lang);
     },
     /**
      * 页面刷新

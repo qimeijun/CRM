@@ -2,7 +2,8 @@
 <!-- 单个日志 -->
     <section class="diary-module" v-if="!isDeleteDiary">
         <div class="diary-module__left">
-            <div class="time" :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">
+            <!--  :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`" -->
+            <div class="time">
                 <p>{{ timeInfo.year }}</p>
                 <p>{{ timeInfo.month }}.{{ timeInfo.day }}</p>
                 <p>{{ timeInfo.hour }}:{{ timeInfo.minute }}</p>
@@ -15,7 +16,8 @@
             </div>
         </div>
         <div class="diary-module__right">
-            <div class="project" :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`">
+            <!-- :style="`background-color: ${diaryTypeColors[parseInt(item.followNodeType) - 1]}`" -->
+            <div class="project" >
                 <span>
                     {{ item.followItemIdName }}
                 </span>
@@ -98,7 +100,7 @@
                 <!-- 翻译内容显示 start -->
                 <div v-if="translateContent" style="margin-top: 20px; margin-bottom: 20px; line-height: 20px;word-break: break-all;">
                     <p style="line-height: 30px;">{{ $t("workDiary.translateTip") }}：</p>
-                    {{ translateContent }}
+                    <div class="dairy-content" v-html="translateContent"></div>
                 </div>
                 <!-- 翻译内容显示 end -->
                 <!-- 聊天记录 -->
@@ -122,7 +124,7 @@
                     权限：
                         1、除了自己，都可以
                  -->
-                <LeaveMessage v-if="item.followAddUser != userInfo.id" :parent="item" @onCloseLeaveMessage="onQueryDiary"></LeaveMessage>
+                <LeaveMessage v-if="item.followAddUser != userInfo.id && isShowLeaveMessage" :parent="item" @onCloseLeaveMessage="onQueryDiary"></LeaveMessage>
                 <!-- 留言信息 start -->
                 <template v-if="item && item.nodeList && item.nodeList.length > 0">
                     <Message v-for="(nItem, nIndex) in item.nodeList" :key="nIndex" :message="nItem" @onCloseLeaveMessage="onQueryDiary"></Message>
@@ -141,7 +143,7 @@
         :modal="false"
         :lock-scroll="true"
         :close-on-click-modal="false"
-        width="30%">
+        :width="$global.dialogWidth">
         <el-scrollbar class="scrollbar">
             <ModifyWorkDiary :id="$parent.id" :type="$parent.type" :diaryInfo="diary" @onOperateSuccess="modifyWorkDiaryDialogVisible=false;onQueryDiary();"></ModifyWorkDiary>
         </el-scrollbar>
@@ -207,7 +209,8 @@ export default {
                 minute: "12"
             },
             isAllowOperate: true,
-            isDeleteDiary: false
+            isDeleteDiary: false,
+            isShowLeaveMessage: false
         }
     },
     computed: {
@@ -236,6 +239,7 @@ export default {
                     this.modifyWorkDiaryDialogVisible =  true;
                     break;
                 case 'leave':
+                    this.isShowLeaveMessage = true;
                     break;
                 case 'delete':
                     this.deleteDiary();
@@ -330,7 +334,7 @@ $-scope-padding-lr: .2rem;
         margin-right: .2rem;
         .time {
             padding: 10px 0;
-            width:44px;
+            width:65px;
             border-radius: $--default-border-radius;
             background-color: #31376D;
             color: $--default-white;
@@ -342,7 +346,7 @@ $-scope-padding-lr: .2rem;
             text-align: center;
             line-height: 25px;
             margin-top: 10px;
-            width:44px;
+            width:65px;
             // background-color: #31376D;
             border-radius:12px;
             color: $--default-white;

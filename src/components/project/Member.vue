@@ -7,7 +7,7 @@
     </div>
     <div class="member_list" v-for="(item, index) in memberlist" :key="'member'+index">
       <i :style="`background-color:${item.roleColor}`">
-        <template >{{$lang==$global.lang.en?item.roleNameEn:item.roleName}}</template>
+        <template >{{ item.roleName }}</template>
         </i>
       <p class="list_img">
         <el-avatar size="medium" >
@@ -39,7 +39,7 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <el-scrollbar>
         <ChangeAdministrator :params="{id: id, type: 'addMemberForProject'}" @getManager="addMemberForProject"></ChangeAdministrator>

@@ -49,6 +49,7 @@
           :end-placeholder="$t('workBench.addremind.placeholder.endDate')"
           format="yyyy / MM / dd "
           value-format="yyyy-MM-dd"
+          :picker-options="pickerOptions"
         ></el-date-picker>
       </el-form-item>
       <!-- 起止日期 end -->
@@ -132,7 +133,7 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <el-scrollbar>
         <AddNotifyUser
@@ -280,6 +281,11 @@ export default {
             }
           }
         ]
+      },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
+        }
       }
     };
   },

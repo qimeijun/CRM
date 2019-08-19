@@ -73,7 +73,7 @@
       :modal="false"
       :lock-scroll="true"
       :close-on-click-modal="false"
-      width="30%">
+      :width="$global.dialogWidth">
       <el-scrollbar>
         <AddAdministrator @getManager="getManager" 
             :oldAdminstrator="currentProjectManger" 

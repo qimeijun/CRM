@@ -48,7 +48,7 @@
         :append-to-body="true"
         :modal="false"
         :lock-scroll="true"
-        width="30%"
+        :width="$global.dialogWidth"
       >
         <el-scrollbar class="scrollbar">
           <UploadReport :targetid="targetid" type="add" @close="closeShow"></UploadReport>
@@ -64,7 +64,7 @@
         :append-to-body="true"
         :modal="false"
         :lock-scroll="true"
-        width="30%"
+        :width="$global.dialogWidth"
       >
         <el-scrollbar class="scrollbar">
           <UploadReport

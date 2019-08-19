@@ -9,7 +9,7 @@
         :title="$t('workBench.remind.dialogTitle')"
         :visible.sync="dialogFormVisible"
         :close-on-click-modal="false"
-        width="30%"
+        :width="$global.dialogWidth"
       >
         <AddRemind :itemid="itemid" @onSuccess="onAddSuccess"></AddRemind>
       </el-dialog>

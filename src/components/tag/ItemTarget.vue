@@ -15,7 +15,7 @@
                     :colors="['#E50054', '#E50054', '#E50054']"
                     disabled>
                 </el-rate>
-                <span style="display: inline-block; margin-top: 10px;">{{ data.statusNameZh }}</span>
+                <span style="display: inline-block; margin-top: 10px;">{{ data.statusName }}</span>
             </div>
         </div>
     </section>

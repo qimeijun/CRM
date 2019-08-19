@@ -3,7 +3,7 @@
         <div v-if="data.id" class="tag-item-project__content">
             <div class="title">{{ data.companyName }}</div>
             <div class="user">
-                <el-avatar :size="50" :src="`${data.avatarURI}${data.probjectManagerProfileImage}`"></el-avatar>
+                <el-avatar :size="50" :src="`${$global.avatarURI}${data.probjectManagerProfileImage}`"></el-avatar>
                 <div style="margin-left: .1rem;">
                     <p style="font-size:16px;">{{ data.probjectManagerNameZh || data.probjectManagerNameEn }}</p>
                     <i class="el-icon-location">{{ '越南' }}</i>

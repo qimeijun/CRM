@@ -166,6 +166,9 @@
 import { getQiniuToken, rename } from "@/plugins/configuration.js"
 import { mapGetters } from 'vuex'
 export default {
+  components: {
+        Attachment: () => import('@/components/lib/Attachment.vue')
+  },
   props: {
     // 项目ID、目标公司ID、成员ID
     id: {
@@ -280,7 +283,7 @@ export default {
             if (res.iworkuCode == 200) {
                 this.projectList = res.datas;
             }
-        });
+      });
     },
     /**
      *  根据项目获取目标公司
@@ -307,7 +310,7 @@ export default {
     /**
      * 提交表单
      */
-    onSubmitForm(formName) {
+    onSubmitForm(formName="diaryForm") {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let params = {
@@ -367,7 +370,13 @@ export default {
     /**
      * 表单重置
      */
-    onResetForm(formName) {
+    onResetForm(formName="diaryForm") {
+      this.diaryForm.chatLogList = [];
+      this.diaryForm.attachmentList = [];
+      this.diaryForm.attachmentPreview = "";
+      this.diaryForm.chatLogPreview = "";
+      this.diaryForm.attachment = [];
+      this.diaryForm.chatLog = [];
       this.$refs[formName].resetFields();
     },
     /**
@@ -455,20 +464,19 @@ export default {
             });
           });
         }
-
         this.getTarget(this.diaryForm.projectName);
     }
   },
   watch: {
-    type: {
-      handler(newVal) {
-        if (newVal == 'project') {
-          this.diaryForm.projectName = this.id;
-          this.getTarget(this.id);
-        } 
-      },
-      immediate: true
-    },
+    // type: {
+    //   handler(newVal) {
+    //     if (newVal == 'project') {
+    //       this.diaryForm.projectName = this.id;
+    //       this.getTarget(this.id);
+    //     } 
+    //   },
+    //   immediate: true
+    // },
     diaryInfo: {
       handler(newVal) {
         if (newVal && newVal.id) {
@@ -482,6 +490,15 @@ export default {
         if (newVal && this.type == 'target') {
           this.diaryForm.projectName = newVal;
           this.diaryForm.targetCompany = this.id;
+          this.getTarget(newVal);
+        }
+      },
+      immediate: true
+    },
+    id: {
+      handler(newVal) {
+        if (newVal && this.type == 'project') {
+          this.diaryForm.projectName = newVal;
           this.getTarget(newVal);
         }
       },

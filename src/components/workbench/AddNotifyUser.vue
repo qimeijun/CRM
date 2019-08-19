@@ -9,8 +9,8 @@
             <div class="add-notify-user__list-left-user">
               <div
                 class="add-notify-user__list-name"
-              >{{ $lang == $global.en ? item.userNameEn : item.userNameZh }}</div>
-              <div>{{ $lang == $global.en ? item.roleNameEn : item.roleNameZh }}</div>
+              >{{ item.userNameZh||item.userNameEn }}</div>
+              <div>{{ item.roleName }}</div>
             </div>
           </div>
           <span class="add-notify-user__list-time">{{ item.addTimeStr }}</span>

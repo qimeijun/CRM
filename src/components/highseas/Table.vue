@@ -40,7 +40,7 @@
         <el-option
           v-for="item in targetTypeList"
           :key="item.id"
-          :label="$lang==$global.lang.en?item.nameEn:item.nameZh"
+          :label="item.name"
           :value="item.id"
         ></el-option>
       </el-select>

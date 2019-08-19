@@ -63,7 +63,7 @@
         <el-option
           v-for="item in targetTypeList"
           :key="item.value"
-          :label="$lang==$global.lang.en?item.nameEn:item.nameZh"
+          :label="item.name"
           :value="item.value"
         ></el-option>
       </el-select>
@@ -181,7 +181,7 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <el-scrollbar class="scrollbar">
         <ChangeAdministrator
@@ -202,7 +202,7 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <el-scrollbar class="scrollbar">
         <AddTarget @close="addShow=false"></AddTarget>
@@ -218,7 +218,7 @@
       :append-to-body="true"
       :modal="false"
       :lock-scroll="true"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <el-scrollbar class="scrollbar">
         <ImportTarget :itemid="itemid" @close="importShow=false" @getList="getPrivate(itemid, 1)"></ImportTarget>

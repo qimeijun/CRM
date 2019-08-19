@@ -4,7 +4,7 @@
     <el-dialog
       :title="$t('project.add')"
       :visible.sync="show"
-      width="610px"
+      :width="$global.dialogWidth"
       :close-on-click-modal="false"
     >
       <ul class="addProject_ul">
@@ -68,7 +68,7 @@
               <el-option
                 v-for="item in industryList"
                 :key="item.value"
-                :label="$lang==$global.lang.en?item.nameEn:item.nameZh"
+                :label="item.name"
                 :value="item.value"
               ></el-option>
             </el-select>

@@ -201,7 +201,7 @@
       :modal="false"
       :lock-scroll="true"
       :close-on-click-modal="false"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <el-scrollbar>
         <UpdateTeam :team="teamInfo" @updateTeam="updateTeamInfo"></UpdateTeam>
@@ -218,7 +218,7 @@
       :modal="false"
       :lock-scroll="true"
       :close-on-click-modal="false"
-      width="30%"
+      :width="$global.dialogWidth"
     >
       <el-scrollbar>
         <HandOverAdministrator
@@ -241,7 +241,7 @@
         :modal="false"
         :lock-scroll="true"
         :close-on-click-modal="false"
-        width="30%"
+        :width="$global.dialogWidth"
       >
         <el-scrollbar>
           <AddMember :params="{orgId: teamInfo.id, userRole: $global.userRole.member}" @onOperateSuccess="addMemberDialogVisible=false; getTeamInfo()"></AddMember>
@@ -259,7 +259,7 @@
         :modal="false"
         :lock-scroll="true"
         :close-on-click-modal="false"
-        width="30%"
+        :width="$global.dialogWidth"
       >
         <el-scrollbar>
           <AddTeam @updateTeam="addTeamDialogVisible=false; getTeamInfo();"></AddTeam>

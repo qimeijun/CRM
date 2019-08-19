@@ -63,7 +63,7 @@
             :append-to-body="true"
             :modal="false"
             :lock-scroll="true"
-            width="30%">
+            :width="$global.dialogWidth">
             <el-scrollbar class="scrollbar">
                 <ChangeAdministrator @getManager="getManager" :oldAdminstrator="item" operate="handOver" :params="{type: 'handoverProjectManger', id:item.teamId }"></ChangeAdministrator>
             </el-scrollbar>

@@ -411,7 +411,7 @@ export default {
         activation: "The activation",
         transfer: "Transfer",
         intoSea: " Move to Public",
-        Private: "移入私海en",
+        Private: "Move into private",
         view: "View",
         updateTitle:"Modify the data",
         placeholder: {

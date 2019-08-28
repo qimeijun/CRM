@@ -16,7 +16,7 @@
           width="200"
         ></el-table-column>
         <el-table-column
-          :prop="userNameZh"
+          prop="userNameZh"
           :label="$t('target.loca.tableHeader[3]')"
           width="200"
         >
@@ -64,10 +64,8 @@
           <template slot-scope="scope">
             <Operate>
               <ul>
-                <li @click="SetHistoryPath()">
-                  <router-link
-                    :to="`/target/detail/info/${scope.row.targetCompanyId}/${scope.row.itemId}`"
-                  >{{$t("target.loca.view")}}</router-link>
+                <li class="table_delete"  @click="SetHistoryPath(`/target/detail/info/${scope.row.targetCompanyId}/${scope.row.itemId}`)">
+                  {{$t("target.loca.view")}}
                 </li>
               </ul>
             </Operate>
@@ -128,8 +126,9 @@ export default {
           }
         });
     },
-     SetHistoryPath(){
+     SetHistoryPath(path){
       session.set("historyPath",`/highseas/loca/${this.targetName}`);
+      this.$router.push({path});
     }
   }
 };

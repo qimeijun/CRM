@@ -97,7 +97,7 @@
         <el-table-column
           prop="updateTimeStr"
           :label="$t('projectInfo.commonality.tableHeader[2]')"
-          width="120"
+          width="140"
           sortable
         >
           <template slot-scope="scope">
@@ -117,7 +117,7 @@
         <el-table-column
           prop="addTimeStr"
           :label="$t('projectInfo.commonality.tableHeader[4]')"
-          width="120"
+          width="140"
           sortable
         >
           <template slot-scope="scope">
@@ -127,17 +127,15 @@
         <el-table-column
           prop="division"
           :label="$t('projectInfo.commonality.tableHeader[5]')"
-          width="140"
+          width="150"
           sortable
         ></el-table-column>
-        <el-table-column :label="$t('projectInfo.commonality.tableHeader[6]')" width="60">
+        <el-table-column :label="$t('projectInfo.commonality.tableHeader[6]')" width="80">
           <template slot-scope="scope">
             <Operate>
               <ul>
-                <li @click="SetHistoryPath()">
-                  <router-link
-                    :to="`/target/detail/info/${scope.row.id}/${scope.row.itemId}`"
-                  >{{$t("project.view")}}</router-link>
+                <li class="table_operation" @click="SetHistoryPath(`/target/detail/info/${scope.row.id}/${scope.row.itemId}`)">
+                 {{$t("project.view")}}
                 </li>
                 <li
                   v-show="itemStatus!=2&&userInfo.userRole!=$global.userRole.member&&allotType!=null&&scope.row.status!=4"
@@ -514,8 +512,9 @@ export default {
           }
         });
     },
-    SetHistoryPath(){
+    SetHistoryPath(path){
       session.set("historyPath",`/project/detail/commonality/${this.itemid}/${this.adminId}`);
+      this.$router.push({path});
     }
   }
 };

@@ -112,9 +112,9 @@ export default {
         this.$http
           .post(`/third_party/qiniu/delete/${this.researchFile}`)
           .then(res => {
-            if (res.iworkuCode == 200) {
+            // if (res.iworkuCode == 200) {
               this.researchFile = response.key;
-            }
+            // }
           });
       }
       this.fileProgress = 100;

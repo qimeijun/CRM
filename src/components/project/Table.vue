@@ -64,7 +64,7 @@
             <el-tag
               class="table_tag"
               v-for="(item,index) in scope.row.itemLabelList.slice(0,10)"
-              :key="index"
+              :key="`${index}_${item.id}`"
               size="medium"
             >{{ item.labelNameEn }}</el-tag>
           </template>

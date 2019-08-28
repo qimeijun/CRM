@@ -68,6 +68,7 @@ instance.interceptors.response.use((response) => {
     }
     return response.data;
 }, (error) => {
+    console.log(error);
     return Promise.resolve({
         iworkuCode: '201',
         datas: [],

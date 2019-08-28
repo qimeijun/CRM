@@ -310,7 +310,8 @@ export default {
     ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
-    this.member = this.userInfo.userRole==this.$global.userRole.superAdministrator?"":this.userInfo.id;
+    // this.member = this.userInfo.userRole==this.$global.userRole.superAdministrator ? "" : this.userInfo.id;
+
     this.targetTypeList =[ {nameEn: "ALL",nameZh: "全部",value: ""},...await getTargetType(this)];
     this.getPrivate(this.itemid, 1);
     this.getItemStatus(this.itemid);
@@ -488,10 +489,16 @@ export default {
           if (res.iworkuCode == 200) {
             if(this.userInfo.userRole==this.$global.userRole.regionalManager){
               this.memberList =res.datas.filter(o=>{
-                return o.userRole!=this.$global.userRole.regionalManager
+                return o.userRole!=this.$global.userRole.regionalManager || o.id == this.userInfo.id
               })
             }else{
               this.memberList =[{id:"",userNameEn:"ALL",userNameZh:"所有人"},...res.datas] ;
+            }
+
+            // 当前登录人是否是这个项目的成员
+            let index = this.memberList.findIndex(val => val.id == this.userInfo.id);
+            if (index > -1) {
+              this.member = this.userInfo.id;
             }
           }
         });

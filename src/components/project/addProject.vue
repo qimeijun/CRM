@@ -67,7 +67,7 @@
             <el-select v-model="secondForm.tmt" :placeholder="$t('project.placeholder.tmt')">
               <el-option
                 v-for="item in industryList"
-                :key="item.value"
+                :key="item.id"
                 :label="item.name"
                 :value="item.value"
               ></el-option>
@@ -204,6 +204,7 @@
                   :src="`${$global.avatarURI}${thirdlyForm.videoList[0].nodeFiles}`"
                 ></video>
                 <el-upload
+                  ref="project-video"
                   :action="$global.qiniuURL"
                   :show-file-list="false"
                   accept="video/ogg, video/mp4, video/webm"
@@ -211,6 +212,7 @@
                   :before-upload="onBeforeAvatarUploadVideo"
                   :on-progress="getVideoProgress"
                   :data="uploadData"
+                  :auto-upload="true"
                   class="video_upload"
                 >
                   <el-button
@@ -231,11 +233,13 @@
                   style="margin-bottom:14px;"
                 ></el-input>
                 <el-progress
+                  style="display: inline"
                   v-show="videoPercentage"
                   :percentage="videoPercentage"
                   :format="videoformat"
                   color="#E50054"
                 ></el-progress>
+                <span v-if="videoPercentage" @click="onCanceVideo" style="padding-left: 3.5%; font-size: 12px; color: #4937ea; cursor: pointer;">取消上传</span>
               </el-col>
             </el-row>
           </el-form-item>
@@ -273,7 +277,7 @@
               <el-col style="display:flex;flex-wrap:wrap;">
                 <Attachment
                   v-for="(item,index) in thirdlyForm.learnList"
-                  :key="'accessory'+index"
+                  :key="'accessory2'+index"
                   :name="item.nodeFiles"
                   :isDelete="true"
                   @onDelete="onDeleteLearn(index)"
@@ -572,9 +576,9 @@ export default {
             `/third_party/qiniu/delete/${this.thirdlyForm.videoList[0].nodeFiles}`
           )
           .then(res => {
-            if (res.iworkuCode == 200) {
+            // if (res.iworkuCode == 200) {
               this.thirdlyForm.videoList[0].nodeFiles = response.key;
-            }
+            // }
           });
       }
       this.videoPercentage = 100;
@@ -596,11 +600,11 @@ export default {
       const isLt20M = file.size / 1024 / 1024 < 20;
       if (!isLt20M) {
         this.$message.error(this.$t("project.rules.video"));
+        return Promise.reject();
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);
-      this.uploadData.key = rename(file.name);
-      return isLt20M;
+      this.uploadData.key = rename(file.name);      
     },
     // 附件/学习资料上传之前
     async onBeforeAvatarUploadAccessory(file) {
@@ -631,9 +635,9 @@ export default {
           `/third_party/qiniu/delete/${this.thirdlyForm.attachmentList[index].nodeFiles}`
         )
         .then(res => {
-          if (res.iworkuCode == 200) {
+          // if (res.iworkuCode == 200) {
             this.thirdlyForm.attachmentList.splice(index, 1);
-          }
+          // }
         });
     },
     onDeleteLearn(index) {
@@ -642,9 +646,9 @@ export default {
           `/third_party/qiniu/delete/${this.thirdlyForm.learnList[index].nodeFiles}`
         )
         .then(res => {
-          if (res.iworkuCode == 200) {
+          // if (res.iworkuCode == 200) {
             this.thirdlyForm.learnList.splice(index, 1);
-          }
+          // }
         });
     },
     // 删除图片
@@ -654,13 +658,21 @@ export default {
           `/third_party/qiniu/delete/${this.thirdlyForm.imageList[index].nodeFiles}`
         )
         .then(res => {
-          if (res.iworkuCode == 200) {
+          // if (res.iworkuCode == 200) {
             this.thirdlyForm.imageList.splice(index, 1);
             if (this.thirdlyForm.imageList.length == 0) {
               this.imgShow = true;
             }
-          }
+          // }
         });
+    },
+    /**
+     * 取消视频的上传
+     */
+    onCanceVideo() {
+      this.$refs['project-video'].abort(this.thirdlyForm.videoList[0].nodeFiles);
+      this.thirdlyForm.videoList[0].nodeFiles = "";
+      this.videoPercentage = 0;
     }
   }
 };

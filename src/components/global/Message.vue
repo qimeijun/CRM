@@ -39,7 +39,7 @@ export default {
         }
     },
     created() {
-        setTimeout(()=>{ this.isShow = false;},2*1000)
+        setTimeout(()=>{ this.isShow = false;}, 3*1000)
     },
     methods: {
         // 关闭弹窗
@@ -58,6 +58,7 @@ export default {
     width: 100%;
     position: fixed;
     top: 0;
+    z-index: 9999;
     .mask {
         height: 100%;
         width: 100%;

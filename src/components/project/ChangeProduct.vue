@@ -227,9 +227,9 @@ export default {
               //   删除
               this.deleteList.map(o => {
                 this.$http.post(`/third_party/qiniu/delete/${o}`).then(res => {
-                  if (res.iworkuCode == 200) {
+                  // if (res.iworkuCode == 200) {
                     this.$emit("close");
-                  }
+                  // }
                 });
               });
             });

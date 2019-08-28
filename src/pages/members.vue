@@ -44,7 +44,7 @@
       <!-- 添加成员 dialog start -->
       <el-dialog
         class="el-dialog__scroll"
-        :title="$t('selectRegionalManager.title')"
+        :title="$t('member.add')"
         :visible.sync="addMemberDialogVisible"
         top="5vh"
         :append-to-body="true"

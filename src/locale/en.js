@@ -477,7 +477,8 @@ export default {
             edit: "Edit",
             detele:"detele",
             continueUpload:"Continue to upload",
-            UploadAgain:"Upload again"
+            UploadAgain:"Upload again",
+            cancelUpload: "Cancel Upload"
         },
         tableHeader: ["ID", "Project", "Status", "Administrator", "Tag", "Working Days", "Add date", "Operate"],
         status: ["ongoing", "Has ended", "Restart the project", "The new project"]

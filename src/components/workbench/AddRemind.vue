@@ -209,7 +209,7 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!value) {
-                callback(new Error(this.$t("workBench.remind.rules.content")));
+                callback(new Error(this.$t("workBench.addremind.rules.content")));
               } else {
                 callback();
               }

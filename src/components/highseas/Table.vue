@@ -41,7 +41,7 @@
           v-for="item in targetTypeList"
           :key="item.id"
           :label="item.name"
-          :value="item.id"
+          :value="item.value"
         ></el-option>
       </el-select>
       <!-- 分类 end -->

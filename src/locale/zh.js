@@ -478,8 +478,8 @@ export default {
             edit: "编辑",
             detele:"删除",
             continueUpload:"继续上传",
-            UploadAgain:"重新上传"
-
+            UploadAgain:"重新上传",
+            cancelUpload: "取消上传"
         },
         tableHeader: ["ID", "项目名称", "状态", "管理员", "标签", "进行天数", "添加时间", "操作"],
         status: ["进行中", "已结束", "重启项目", "新项目"]

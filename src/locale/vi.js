@@ -18,11 +18,11 @@ export default {
             chatLog: "Nhật ký cuộc trò chuyện", 
             attachment: "Tệp đính kèm",
             leaveMessage: "Nội dung lời nhắn", 
-            orderNo: "订单编号",
-            orderName: "产品",
-            orderNum: "订单数量",
-            orderPrice: "订单价格",
-            orderDescription: "订单描述",
+            orderNo: "Số thứ tự",
+            orderName: "Sản phẩm",
+            orderNum: "Số lượng đặt hàng",
+            orderPrice: "Giá đặt hàng",
+            orderDescription: "Đơn đặt hàng Mô tả",
             orderType: "Loại hình đơn hàng"
         },
         rules: {
@@ -475,8 +475,8 @@ export default {
             edit:"Chỉnh sửa" ,
             detele:"Xóa",
             continueUpload:"Tiếp tục tải lên",
-            UploadAgain:"Tải lên lại"
-            
+            UploadAgain:"Tải lên lại",
+            cancelUpload: "Hủy tải lên"
         },
         tableHeader: ["ID","Tên dự án","Trạng thái","Người quản lý","Nhãn","Số ngày thực hiện","Thêm thời gian","Thao tác"],
         status: ["Đang thực hiện", "Đã kết thúc", "Dự án khởi động lại", "Dự án mới"]

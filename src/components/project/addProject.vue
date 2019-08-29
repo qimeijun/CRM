@@ -239,7 +239,7 @@
                   :format="videoformat"
                   color="#E50054"
                 ></el-progress>
-                <span v-if="videoPercentage" @click="onCanceVideo" style="padding-left: 3.5%; font-size: 12px; color: #4937ea; cursor: pointer;">取消上传</span>
+                <span v-if="videoPercentage" @click="onCanceVideo" style="padding-left: 3.5%; font-size: 12px; color: #4937ea; cursor: pointer;">{{ $t("project.btn.cancelUpload") }}</span>
               </el-col>
             </el-row>
           </el-form-item>

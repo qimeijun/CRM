@@ -76,7 +76,8 @@ export default {
             password: "Mật khẩu đăng nhập",
             country: "Quốc gia",
             city: "Thành phố",
-            region: "Giám đốc khu vực"
+            region: "Giám đốc khu vực",
+            regional: "Please select a region"
         },
         rules: {
             avatar: "Đăng tải ảnh công việc", 
@@ -89,6 +90,7 @@ export default {
             gender: "Lựa chọn vai trò của thành viên",
             country: "Vui lòng chọn quốc gia",
             region: "Lựa chọn giám đốc khu vực",
+            regional: "Please select a region"
         },
         placeholder: {
             account: "Nhập Email", 
@@ -99,7 +101,8 @@ export default {
             telphone: "Nhập số điện thoại của thành viên", 
             role: "Lựa chọn cấp bậc của thành viên",
             search: "Tìm kiếm tên, ID, địa chỉ, người chủ chốt của công ty mục tiêu",
-            country: "Vui lòng chọn quốc gia"
+            country: "Vui lòng chọn quốc gia",
+            regional: "Please select a region"
         },
         gender: {
             male: "Nam", 
@@ -674,6 +677,26 @@ export default {
         companyProduct: "Thông tin sản phẩm",
         target: "Công ty mục tiêu",
         workDiary: "Nhật ký công việc"
+    },
+    addRegion: {
+        title: "Thêm diện tích",
+        modify: "Sửa đổi khu vực",
+        form: {
+            name: "Tên khu vực",
+            country: "Đất nước",
+            city: "Thành phố"
+        },
+        rules: {
+            name: "Vui lòng nhập tên của khu vực",
+            country: "Vui lòng chọn quốc gia",
+            city: "Vui lòng chọn một thành phố"
+        },
+        btn: {
+            add: "Xác nhận thêm",
+            modify: "Xác nhận sửa đổi",
+            delete: "Xóa",
+            modify2: "Sửa đổi"
+        }
     }
 }
 

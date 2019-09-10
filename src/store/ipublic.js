@@ -26,7 +26,8 @@ export default {
         // 目标公司重要程度
         grade:[],
         // 目标公司状态
-        targetStatus: []
+        targetStatus: [],
+        regionId: null
     },
     // 提交
     mutations: {
@@ -61,6 +62,10 @@ export default {
         },
         $_set_targetStatus(state, value) {
             state.targetStatus = value;
+        },
+        $_set_regionId(state, value) {
+            state.regionId = value;
+            session.set("regionId", value);
         }
     },
     // 提交到 mutations 中
@@ -101,6 +106,13 @@ export default {
         },
         targetStatus:state => {
             return state.targetStatus;
+        },
+        regionId: state => {
+            if (!state.regionId) {
+                return session.get("regionId") || null;
+            } else {
+                return state.regionId;
+            }
         }
     }
 };

@@ -2,7 +2,7 @@
   <!-- 所在项目 -->
   <section class="highseas-loca">
     <div class="highseas-loca__top">
-      <PageHeader url="/highseas"></PageHeader>
+      <PageHeader :url="`/highseas/${$store.getters['ipublic/regionId']}`"></PageHeader>
       <div class="highseas-loca__top-name">{{$t("highseas.loca")}}</div>
     </div>
     <el-scrollbar style="height: calc(100vh - 2rem);">

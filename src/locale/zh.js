@@ -76,7 +76,8 @@ export default {
             password: "登录密码",
             country: "国家",
             city: "城市",
-            region: "区域经理"
+            region: "区域经理",
+            regional: "区域"
         },
         rules: {
             avatar: "请上传工作照",
@@ -89,6 +90,7 @@ export default {
             gender: "请选择成员性别",
             country: "请选择国家",
             region: "请选择区域经理",
+            regional: "请选择区域"
         },
         placeholder: {
             account: "请输入邮箱",
@@ -99,7 +101,8 @@ export default {
             telphone: "请输入成员的手机号码",
             role: "请选择成员的级别",
             search: "搜索目标公司名称、ID、地址、关键人",
-            country: "请选择国家"
+            country: "请选择国家",
+            regional: "请选择区域"
         },
         gender: {
             male: "男",
@@ -678,5 +681,25 @@ export default {
         companyProduct: "产品信息",
         target: "目标公司",
         workDiary: "工作日志"
+    },
+    addRegion: {
+        title: "添加区域",
+        modify: "修改区域",
+        form: {
+            name: "区域名称",
+            country: "国家",
+            city: "城市"
+        },
+        rules: {
+            name: "请输入区域名称",
+            country: "请选择国家",
+            city: "请选择城市"
+        },
+        btn: {
+            add: "确认添加",
+            modify: "确认修改",
+            delete: "删除",
+            modify2: "修改"
+        }
     }
 }

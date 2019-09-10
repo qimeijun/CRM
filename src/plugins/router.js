@@ -12,18 +12,18 @@ const router = new VueRouter({
             path: '/', component: () => import('./../pages/layout.vue') ,
             children: [
                 { path: '/', component: () => import('./../pages/workbench.vue') },
-                { path: '/projectmanage', component: () => import('./../pages/projectManage.vue') },
+                { path: '/projectmanage/:id', component: () => import('./../pages/projectManage.vue') },
                 {
                     path: '/tag', component: () => import('./../pages/tag.vue'),
                     children: [
                         {
-                            path: '/',
+                            path: 'project/:id',
                             alias: 'project',
                             name: 'tag-project',
                             component: () => import('./../components/tag/Project.vue')
                         },
                         {
-                            path: 'target',
+                            path: 'target/:id',
                             name: 'tag-target',
                             component: () => import('./../components/tag/Target.vue')
                         }
@@ -119,7 +119,7 @@ const router = new VueRouter({
                     component: () => import('./../pages/setting.vue')
                 },
                 {
-                    path: '/highseas',
+                    path: '/highseas/:id',
                     name: 'highseas',
                     component: () => import('./../pages/highseas.vue')
                 },

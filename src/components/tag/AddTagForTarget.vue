@@ -126,9 +126,9 @@ export default {
          */
         onAddTag() {
             if (this.type == 'target') {
-                this.$router.push({ path: `/tag/target` });
+                this.$router.push({ path: `/tag/target/${this.$store.getters['ipublic/regionId']}` });
             } else {
-                this.$router.push({ path: `/tag` });
+                this.$router.push({ path: `/tag/project/${this.$store.getters['ipublic/regionId']}` });
             }
         },
         /**

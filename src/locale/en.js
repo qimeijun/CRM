@@ -77,6 +77,7 @@ export default {
             country: "Country",
             city: "City",
             region: "Regional Manager",
+            regional: "Region"
         },
         rules: {
             avatar: "Please upload the work photo",
@@ -89,6 +90,7 @@ export default {
             gender: "Please select a member gender",
             country: "Please select a country",
             region: "Please select a regional manager",
+            regional: "Please select a region"
         },
         placeholder: {
             account: "Please input a email",
@@ -99,7 +101,8 @@ export default {
             telphone: "Please enter the member's mobile number",
             role: "Please select the level of the member",
             search: "Search target company name, ID, address, key person",
-            country: "Please select a country"
+            country: "Please select a country",
+            regional: "Please select a region"
         },
         gender: {
             male: "Male",
@@ -676,5 +679,25 @@ export default {
         companyProduct: "Product",
         target: "Target Company",
         workDiary: "Work Diary"
+    },
+    addRegion: {
+        title: "Add Region",
+        modify: "Modify Region",
+        form: {
+            name: "Region Name",
+            country: "Country",
+            city: "City"
+        },
+        rules: {
+            name: "Please input the region name",
+            country: "Please select country",
+            city: "Please select city"
+        },
+        btn: {
+            add: "Confirm & Add",
+            modify: "Config & Modify",
+            delete: "Delete",
+            modify2: "Modify"
+        }
     }
 }

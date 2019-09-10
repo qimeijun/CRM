@@ -1,5 +1,6 @@
 /**
  *  获取各种配置
+ *  国家
  */
 export const getCountry = async ({$http, $store, $lang, $global}) => {
     let country = $store.getters['ipublic/country'];
@@ -23,6 +24,32 @@ export const getCountry = async ({$http, $store, $lang, $global}) => {
     }
     return country;
 }
+
+/**
+ * 
+ * @param { 调用函数的当前上下文环境 } param0 
+ * @param { 国家ID } id 
+ */
+export const getCityById = async ({$http, $store, $lang, $global}, id) => {
+    let city = [];
+    if (!id) {
+        return city;
+    }
+    
+    let params = {sortname: 'area_sort_name_en'};
+    if ($lang == $global.lang.en) {
+        params.sortname = 'area_sort_name_en'
+    } else if ($lang == $global.lang.zh) {
+        params.sortname = 'area_sort_name_zh';
+    } else if ($lang == $global.lang.vi) {
+        params.sortname = 'area_sort_name_en'
+    }
+    let res = await $http.post('/properties/area/withoutpaginglist', { areaLevel: 3, areaParentId: id,  ...params});
+    if (res.iworkuCode == 200 && res.datas) {
+        city = res.datas;
+    }
+    return city;
+} 
 
 /**
  *  获取七牛token

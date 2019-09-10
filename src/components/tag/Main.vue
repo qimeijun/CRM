@@ -172,7 +172,8 @@ export default {
         pageSize: 25,
         pageNum: 1,
         total: 0
-      }
+      },
+      regionId: this.$route.params.id
     };
   },
   computed: {
@@ -231,7 +232,7 @@ export default {
       if(this.type == 'target') {
         uri = '/target/label/group/withoutpaginglist';
       }
-      this.$http.post(uri, { groupStatus: 1 }).then(res => {
+      this.$http.post(uri, { groupStatus: 1, regionId: this.regionId }).then(res => {
         if (res.iworkuCode == 200) {
           this.groupList = res.datas;
           // 默认选中第一个
@@ -267,7 +268,8 @@ export default {
         keyWord: '',
         labelGroupId: this.activeGroup,
         pageNum: this.pagination.pageNum,
-        pageSize: this.pagination.pageSize
+        pageSize: this.pagination.pageSize,
+        regionId: this.regionId
       }).then(res => {
         if (res.iworkuCode == 200) {
           this.tagList = res.datas;

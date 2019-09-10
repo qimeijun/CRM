@@ -17,11 +17,9 @@ export default {
   components: {
     Table: () => import("@/components/highseas/Table.vue")
   },
-  data() {
-    return {};
+  created() {
+    this.$store.commit("ipublic/$_set_regionId", this.$route.params.id);
   },
-  methods: {
-  }
 };
 </script>
 <style lang="scss" scoped>

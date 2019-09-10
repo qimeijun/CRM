@@ -18,23 +18,41 @@
         <i class="iconfont">&#xe627;</i>
         <span slot="title">{{ $t("layout.workBench") }}</span>
       </el-menu-item>
-      <el-menu-item index="/projectmanage" route="/projectmanage">
+      <!-- <el-menu-item index="/projectmanage" route="/projectmanage">
         <i class="iconfont">&#xe604;</i>
         <span slot="title">{{ $t("layout.project") }}</span>
-      </el-menu-item>
+      </el-menu-item> -->
+      <el-submenu index="/projectmanage">
+          <template slot="title">
+            <i class="iconfont">&#xe604;</i>
+            <span slot="title">{{ $t("layout.project") }}</span>
+          </template>
+          <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/projectmanage/${item.id}`" :route="`/projectmanage/${item.id}`">
+            {{ item.regionName }}
+          </el-menu-item>
+      </el-submenu>
       <!-- 
         功能：公海管理
         权限：
           1、超级管理员和区域经理可见
       -->
-      <el-menu-item
+      <!-- <el-menu-item
         v-if="[$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)"
         index="/highseas"
         route="/highseas"
       >
         <i class="iconfont">&#xe600;</i>
         <span slot="title">{{ $t("layout.public") }}</span>
-      </el-menu-item>
+      </el-menu-item> -->
+      <el-submenu index="/highseas" v-if="[$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)">
+          <template slot="title">
+            <i class="iconfont">&#xe600;</i>
+            <span slot="title">{{ $t("layout.public") }}</span>
+          </template>
+          <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/highseas/${item.id}`" :route="`/highseas/${item.id}`">
+            {{ item.regionName }}
+          </el-menu-item>
+      </el-submenu>
       <!-- 
         功能：成员管理
         权限：
@@ -52,10 +70,15 @@
         权限：
           1、只有客户不可见
       -->
-      <el-menu-item index="/tag" route="/tag">
-        <i class="iconfont">&#xe61e;</i>
-        <span slot="title">{{ $t("layout.tag") }}</span>
-      </el-menu-item>
+      <el-submenu index="/tag/project">
+          <template slot="title">
+            <i class="iconfont">&#xe61e;</i>
+            <span slot="title">{{ $t("layout.tag") }}</span>
+          </template>
+          <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/tag/project/${item.id}`" :route="`/tag/project/${item.id}`">
+            {{ item.regionName }}
+          </el-menu-item>
+      </el-submenu>
       <el-button
         type="text"
         class="menu-button"
@@ -120,7 +143,8 @@ export default {
     return {
       isCollapse: true,
       itemid: "",
-      adminId: ""
+      adminId: "",
+      regionList: []
     };
   },
   computed: {
@@ -133,6 +157,13 @@ export default {
     }
   },
   async created() {
+    // 获取区域
+    this.$http.post('/user/region/withoutpaginglist').then(res => {
+      if (res.iworkuCode == 200 && res.datas) {
+        this.$store.commit("ipublic/$_set_regionId", res.datas[0].id);
+        this.regionList = res.datas;
+      }
+    });
     await automaticLogin(this);
     if (this.userInfo.userRole == this.$global.userRole.customer) {
       this.getProject();
@@ -197,7 +228,7 @@ export default {
 }
 </style>
 
-<style>
+<style lang="scss">
 #crm {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -221,4 +252,30 @@ export default {
 .iworku-menu .el-menu-item.is-active i {
   color: #4937ea;
 }
+.iworku-menu {
+  .el-submenu__title {
+    border-top-left-radius: 0.08rem;
+    border-bottom-left-radius: 0.08rem;
+  }
+  .el-submenu__title:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  .el-menu--inline {
+    background-color: transparent;
+  }
+}
+.el-menu--vertical {
+    .el-menu--popup {
+      background-color: #48296c;
+      border-top-right-radius: .08rem;
+      border-bottom-right-radius: .08rem;
+      .el-menu-item:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      .is-active {
+        color: #4937ea;
+        background-color: white;
+      }
+    }
+  }
 </style>

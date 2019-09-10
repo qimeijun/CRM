@@ -2,7 +2,7 @@
 <!-- 项目详情 -->
   <section class="project-details">
     <div class="project-details__top">
-      <PageHeader url="/projectmanage"></PageHeader>
+      <PageHeader :url="`/projectmanage/${$store.getters['ipublic/regionId']}`"></PageHeader>
       <div class="project-details__top-name">{{$t("projectInfo.title")}}</div>
     </div>
     <div class="project-details__content">

@@ -121,7 +121,8 @@ export default {
             // 获取项目标签分组
             this.$http
               .post("/target/label/group/withoutpaginglist", {
-                groupStatus: 1
+                groupStatus: 1,
+                regionId: this.$route.params.id
               })
               .then(res => {
                 if (res.iworkuCode == 200) {
@@ -138,7 +139,8 @@ export default {
             // 获取项目各组标签
             this.$http
               .post(`/target/label/withoutpaginglist`, {
-                labelGroupId: node.value
+                labelGroupId: node.value,
+                regionId: this.$route.params.id
               })
               .then(res => {
                 if (res.iworkuCode == 200) {
@@ -158,7 +160,6 @@ export default {
     };
   },
   async created() {
-    this.getHighseas(1);
     this.targetTypeList = await getTargetType(this);
     this.countryList = await getCountry(this);
   },
@@ -168,7 +169,8 @@ export default {
       let params = {
         pageNum: page,
         pageSize: this.size,
-        keyWord: this.seek
+        keyWord: this.seek,
+        regionId: this.$route.params.id
       };
       if (this.tag) {
         params.labelId = this.tag[1];
@@ -189,7 +191,17 @@ export default {
           }
         });
     },
-  }
+  },
+  watch: {
+    "$route.params.id": {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.getHighseas(1);
+        }
+      },
+      immediate: true
+    },
+  },
 };
 </script>
 

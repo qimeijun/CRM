@@ -24,6 +24,12 @@
             icon="el-icon-plus"
             @click="addMemberDialogVisible=true"
           >{{ $t("memberManagement.btn.addMember") }}</el-button>
+          <!-- 
+            功能： 添加区域，
+            权限：只有超级管理员才能添加
+           -->
+          <el-button v-if="userInfo.userRole == $global.userRole.superAdministrator" style="width: 200px; background-color: #E50054; border-color: #E50054;" 
+              type="primary" @click="addRegionDialogVisible=true">{{ $t('addRegion.title') }}</el-button>
         </div>
       </div>
       <!-- 头部检索 end -->
@@ -81,6 +87,22 @@
         </el-scrollbar>
       </el-dialog>
       <!-- 添加区域经理 dialog end -->
+
+      <!-- 添加区域 dialog start -->
+      <el-dialog
+        class="el-dialog__scroll"
+        :title="$t('addRegion.title')"
+        :visible.sync="addRegionDialogVisible"
+        top="5vh"
+        :append-to-body="true"
+        :modal="false"
+        :lock-scroll="true"
+        :close-on-click-modal="false"
+        :width="$global.dialogWidth"
+      >
+      <AddRegion @onOperateSuccess="addRegionDialogVisible=false;"></AddRegion>
+      </el-dialog>
+      <!-- 添加区域 dialog end -->
     </section>
   </el-scrollbar>
 </template>
@@ -93,7 +115,8 @@ export default {
     // 添加区域经理
     AddAdministrator: () =>
       import("@/components/member/ChangeAdministrator.vue"),
-    Region: () => import("@/components/member/Region.vue")
+    Region: () => import("@/components/member/Region.vue"),
+    AddRegion: () => import("@/components/member/AddRegion.vue")
   },
   data() {
     return {
@@ -108,7 +131,8 @@ export default {
       },
       // 当前操作的区域
       currentRegionId: null,
-      isAddProjectManager: false
+      isAddProjectManager: false,
+      addRegionDialogVisible: false
     };
   },
   computed: {

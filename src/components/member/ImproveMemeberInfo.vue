@@ -87,6 +87,17 @@
             <el-input v-model="memberForm.email" :placeholder="$t('member.placeholder.email')"></el-input>
           </el-form-item>
           <!-- 电子邮件 end -->
+          <!-- 区域 
+            超级管理员添加时
+            start -->
+          <el-form-item v-if="!memberForm.id && userInfo.userRole == $global.userRole.superAdministrator" :label="`${$t('member.form.regional')}`" prop="regional">
+            <el-select filterable v-model="memberForm.regional">
+              <template v-if="regionList.length > 0">
+                <el-option v-for="(item, index) in regionList" :key="index" :label="item.regionName" :value="item.regionId"></el-option>
+              </template>
+            </el-select>
+          </el-form-item>
+          <!-- 区域 end -->
           <!-- 国家 start -->
           <el-form-item :label="`${$t('member.form.country')}`" prop="country">
             <el-select
@@ -185,7 +196,8 @@ export default {
         email: "",
         role: "",
         team: "",
-        country: ""
+        country: "",
+        regional: ""
       },
       rules: {
         avatar: [
@@ -241,13 +253,21 @@ export default {
             message: this.$t("member.rules.team"),
             trigger: "blur"
           }
+        ],
+        regional: [
+          {
+            required: true,
+            message: this.$t("member.rules.regional"),
+            trigger: "blur"
+          }
         ]
       },
       submitBtnLoading: false,
       countryList: [],
       uploadData: {},
       teamList: [],
-      avatarProgress: 0
+      avatarProgress: 0,
+      regionList: []
     };
   },
   computed: {
@@ -271,6 +291,12 @@ export default {
       this.memberForm.email = this.account;
       this.getTeam();
     }
+    // 获取区域
+    this.$http.post('/user/region/withpaginglist').then(res => {
+      if (res.iworkuCode == 200 && res.datas) {
+        this.regionList = res.datas;
+      }
+    });
     // 获取所有的国家
     this.countryList = await getCountry(this);
   },
@@ -298,10 +324,11 @@ export default {
             userRole: this.memberForm.role,
             userGender: this.memberForm.gender,
             userPhone: this.memberForm.telphone,
-            userCountry: this.memberForm.country,
+            userCountry: this.memberForm.country
           };
           
           if (!this.memberForm.id) {
+            params.regionId = this.memberForm.regional;
             // 新增用户
             // 如果是成员，需要选择team
             if (this.memberForm.role == this.$global.userRole.member) {
@@ -328,7 +355,7 @@ export default {
             this.submitBtnLoading = true;
             this.$http.post('/user/info/update', params).then(res => {
               if (res.iworkuCode == 200) {
-                this.userInfo.id == this.memberForm.id ? this.$store.commit('ipublic/$_set_userInfo', {...params, ...this.userInfo}) : null;
+                this.userInfo.id == this.memberForm.id && this.$store.commit('ipublic/$_set_userInfo', {...params, ...this.userInfo});
                 this.$imessage({
                   content: this.$t("public.tips.success"),
                   type: "success"

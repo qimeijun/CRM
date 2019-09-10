@@ -1,7 +1,14 @@
 <template>
-  <div class="member__content">
+  <div v-if="!isDelete" class="member__content">
     <div class="member__content-top">
-      <span>{{ $t("member.regional") }}</span>
+      <span>
+        <!-- {{ $t("member.regional") }} -->
+        {{ regionalData.regionName }}
+        <span v-if="userInfo.userRole == $global.userRole.superAdministrator" style="color: #4937EA; font-size:14px;">
+          <span style="cursor: pointer;" @click="modifyRegionDialogVisible=true;">{{ $t("addRegion.btn.modify2") }}</span>/
+          <span style="cursor: pointer;" @click="onDeleteRegion">{{ $t("addRegion.btn.delete") }}</span>
+        </span>
+      </span>
       <!-- 管理区域管理员按钮
            限制：
             1、只有超级管理员才能管理 -->
@@ -83,6 +90,24 @@
       </template>
     </div>
     <!-- 表格 list  end -->
+
+
+    <!-- 添加区域 dialog start -->
+      <el-dialog
+        class="el-dialog__scroll"
+        :title="$t('addRegion.modify')"
+        :visible.sync="modifyRegionDialogVisible"
+        top="5vh"
+        :append-to-body="true"
+        :modal="false"
+        :lock-scroll="true"
+        :close-on-click-modal="false"
+        :width="$global.dialogWidth"
+      >
+      <ModifyRegion :regionInfo="{id: regionalData.regionId,name: regionalData.regionName, country: regionalData.regionCountry, city: regionalData.regionCity}" 
+          @onOperateSuccess="onModifySuccess"></ModifyRegion>
+      </el-dialog>
+      <!-- 添加区域 dialog end -->
   </div>
 </template>
 <script>
@@ -98,13 +123,16 @@ export default {
   },
   components: {
     // 表格列表
-    TableList: () => import("@/components/member/Table.vue")
+    TableList: () => import("@/components/member/Table.vue"),
+    ModifyRegion: () => import("@/components/member/AddRegion.vue")
   },
   data() {
     return {
       isUpdateManager: false,
       regionalData: {},
-      teamList: []
+      teamList: [],
+      modifyRegionDialogVisible: false,
+      isDelete: false
     };
   },
   computed: {
@@ -145,6 +173,41 @@ export default {
         userRole: item.userRole
       });
       this.$router.push({ path: `/member/detail/info/${item.id}` });
+    },
+    /**
+     * 修改区域信息成功
+     */
+    onModifySuccess(data) {
+      this.regionalData.regionName = data.name;
+      this.modifyRegionDialogVisible = false;
+    },
+    /**
+     *  删除区域
+     */
+    onDeleteRegion() {
+       this.$confirm(
+        `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>您确定要删除该区域吗？`,
+        this.$t("memberInfo.priviteShiftInTip.title"),
+        {
+          confirmButtonText: this.$t("memberInfo.priviteShiftInTip.btn[0]"),
+          cancelButtonText: this.$t("memberInfo.priviteShiftInTip.btn[1]"),
+          center: true,
+          dangerouslyUseHTMLString: true,
+          confirmButtonClass: "iworku-confirm-button",
+          cancelButtonClass: "iworku-confirm-cancel-button"
+        }
+      ).then(() => {
+        this.$http.post('/user/region/remove', {id: this.regionalData.regionId}).then(res => {
+          if (res.iworkuCode == 200) {
+            this.$imessage({
+                content: this.$t("public.tips.success"),
+                type: "success"
+            });
+            this.isDelete = true;
+          }
+        });
+      });
+      
     }
   },
   watch: {

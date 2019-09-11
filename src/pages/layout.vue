@@ -18,10 +18,7 @@
         <i class="iconfont">&#xe627;</i>
         <span slot="title">{{ $t("layout.workBench") }}</span>
       </el-menu-item>
-      <!-- <el-menu-item index="/projectmanage" route="/projectmanage">
-        <i class="iconfont">&#xe604;</i>
-        <span slot="title">{{ $t("layout.project") }}</span>
-      </el-menu-item> -->
+      <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
       <el-submenu index="/projectmanage">
           <template slot="title">
             <i class="iconfont">&#xe604;</i>
@@ -31,28 +28,38 @@
             {{ item.regionName }}
           </el-menu-item>
       </el-submenu>
+      </template>
+      <template v-else>
+      <el-menu-item index="/projectmanage" route="/projectmanage">
+        <i class="iconfont">&#xe604;</i>
+        <span slot="title">{{ $t("layout.project") }}</span>
+      </el-menu-item>
+      </template>
       <!-- 
         功能：公海管理
         权限：
           1、超级管理员和区域经理可见
       -->
-      <!-- <el-menu-item
-        v-if="[$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)"
-        index="/highseas"
-        route="/highseas"
-      >
-        <i class="iconfont">&#xe600;</i>
-        <span slot="title">{{ $t("layout.public") }}</span>
-      </el-menu-item> -->
-      <el-submenu index="/highseas" v-if="[$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(userInfo.userRole)">
-          <template slot="title">
-            <i class="iconfont">&#xe600;</i>
-            <span slot="title">{{ $t("layout.public") }}</span>
-          </template>
-          <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/highseas/${item.id}`" :route="`/highseas/${item.id}`">
-            {{ item.regionName }}
-          </el-menu-item>
-      </el-submenu>
+      <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
+        <el-submenu index="/highseas">
+            <template slot="title">
+              <i class="iconfont">&#xe600;</i>
+              <span slot="title">{{ $t("layout.public") }}</span>
+            </template>
+            <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/highseas/${item.id}`" :route="`/highseas/${item.id}`">
+              {{ item.regionName }}
+            </el-menu-item>
+        </el-submenu>
+      </template>
+      <template v-else-if="userInfo.userRole == $global.userRole.regionalManager">
+        <el-menu-item
+          index="/highseas"
+          route="/highseas"
+        >
+          <i class="iconfont">&#xe600;</i>
+          <span slot="title">{{ $t("layout.public") }}</span>
+        </el-menu-item>
+      </template>
       <!-- 
         功能：成员管理
         权限：
@@ -70,7 +77,8 @@
         权限：
           1、只有客户不可见
       -->
-      <el-submenu index="/tag/project">
+      <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
+      <el-submenu index="/tag">
           <template slot="title">
             <i class="iconfont">&#xe61e;</i>
             <span slot="title">{{ $t("layout.tag") }}</span>
@@ -79,6 +87,16 @@
             {{ item.regionName }}
           </el-menu-item>
       </el-submenu>
+      </template>
+      <template v-else>
+        <el-menu-item
+          index="/tag/project"
+          route="/tag/project"
+        >
+          <i class="iconfont">&#xe61e;</i>
+          <span slot="title">{{ $t("layout.tag") }}</span>
+        </el-menu-item>
+      </template>
       <el-button
         type="text"
         class="menu-button"
@@ -157,13 +175,16 @@ export default {
     }
   },
   async created() {
-    // 获取区域
-    this.$http.post('/user/region/withoutpaginglist').then(res => {
-      if (res.iworkuCode == 200 && res.datas) {
-        this.$store.commit("ipublic/$_set_regionId", res.datas[0].id);
-        this.regionList = res.datas;
-      }
-    });
+    // 获取区域，只有超级管理员才有区域区分
+    if (this.userInfo.userRole == this.$global.userRole.superAdministrator) {
+      this.$http.post('/user/region/withoutpaginglist').then(res => {
+        if (res.iworkuCode == 200 && res.datas) {
+          this.$store.commit("ipublic/$_set_regionId", res.datas[0].id);
+          this.regionList = res.datas;
+        }
+      });
+    }
+
     await automaticLogin(this);
     if (this.userInfo.userRole == this.$global.userRole.customer) {
       this.getProject();

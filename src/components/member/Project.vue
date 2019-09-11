@@ -116,7 +116,7 @@ export default {
   },
   methods: {
     getProject() {
-      this.$http.post('/customer/item/withpaginglist', {userId: this.userId, pageSize: this.page.pageSize, pageNum: this.page.pageNum}).then(res => {
+      this.$http.post('/customer/item/withpaginglist', {userId: this.userId, pageSize: this.page.pageSize, pageNum: this.page.pageNum, regionId: this.$store.getters['ipublic/regionId']}).then(res => {
         if (res.iworkuCode == 200) {
           this.tableData = res.datas;
           this.page.total = res.total;

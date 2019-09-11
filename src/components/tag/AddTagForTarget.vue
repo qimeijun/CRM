@@ -68,7 +68,7 @@ export default {
             if(this.type == 'target') {
                 uri = '/target/label/group/withoutpaginglist';
             }
-            this.$http.post(uri, { groupStatus: 1 }).then(res => {
+            this.$http.post(uri, { groupStatus: 1, regionId: this.$store.getters['ipublic/regionId'] }).then(res => {
                 if (res.iworkuCode == 200) {
                     this.groupList = res.datas;
                     this.activeGroup = res.datas[0].id;
@@ -84,7 +84,8 @@ export default {
             }
             this.$http.post(uri, {
                 keyWord: '',
-                labelGroupId: this.activeGroup
+                labelGroupId: this.activeGroup,
+                regionId: this.$store.getters['ipublic/regionId']
             }).then(res => {
                 if (res.iworkuCode == 200) {
                     this.tagList = res.datas;

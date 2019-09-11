@@ -251,7 +251,8 @@ export default {
             // 获取项目标签分组
             this.$http
               .post("/target/label/group/withoutpaginglist", {
-                groupStatus: 1
+                groupStatus: 1,
+                regionId: this.$store.getters['ipublic/regionId']
               })
               .then(res => {
                 if (res.iworkuCode == 200) {
@@ -268,7 +269,8 @@ export default {
             // 获取项目各组标签
             this.$http
               .post(`/target/label/withoutpaginglist`, {
-                labelGroupId: node.value
+                labelGroupId: node.value,
+                regionId: this.$store.getters['ipublic/regionId']
               })
               .then(res => {
                 if (res.iworkuCode == 200) {

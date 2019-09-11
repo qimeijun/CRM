@@ -46,7 +46,6 @@ export default {
   },
   created() {
       this.activeMenu = this.$route.name;
-      this.$store.commit("ipublic/$_set_regionId", this.$route.params.id);
   },
   methods: {
     /**
@@ -60,6 +59,12 @@ export default {
   watch: {
       '$route'(to, from) {
           this.activeMenu = to.name;
+      },
+      "$route.params.id": {
+        handler(newVal, oldVal) {
+          newVal && this.$store.commit("ipublic/$_set_regionId", newVal);
+        },
+        immediate: true
       }
   }
 };

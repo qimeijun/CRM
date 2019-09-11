@@ -93,7 +93,7 @@ export default {
             });
             if (this.type == 'project') {
                 this.submitBtnLoading = true;
-                this.$http.post('/customer/item/label/group/list/update', {labelGroupList: params}).then(res => {
+                this.$http.post('/customer/item/label/group/list/update', {labelGroupList: params, regionId: this.$store.getters['ipublic/regionId']}).then(res => {
                     this.submitBtnLoading = false;
                     if (res.iworkuCode == 200) {
                         this.$imessage({
@@ -105,7 +105,7 @@ export default {
                 });
             } else if (this.type == 'target') {
                 this.submitBtnLoading = true;
-                this.$http.post('/target/label/group/list/update', { labelGroupList: params }).then(res => {
+                this.$http.post('/target/label/group/list/update', { labelGroupList: params, regionId: this.$store.getters['ipublic/regionId'] }).then(res => {
                     this.submitBtnLoading = false;
                     if (res.iworkuCode == 200) {
                         this.$imessage({

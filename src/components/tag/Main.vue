@@ -173,7 +173,7 @@ export default {
         pageNum: 1,
         total: 0
       },
-      regionId: this.$route.params.id
+      regionId: null
     };
   },
   computed: {
@@ -232,7 +232,7 @@ export default {
       if(this.type == 'target') {
         uri = '/target/label/group/withoutpaginglist';
       }
-      this.$http.post(uri, { groupStatus: 1, regionId: this.regionId }).then(res => {
+      this.$http.post(uri, { groupStatus: 1, regionId: this.$store.getters['ipublic/regionId'] }).then(res => {
         if (res.iworkuCode == 200) {
           this.groupList = res.datas;
           // 默认选中第一个
@@ -269,7 +269,7 @@ export default {
         labelGroupId: this.activeGroup,
         pageNum: this.pagination.pageNum,
         pageSize: this.pagination.pageSize,
-        regionId: this.regionId
+        regionId: this.$store.getters['ipublic/regionId']
       }).then(res => {
         if (res.iworkuCode == 200) {
           this.tagList = res.datas;
@@ -298,7 +298,7 @@ export default {
           labelId: this.activeTag
         };
       }
-      this.$http.post(uri, {...params, ...{pageSize: this.companyPage.pageSize, pageNum: this.companyPage.pageNum}}).then(res => {
+      this.$http.post(uri, {...params, ...{pageSize: this.companyPage.pageSize, pageNum: this.companyPage.pageNum, regionId: this.$store.getters['ipublic/regionId']}}).then(res => {
         if (res.iworkuCode == 200) {
           this.companyList = res.datas;
           // if (this.companyList.length < this.companyPage.pageSize) {
@@ -495,6 +495,13 @@ export default {
   watch: {
     type: {
       handler(newVal, oldVal) {
+        this.getGroup();
+      },
+      immediate: true
+    },
+    "$route.params.id": {
+      handler(newVal, oldVal) {
+        newVal && this.$store.commit("ipublic/$_set_regionId", newVal);
         this.getGroup();
       },
       immediate: true

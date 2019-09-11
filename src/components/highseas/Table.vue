@@ -53,6 +53,7 @@
         v-model="tag"
         :show-all-levels="false"
         :props="props"
+        ref="selectTag"
         :placeholder="$t('highseas.placeholder.tag')"
         @change="getHighseas(1)"
       ></el-cascader>
@@ -113,55 +114,26 @@ export default {
       tag: "",
       countryList: [],
       targetTypeList: [
-      ],
-      props: {
-        lazy: true,
-        lazyLoad: (node, resolve) => {
-          if (node.level == 0) {
-            // 获取项目标签分组
-            this.$http
-              .post("/target/label/group/withoutpaginglist", {
-                groupStatus: 1,
-                regionId: this.$route.params.id
-              })
-              .then(res => {
-                if (res.iworkuCode == 200) {
-                  let taglist = res.datas.map(o => {
-                    return {
-                      value: o.id,
-                      label: o.groupNameEn
-                    };
-                  });
-                  resolve(taglist);
-                }
-              });
-          } else {
-            // 获取项目各组标签
-            this.$http
-              .post(`/target/label/withoutpaginglist`, {
-                labelGroupId: node.value,
-                regionId: this.$route.params.id
-              })
-              .then(res => {
-                if (res.iworkuCode == 200) {
-                  let taglist = res.datas.map(o => {
-                    return {
-                      value: o.id,
-                      label:o.labelNameEn,
-                      leaf: true
-                    };
-                  });
-                  resolve(taglist);
-                }
-              });
-          }
-        }
-      }
+      ]
     };
+  },
+  computed: {
+    props: {
+      get: function () {
+        return {
+          lazy: true
+        }
+      },
+      set: function (newVal) {
+        return newVal;
+      }
+    }
   },
   async created() {
     this.targetTypeList = await getTargetType(this);
     this.countryList = await getCountry(this);
+  },
+  mounted() {
   },
   methods: {
     // 获取公海列表
@@ -191,13 +163,66 @@ export default {
           }
         });
     },
+    getLableList() {
+      this.props.lazyLoad = (node, resolve) => {
+        console.log(node);
+          if (node.level == 0) {
+            // 获取项目标签分组
+            this.$http
+              .post("/target/label/group/withoutpaginglist", {
+                groupStatus: 1,
+                regionId: this.$store.getters['ipublic/regionId']
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  let taglist = res.datas.map(o => {
+                    return {
+                      value: o.id,
+                      label: o.groupNameEn
+                    };
+                  });
+                  resolve(taglist);
+                }
+              });
+          } else {
+            // 获取项目各组标签
+            this.$http
+              .post(`/target/label/withoutpaginglist`, {
+                labelGroupId: node.value,
+                regionId: this.$store.getters['ipublic/regionId']
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  let taglist = res.datas.map(o => {
+                    return {
+                      value: o.id,
+                      label:o.labelNameEn,
+                      leaf: true
+                    }
+                  });
+                  resolve(taglist);
+                }
+              });
+          }
+        }
+    }
   },
   watch: {
     "$route.params.id": {
       handler(newVal, oldVal) {
-        if (newVal) {
           this.getHighseas(1);
-        }
+          if (this && this.$refs && Object.keys(this.$refs).length > 0) {
+            let dom = this.$refs['selectTag'].$refs['panel'];
+            // 清空原来的数据
+            dom.store = [];
+            dom.checkedValue = null;
+            dom.checkedNodePaths = [];
+            dom.menus = [];
+            dom.activePath = [];
+            // 初始化store
+            dom.initStore();
+          }
+          this.getLableList();
       },
       immediate: true
     },

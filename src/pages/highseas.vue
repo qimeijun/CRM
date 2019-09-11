@@ -17,8 +17,13 @@ export default {
   components: {
     Table: () => import("@/components/highseas/Table.vue")
   },
-  created() {
-    this.$store.commit("ipublic/$_set_regionId", this.$route.params.id);
+  watch: {
+    "$route.params.id": {
+      handler(newVal, oldVal) {
+        newVal && this.$store.commit("ipublic/$_set_regionId", newVal);
+      },
+      immediate: true
+    }
   },
 };
 </script>

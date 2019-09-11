@@ -261,7 +261,8 @@ export default {
         if (node.level == 1) {
           // 标签
           this.$http.post('/target/label/withoutpaginglist', {
-            labelGroupId: node.value
+            labelGroupId: node.value,
+            regionId: this.$store.getters['ipublic/regionId']
           }).then(res => {
             if (res.iworkuCode = 200) {
               res.datas.map(val => {
@@ -276,7 +277,7 @@ export default {
           });
         } else {    
           // 分组  
-          this.$http.post('/target/label/group/withoutpaginglist', {groupStatus: 1}).then(res => {
+          this.$http.post('/target/label/group/withoutpaginglist', {groupStatus: 1, regionId: this.$store.getters['ipublic/regionId']}).then(res => {
             if (res.iworkuCode == 200) {
               res.datas.map(val => {
                 nodes.push({

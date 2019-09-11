@@ -15,6 +15,7 @@
       <el-cascader
         filterable
         clearable
+        ref="selectTag"
         class="top_select"
         v-model="tag"
         :show-all-levels="false"
@@ -166,60 +167,25 @@ export default {
       currentPage: 1,
       itemStatusList: [],
       allocationShow: false,
-      props: {
-        lazy: true,
-        lazyLoad: (node, resolve) => {
-          if (node.level == 0) {
-            // 获取项目标签分组
-            this.$http
-              .post("/customer/item/label/group/withoutpaginglist", {
-                groupStatus: 1,
-                regionId: this.$route.params.id
-              })
-              .then(res => {
-                if (res.iworkuCode == 200) {
-                  let taglist = res.datas.map(o => {
-                    return {
-                      value: o.id,
-                      label: o.groupNameEn
-                    };
-                  });
-                  resolve(taglist);
-                }
-              });
-          } else {
-            // 获取项目各组标签
-            this.$http
-              .post(`/customer/item/label/withoutpaginglist`, {
-                labelGroupId: node.value,
-                regionId: this.$route.params.id
-              })
-              .then(res => {
-                if (res.iworkuCode == 200) {
-                  let taglist = res.datas.map(o => {
-                    return {
-                      value: o.id,
-                      label: o.labelNameEn,
-                      leaf: true
-                    };
-                  });
-                  resolve(taglist);
-                }
-              });
-          }
-        }
-      },
       allotProject: {}
     };
   },
   computed: {
-    ...mapGetters("ipublic", ["userInfo"])
+    ...mapGetters("ipublic", ["userInfo"]),
+    props: {
+      get: function () {
+        return {
+          lazy: true
+        }
+      },
+      set: function (newVal) {
+        return new newVal;
+      }
+    }
   },
   async created() {
     // 获取项目状态字典
     this.itemStatusList = await getItemStatus(this);
-    this.getProject(1);
-    this.$store.commit("ipublic/$_set_regionId", this.$route.params.id);
   },
   methods: {
     // 获取项目列表
@@ -227,11 +193,11 @@ export default {
       this.$http
         .post("/customer/item/withpaginglist", {
           keyWord: this.seek,
-          itemLabelId: this.tag[1],
+          itemLabelId: this.tag && this.tag[1],
           pageNum: page,
           pageSize: this.size,
           sortname:"item_number",
-          regionId: this.$route.params.id
+          regionId: this.$store.getters['ipublic/regionId']
         })
         .then(res => {
           if (res.iworkuCode == 200) {
@@ -340,8 +306,69 @@ export default {
          this.$router.push({path:`/member/detail/info/${row.probjectManager}`});
         
       }
+    },
+    getLableList() {
+      this.props.lazyLoad = (node, resolve) => {
+          if (node.level == 0) {
+            // 获取项目标签分组
+            this.$http
+              .post("/customer/item/label/group/withoutpaginglist", {
+                groupStatus: 1,
+                regionId: this.$store.getters['ipublic/regionId']
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  let taglist = res.datas.map(o => {
+                    return {
+                      value: o.id,
+                      label: o.groupNameEn
+                    };
+                  });
+                  resolve(taglist);
+                }
+              });
+          } else {
+            // 获取项目各组标签
+            this.$http
+              .post(`/customer/item/label/withoutpaginglist`, {
+                labelGroupId: node.value,
+                regionId: this.$store.getters['ipublic/regionId']
+              })
+              .then(res => {
+                if (res.iworkuCode == 200) {
+                  let taglist = res.datas.map(o => {
+                    return {
+                      value: o.id,
+                      label: o.labelNameEn,
+                      leaf: true
+                    };
+                  });
+                  resolve(taglist);
+                }
+              });
+          }
+        }
     }
-  }
+  },
+  watch: {
+    "$route.params.id": {
+      handler(newVal, oldVal) {
+        newVal && this.$store.commit("ipublic/$_set_regionId", newVal);
+        this.getProject(1);
+        if (this && this.$refs && Object.keys(this.$refs).length > 0) {
+          let dom = this.$refs['selectTag'].$refs['panel'];
+          dom.store = [];
+          dom.checkedValue = null;
+          dom.checkedNodePaths = [];
+          dom.menus = [];
+          dom.activePath = [];
+          dom.initStore();
+        }
+        this.getLableList();
+      },
+      immediate: true
+    }
+  },
 };
 </script>
 

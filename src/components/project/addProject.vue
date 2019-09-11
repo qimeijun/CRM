@@ -511,7 +511,8 @@ export default {
                 ...this.thirdlyForm.videoList,
                 ...this.thirdlyForm.attachmentList,
                 ...this.thirdlyForm.learnList
-              ]
+              ],
+              itemRegionId: this.$store.getters['ipublic/regionId']
             };
             // 去掉空元素
             params.productNodeList=params.productNodeList.filter(o=>{if(o.nodeFiles){return o}})

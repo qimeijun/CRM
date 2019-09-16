@@ -163,6 +163,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getCountry, getQiniuToken, rename } from "@/plugins/configuration.js"
+import { userInfo } from 'os';
 export default {
   props: {
     /**
@@ -431,8 +432,10 @@ export default {
     },
     regionId: {
       handler(newVal, oldVal) {
-        if (newVal && !this.memberForm.id) {
+        if (newVal && !this.memberForm.id && this.userInfo.userRole == this.$global.userRole.superAdministrator) {
           this.memberForm.regional = newVal;
+          this.getTeam();
+        } else if (!this.memberForm.id && this.userInfo.userRole != this.$global.userRole.superAdministrator) {
           this.getTeam();
         }
       }

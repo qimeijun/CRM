@@ -65,13 +65,27 @@
         权限：
           1、只有客户不可见
       -->
-      <el-menu-item
-        index="/member"
-        route="/member"
-      >
-        <i class="iconfont">&#xe63f;</i>
-        <span slot="title">{{ $t("layout.member") }}</span>
-      </el-menu-item>
+      <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
+        <el-submenu index="/member">
+          <template slot="title">
+            <i class="iconfont">&#xe63f;</i>
+            <span slot="title">{{ $t("layout.member") }}</span>
+          </template>
+          <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/member/${item.id}`" :route="`/member/${item.id}`">
+            {{ item.regionName }}
+          </el-menu-item>
+      </el-submenu>
+      </template>
+      <template v-else>
+        <el-menu-item
+          index="/member"
+          route="/member"
+        >
+          <i class="iconfont">&#xe63f;</i>
+          <span slot="title">{{ $t("layout.member") }}</span>
+        </el-menu-item>
+      </template>
+      
       <!-- 
         功能：标签管理
         权限：
@@ -162,11 +176,11 @@ export default {
       isCollapse: true,
       itemid: "",
       adminId: "",
-      regionList: []
+      // regionList: []
     };
   },
   computed: {
-    ...mapGetters("ipublic", ["userInfo"]),
+    ...mapGetters("ipublic", ["userInfo", "regionList"]),
     path() {
       return this.$route.path;
     },
@@ -179,8 +193,9 @@ export default {
     if (this.userInfo.userRole == this.$global.userRole.superAdministrator) {
       this.$http.post('/user/region/withoutpaginglist').then(res => {
         if (res.iworkuCode == 200 && res.datas) {
-          this.$store.commit("ipublic/$_set_regionId", res.datas[0].id);
-          this.regionList = res.datas;
+          // this.$store.commit("ipublic/$_set_regionId", res.datas[0].id);
+          // this.regionList = res.datas;
+          this.$store.commit("ipublic/$_set_regionList", res.datas);
         }
       });
     }
@@ -200,7 +215,10 @@ export default {
         }
       });
     }
-  }
+  },
+  watch: {
+    regionList(newVal) {}
+  },
 };
 </script>
 

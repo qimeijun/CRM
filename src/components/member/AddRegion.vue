@@ -130,6 +130,10 @@ export default {
                                 content: this.$t("public.tips.success"),
                                 type: "success"
                             });
+                            this.$store.commit('ipublic/$_set_regionList', [{
+                              id: res.datas,
+                              regionName: this.addRegionForm.name
+                            }])
                             this.$emit("onOperateSuccess");
                         }
                         this.submitBtnLoading = false;

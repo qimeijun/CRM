@@ -213,7 +213,8 @@ export default {
         teamStatistics: ["All Member Performance", '1V1 Performance'],
         teamStatisticsTime: ["Month", "Year"],
         privateOperate: ["View", "Move into public", "Hand Over"],
-        statistics: ["Single customer", "Follow up with customers", "Private customer"]
+        statistics1: ["Single customer", "Follow up with customers", "Private customer"],
+        deleteTip: "Are you sure you want to delete this area?"
     },
     team: {
         add: "Add Team",

@@ -27,7 +27,9 @@ export default {
         grade:[],
         // 目标公司状态
         targetStatus: [],
-        regionId: null
+        regionId: null,
+        // 区域列表
+        regionList: []
     },
     // 提交
     mutations: {
@@ -66,6 +68,17 @@ export default {
         $_set_regionId(state, value) {
             state.regionId = value;
             session.set("regionId", value);
+        },
+        $_set_regionList(state, value) {
+            state.regionList = [...state.regionList, ...value];
+        },
+        $_remove_region(state, value) {
+            if (state.regionList && state.regionList.length > 0) {
+                let index = state.regionList.findIndex(val => val.id == value);
+                if (index > -1) {
+                    state.regionList.splice(index, 1);
+                }
+            }
         }
     },
     // 提交到 mutations 中
@@ -113,6 +126,9 @@ export default {
             } else {
                 return state.regionId;
             }
+        },
+        regionList: state => {
+            return state.regionList;
         }
     }
 };

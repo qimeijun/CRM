@@ -213,7 +213,8 @@ export default {
         teamStatistics: ["所有成员业绩", '1V1业绩'],
         teamStatisticsTime: ["月份", "年份"],
         privateOperate: ["查看详情", "移入公海", "移交"],
-        statistics: ["成单客户", "跟进客户", "私海客户"]
+        statistics1: ["成单客户", "跟进客户", "私海客户"],
+        deleteTip: "您确定要删除该区域吗？"
     },
     team: {
         add: "添加团队",

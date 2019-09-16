@@ -1,7 +1,7 @@
 <template>
   <section class="member-details">
     <div class="member-details__top">
-        <PageHeader url="/member"></PageHeader>
+        <PageHeader :url="`/member/${$store.getters['ipublic/regionId']}`"></PageHeader>
         <div class="member-details__top-name">{{ memberInfo && memberInfo.username }}</div>
     </div>
     <div class="member-details__menu">

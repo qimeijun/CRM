@@ -1,5 +1,5 @@
 <template>
-  <section class="add-member">
+  <section class="add-member" ref="add-member">
     <ul class="iworku-dialog-menu">
       <li
         v-for="(item, index) in addMemberMenuList"
@@ -70,9 +70,14 @@ export default {
      * 获取子组件的成功信息
      */
     onOperateSuccess() {
+      this.selectDialogMenu = this.addMemberMenuList[0].value;
       this.$emit("onOperateSuccess");
     }
-  }
+  },
+  watch: {
+    account(newVal) {},
+    password(newVal) {}
+  },
 };
 </script>
 <style lang="scss" scoped>

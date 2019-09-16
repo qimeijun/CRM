@@ -138,9 +138,6 @@ export default {
   computed: {
     ...mapGetters('ipublic', ['userInfo'])
   },
-  created() {
-    this.getRegionData();
-  },
   methods: {
     /**
      *  超级管理员查看人员，根据区域分类
@@ -149,7 +146,8 @@ export default {
       this.$http.post("/user/region/withpaginglist", {
         keyWord: this.searchMember,
         pageNum: this.pagination.pageNum,
-        pageSize: this.pagination.pageSize
+        pageSize: this.pagination.pageSize,
+        regionId: this.$store.getters['ipublic/regionId']
       }).then(res => {
         if (res.iworkuCode == 200) {
           this.dataList = res.datas || [];
@@ -176,7 +174,16 @@ export default {
     getRegionId(id) {
       this.currentRegionId = id;
     }
-  }
+  },
+  watch: {
+    "$route.params.id": {
+      handler(newVal, oldVal) {
+        newVal && this.$store.commit("ipublic/$_set_regionId", newVal);
+        this.getRegionData();
+      },
+      immediate: true
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>

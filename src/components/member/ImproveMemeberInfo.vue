@@ -279,6 +279,14 @@ export default {
     },
     userInfo() {
       return this.$store.getters['ipublic/userInfo'] 
+    },
+    regionId:{
+      get: function () {
+        return this.$store.getters['ipublic/regionId'];
+      },
+      set: function (newVal) {
+        return newVal;
+      }
     }
   },
   async created() {
@@ -289,6 +297,7 @@ export default {
 
     if (!this.memberForm.id) {
       this.memberForm.email = this.account;
+      this.memberForm.regional = this.regionId;
       this.getTeam();
     }
     // 获取区域
@@ -302,7 +311,7 @@ export default {
   },
   methods: {
     getTeam() {
-      this.$http.post('/user/team/withoutpaginglist').then(res => {
+      this.$http.post('/user/team/withoutpaginglist', { regionId: this.regionId }).then(res => {
         if (res.iworkuCode == 200) {
           this.teamList = res.datas;
         }
@@ -374,6 +383,9 @@ export default {
      */
     onResetForm(formName) {
         this.$refs[formName].resetFields();
+        this.memberForm.email = null;
+        this.memberForm.avatar = null;
+        this.avatarProgress = 0;
     },
     /**
      *  图片上传成功之后。。。。
@@ -416,6 +428,14 @@ export default {
         }
       },
       immediate: true
+    },
+    regionId: {
+      handler(newVal, oldVal) {
+        if (newVal && !this.memberForm.id) {
+          this.memberForm.regional = newVal;
+          this.getTeam();
+        }
+      }
     }
   }
 };

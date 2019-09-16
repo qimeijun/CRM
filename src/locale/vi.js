@@ -213,7 +213,8 @@ export default {
         teamStatistics: ["Thành tích của tất cả thành viên", 'Thành tích 1V1'],
         teamStatisticsTime: ["Tháng", "Năm"],
         privateOperate: ["Xem thông tin chi tiết", "Di chuyển ra biển khơi", "Bàn giao"] , 
-        statistics: ["Khách hàng độc thân", "Theo dõi khách hàng", "Khách hàng biển tư nhân"]
+        statistics1: ["Khách hàng độc thân", "Theo dõi khách hàng", "Khách hàng biển tư nhân"],
+        deleteTip: "Bạn có chắc chắn muốn xóa khu vực này?"
     },
     team: {
         add: "Thêm đội",

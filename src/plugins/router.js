@@ -28,7 +28,7 @@ const router = new VueRouter({
                         }
                     ]
                 },
-                { path: '/member', component: () => import('./../pages/members.vue') },
+                { path: '/member/:id?', component: () => import('./../pages/members.vue') },
                 {
                     path: '/member/detail', component: () => import('./../pages/membersDetail.vue'),
                     children: [

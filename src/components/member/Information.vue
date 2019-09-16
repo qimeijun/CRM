@@ -7,6 +7,7 @@
         <div class="member-info__details-left">
           <p class="member-info__details-left-name">{{ userInformation.userNameZh }}</p>
           <p class="el-icon-location">{{ userInformation.userCountryName }}</p>
+          {{ userInformation.userGender }}
           <p class="member-info__details-left-gender">{{ userInformation.userGender == '2' ?  $t("member.gender.male") : $t("member.gender.female") }}</p>
         </div>
         <!-- 

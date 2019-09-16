@@ -86,6 +86,16 @@ export default {
       }
     }
   },
+  computed: {
+    regionId:{
+      get: function () {
+        return this.$store.getters['ipublic/regionId'];
+      },
+      set: function (newVal) {
+        return newVal;
+      }
+    }
+  },
   data() {
     return {
       searchName: "",
@@ -109,9 +119,10 @@ export default {
       this.selectAdminstratorInfo = {};
     },
     getUserData(obj) {
+      console.log(this.regionId);
       if (obj.type == 'addRegionalManager') {
         // 添加区域经理
-        this.$http.post('/user/info/find/role', { userRole: obj.id, regionId: this.$store.getters['ipublic/regionId'] }).then(res => {
+        this.$http.post('/user/info/find/role', { userRole: obj.id, regionId: this.regionId }).then(res => {
           if (res.iworkuCode == '200') {
             this.adminstratorList = res.datas;
           }
@@ -134,7 +145,7 @@ export default {
         this.adminstratorList = temp;
       } else if (obj.type == 'addProjectManager') {
         // 将一个新的项目分配给项目经理
-        this.$http.post('/user/info/find/role', { userRole: this.$global.userRole.projectManager, regionId: this.$store.getters['ipublic/regionId'] }).then(res => {
+        this.$http.post('/user/info/find/role', { userRole: this.$global.userRole.projectManager, regionId: this.regionId }).then(res => {
           if (res.iworkuCode == '200') {
             this.adminstratorList = res.datas;
           }
@@ -162,7 +173,7 @@ export default {
         })
       } else if (obj.type == 'changeProjectManger') {
         // 将一个项目从一个管理员手中移交到另一个管理员
-        this.$http.post('/user/info/find/role', { userRole: this.$global.userRole.projectManager, regionId: this.$store.getters['ipublic/regionId'] }).then(res => {
+        this.$http.post('/user/info/find/role', { userRole: this.$global.userRole.projectManager, regionId: this.regionId }).then(res => {
           if (res.iworkuCode == '200') {
             this.adminstratorList = res.datas;
           }
@@ -185,6 +196,11 @@ export default {
         }
       },
       immediate: true
+    },
+    regionId: {
+      handler(newVal, oldVal) {
+        if (newVal) this.regionId = newVal
+      }
     }
   }
 };

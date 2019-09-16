@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isDelete" class="member__content">
+  <div class="member__content">
     <div class="member__content-top">
       <span>
         <!-- {{ $t("member.regional") }} -->
@@ -131,8 +131,7 @@ export default {
       isUpdateManager: false,
       regionalData: {},
       teamList: [],
-      modifyRegionDialogVisible: false,
-      isDelete: false
+      modifyRegionDialogVisible: false
     };
   },
   computed: {
@@ -186,15 +185,15 @@ export default {
      */
     onDeleteRegion() {
        this.$confirm(
-        `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>您确定要删除该区域吗？`,
+        `<i class="el-icon-question" style="color: #E50054; font-size: 48px;"></i><br/>${this.$t("memberInfo.deleteTip")}`,
         this.$t("memberInfo.priviteShiftInTip.title"),
         {
           confirmButtonText: this.$t("memberInfo.priviteShiftInTip.btn[0]"),
           cancelButtonText: this.$t("memberInfo.priviteShiftInTip.btn[1]"),
           center: true,
           dangerouslyUseHTMLString: true,
-          confirmButtonClass: "iworku-confirm-button",
-          cancelButtonClass: "iworku-confirm-cancel-button"
+          confirmButtonClass: "iworku-confirm-button region-delete-confirm",
+          cancelButtonClass: "iworku-confirm-cancel-button region-delete-cancel"
         }
       ).then(() => {
         this.$http.post('/user/region/remove', {id: this.regionalData.regionId}).then(res => {
@@ -203,7 +202,8 @@ export default {
                 content: this.$t("public.tips.success"),
                 type: "success"
             });
-            this.isDelete = true;
+            this.$store.commit('ipublic/$_remove_region', this.regionalData.regionId);
+            this.$router.push({ path: '/' });
           }
         });
       });
@@ -303,5 +303,16 @@ export default {
       cursor: pointer;
     }
   }
+}
+</style>
+
+<style lang="scss">
+.region-delete-confirm {
+  float: left;
+  margin-left: 35% !important;
+}
+.region-delete-cancel {
+  float: right;
+  margin-right: 35% !important;
 }
 </style>

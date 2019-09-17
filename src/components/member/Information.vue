@@ -163,7 +163,7 @@ export default {
             },
             {
               icon: "circle",
-              name: this.$t("memberInfo.statistics[2]")
+              name: this.$t("memberInfo.statistics1[2]")
             }
           ]
         },
@@ -203,7 +203,7 @@ export default {
               },
               {
                 value: 0,
-                name: this.$t("memberInfo.statistics[2]"),
+                name: this.$t("memberInfo.statistics1[2]"),
                 label: {
                   color: "#1E1E1E"
                 }

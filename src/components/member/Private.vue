@@ -106,8 +106,9 @@
         <template slot-scope="scope">
           <Operate>
             <ul class="member-private__operate">
-              <li>
-                <router-link :to="`/target/detail/info/${scope.row.id}/${scope.row.itemId}`">{{ $t("memberInfo.privateOperate")[0] }}</router-link>
+              <li @click="onClick(scope.row)">
+                <!-- <router-link :to="`/target/detail/info/${scope.row.id}/${scope.row.itemId}`"></router-link> -->
+                {{ $t("memberInfo.privateOperate")[0] }}
               </li>
               <!-- 
                 功能：移入公海
@@ -168,6 +169,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getGrade, getTargetStatus } from "@/plugins/configuration.js"
+import session from "@/plugins/session.js";
 export default {
   components: {
     Operate: () => import("@/components/lib/Operate.vue"),
@@ -419,6 +421,7 @@ export default {
       });
     },
     onClick(row) {
+      session.set("historyPath",this.$route.fullPath);
       this.$router.push({ path: `/target/detail/info/${row.id}/${row.itemId}` })
     }
   }

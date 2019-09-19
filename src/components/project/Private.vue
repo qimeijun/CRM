@@ -333,9 +333,7 @@ export default {
     onCancel(item, index) {
       this.$msgbox({
         title: this.$t("projectStatus.title"),
-        message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t(
-          "targetStatus.intoSea"
-        )}</p>`,
+        message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t("targetStatus.intoSea.messageText")}</p>`,
         confirmButtonText: this.$t("projectStatus.btn.determine"),
         cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
@@ -361,10 +359,10 @@ export default {
         })
         .catch(() => {
           // 取消移入公海
-          this.$message({
-            type: "info",
-            message: this.$t("targetStatus.catch")
-          });
+          // this.$message({
+          //   type: "info",
+          //   message: this.$t("targetStatus.catch")
+          // });
         });
     },
     // 结束项目
@@ -398,10 +396,10 @@ export default {
         })
         .catch(() => {
           // 取消
-          this.$message({
-            type: "info",
-            message: this.$t("projectStatus.catch")
-          });
+          // this.$message({
+          //   type: "info",
+          //   message: this.$t("projectStatus.catch")
+          // });
         });
     },
     // 重启项目
@@ -435,10 +433,10 @@ export default {
         })
         .catch(() => {
           // 取消
-          this.$message({
-            type: "info",
-            message: this.$t("projectStatus.catch")
-          });
+          // this.$message({
+          //   type: "info",
+          //   message: this.$t("projectStatus.catch")
+          // });
         });
     },
     // 获取私海列表

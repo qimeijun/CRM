@@ -119,7 +119,6 @@ export default {
       this.selectAdminstratorInfo = {};
     },
     getUserData(obj) {
-      console.log(this.regionId);
       if (obj.type == 'addRegionalManager') {
         // 添加区域经理
         this.$http.post('/user/info/find/role', { userRole: obj.id, regionId: this.regionId }).then(res => {

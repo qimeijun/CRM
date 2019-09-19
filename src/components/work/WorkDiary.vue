@@ -252,6 +252,11 @@ export default {
             } else if (this.type == 'member') {
                 params.userId = this.id;
             }
+            if (this.activeMenu == this.menuList[1].value) {
+                params.followType = 1;
+            } else if (this.activeMenu == this.menuList[2].value) {
+                params.followType = 2;
+            }
             this.$http.post('/customer/followup/info/unread/withoutpaginglist', params).then(res => {
                 if (res.iworkuCode == 200) {
                     this.page.pageNum > 1 ? this.workDiarList.push(...res.datas) : this.workDiarList = res.datas || [];

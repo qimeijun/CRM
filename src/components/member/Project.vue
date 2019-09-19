@@ -6,6 +6,8 @@
       style="width: 100%"
       header-row-class-name="table-header"
       :default-sort="{prop: 'date', order: 'descending'}"
+      :row-style="{'cursor': 'pointer'}"
+      @row-click="onClick"
     >
       <el-table-column prop="itemNumber" label="ID" sortable width="80"></el-table-column>
       <el-table-column prop="itemName" :label="$t('memberInfo.projectTable[0]')"></el-table-column>
@@ -49,7 +51,7 @@
                       || (userRole == $global.userRole.regionalManager && [$global.userRole.superAdministrator].includes(userInfo.userRole))">
       <el-table-column :label="$t('memberInfo.projectTable[6]')" width="120">
         <template slot-scope="scope">
-          <span class="member-project__delete" @click="onDelete(scope.row, scope.$index)">{{ $t("memberInfo.btn.shiftOutProject") }}</span>
+          <span class="member-project__delete" @click.stop="onDelete(scope.row, scope.$index)">{{ $t("memberInfo.btn.shiftOutProject") }}</span>
         </template>
       </el-table-column>
       </template>
@@ -277,6 +279,9 @@ export default {
             }
           });
         }
+      },
+      onClick(row) {
+        this.$router.push({ path: `/project/detail/info/${row.itemId}/${row.probjectManager}` });
       }
   }
 };

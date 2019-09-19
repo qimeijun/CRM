@@ -33,7 +33,7 @@
               class="add-input"
               :placeholder="$t('tag.addTagPlaceholder')"
               v-model="addTagName"
-              :autofocus="true"
+              ref="input-tagname"
             >
               <i v-if="addTagName" slot="suffix" class="el-input__icon el-icon-circle-plus" @click="addTag"></i>
             </el-input>
@@ -223,6 +223,10 @@ export default {
         return newVal;
       }
     }
+  },
+  mounted() {
+    // 输入框自动获取焦点
+    this.$refs['input-tagname'].focus();
   },
   methods: {
     /**

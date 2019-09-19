@@ -170,7 +170,7 @@ export default {
     },
     memberInfo: {
         modifyInfo: "Chỉnh sửa thông tin",
-        menu: ["Tài liệu", "Nhóm", "Dự án theo sát", "Khách hàng riêng tư", "Nhật ký công việc"], 
+        menu: ["Thông tin cá nhân", "Nhóm", "Dự án theo sát", "Khách hàng riêng tư", "Nhật ký công việc"], 
         priviteTable: {
             targetCompany: "Công ty mục tiêu",
             importance: "Mức độ quan trọng",

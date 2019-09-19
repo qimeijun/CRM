@@ -50,12 +50,16 @@
     </div>
     <!-- 顶部筛选 end -->
     <!-- 表格 start -->
+     <!-- 
+       -->
     <el-table
       class="member-private__table"
       :data="tableData"
       style="width: 100%"
       :default-sort="{prop: 'date', order: 'descending'}"
       @selection-change="onHandleSelectionChange"
+      :row-style="{'cursor': 'pointer'}"
+      @row-click="onClick"
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="targetCompanyName" :label="$t('memberInfo.priviteTable.targetCompany')"></el-table-column>
@@ -76,12 +80,7 @@
             score-template="{value}"
           ></el-rate>
           <div style="margin-top: 10px;">
-            <template v-if="scope.row.grade">
-              {{ $t(`target.importanceStatus[${parseInt(scope.row.grade)}]`) }}
-            </template>
-            <template v-else>
-              {{ $t(`target.importanceStatus[0]`) }}
-            </template>
+            {{ scope.row.gradeName }}
           </div>
         </template>
       </el-table-column>
@@ -418,6 +417,9 @@ export default {
           value: val.value
         });
       });
+    },
+    onClick(row) {
+      this.$router.push({ path: `/target/detail/info/${row.id}/${row.itemId}` })
     }
   }
 };

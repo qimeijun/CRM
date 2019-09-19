@@ -34,7 +34,7 @@
               <span>{{$global.localTime({time:item.scheduleBeginDate,hour:false})}} - {{$global.localTime({time:item.scheduleEndDate,hour:false})}}，{{$t("workBench.remind.addPeople")}}：
                 <template v-if="item.sheduleParticipate && item.sheduleParticipate.length > 0">
                   <template v-for="(s, i) in item.sheduleParticipate">
-                    {{ s.userNameZh || s.userNameEn }} <i style="color: #959595;" :key="i" v-if="(i + 1) < item.sheduleParticipate.length">、</i>
+                    <router-link :to="`/member/detail/info/${s.userId}`" :key="`list_${i}`">{{ s.userNameZh || s.userNameEn }}</router-link> <i style="color: #959595;" :key="i" v-if="(i + 1) < item.sheduleParticipate.length">、</i>
                   </template>
                 </template>
               </span>

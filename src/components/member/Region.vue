@@ -27,7 +27,7 @@
       >
         <el-avatar :size="50" :src="`${$global.avatarURI}${item.userProfileImage}`"></el-avatar>
         <div class="member__regional-content-right">
-          <span>{{ $lang == $global.en ? item.userNameEn : item.userNameZh }}</span>
+          <span>{{ item.userNameZh }}</span>
           <span>{{ $t("public.role.regionalManager") }}</span>
         </div>
         <i v-if="isUpdateManager" class="el-icon-error" @click="onDeleteManager(item, index)"></i>

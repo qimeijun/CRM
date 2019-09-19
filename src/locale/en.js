@@ -170,7 +170,7 @@ export default {
     },
     memberInfo: {
         modifyInfo: "Modify",
-        menu: ["Information", "Team", "Follow Up Project", "Private customer", "Work Log"],
+        menu: ["Personal Information", "Team", "Follow Up Project", "Private customer", "Work Log"],
         priviteTable: {
             targetCompany: "Tartget Company",
             importance: "Importance",

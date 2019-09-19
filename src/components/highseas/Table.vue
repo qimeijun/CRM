@@ -60,7 +60,10 @@
       <!-- 标签选择 end -->
     </div>
     <div>
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%"
+        :row-style="{'cursor': 'pointer'}"
+        @row-click="onClick"
+      >
         <el-table-column
           prop="targetCompanyName"
           :label="$t('highseas.table.target')"
@@ -165,7 +168,6 @@ export default {
     },
     getLableList() {
       this.props.lazyLoad = (node, resolve) => {
-        console.log(node);
           if (node.level == 0) {
             // 获取项目标签分组
             this.$http
@@ -205,6 +207,9 @@ export default {
               });
           }
         }
+    },
+    onClick(row) {
+      this.$router.push({ path: `/highseas/loca/${row.targetCompanyName}` })
     }
   },
   watch: {

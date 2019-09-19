@@ -64,7 +64,7 @@
             </div>
             <div class="diary-content">
                 <div style="font-size: 16px; color: black; line-height: 35px;">{{ item.followTitle }}</div>
-                <div style="display: flex; align-items: center;">
+                <div style="display: flex; align-items: center; cursor: pointer;" @click="$router.push({ path: `/member/detail/info/${item.followAddUser}` })">
                     <el-avatar style="margin-right: .2rem;" :size="40" :src="`${$global.avatarURI}${item.followAddUserProfileImage}`"></el-avatar>
                     <span style="font-size: 12px;">{{ item.followAddUserNameZh || item.followAddUserNameEn }}</span>
                 </div>
@@ -124,7 +124,7 @@
                     权限：
                         1、除了自己，都可以
                  -->
-                <LeaveMessage v-if="item.followAddUser != userInfo.id && isShowLeaveMessage" :parent="item" @onCloseLeaveMessage="onQueryDiary"></LeaveMessage>
+                <LeaveMessage :id="`leave-message-${item.id}`" v-if="item.followAddUser != userInfo.id && isShowLeaveMessage" :parent="item" @onCloseLeaveMessage="onQueryDiary"></LeaveMessage>
                 <!-- 留言信息 start -->
                 <template v-if="item && item.nodeList && item.nodeList.length > 0">
                     <Message v-for="(nItem, nIndex) in item.nodeList" :key="nIndex" :message="nItem" @onCloseLeaveMessage="onQueryDiary"></Message>
@@ -240,6 +240,9 @@ export default {
                     break;
                 case 'leave':
                     this.isShowLeaveMessage = true;
+                    setTimeout(() => {
+                        document.querySelector(`#leave-message-${this.item.id}`).scrollIntoView(true);
+                    }, 0);
                     break;
                 case 'delete':
                     this.deleteDiary();

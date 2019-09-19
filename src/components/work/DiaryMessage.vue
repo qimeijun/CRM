@@ -3,7 +3,7 @@
     <section class="diary-message">
         <div class="parent">
             <div class="name">
-                <span class="user">{{ message.followAddUserNameZh || message.followAddUserNameEn }}: </span>
+                <span class="user" @click="$router.push({ path: `/member/detail/info/${message.followAddUser}` })">{{ message.followAddUserNameZh || message.followAddUserNameEn }}: </span>
                 <div>
                     <span class="time">{{ $global.localTime({ time: message.followAddTimeStr }) }}</span>
                     <span v-if="message.followAddUser != userInfo.id" @click="onShowLeaveMesssageForm(message)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span>
@@ -18,7 +18,7 @@
             <template v-if="message && message.nodeList && Object.prototype.toString.call(message.nodeList) == '[object Array]'">
             <div v-for="(item, index) in message.nodeList" :key="index" class="child">
                 <div class="name">
-                    <span class="user">{{ item.followAddUserNameZh || item.followAddUserNameEn }}: </span>
+                    <span class="user" @click="$router.push({ path: `/member/detail/info/${message.followAddUser}` })">{{ item.followAddUserNameZh || item.followAddUserNameEn }}: </span>
                     <div>
                         <span class="time">{{ item.followAddTimeStr }}</span>
                         <!-- <span v-if="item.followAddUser != userInfo.id" @click="onShowLeaveMesssageForm(item)" style="color:#4937EA; margin-left: .2rem; cursor: pointer;">{{ $t("workDiary.btn.reply") }}</span> -->
@@ -100,6 +100,9 @@ export default {
         .user, .time {
             color: #1E1E1E;
             // font-weight: 600;
+        }
+        .user {
+            cursor: pointer;
         }
     }
     .content {

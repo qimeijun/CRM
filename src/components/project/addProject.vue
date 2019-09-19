@@ -47,7 +47,7 @@
       >
         <el-scrollbar class="scrollbar" style="height:100%;">
           <!-- 项目名 -->
-          <el-form-item :label="$t('project.from.projectTitle')" prop="projectTitle">
+          <el-form-item :label="$t('project.from.projectTitle')" prop="projectTitle" id="projectTitle">
             <el-input
               v-model="secondForm.projectTitle"
               autocomplete="off"
@@ -55,7 +55,7 @@
             ></el-input>
           </el-form-item>
           <!-- 公司名 -->
-          <el-form-item :label="$t('project.from.companyName')" prop="companyName">
+          <el-form-item :label="$t('project.from.companyName')" prop="companyName" id="companyName">
             <el-input
               v-model="secondForm.companyName"
               autocomplete="off"
@@ -63,7 +63,7 @@
             ></el-input>
           </el-form-item>
           <!-- 行业 -->
-          <el-form-item :label="$t('project.from.tmt')" prop="tmt">
+          <el-form-item :label="$t('project.from.tmt')" prop="tmt" id="tmt">
             <el-select v-model="secondForm.tmt" :placeholder="$t('project.placeholder.tmt')">
               <el-option
                 v-for="item in industryList"
@@ -74,7 +74,7 @@
             </el-select>
           </el-form-item>
           <!-- 地址 -->
-          <el-form-item :label="$t('project.from.site')" prop="site">
+          <el-form-item :label="$t('project.from.site')" prop="site" id="site">
             <el-input
               v-model="secondForm.site"
               autocomplete="off"
@@ -82,7 +82,7 @@
             ></el-input>
           </el-form-item>
           <!-- 网址 -->
-          <el-form-item :label="$t('project.from.url')" prop="url">
+          <el-form-item :label="$t('project.from.url')" prop="url" id="url">
             <el-input
               v-model="secondForm.url"
               autocomplete="off"
@@ -90,7 +90,7 @@
             ></el-input>
           </el-form-item>
           <!-- 电子邮箱 -->
-          <el-form-item :label="$t('project.from.email')" prop="email">
+          <el-form-item :label="$t('project.from.email')" prop="email" id="email">
             <el-input
               v-model="secondForm.email"
               autocomplete="off"
@@ -98,11 +98,11 @@
             ></el-input>
           </el-form-item>
           <!-- 公司电话 -->
-          <el-form-item :label="$t('project.from.tel')" prop="tel">
+          <el-form-item :label="$t('project.from.tel')" prop="tel" id="tel">
             <el-input v-model="secondForm.tel" autocomplete="off" :placeholder="$t('project.placeholder.tel')"></el-input>
           </el-form-item>
           <!-- 公司简介 -->
-          <el-form-item :label="$t('project.from.intro')" prop="intro">
+          <el-form-item :label="$t('project.from.intro')" prop="intro" id="intro">
             <el-input
               v-model="secondForm.intro"
               autocomplete="off"
@@ -112,7 +112,7 @@
             ></el-input>
           </el-form-item>
           <!-- 优势 -->
-          <el-form-item :label="$t('project.from.strength')" prop="strength">
+          <el-form-item :label="$t('project.from.strength')" prop="strength" id="strength">
             <el-input
               v-model="secondForm.strength"
               autocomplete="off"
@@ -366,6 +366,7 @@ export default {
         attachmentList: [],
         learnList: []
       },
+      isJump: true,
       firstRules: {
         account: [
           {
@@ -405,49 +406,112 @@ export default {
         projectTitle: [
           {
             required: true,
-            message: this.$t("project.rules.projectTitle"),
+            // message: this.$t("project.rules.projectTitle"),
+            validator: (rule, value, callback) => {
+              if (!value) {
+                this.isJump && document.querySelector(`#projectTitle`).scrollIntoView(true);
+                this.isJump = false;
+                callback(new Error(this.$t("project.rules.projectTitle")));
+              } else {
+                this.isJump = true;
+                callback();
+              }
+            },
             trigger: "blur"
           }
         ],
         companyName: [
           {
             required: true,
-            message: this.$t("project.rules.companyName"),
+            // message: this.$t("project.rules.companyName"),
+            validator: (rule, value, callback) => {
+              if (!value) {
+                this.isJump && document.querySelector(`#companyName`).scrollIntoView(true);
+                this.isJump = false;
+                callback(new Error(this.$t("project.rules.companyName")));
+              } else {
+                this.isJump = true;
+                callback();
+              }
+            },
             trigger: "blur"
           }
         ],
         tmt: [
           {
             required: true,
-            message: this.$t("project.rules.tmt"),
+            // message: this.$t("project.rules.tmt"),
+            validator: (rule, value, callback) => {
+              if (!value) {
+                this.isJump && document.querySelector(`#tmt`).scrollIntoView(true);
+                this.isJump = false;
+                callback(new Error(this.$t("project.rules.tmt")));
+              } else {
+                this.isJump = true;
+                callback();
+              }
+            },
             trigger: "blur"
           }
         ],
         site: [
           {
             required: true,
-            message: this.$t("project.rules.site"),
+            // message: this.$t("project.rules.site"),
+            validator: (rule, value, callback) => {
+              if (!value) {
+                this.isJump && document.querySelector(`#site`).scrollIntoView(true);
+                this.isJump = false;
+                callback(new Error(this.$t("project.rules.site")));
+              } else {
+                this.isJump = true;
+                callback();
+              }
+            },
             trigger: "blur"
           }
         ],
         url: [
           {
             required: true,
-            message: this.$t("project.rules.url"),
+            // message: this.$t("project.rules.url"),
+            validator: (rule, value, callback) => {
+              if (!value) {
+                this.isJump && document.querySelector(`#url`).scrollIntoView(true);
+                this.isJump = false;
+                callback(new Error(this.$t("project.rules.url")));
+              } else {
+                this.isJump = true;
+                callback();
+              }
+            },
             trigger: "blur"
           }
         ],
         email: [
           {
             required: true,
-            message: this.$t("project.rules.email"),
+            // message: this.$t("project.rules.email"),
+            validator: (rule, value, callback) => {
+              if (!value) {
+                this.isJump && document.querySelector(`#email`).scrollIntoView(true);
+                this.isJump = false;
+                callback(new Error(this.$t("project.rules.email")));
+              } else {
+                this.isJump = true;
+                callback();
+              }
+            },
             trigger: "blur"
           },
             {
             validator: (rule, value, callback) => {
               if (!/^\w+((.\w+)|(-\w+))@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+).[A-Za-z0-9]+$/.test(value)) {
+                this.isJump && document.querySelector(`#email`).scrollIntoView(true);
+                this.isJump = false;
                 callback(new Error(this.$t("member.rules.account[1]")));
               } else {
+                this.isJump = true;
                 callback();
               }
             }
@@ -456,14 +520,34 @@ export default {
         tel: [
           {
             required: true,
-            message: this.$t("project.rules.tel"),
+            // message: this.$t("project.rules.tel"),
+            validator: (rule, value, callback) => {
+              if (!value) {
+                this.isJump && document.querySelector(`#tel`).scrollIntoView(true);
+                this.isJump = false;
+                callback(new Error(this.$t("project.rules.tel")));
+              } else {
+                this.isJump = true;
+                callback();
+              }
+            },
             trigger: "blur"
           }
         ],
         intro: [
           {
             required: true,
-            message: this.$t("project.rules.intro"),
+            // message: this.$t("project.rules.intro"),
+            validator: (rule, value, callback) => {
+              if (!value) {
+                this.isJump && document.querySelector(`#intro`).scrollIntoView(true);
+                this.isJump = false;
+                callback(new Error(this.$t("project.rules.intro")));
+              } else {
+                this.isJump = true;
+                callback();
+              }
+            },
             trigger: "blur"
           }
         ]

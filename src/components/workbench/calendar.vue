@@ -8,7 +8,10 @@
       <el-calendar :first-day-of-week="7" v-model="calenderValue">
         <template #dateCell="{date, data}">
           <p @click.self="addRemindVisibleDialog=true;currentRemind={scheduleBeginDate:data.day};" style="height:100%;">
-            <span style="line-height:20px;">{{ $lang==$global.lang.en?data.day.split('-').slice(1).join('month'):data.day.split('-').slice(1).join('月')}}{{$lang==$global.lang.en?'day':'日'}}</span>
+            <span style="line-height:20px;">
+              {{ data.day.split("-")[2] }}
+              <!-- {{ $lang==$global.lang.en?data.day.split('-').slice(1).join('month'):data.day.split('-').slice(1).join('月')}}{{$lang==$global.lang.en?'day':'日'}} -->
+            </span>
   
             <span
               v-if="filterList(firstlist,data).length>0"

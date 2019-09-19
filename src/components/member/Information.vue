@@ -7,7 +7,6 @@
         <div class="member-info__details-left">
           <p class="member-info__details-left-name">{{ userInformation.userNameZh }}</p>
           <p class="el-icon-location">{{ userInformation.userCountryName }}</p>
-          {{ userInformation.userGender }}
           <p class="member-info__details-left-gender">{{ userInformation.userGender == '2' ?  $t("member.gender.male") : $t("member.gender.female") }}</p>
         </div>
         <!-- 
@@ -134,8 +133,16 @@ export default {
     // 获取用户信息
     getUserInfo() {
       this.$http.get(`/user/info/infobypk/${this.id}`).then(res => {
-        if (res.iworkuCode == 200) {
+        if (res.iworkuCode == 200 && res.datas) {
           this.userInformation = res.datas;
+          // 从其他页面进来就没有团队ID，所以查询之后重新保存一份， 例如：项目管理页面点击项目经理头像
+          this.$store.commit('members/$_set_memberInfo', {
+            teamId: res.datas.teamId, 
+            userId: res.datas.id, 
+            username: res.datas.userNameZh,
+            userRole: res.datas.userRole,
+            status: res.datas.userStatus
+          });
         }
       });
     },

@@ -33,15 +33,16 @@
               class="add-input"
               :placeholder="$t('tag.addTagPlaceholder')"
               v-model="addTagName"
+              :autofocus="true"
             >
-              <i slot="suffix" class="el-input__icon el-icon-circle-plus" @click="addTag"></i>
+              <i v-if="addTagName" slot="suffix" class="el-input__icon el-icon-circle-plus" @click="addTag"></i>
             </el-input>
           </template>
           
           <!-- 添加标签 end -->
           <!-- 操作选择 start -->
           <el-button :style="pagination.total >= 20 ? `margin-left: auto`: null" v-if="tagRename && tagRename.id" type="primary" size="mini" @click="onConfirmTagRename">{{ $t("tag.btn.ok") }}</el-button>
-          <div v-else :style="`display: relative; ${pagination.total >= 20 ? `margin-left: auto` : null }`">
+          <div v-else-if="activeTag" :style="`display: relative; ${pagination.total >= 20 ? `margin-left: auto` : null }`">
             <span style="color: #4937EA; cursor: pointer;" @click="isShowOperateMenu=true;">
               {{ $t('tag.operate') }}
               <i class="el-icon-caret-bottom"></i>

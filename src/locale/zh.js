@@ -170,7 +170,7 @@ export default {
     },
     memberInfo: {
         modifyInfo: "编辑信息",
-        menu: ["资料", "团队", "跟进项目", "私海客户", "工作日志"],
+        menu: ["个人资料", "团队", "跟进项目", "私海客户", "工作日志"],
         priviteTable: {
             targetCompany: "目标公司",
             importance: "重要程度",

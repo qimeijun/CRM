@@ -91,7 +91,7 @@
               <div
                 style="margin: 20px; padding-top: 13px; display: flex; justify-content: space-between; align-items: center;"
               >
-                <div style="display: flex; width: 30%;">
+                <div style="display: flex; width: 30%; cursor: pointer;" @click="$router.push({ path: `/member/detail/info/${item.id}` })">
                   <el-avatar :size="50" :src="`${$global.avatarURI}${item.userProfileImage}`"></el-avatar>
                   <div
                     style="margin-right: auto;margin-left: .2rem; font-size: 14px;line-height: 35px;"

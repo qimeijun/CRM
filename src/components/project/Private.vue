@@ -81,7 +81,14 @@
       <!-- 标签 end -->
     </div>
     <div class="private_table">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
+      <el-table
+        ref="multipleTable"
+        :data="tableData"
+        tooltip-effect="dark"
+        style="width: 100%"
+        :row-style="{'cursor': 'pointer'}"
+        @row-click="onClick"
+      >
         <el-table-column
           prop="targetCompanyName"
           :label="$t('projectInfo.commonality.tableHeader[0]')"
@@ -138,9 +145,10 @@
           <template slot-scope="scope">
             <Operate>
               <ul>
-                <li class="table_operation" @click="SetHistoryPath(`/target/detail/info/${scope.row.id}/${scope.row.itemId}`)">
-                  {{$t("project.view")}}
-                </li>
+                <li
+                  class="table_operation"
+                  @click="SetHistoryPath(`/target/detail/info/${scope.row.id}/${scope.row.itemId}`)"
+                >{{$t("project.view")}}</li>
                 <!-- 移入公海 -->
                 <li
                   v-show="itemStatus!=2&&(scope.row.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(scope.row.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&scope.row.targetCompanyUserInfo.id==userInfo.id))"
@@ -226,7 +234,7 @@
   </section>
 </template>
 <script>
-import session from '@/plugins/session.js'
+import session from "@/plugins/session.js";
 import { mapGetters } from "vuex";
 import { getTargetType } from "@/plugins/configuration.js";
 export default {
@@ -252,7 +260,7 @@ export default {
             this.$http
               .post("/target/label/group/withoutpaginglist", {
                 groupStatus: 1,
-                regionId: this.$store.getters['ipublic/regionId']
+                regionId: this.$store.getters["ipublic/regionId"]
               })
               .then(res => {
                 if (res.iworkuCode == 200) {
@@ -270,7 +278,7 @@ export default {
             this.$http
               .post(`/target/label/withoutpaginglist`, {
                 labelGroupId: node.value,
-                regionId: this.$store.getters['ipublic/regionId']
+                regionId: this.$store.getters["ipublic/regionId"]
               })
               .then(res => {
                 if (res.iworkuCode == 200) {
@@ -304,7 +312,7 @@ export default {
     itemid() {
       return this.$route.params.itemid;
     },
-    adminId(){
+    adminId() {
       return this.$route.params.adminId;
     },
     ...mapGetters("ipublic", ["userInfo"])
@@ -312,7 +320,10 @@ export default {
   async created() {
     // this.member = this.userInfo.userRole==this.$global.userRole.superAdministrator ? "" : this.userInfo.id;
 
-    this.targetTypeList =[ {nameEn: "ALL",nameZh: "全部",value: ""},...await getTargetType(this)];
+    this.targetTypeList = [
+      { nameEn: "ALL", nameZh: "全部", value: "" },
+      ...(await getTargetType(this))
+    ];
     this.getPrivate(this.itemid, 1);
     this.getItemStatus(this.itemid);
     this.getMemberList(this.itemid);
@@ -322,10 +333,11 @@ export default {
     onCancel(item, index) {
       this.$msgbox({
         title: this.$t("projectStatus.title"),
-        message:
-          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('targetStatus.intoSea')}</p>`,
-        confirmButtonText:  this.$t("projectStatus.btn.determine"),
-        cancelButtonText:  this.$t("projectStatus.btn.cancel"),
+        message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t(
+          "targetStatus.intoSea"
+        )}</p>`,
+        confirmButtonText: this.$t("projectStatus.btn.determine"),
+        cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -351,7 +363,7 @@ export default {
           // 取消移入公海
           this.$message({
             type: "info",
-            message: this.$t("targetStatus.catch"),
+            message: this.$t("targetStatus.catch")
           });
         });
     },
@@ -359,8 +371,9 @@ export default {
     onDeleteMember(id) {
       this.$msgbox({
         title: this.$t("projectStatus.title"),
-        message:
-          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('projectStatus.end.messageText')}</p>`,
+        message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t(
+          "projectStatus.end.messageText"
+        )}</p>`,
         confirmButtonText: this.$t("projectStatus.btn.determine"),
         cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
@@ -379,7 +392,7 @@ export default {
               this.getItemStatus(this.itemid);
               this.$message({
                 type: "success",
-                message: this.$t("projectStatus.end.success"),
+                message: this.$t("projectStatus.end.success")
               });
             });
         })
@@ -387,18 +400,19 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: this.$t("projectStatus.catch"),
+            message: this.$t("projectStatus.catch")
           });
         });
     },
     // 重启项目
     onRestartMember(id) {
       this.$msgbox({
-        title:this.$t("projectStatus.title"),
-        message:
-          `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t('projectStatus.restart.messageText')}</p>`,
-        confirmButtonText:  this.$t("projectStatus.btn.determine"),
-        cancelButtonText:  this.$t("projectStatus.btn.cancel"),
+        title: this.$t("projectStatus.title"),
+        message: `<i style='color:#E50054;font-size:48px;margin:25px;' class='el-icon-question'></i><p style='font-size: 16px;font-weight:bold;'>${this.$t(
+          "projectStatus.restart.messageText"
+        )}</p>`,
+        confirmButtonText: this.$t("projectStatus.btn.determine"),
+        cancelButtonText: this.$t("projectStatus.btn.cancel"),
         showCancelButton: true,
         dangerouslyUseHTMLString: true,
         center: true
@@ -415,7 +429,7 @@ export default {
               this.getItemStatus(this.itemid);
               this.$message({
                 type: "success",
-                message: this.$t("projectStatus.restart.success"),
+                message: this.$t("projectStatus.restart.success")
               });
             });
         })
@@ -423,7 +437,7 @@ export default {
           // 取消
           this.$message({
             type: "info",
-            message: this.$t("projectStatus.catch"),
+            message: this.$t("projectStatus.catch")
           });
         });
     },
@@ -487,25 +501,42 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            if(this.userInfo.userRole==this.$global.userRole.regionalManager){
-              this.memberList =res.datas.filter(o=>{
-                return o.userRole!=this.$global.userRole.regionalManager || o.id == this.userInfo.id
-              })
-            }else{
-              this.memberList =[{id:"",userNameEn:"ALL",userNameZh:"所有人"},...res.datas] ;
+            if (
+              this.userInfo.userRole == this.$global.userRole.regionalManager
+            ) {
+              this.memberList = res.datas.filter(o => {
+                return (
+                  o.userRole != this.$global.userRole.regionalManager ||
+                  o.id == this.userInfo.id
+                );
+              });
+            } else {
+              this.memberList = [
+                { id: "", userNameEn: "ALL", userNameZh: "所有人" },
+                ...res.datas
+              ];
             }
 
             // 当前登录人是否是这个项目的成员
-            let index = this.memberList.findIndex(val => val.id == this.userInfo.id);
+            let index = this.memberList.findIndex(
+              val => val.id == this.userInfo.id
+            );
             if (index > -1) {
               this.member = this.userInfo.id;
             }
           }
         });
     },
-  SetHistoryPath(path){
-      session.set("historyPath",`/project/detail/commonality/${this.itemid}/${this.adminId}`);
-      this.$router.push({path});
+    SetHistoryPath(path) {
+      session.set(
+        "historyPath",
+        `/project/detail/private/${this.itemid}/${this.adminId}`
+      );
+      this.$router.push({ path });
+    },
+    onClick(row) {
+      let path = `/target/detail/info/${row.id}/${row.itemId}`;
+      this.SetHistoryPath(path);
     }
   }
 };

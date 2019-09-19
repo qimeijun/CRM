@@ -9,7 +9,7 @@
       <i :style="`background-color:${item.roleColor}`">
         <template >{{ item.roleName }}</template>
         </i>
-      <p class="list_img">
+      <p class="list_img" @click="$router.push({ path: `/member/detail/info/${item.id}` })">
         <el-avatar size="medium" >
           <img v-if="item.userProfileImage" :src="$global.avatarURI+item.userProfileImage">
           <span v-else>{{$lang==$global.en?item.userNameEn.slice("")[0]:item.userNameZh.slice("")[0]}}</span>
@@ -188,6 +188,7 @@ export default {
       margin: 0 10px;
       font-size: 12px;
       width:100px;
+      cursor: pointer;
     }
     .list_div {
       display: flex;

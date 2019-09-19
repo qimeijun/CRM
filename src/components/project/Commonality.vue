@@ -76,6 +76,8 @@
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
+        :row-style="{'cursor': 'pointer'}"
+        @row-click="onClick"
       >
         <el-table-column type="selection" width="35"></el-table-column>
         <el-table-column
@@ -517,6 +519,10 @@ export default {
     SetHistoryPath(path){
       session.set("historyPath",`/project/detail/commonality/${this.itemid}/${this.adminId}`);
       this.$router.push({path});
+    },
+    onClick(row) {
+      let path = `/target/detail/info/${row.id}/${row.itemId}`
+      this.SetHistoryPath(path);
     }
   }
 };

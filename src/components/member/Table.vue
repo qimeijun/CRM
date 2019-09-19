@@ -3,7 +3,7 @@
         <div
             :class="['member-table-list-tr', (!children && item.children && item.children.length > 0) ? 'member-table-list-tr--parent' : '', children ? 'member-table-list-tr--children':'', last ? 'member-table-list-tr--children-last' : '']"
         >
-            <div class="member-table-list-user">
+            <div class="member-table-list-user" @click="onRoute">
                 <el-avatar :size="50" :src="`${$global.avatarURI}${item.userProfileImage}`"></el-avatar>
                 <div class="member-table-list-user-right">
                     <span class="user-name">{{ item.userNameEn || item.userNameZh }}</span>
@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div>{{ item.roleName }}</div>
-            <div>{{ item.team }}</div>
+            <div style="cursor: pointer;" @click="onRoute('team')">{{ item.team }}</div>
             <div>{{ item.itemCount || 0}}</div>
             <!-- targetCompanyProcessingCount -->
             <div>{{ item.targetCompanyCount || 0 }}</div>
@@ -182,7 +182,7 @@ export default {
     /**
      *  页面跳转
      */
-    onRoute() {
+    onRoute(type) {
       // 存储团队ID
       this.$store.commit('members/$_set_memberInfo', {
         teamId: this.item.teamId, 
@@ -191,7 +191,11 @@ export default {
         userRole: this.item.userRole,
         status: this.item.userStatus
       });
-      this.$router.push({ path: `/member/detail/info/${this.item.id}` });
+      if (type == 'team') {
+        this.$router.push({ path: `/member/detail/team/${this.item.teamId}` });
+      } else {
+        this.$router.push({ path: `/member/detail/info/${this.item.id}` });
+      }
     }
   }
 };
@@ -233,6 +237,7 @@ export default {
   &-user {
       display: flex !important;
      align-items: center !important;
+     cursor: pointer;
     &-right {
         span {
             display: block;

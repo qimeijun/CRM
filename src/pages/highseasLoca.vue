@@ -7,7 +7,10 @@
     </div>
     <el-scrollbar style="height: calc(100vh - 2rem);">
     <div>
-      <el-table :data="tableData" style="width: 100%" :show-header="true">
+      <el-table :data="tableData" style="width: 100%" :show-header="true"
+          :row-style="{'cursor': 'pointer'}"
+          @row-click="onClick"
+      >
         <!-- <el-table-column fixed prop="id" :label="$t('target.loca.tableHeader[0]')" width="50"></el-table-column>  -->
         <el-table-column prop="itemName" :label="$t('target.loca.tableHeader[1]')" min-width="100"></el-table-column>
         <el-table-column
@@ -129,6 +132,10 @@ export default {
      SetHistoryPath(path){
       session.set("historyPath",`/highseas/loca/${this.targetName}`);
       this.$router.push({path});
+    },
+    onClick(row) {
+      let path = `/target/detail/info/${row.targetCompanyId}/${row.itemId}`;
+      this.SetHistoryPath(path);
     }
   }
 };

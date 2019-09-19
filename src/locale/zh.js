@@ -132,6 +132,7 @@ export default {
     },
     password: {
         modify: "修改密码",
+        clientModify: "修改客户密码",
         form: {
             new: "新密码",
             confirm: "再次输入"

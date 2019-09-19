@@ -132,6 +132,7 @@ export default {
     },
     password: {
         modify: "Chỉnh sửa mật khẩu", 
+        clientModify: "Sửa đổi mật khẩu khách hàng",
         form: {
             new: "Mật khẩu mới", 
             confirm: "Nhập lại" 

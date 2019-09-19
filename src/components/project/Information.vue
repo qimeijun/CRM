@@ -24,7 +24,7 @@
             v-show="userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.customer"
             type="text"
             @click="passwordshow=true"
-          >{{$t("password.modify")}}</el-button>
+          >{{$t("password.clientModify")}}</el-button>
           <!-- 编辑 -->
           <el-button
             v-show="userInfo.userRole!=$global.userRole.member"
@@ -139,7 +139,7 @@
             <el-form-item class="update_info_btn">
               <el-button
                 type="primary"
-                @click="show = false;updateInfo('infoFrom')"
+                @click="updateInfo('infoFrom')"
               >{{$t("project.btn.ok")}}</el-button>
             </el-form-item>
           </el-form>
@@ -296,6 +296,7 @@ export default {
           let params = this[formName];
           this.$http.post("/customer/company/update", params).then(res => {
             if (res.iworkuCode == 200) {
+              this.show = false;
               // 重新获取资料
               this.getInfo(this.itemid);
             }

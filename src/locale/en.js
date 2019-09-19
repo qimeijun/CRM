@@ -132,6 +132,7 @@ export default {
     },
     password: {
         modify: "Change Password",
+        clientModify: "Change the Client Modify",
         form: {
             new: "New Password",
             confirm: "Re-enter"

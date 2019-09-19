@@ -78,7 +78,8 @@
     <!-- 资料展示 end -->
     <div class="info_redact">
       <!-- 编辑资料弹窗 start -->
-      <el-dialog class="el-dialog__scroll" :title="$t('project.updateTitle')" :visible.sync="show" :width="$global.dialogWidth">
+      <el-dialog class="el-dialog__scroll" :title="$t('project.updateTitle')" :visible.sync="show" :width="$global.dialogWidth" 
+        :close-on-click-modal="false">
         <el-scrollbar class="scrollbar">
           <h1>{{$t("project.from.secondTitle")}}</h1>
           <el-form :model="infoFrom" ref="infoFrom" :rules="infoRules" label-position="top">
@@ -146,7 +147,7 @@
         </el-scrollbar>
       </el-dialog>
       <!-- 编辑资料弹窗 end -->
-      <el-dialog :title="$t('password.modify')" :visible.sync="passwordshow" :width="$global.dialogWidth">
+      <el-dialog :title="$t('password.modify')" :visible.sync="passwordshow" :width="$global.dialogWidth" :close-on-click-modal="false">
         <UpdatePassword :user="adminUser"></UpdatePassword>
       </el-dialog>
     </div>

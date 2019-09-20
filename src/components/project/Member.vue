@@ -42,7 +42,7 @@
       :width="$global.dialogWidth"
     >
       <el-scrollbar>
-        <ChangeAdministrator :params="{id: id, type: 'addMemberForProject'}" @getManager="addMemberForProject"></ChangeAdministrator>
+        <ChangeAdministrator :params="{id: id, type: 'addMemberForProject'}" :userList="memberlist" @getManager="addMemberForProject"></ChangeAdministrator>
       </el-scrollbar>
     </el-dialog>
     <!-- 添加成员 dialog end -->

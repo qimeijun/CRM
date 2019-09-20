@@ -414,7 +414,7 @@ export default {
      */
     onChangeTarget(item) {
       let res = this.targetList.find(val => val.id == item);
-      if (res) {
+      if (res) { 
         this.dateForm.targetOwnerId = res.targetCompanyUserInfo.id;
       }
     }

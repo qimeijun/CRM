@@ -66,6 +66,7 @@ export default {
             state.targetStatus = value;
         },
         $_set_regionId(state, value) {
+            value === undefined ? value = null : null;
             state.regionId = value;
             session.set("regionId", value);
         },

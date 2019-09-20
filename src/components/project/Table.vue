@@ -60,7 +60,7 @@
             </p>
           </template>
         </el-table-column>
-        <el-table-column class-name="column--cursor" prop="itemLabelList" :label="$t('project.tableHeader[4]')" max-width="200" >
+        <el-table-column prop="itemLabelList" :label="$t('project.tableHeader[4]')" max-width="200" >
           <template slot-scope="scope">
             <el-tag
               class="table_tag"
@@ -300,7 +300,7 @@ export default {
         });
     },
     goPath(row, column, cell, event){
-      if(column.property=="itemName"||column.property=="itemLabelList"){
+      if(column.property=="itemName"){
         this.$router.push({path:`/project/detail/info/${row.itemId}/${row.probjectManager}`});
       }else if(column.property=="probjectManager"&&row.probjectManager!=null){
          this.$router.push({path:`/member/detail/info/${row.probjectManager}`});

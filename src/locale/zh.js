@@ -237,7 +237,7 @@ export default {
     },
     public: {
         btn: {
-            submit: "提交",
+            submit: "提交", 
             cancel: "取消",
             upload: "上传附件",
             save: "保存"
@@ -439,8 +439,8 @@ export default {
             firstTitle: "添加项目",
             secondTitle: "项目资料",
             thirdlyTitle: "产品资料",
-            account: "登录账号",
-            password: "登录密码",
+            account: "添加客户账号",
+            password: "客户账号登录密码",
             projectTitle: "项目名称",
             companyName: "企业名称",
             tmt: "行业",
@@ -496,7 +496,7 @@ export default {
         menu: ["资料", "产品", "公海客户", "成员私海", "工作日志"],
         member: {
             title: "工作成员",
-            add: "添加成员",
+            add: "添加项目成员",
             target: ["目标公司", "家"],
             time: ["进行时间", "天"],
             population:"共{number}人",

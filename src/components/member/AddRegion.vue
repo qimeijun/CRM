@@ -126,15 +126,16 @@ export default {
                         regionCountry: this.addRegionForm.country
                     }).then(res => {
                         if (res.iworkuCode == 200) {
-                            this.$imessage({
-                                content: this.$t("public.tips.success"),
-                                type: "success"
-                            });
+                            // this.$imessage({
+                            //     content: this.$t("public.tips.success"),
+                            //     type: "success"
+                            // });
                             this.$store.commit('ipublic/$_set_regionList', [{
                               id: res.datas,
                               regionName: this.addRegionForm.name
                             }])
                             this.$emit("onOperateSuccess");
+                            this.$router.push({ path: `/member/${res.datas}` });
                         }
                         this.submitBtnLoading = false;
                     })

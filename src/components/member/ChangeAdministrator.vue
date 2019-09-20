@@ -39,6 +39,9 @@
         </div>
         <i v-if="selectAdminstrator == index" class="el-icon-success"></i>
       </li>
+      <li v-if="adminstratorList.length == 0" style="line-height: 85px;color: grey; text-align: center;">
+        {{ $t("public.tips.noData") }}
+      </li>
     </ul>
     <div class="change-administrator__btn">
       <!-- <span v-if="operate == 'add'" style="cursor: pointer;" @click="$emit('addProjectAdministrator')">{{ $t("changeAdministrator.btn.addMember") }}</span> -->
@@ -84,6 +87,15 @@ export default {
       default() {
         return {}
       }
+    },
+    /**
+     *  原来已经存在的用户列表
+     */
+    userList: {
+      type: Array,
+      default() {
+        return [];
+      }
     }
   },
   computed: {
@@ -102,7 +114,8 @@ export default {
       adminstratorList: [],
       selectAdminstrator: -1,
       selectAdminstratorInfo: {},
-      newAdminstrator: {}
+      newAdminstrator: {},
+      userMap: new Map()
     };
   },
   methods: {
@@ -159,8 +172,14 @@ export default {
       } else if (obj.type == 'addMemberForProject') {
         // 给项目添加成员
         this.$http.post('/user/item/user/rel/project/manager/withoutpaginglist', { userId: this.params.id }).then(res => {
-          if (res.iworkuCode == 200) {
-            this.adminstratorList = res.datas; 
+          if (res.iworkuCode == 200 && res.datas) {
+            res.datas.map(val => {
+              this.userMap.set(val.id, val);
+            });
+            this.userList.map(val => {
+              this.userMap.has(val.id) && this.userMap.delete(val.id);
+            });
+            this.adminstratorList = [...this.userMap.values()];
           }
         });
       } else if (obj.type == 'handOverTargetByOther') {

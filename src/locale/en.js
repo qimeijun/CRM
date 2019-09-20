@@ -46,7 +46,7 @@ export default {
             translate: "Translate",
             leaveMessage: "Leave a Message",
             modifyDiary: "Edit Log",
-            leaveMessageNow: "Leave a Message Now",
+            leaveMessageNow: "Reply",
             delete: "Delete Log",
             reply: "Reply"
         },
@@ -261,7 +261,7 @@ export default {
         }
     },
     workBench: {
-        title: "Work Bench",
+        title: "Work Panel",
         noInvolved:"Not involved in the project",
         btn: {
             addProject: "Add New Project",
@@ -279,9 +279,9 @@ export default {
         },
         overview: {
             title: "Project Overview",
-            targetNum: "Target Company",
-            vlinkNum: "Number of Target Companies Visited",
-            intentionNum: "Intention Target Company",
+            targetNum: "Sales Leads",
+            vlinkNum: "Follow-Up",
+            intentionNum: "Potential Clients",
             orderNum: "Order",
             btn: "Edit"
         },
@@ -672,7 +672,7 @@ export default {
         btn: "Try back to the home page"
     },
     layout: {
-        workBench: "Work Bench",
+        workBench: "Work Panel",
         project: "Project",
         public: "Public",
         member: "Member",

@@ -98,21 +98,23 @@
       <el-form-item :label="$t('workBench.addremind.form.people')" prop="selectUsers">
         <div style="display: flex;justify-content: flex-start;">
           <div v-for="(item, index) in dateForm.selectUsers" class="notify-user" :key="index">
-            <el-image
+            <!-- <el-image
               class="avatar"
               :title="item.userNameZh"
               :src="`${$global.avatarURI}${item.userProfileImage}`"
               :alt="item.userNameZh"
-            ></el-image>
+            ></el-image> -->
+            <img class="avatar" :title="`${item.userNameZh}-${item.roleName}`" :src="`${$global.avatarURI}${item.userProfileImage}`" :alt="item.userNameZh">
           </div>
-          <div v-if="userInfo.userRole != $global.userRole.member" class="notify-user">
+          
+          <!-- <div v-if="userInfo.userRole != $global.userRole.member" class="notify-user">
             <div
               @click="selectUserVisibleDialog=true;"
               style="height: 50px; width: 50px; border-radius: 50%; border: 1px solid grey;text-align: center; cursor: pointer;"
             >
               <i class="el-icon-plus" style="line-height: 50px; font-size: 30px; "></i>
             </div>
-          </div>
+          </div> -->
         </div>
       </el-form-item>
       <!-- 参与人员 end -->
@@ -294,14 +296,12 @@ export default {
   },
   async created() {
     this.colorTypes = await getRemindColor(this);
-    // 如果不是超级管理员，那就把他自己添加进去
-    if (this.userInfo.userRole != this.$global.userRole.superAdministrator) {
-      this.dateForm.selectUsers = [this.userInfo];
-    }
+    
   },
   methods: {
     // 查询目标公司
     getTargetList() {
+      this.targetList = [];
       this.$http
         .post("/target/company/withoutpaginglist", {
           id: this.itemid,
@@ -313,6 +313,8 @@ export default {
             // 设置默认值
             this.dateForm.targetCompanyId = this.targetList[0].id;
             this.dateForm.targetOwnerId = this.targetList[0].targetCompanyUserInfo.id;
+            // 设置默认选中的工作成员
+            this.targetList[0].targetCompanyUserInfo && this.dateForm.selectUsers.push(this.targetList[0].targetCompanyUserInfo);
           }
         });
     },
@@ -417,14 +419,28 @@ export default {
       if (res) { 
         this.dateForm.targetOwnerId = res.targetCompanyUserInfo.id;
       }
+    },
+    addAdministrator() {
+      if (!this.dateForm.id) {
+        this.dateForm.selectUsers = [];
+        // 如果不是超级管理员，那就把他自己添加进去
+        if (this.userInfo.userRole != this.$global.userRole.superAdministrator) {
+          this.dateForm.selectUsers = [this.userInfo];
+        }
+      }
+    },
+    resetForm() {
+      setTimeout(() => {
+        this.$refs['dateForm'].resetFields();
+      }, 10);
     }
   },
   watch: {
     itemid: {
       handler(newVal) {
-        if (newVal) {
-          this.getTargetList();
-        }
+        this.addAdministrator();
+        this.resetForm();
+        newVal && this.getTargetList();
       },
       immediate: true
     },

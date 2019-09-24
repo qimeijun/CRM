@@ -21,6 +21,8 @@
                 <span>
                     {{ item.followItemIdName }}
                 </span>
+                <!-- 系统日志不让修改 -->
+                <template v-if="item.followNodeType != '7'">
                 <el-dropdown v-if="isAllowOperate" @command="onHandleCommand" style="color: white; cursor: pointer;">
                     <span class="el-dropdown-link">
                         {{ $t("workDiary.operate") }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -58,6 +60,7 @@
                         <el-dropdown-item v-if="$global.userRole.superAdministrator == userInfo.userRole || ($global.userRole.regionalManager == userInfo.userRole && (userInfo.id == item.followAddUser || ![$global.userRole.superAdministrator, $global.userRole.regionalManager].includes(item.followAddUserRole)))" command="delete">{{ $t("workDiary.btn.delete") }}</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
+                </template>
             </div>
             <div v-if="item.followTargetCompanyName" class="target-company">
                 {{ $t("workDiary.targetCompany") }}：{{ item.followTargetCompanyName }}

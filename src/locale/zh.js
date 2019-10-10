@@ -503,7 +503,7 @@ export default {
             dialogTitle:"添加项目成员"
         },
         commonality: {
-            tableHeader: ["目标公司", "重要程度", "更新时间", "状态", "创建时间", "资料完整度", "操作"]
+            tableHeader: ["目标公司", "负责人", "重要程度", "更新时间", "状态", "创建时间", "资料完整度", "操作"]
         },
         importTarget: {
             add: "新增目标公司",

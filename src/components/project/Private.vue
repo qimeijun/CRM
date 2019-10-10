@@ -95,8 +95,17 @@
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="grade"
           :label="$t('projectInfo.commonality.tableHeader[1]')"
+          show-overflow-tooltip
+          width="250"
+        >
+        <template slot-scope="scope">
+          {{ scope.row.targetCompanyUserInfo.userNameZh || scope.row.targetCompanyUserInfo.userNameEn }}
+        </template>
+        </el-table-column>
+        <el-table-column
+          prop="grade"
+          :label="$t('projectInfo.commonality.tableHeader[2]')"
           width="150"
           sortable
         >
@@ -107,7 +116,7 @@
         </el-table-column>
         <el-table-column
           prop="updateTimeStr"
-          :label="$t('projectInfo.commonality.tableHeader[2]')"
+          :label="$t('projectInfo.commonality.tableHeader[3]')"
           width="140"
           sortable
         >
@@ -117,7 +126,7 @@
         </el-table-column>
         <el-table-column
           prop="status"
-          :label="$t('projectInfo.commonality.tableHeader[3]')"
+          :label="$t('projectInfo.commonality.tableHeader[4]')"
           width="150"
           sortable
         >
@@ -127,7 +136,7 @@
         </el-table-column>
         <el-table-column
           prop="addTimeStr"
-          :label="$t('projectInfo.commonality.tableHeader[4]')"
+          :label="$t('projectInfo.commonality.tableHeader[5]')"
           width="140"
           sortable
         >
@@ -137,11 +146,11 @@
         </el-table-column>
         <el-table-column
           prop="division"
-          :label="$t('projectInfo.commonality.tableHeader[5]')"
+          :label="$t('projectInfo.commonality.tableHeader[6]')"
           width="150"
           sortable
         ></el-table-column>
-        <el-table-column :label="$t('projectInfo.commonality.tableHeader[6]')" width="80">
+        <el-table-column :label="$t('projectInfo.commonality.tableHeader[7]')" width="80">
           <template slot-scope="scope">
             <Operate>
               <ul>
@@ -499,18 +508,20 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            if (
-              this.userInfo.userRole == this.$global.userRole.regionalManager
-            ) {
+            if (this.userInfo.userRole == this.$global.userRole.regionalManager) {
               this.memberList = res.datas.filter(o => {
                 return (
                   o.userRole != this.$global.userRole.regionalManager ||
                   o.id == this.userInfo.id
                 );
               });
+              this.memberList = [
+                { id: "", userNameEn: "ALL", userNameZh: "ALL" },
+                ...this.memberList
+              ];
             } else {
               this.memberList = [
-                { id: "", userNameEn: "ALL", userNameZh: "所有人" },
+                { id: "", userNameEn: "ALL", userNameZh: "ALL" },
                 ...res.datas
               ];
             }

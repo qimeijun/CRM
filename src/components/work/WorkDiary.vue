@@ -8,7 +8,13 @@
                     1、当前登录人就是这个查看对象
                     2、公海中的目标公司不能添加日志
              -->
-            <el-button v-if="isAllow && ((type == 'member' && id == userInfo.id) || type == 'project' || type == 'target')" type="primary" @click="onAddDiary">{{ $t("memberInfo.btn.addDiary") }}</el-button>
+             <template v-if="isAllow && ((type == 'member' && id == userInfo.id) || type == 'project' || type == 'target')">
+                <el-button type="primary" @click="onAddDiary">{{ $t("memberInfo.btn.addDiary") }}</el-button>
+             </template>
+             <template v-if="isAllow && type == 'target'">
+                 <el-button type="primary" @click="addRemindDialogVisible=true;">{{ $t("workBench.remind.add") }}</el-button>
+             </template>
+            
         </div>
         
         <!-- 顶部按钮 end -->
@@ -66,6 +72,18 @@
         </el-scrollbar>
         </el-dialog>
         <!-- 添加工作日志 dialog end -->
+
+        <!-- 添加提醒 start -->
+        <!-- 添加表单 -->
+      <el-dialog
+        :title="$t('workBench.remind.dialogTitle')"
+        :visible.sync="addRemindDialogVisible"
+        :close-on-click-modal="false"
+        :width="$global.dialogWidth"
+      >
+        <AddRemind :itemid="itemid" :targetId="id" @onSuccess="onAddSuccess"></AddRemind>
+      </el-dialog>
+        <!-- 添加提醒 end -->
     </section>
 </template>
 <script>
@@ -109,6 +127,7 @@ export default {
     components: {
         AddWorkDiary: () => import("@/components/work/AddWorkDiary.vue"),
         DiaryModule: () => import("@/components/work/DiaryModule.vue"), 
+        AddRemind: () => import("@/components/workbench/AddRemind.vue")
     },
     data() {
         return {
@@ -122,7 +141,8 @@ export default {
                 pageSize: 5,
                 pageNum: 1,
                 totalPage: 1
-            }
+            },
+            addRemindDialogVisible: false
         }
     },
     computed: {
@@ -265,6 +285,10 @@ export default {
                     this.logMap = new Map(this.logMap);
                 }
             });
+        },
+        // 添加提醒成功
+        onAddSuccess() {
+            this.addRemindDialogVisible = false;
         }
     },
     watch: {

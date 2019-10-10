@@ -502,7 +502,7 @@ export default {
             dialogTitle:"Add project members"
         },
         commonality: {
-            tableHeader: ["Target", "Importance", "Update date", "status", "Creat Time", "Completeness", "Operate"]
+            tableHeader: ["Target", "Responsible Person", "Importance", "Update date", "status", "Creat Time", "Completeness", "Operate"]
         },
         importTarget: {
             add: "Add new Target",

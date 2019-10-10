@@ -499,7 +499,7 @@ export default {
 			dialogTitle:"Thêm thành viên dự án"
         },
         commonality:{
-            tableHeader: ["Công ty mục tiêu","Mức độ quan trọng","Thời gian cập nhật","Trạng thái","Thời gian khởi tạo","Mức độ hoàn thành tài liệu","Tiến hành"],
+            tableHeader: ["Công ty mục tiêu", "Người có trách nhiệm", "Mức độ quan trọng","Thời gian cập nhật","Trạng thái","Thời gian khởi tạo","Mức độ hoàn thành tài liệu","Tiến hành"],
         },
         importTarget:  {
             add: "Thêm công ty mục tiêu mới", 

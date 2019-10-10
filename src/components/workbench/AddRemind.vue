@@ -170,7 +170,16 @@ export default {
       default() {
         return {};
       }
-    }
+    },
+    /**
+     *  为添加目标公司的工作日志做引入
+     */
+    targetId: {
+      type: String,
+      default() {
+        return "";
+      }
+    },
   },
   components: {
     AddNotifyUser: () => import("@/components/workbench/AddNotifyUser.vue")
@@ -310,11 +319,22 @@ export default {
         .then(res => {
           if (res.iworkuCode == 200 && res.datas && res.datas.length > 0) {
             this.targetList = res.datas || [];
-            // 设置默认值
-            this.dateForm.targetCompanyId = this.targetList[0].id;
-            this.dateForm.targetOwnerId = this.targetList[0].targetCompanyUserInfo.id;
-            // 设置默认选中的工作成员
-            this.targetList[0].targetCompanyUserInfo && this.dateForm.selectUsers.push(this.targetList[0].targetCompanyUserInfo);
+            // 从添加工作日志引入时 
+            if (this.targetId) {
+              this.dateForm.targetCompanyId = this.targetId;
+              let targetRes = this.targetList.find(val => val.id == this.targetId);
+              targetRes && ((targetRes) => {
+                  this.dateForm.targetOwnerId = targetRes.targetCompanyUserInfo.id;
+                  targetRes.targetCompanyUserInfo && this.dateForm.selectUsers.push(targetRes.targetCompanyUserInfo);
+              })(targetRes);
+            } else {
+              // 设置默认值
+              this.dateForm.targetCompanyId = this.targetList[0].id;
+              this.dateForm.targetOwnerId = this.targetList[0].targetCompanyUserInfo.id;
+              // 设置默认选中的工作成员
+              this.targetList[0].targetCompanyUserInfo && this.dateForm.selectUsers.push(this.targetList[0].targetCompanyUserInfo);
+            }
+            
           }
         });
     },

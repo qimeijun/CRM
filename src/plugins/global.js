@@ -40,7 +40,7 @@ Vue.prototype.$global = {
         let serverTime = new Date(time.replace(/-/g, '/')).getTime()
         // 将时间转换成时间戳
         let utcTime = new Date(serverTime + offset)
-        let month = utcTime.getMonth() + 1 > 9 ? utcTime.getMonth() : `0${utcTime.getMonth() + 1}`
+        let month = utcTime.getMonth() + 1 > 9 ? utcTime.getMonth() + 1 : `0${utcTime.getMonth() + 1}`
         let date = utcTime.getDate() > 9 ? utcTime.getDate() : `0${utcTime.getDate()}`
         
         let result = `${utcTime.getFullYear()}${sparator}${month}${sparator}${date}`;

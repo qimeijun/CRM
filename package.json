@@ -7,7 +7,8 @@
     "testBuild": "vue-cli-service build --mode development",
     "build": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
-    "local": "vue-cli-service serve --mode local"
+    "local": "vue-cli-service serve --mode local",
+    "serveP": "vue-cli-service serve --mode production"
   },
   "dependencies": {
     "css-loader": "^3.0.0",

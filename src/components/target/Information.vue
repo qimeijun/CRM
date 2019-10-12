@@ -104,7 +104,7 @@
             <h5>{{$t("target.info.source")}}</h5>
             <p>{{otherForm.nodeCustomerSource}}</p>
             <h5>{{$t("target.info.clientType")}}</h5>
-            <p>{{otherForm.nodeClientTypeName}}</p>
+            <p>{{otherForm.nodeClientTypeName || otherForm.nodeClientTypeCustom}}</p>
             <h5>{{$t("target.info.purchaseScale")}}</h5>
             <p>{{otherForm.nodePurchaseScale}}</p>
             <h5>{{$t("target.info.hsCode")}}</h5>

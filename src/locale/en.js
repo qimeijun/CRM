@@ -607,7 +607,10 @@ export default {
             country:"Please select the country",
             keymenName:"Please enter the key name",
             type:"Please select the company type",
-            seek:"Search for target company name, ID, address, key person"
+            seek:"Search for target company name, ID, address, key person",
+            customType: "Please enter a custom type",
+            customTip: "Didn't want it? Click to add",
+            customTip2: "Back to selection" 
         },
         next: "Next",
         finish: "Finish",

@@ -609,7 +609,9 @@ export default {
             keymenName:"请输入关键人名",
             type:"请选择公司类型",
             seek:"搜索目标公司名称、ID、地址、关键人",
-            
+            customType: "请输入自定义类型",
+            customTip: "没有想要的？点击添加",
+            customTip2: "返回选择"
         },
         next: "下一步",
         finish: "完成添加",

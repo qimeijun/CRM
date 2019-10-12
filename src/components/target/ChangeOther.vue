@@ -7,14 +7,21 @@
         <el-input v-model="form.nodeCustomerSource"></el-input>
       </el-form-item>
       <el-form-item :label="$t('target.form.clientType')" prop="type">
-        <el-select v-model="form.nodeClientType">
-          <el-option
-            v-for="(item,index) in targetTypeList"
-            :key="'position'+index"
-            :label="item.name"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+        <template v-if="form.nodeClientTypeCustom || isAllowCustomType">
+          <el-input v-model="form.nodeClientTypeCustom" style="display: inline-block;width: 60%"  :placeholder="$t('target.placeholder.customType')"></el-input>
+          <span @click="isAllowCustomType=false; form.nodeClientTypeCustom=''" style="padding-left: 20px; font-size: 12px; color: #4937ea; cursor: pointer;">{{ $t('target.placeholder.customTip2') }}</span>
+        </template>
+        <template v-else>
+          <el-select v-model="form.nodeClientType" style="display: inline-block; width: 60%;">
+            <el-option
+              v-for="(item,index) in targetTypeList"
+              :key="'position'+index"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <span @click="isAllowCustomType=true; form.nodeClientType=''" style="padding-left: 20px; font-size: 12px; color: #4937ea; cursor: pointer;">{{ $t('target.placeholder.customTip') }}</span>
+        </template>
       </el-form-item>
       <el-form-item :label="$t('target.form.purchaseScale')" prop="scale">
         <el-input v-model="form.nodePurchaseScale"></el-input>
@@ -71,7 +78,8 @@ export default {
       gradeColors: ["#E50054", "#E50054", "#E50054"],
       gradeTexts: [],
       form: {},
-      rules: {}
+      rules: {},
+      isAllowCustomType: false
     };
   },
   methods: {
@@ -85,12 +93,13 @@ export default {
             id: this.form.id,
             targetCompanyId: this.form.targetCompanyId,
             nodeCustomerSource: this.form.nodeCustomerSource,
-            nodeClientType: this.form.nodeClientType,
+            nodeClientType: this.isAllowCustomType ? "" : this.form.nodeClientType,
             nodePurchaseScale: this.form.nodePurchaseScale,
             nodeHacode: this.form.nodeHacode,
             nodeGrade: this.form.nodeGrade,
             nodeProfile: this.form.nodeProfile,
-            nodeRemarks: this.form.nodeRemarks
+            nodeRemarks: this.form.nodeRemarks,
+            nodeClientTypeCustom: this.isAllowCustomType ? this.form.nodeClientTypeCustom : ""
           };
           this.$http.post("/target/company/node/update", params).then(res => {
             if (res.iworkuCode == 200) {

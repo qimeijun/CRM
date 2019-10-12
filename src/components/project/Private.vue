@@ -333,9 +333,9 @@ export default {
       { nameEn: "ALL", nameZh: "全部", value: "" },
       ...(await getTargetType(this))
     ];
-    this.getPrivate(this.itemid, 1);
     this.getItemStatus(this.itemid);
     this.getMemberList(this.itemid);
+    // this.getPrivate(this.itemid, 1);
   },
   methods: {
     // 移入公海
@@ -534,6 +534,7 @@ export default {
               this.member = this.userInfo.id;
             }
           }
+          this.getPrivate(this.itemid, 1);
         });
     },
     SetHistoryPath(path) {

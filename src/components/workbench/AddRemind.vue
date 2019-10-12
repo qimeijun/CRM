@@ -438,6 +438,11 @@ export default {
       let res = this.targetList.find(val => val.id == item);
       if (res) { 
         this.dateForm.targetOwnerId = res.targetCompanyUserInfo.id;
+        if (this.userInfo.userRole != this.$global.userRole.superAdministrator) {
+          this.dateForm.selectUsers = [this.userInfo, res.targetCompanyUserInfo];
+        } else {
+          this.dateForm.selectUsers = [res.targetCompanyUserInfo];
+        }
       }
     },
     addAdministrator() {

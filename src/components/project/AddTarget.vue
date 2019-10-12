@@ -87,14 +87,22 @@
           <el-input v-model="otherForm.source"></el-input>
         </el-form-item>
         <el-form-item :label="$t('target.form.clientType')">
-          <el-select v-model="otherForm.type" :placeholder="$t('target.placeholder.type')">
-            <el-option
-              v-for="(item,index) in targetTypeList"
-              :key="'position'+index"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
+          <template v-if="isAllowCustomType">
+            <el-input  v-model="otherForm.customType" style="display: inline-block;width: 60%" :placeholder="$t('target.placeholder.customType')"></el-input>
+            <span @click="isAllowCustomType=false" style="padding-left: 20px; font-size: 12px; color: #4937ea; cursor: pointer;">{{ $t('target.placeholder.customTip2') }}</span>
+          </template>
+          <template v-else>
+            <el-select v-model="otherForm.type" style="display: inline-block; width: 60%;" :placeholder="$t('target.placeholder.type')">
+              <el-option
+                v-for="(item,index) in targetTypeList"
+                :key="'position'+index"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+            <span @click="isAllowCustomType=true" style="padding-left: 20px; font-size: 12px; color: #4937ea; cursor: pointer;">{{ $t('target.placeholder.customTip') }}</span>
+          </template>
+          
         </el-form-item>
         <el-form-item :label="$t('target.form.purchaseScale')">
           <el-input v-model="otherForm.scale"></el-input>
@@ -141,19 +149,19 @@ export default {
       gradeColors: ["#E50054", "#E50054", "#E50054"],
       activeName: 1,
       companyForm: {
-        name: "",
-        country: "",
-        site: "",
-        url: "",
-        phone: "",
-        email: ""
+        name: "sdfsdf",
+        country: "45",
+        site: "sdfsdf",
+        url: "sdfsdf",
+        phone: "sdfsdfs",
+        email: "23232@qq.com"
       },
       keymenForm: {
-        name: "",
-        position: "",
-        phone: "",
-        email: "",
-        social: ""
+        name: "sddfsd",
+        position: "sdfsdf",
+        phone: "123591151",
+        email: "23232@qq.com",
+        social: "sdfsdf"
       },
       otherForm: {
         source: "",
@@ -162,7 +170,8 @@ export default {
         hsCode: "",
         importance: 0,
         introduce: "",
-        note: ""
+        note: "",
+        customType: ""
       },
       companyRules: {
         name: [
@@ -179,7 +188,8 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      isAllowCustomType: false
     };
   },
   computed: {
@@ -219,12 +229,14 @@ export default {
               personEmail: this.keymenForm.email,
               personAccount: this.keymenForm.social,
               nodeCustomerSource: this.otherForm.source,
-              nodeClientType: this.otherForm.type,
+              nodeClientType: this.isAllowCustomType ? "" : this.otherForm.type,
+              nodeClientTypeCustom: this.isAllowCustomType ? this.otherForm.customType : "",
               nodePurchaseScale: this.otherForm.scale,
               nodeHacode: this.otherForm.hsCode,
               nodeGrade: this.otherForm.importance,
               nodeProfile: this.otherForm.introduce,
-              nodeRemarks: this.otherForm.note
+              nodeRemarks: this.otherForm.note,
+              listTargetCompanyKeyPerson: []
             };
             this.$http.post("/target/company/save", params).then(res => {
               if (res.iworkuCode == 200) {

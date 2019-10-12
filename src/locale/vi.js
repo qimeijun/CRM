@@ -605,7 +605,9 @@ export default {
             keymenName:"Vui lòng nhập tên khóa",
             type:"Vui lòng chọn một loại công ty",
             seek:"Vui lòng chọn một loại công ty",
-            
+            customType: "Vui lòng nhập một loại tùy chỉnh",
+            customTip: "Không muốn nó à? Nhấn vào đây để thêm",
+            customTip2: "Lựa chọn trở lại"
         },
         next: "Tiếp theo", 
         finish: "Thêm hoàn thành", 

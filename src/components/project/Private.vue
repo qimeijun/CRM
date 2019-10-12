@@ -165,8 +165,8 @@
                   @click="onCancel(scope.row, scope.$index)"
                 >{{$t("project.intoSea")}}</li>
                 <!-- 移交 -->
-                <li
-                  v-show="itemStatus!=2&&(scope.row.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(scope.row.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&scope.row.targetCompanyUserInfo.id==userInfo.id))"
+                <li 
+                  v-show="itemStatus!=2 && (scope.row.targetCompanyUserInfo.userRole!=$global.userRole.regionalManager||(scope.row.targetCompanyUserInfo.userRole==$global.userRole.regionalManager&&scope.row.targetCompanyUserInfo.id==userInfo.id))"
                   class="table_operation"
                   @click="onHandOver(scope.row)"
                 >{{$t("project.transfer")}}</li>

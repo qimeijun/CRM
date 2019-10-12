@@ -197,7 +197,7 @@ export default {
       document.cookie = `username=;path=/; expires=Thu, 01-Jan-70 00:00:01 GMT`;
       this.websocket.onreconnect = function () {}
       this.$store.commit("ipublic/$_remove_userInfo");
-      this.$store.commit("ipublic/$_set_regionId");
+      this.$store.commit("ipublic/$_clear_regionList");
       this.$router.push({ path: '/login' });
     },
     /**

@@ -80,6 +80,9 @@ export default {
                     state.regionList.splice(index, 1);
                 }
             }
+        },
+        $_clear_regionList(state) {
+            state.regionList = []
         }
     },
     // 提交到 mutations 中

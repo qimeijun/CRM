@@ -149,19 +149,19 @@ export default {
       gradeColors: ["#E50054", "#E50054", "#E50054"],
       activeName: 1,
       companyForm: {
-        name: "sdfsdf",
-        country: "45",
-        site: "sdfsdf",
-        url: "sdfsdf",
-        phone: "sdfsdfs",
-        email: "23232@qq.com"
+        name: "",
+        country: "",
+        site: "",
+        url: "",
+        phone: "",
+        email: ""
       },
       keymenForm: {
-        name: "sddfsd",
-        position: "sdfsdf",
-        phone: "123591151",
-        email: "23232@qq.com",
-        social: "sdfsdf"
+        name: "",
+        position: "",
+        phone: "",
+        email: "",
+        social: ""
       },
       otherForm: {
         source: "",

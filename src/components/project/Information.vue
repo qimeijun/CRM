@@ -61,7 +61,7 @@
           <span>{{info.companyEmail}}</span>
         </p>
         <p>
-          <span>{{$t('project.from.tmt')}}</span>
+          <span>{{$t('project.from.tel')}}</span>
           <br />
           <span>{{info.companyTel}}</span>
         </p>
@@ -280,7 +280,8 @@ export default {
             companyProfile: res.datas.companyProfile,
             companyStrength: res.datas.companyStrength,
             companyIndustryEn: res.datas.companyIndustryEn,
-            companyIndustryZh: res.datas.companyIndustryZh
+            companyIndustryZh: res.datas.companyIndustryZh,
+            companyIndustryName: res.datas.companyIndustryName
           };
           // 客户账号
           this.adminUser = {

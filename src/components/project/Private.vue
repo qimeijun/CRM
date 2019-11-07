@@ -86,9 +86,12 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
-        :row-style="{'cursor': 'pointer'}"
-        @row-click="onClick"
+        :cell-class-name="onClickClass"
+        @cell-click="onClick"
+        @sort-change="onSortChange"
       >
+      <!-- :row-style="{'cursor': 'pointer'}"
+        @row-click="onClick" -->
         <el-table-column
           prop="targetCompanyName"
           :label="$t('projectInfo.commonality.tableHeader[0]')"
@@ -103,11 +106,12 @@
           {{ scope.row.targetCompanyUserInfo.userNameZh || scope.row.targetCompanyUserInfo.userNameEn }}
         </template>
         </el-table-column>
+        <el-table-column :label="$t('target.form.area')" prop="area" width="120"></el-table-column>
         <el-table-column
           prop="grade"
           :label="$t('projectInfo.commonality.tableHeader[2]')"
           width="150"
-          sortable
+          sortable="custom"
         >
           <template slot-scope="scope">
             <el-rate :value="scope.row.grade-0" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
@@ -118,7 +122,7 @@
           prop="updateTimeStr"
           :label="$t('projectInfo.commonality.tableHeader[3]')"
           width="140"
-          sortable
+          sortable="custom"
         >
           <template slot-scope="scope">
             <p>{{$global.localTime({time:scope.row.updateTimeStr,hour:false})}}</p>
@@ -128,7 +132,7 @@
           prop="status"
           :label="$t('projectInfo.commonality.tableHeader[4]')"
           width="150"
-          sortable
+          sortable="custom"
         >
           <template slot-scope="scope">
             <p>{{ scope.row.statusName }}</p>
@@ -138,7 +142,7 @@
           prop="addTimeStr"
           :label="$t('projectInfo.commonality.tableHeader[5]')"
           width="140"
-          sortable
+          sortable="custom"
         >
           <template slot-scope="scope">
             <p>{{$global.localTime({time:scope.row.addTimeStr,hour:false})}}</p>
@@ -148,7 +152,7 @@
           prop="division"
           :label="$t('projectInfo.commonality.tableHeader[6]')"
           width="150"
-          sortable
+          sortable="custom"
         ></el-table-column>
         <el-table-column :label="$t('projectInfo.commonality.tableHeader[7]')" width="80">
           <template slot-scope="scope">
@@ -314,7 +318,9 @@ export default {
       changeAdministratorDialogVisible: false,
       addShow: false,
       importShow: false,
-      currentTarget: {}
+      currentTarget: {},
+      sortorder: 'desc',
+      sortname: undefined
     };
   },
   computed: {
@@ -458,7 +464,9 @@ export default {
         clientType: this.tag[1],
         labelId: this.targetType,
         keyWord: this.seek,
-        memberId: this.member
+        memberId: this.member,
+        sortname: this.sortname,
+        sortorder: this.sortorder
       };
       this.$http.post("/target/company/withpaginglist", params).then(res => {
         if (res.iworkuCode == 200) {
@@ -508,23 +516,23 @@ export default {
         })
         .then(res => {
           if (res.iworkuCode == 200) {
-            if (this.userInfo.userRole == this.$global.userRole.regionalManager) {
-              this.memberList = res.datas.filter(o => {
-                return (
-                  o.userRole != this.$global.userRole.regionalManager ||
-                  o.id == this.userInfo.id
-                );
-              });
-              this.memberList = [
-                { id: "", userNameEn: "ALL", userNameZh: "ALL" },
-                ...this.memberList
-              ];
-            } else {
+            // if (this.userInfo.userRole == this.$global.userRole.regionalManager) {
+            //   this.memberList = res.datas.filter(o => {
+            //     return (
+            //       o.userRole != this.$global.userRole.regionalManager ||
+            //       o.id == this.userInfo.id
+            //     );
+            //   });
+            //   this.memberList = [
+            //     { id: "", userNameEn: "ALL", userNameZh: "ALL" },
+            //     ...res.datas
+            //   ];
+            // } else {
               this.memberList = [
                 { id: "", userNameEn: "ALL", userNameZh: "ALL" },
                 ...res.datas
               ];
-            }
+            // }
 
             // 当前登录人是否是这个项目的成员
             let index = this.memberList.findIndex(
@@ -544,9 +552,24 @@ export default {
       );
       this.$router.push({ path });
     },
-    onClick(row) {
-      let path = `/target/detail/info/${row.id}/${row.itemId}`;
-      this.SetHistoryPath(path);
+    onClick(row, column, cell, event) {
+      if (column.property == 'targetCompanyName') { 
+        let path = `/target/detail/info/${row.id}/${row.itemId}`;
+        this.SetHistoryPath(path);
+      }
+    },
+    onClickClass({row, column, rowIndex, columnIndex}) {
+      if (column.property == 'targetCompanyName') {
+        return 'table-name';
+      }
+    },
+    // 点击排序
+    onSortChange({ column, prop, order }) {
+      order == 'ascending' ? this.sortorder='asc' : this.sortorder='desc';
+      if (prop == 'grade' || prop == 'updateTimeStr' || prop == 'status' || prop == 'addTimeStr' || prop == 'division')  {
+        this.sortname = prop;
+        this.getPrivate(this.itemid, 1);
+      }
     }
   }
 };
@@ -574,4 +597,10 @@ export default {
 .table_operation {
   cursor: pointer;
 }
+</style>
+<style lang="scss">
+  .table-name {
+    cursor: pointer;
+    // color: $--default-color;
+  }
 </style>

@@ -227,3 +227,53 @@ export const getTargetStatus = async ({$http, $store, $lang, $global}) => {
     }
     return grade;
 }
+
+/**
+ * 获取订单金额的单位
+ * @param {*} param0 
+ */
+export const getOrderPriceUnit = async ({$http, $store, $lang, $global}) => {
+    let unit = $store.getters['ipublic/orderPriceUnitList'];
+    if (unit.length == 0) {
+        let params = {sortname: 'd_stort_en'};
+        // $lang == $global.lang.en ? params.sortname = 'd_stort_en' : params.sortname = 'd_stort_zh';
+        if ($lang == $global.lang.en) {
+            params.sortname = 'd_stort_en'
+        } else if ($lang == $global.lang.zh) {
+            params.sortname = 'd_stort_zh';
+        } else if ($lang == $global.lang.vi) {
+            params.sortname = 'd_stort_en'
+        }
+        let res = await $http.post('/properties/dictionary/withoutpaginglist', { treeCode: 'EXCHANGE_ RATE', ...params });
+        if (res.iworkuCode == 200) {
+            unit = res.datas;
+            $store.commit("ipublic/$_set_orderPriceUnitList", unit);
+        }
+    }
+    return unit;
+}
+
+/**
+ * 获取订单数量的单位
+ * @param {*} param0 
+ */
+export const getOrderNumUnit = async ({$http, $store, $lang, $global}) => {
+    let unit = $store.getters['ipublic/orderNumUnitList'];
+    if (unit.length == 0) {
+        let params = {sortname: 'd_stort_en'};
+        // $lang == $global.lang.en ? params.sortname = 'd_stort_en' : params.sortname = 'd_stort_zh';
+        if ($lang == $global.lang.en) {
+            params.sortname = 'd_stort_en'
+        } else if ($lang == $global.lang.zh) {
+            params.sortname = 'd_stort_zh';
+        } else if ($lang == $global.lang.vi) {
+            params.sortname = 'd_stort_en'
+        }
+        let res = await $http.post('/properties/dictionary/withoutpaginglist', { treeCode: 'UNIT_CONVERSION', ...params });
+        if (res.iworkuCode == 200) {
+            unit = res.datas;
+            $store.commit("ipublic/$_set_orderNumUnitList", unit);
+        }
+    }
+    return unit;
+}

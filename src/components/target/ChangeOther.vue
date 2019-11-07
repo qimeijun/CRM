@@ -36,7 +36,7 @@
           :colors="gradeColors"
           show-text
           :texts="gradeTexts"
-          :max="4"
+          :max="5"
         ></el-rate>
       </el-form-item>
       <el-form-item :label="$t('target.form.introduce')" prop="introduce">

@@ -47,6 +47,9 @@ export default {
         font-size: 14px;
         color: #1E1E1E;
         line-height: 25px;
+        overflow: hidden; 
+        text-overflow:ellipsis; 
+        white-space: nowrap;
     }
     .user {
         display: flex;

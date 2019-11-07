@@ -40,7 +40,7 @@
       </el-input>
     </div>
     <div id="customer-table">
-      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
+      <el-table ref="multipleTable" @cell-click="onClickName" :cell-class-name="onTableClass" :data="tableData" tooltip-effect="dark" style="width: 100%">
         <el-table-column
           prop="targetCompanyName"
           :label="$t('projectInfo.commonality.tableHeader[0]')"
@@ -211,6 +211,18 @@ export default {
             this.currentPage = page;
           }
         });
+    },
+    // 点击名称进行跳转
+    onClickName(row, column, cell, event) {
+      if (column.property == 'targetCompanyName') {
+        this.$router.push({ path: `/target/detail/info/${row.id}/${row.itemId}` });
+      }
+    },
+    // 给公司名称添加样式，表示可以点击
+    onTableClass({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex == 0) {
+        return "table-name"
+      }
     }
   }
 };
@@ -222,4 +234,10 @@ export default {
     margin-right: 0.1rem;
   }
 }
+</style>
+<style lang="scss">
+  .table-name {
+    cursor: pointer;
+    // color: blue;
+  }
 </style>

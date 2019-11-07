@@ -33,6 +33,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item :label="$t('target.form.area')">
+          <el-input v-model="companyForm.area"></el-input>
+        </el-form-item>
         <el-form-item :label="$t('target.form.site')">
           <el-input v-model="companyForm.site"></el-input>
         </el-form-item>
@@ -139,7 +142,8 @@ import {
   getCountry,
   getTargetType,
   getGrade
-} from "@/plugins/configuration.js";
+} from "@/plugins/configuration.js"
+import { mapGetters } from "vuex"
 export default {
   data() {
     return {
@@ -154,7 +158,8 @@ export default {
         site: "",
         url: "",
         phone: "",
-        email: ""
+        email: "",
+        area: ""
       },
       keymenForm: {
         name: "",
@@ -195,9 +200,20 @@ export default {
   computed: {
     itemid() {
       return this.$route.params.itemid;
-    }
+    },
+    ...mapGetters("ipublic", ["regionList", "userInfo", "regionId"]),
   },
   async created() {
+    // 根据区域获取国家，然后默认
+    if (this.regionList && this.regionList.length > 0 && [this.$global.userRole.regionalManager, this.$global.userRole.projectManager, this.$global.userRole.member].includes(this.userInfo.userRole)) {
+      // 区域管理员、项目经理、普通成员
+      let res = this.regionList.find(val => val.id == this.userInfo.regionId);
+      this.companyForm.country = res && res.regionCountry;
+    } else if (this.regionList && this.regionList.length > 0 && this.$global.userRole.superAdministrator == this.userInfo.userRole ) {
+      // 超级管理员
+      let res = this.regionList.find(val => val.id == this.$store.getters['ipublic/regionId']);
+      this.companyForm.country = res && res.regionCountry;
+    }
     // 国家
     this.countryList = await getCountry(this);
     // 公司类型
@@ -236,7 +252,8 @@ export default {
               nodeGrade: this.otherForm.importance,
               nodeProfile: this.otherForm.introduce,
               nodeRemarks: this.otherForm.note,
-              listTargetCompanyKeyPerson: []
+              listTargetCompanyKeyPerson: [],
+              area: this.companyForm.area
             };
             this.$http.post("/target/company/save", params).then(res => {
               if (res.iworkuCode == 200) {

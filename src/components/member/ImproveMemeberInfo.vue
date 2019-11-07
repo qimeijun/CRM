@@ -365,7 +365,7 @@ export default {
             this.submitBtnLoading = true;
             this.$http.post('/user/info/update', params).then(res => {
               if (res.iworkuCode == 200) {
-                this.userInfo.id == this.memberForm.id && this.$store.commit('ipublic/$_set_userInfo', {...params, ...this.userInfo});
+                this.userInfo.id == this.memberForm.id && this.$store.commit('ipublic/$_set_userInfo', {...this.userInfo, ...params});
                 this.$imessage({
                   content: this.$t("public.tips.success"),
                   type: "success"

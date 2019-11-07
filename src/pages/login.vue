@@ -60,6 +60,7 @@
         </li>
       </ul>
       <div class="ownership">{{ $t("login.ownership") }}</div>
+      <div class="ownership">蜀ICP备16011338号</div>
     </div>
   </section>
 </template>

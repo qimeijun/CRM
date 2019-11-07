@@ -79,14 +79,22 @@
         <!-- 订单数量 start-->
         <el-form-item style="width: 50%;" :label="`${$t('workDiary.form.orderNum')}`" prop="orderNum">
           <el-input v-model="diaryForm.orderNum">
-            <template slot="append">件</template>
+            <el-select v-model="diaryForm.orderNumUnit" slot="append" style="width: 80px">
+              <template v-if="orderNumUnitList && orderNumUnitList.length > 0">
+                <el-option v-for="(item, index) in orderNumUnitList" :key="index" :label="item.name"  :value="item.id"></el-option>
+              </template>
+            </el-select>
           </el-input>
         </el-form-item>
         <!-- 订单数量 end -->
         <!-- 订单金额 start -->
         <el-form-item style="width: 50%;" :label="`${$t('workDiary.form.orderPrice')}`" prop="orderPrice">
           <el-input v-model="diaryForm.orderPrice">
-            <template slot="append">{{ $t("public.dollar") }}</template>
+            <el-select v-model="diaryForm.orderPriceUnit" slot="append" style="width: 100px">
+              <template v-if="orderPriceUnitList && orderPriceUnitList.length > 0">
+                <el-option v-for="(item, index) in orderPriceUnitList" :key="index" :label="item.name"  :value="item.id"></el-option>
+              </template>
+            </el-select>
           </el-input>
         </el-form-item>
         <!-- 订单金额 end  -->
@@ -201,7 +209,7 @@
   </section>
 </template>
 <script>
-import { getQiniuToken, rename } from "@/plugins/configuration.js"
+import { getQiniuToken, rename, getOrderPriceUnit, getOrderNumUnit } from "@/plugins/configuration.js"
 import { mapGetters } from 'vuex'
 export default {
   components: {
@@ -266,7 +274,9 @@ export default {
         orderPrice: 0,
         orderDescription: "",
         chatLogList: [],
-        attachmentList: []
+        attachmentList: [],
+        orderNumUnit: "d34a62ac-ac3e-11e9-b080-946e68be8353",
+        orderPriceUnit: "ee4f62ac-ac3e-11e9-b080-946e68be8353"
       },
       rules: {
         projectName: [
@@ -304,11 +314,15 @@ export default {
       targetList: [],
       uploadData: {},
       submitBtnLoading: false,
-      attachColor: ["#F39470", "#2B79E7", "#59CC9A", "#59cc6b"]
+      attachColor: ["#F39470", "#2B79E7", "#59CC9A", "#59cc6b"],
+      orderPriceUnitList: [],
+      orderNumUnitList: []
     };
   },
-  created() {
+  async created() {
     this.getProject();
+    this.orderPriceUnitList = await getOrderPriceUnit(this);
+    this.orderNumUnitList = await getOrderNumUnit(this);
   },
   computed: {
     ...mapGetters('ipublic', ['userInfo'])
@@ -371,6 +385,8 @@ export default {
             params.productName = this.diaryForm.orderName;
             params.orderType = this.diaryForm.orderType;
             params.followContent = this.diaryForm.orderDescription;
+            params.orderNumberUnitId = this.diaryForm.orderNumUnit;
+            params.orderAmountUnitId = this.diaryForm.orderPriceUnit;
           }
           
           if (this.diaryForm.id) {
@@ -484,6 +500,8 @@ export default {
         this.diaryForm.orderPrice = params.orderAmount;
         this.diaryForm.orderType = params.orderType;
         this.diaryForm.orderDescription = params.followContent;
+        this.diaryForm.orderPriceUnit = params.orderAmountUnitId;
+        this.diaryForm.orderNumUnit = params.orderNumberUnitId;
 
         if (params.followLog) {
           this.diaryForm.chatLogList = [];

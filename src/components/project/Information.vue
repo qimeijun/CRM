@@ -53,7 +53,12 @@
         <p>
           <span>{{$t("project.from.url")}}</span>
           <br />
-          <span>{{info.companyWebsite}}</span>
+          <!-- <span></span> -->
+          <template>
+            <a style="color: blue; text-decoration: underline;" v-if="info.companyWebsite && info.companyWebsite.toLocaleLowerCase().includes('http')" :href="`${info.companyWebsite}`" target="_blank" rel="noopener noreferrer">{{info.companyWebsite}}</a>
+            <a style="color: blue; text-decoration: underline;" v-else-if="info.companyWebsite && info.companyWebsite.toLocaleLowerCase().includes('https')" :href="`${info.companyWebsite}`" target="_blank" rel="noopener noreferrer">{{info.companyWebsite}}</a>
+            <a style="color: blue; text-decoration: underline;" v-else :href="`http://${info.companyWebsite}`" target="_blank" rel="noopener noreferrer">{{info.companyWebsite}}</a>
+          </template>
         </p>
         <p>
           <span>{{$t("project.from.email")}}</span>

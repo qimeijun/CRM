@@ -1,6 +1,7 @@
 export default {
     head: {
-        title: "Hệ thống quản lý kinh doanh bản địa hóa toàn cầu",
+        // title: "Hệ thống quản lý kinh doanh bản địa hóa toàn cầu",
+        title: "Hệ thống quản lý dự án CRM",
         account: "Quản lý tài khoản", 
         logout: "Thoát", 
         today: "Công việc hôm nay"
@@ -411,6 +412,7 @@ export default {
         allot:"Phân bổ",
         redistribution: "Phân phối lại",
         invalid:"vô hiệu hóa", 
+        delete: "Xóa",
         activation: "Kích hoạt",
         transfer:"Bàn giao", 
         intoSea:"Chuyển sang công khai", 
@@ -499,7 +501,7 @@ export default {
 			dialogTitle:"Thêm thành viên dự án"
         },
         commonality:{
-            tableHeader: ["Công ty mục tiêu", "Người có trách nhiệm", "Mức độ quan trọng","Thời gian cập nhật","Trạng thái","Thời gian khởi tạo","Mức độ hoàn thành tài liệu","Tiến hành"],
+            tableHeader: ["Công ty mục tiêu", "Người có trách nhiệm", "Mức độ quan trọng","Thời gian cập nhật","Trạng thái","Thời gian khởi tạo","Mức độ hoàn thành tài liệu","Tiến hành", "Khu vực"],
         },
         importTarget:  {
             add: "Thêm công ty mục tiêu mới", 
@@ -568,7 +570,8 @@ export default {
             importance:"Mức độ quan trọng", 
             introduce:"Giới thiệu",
             remark:"Ghi chú", 
-            btn:"Hoàn thành" 
+            btn:"Hoàn thành",
+            area: "Khu vực"
         },
         info:{
             companyTitle:"Tài liệu công ty mục tiêu", 

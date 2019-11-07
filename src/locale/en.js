@@ -1,6 +1,7 @@
 export default {
     head: {
-        title: "Global Localization Marketing Management System",
+        // title: "Global Localization Marketing Management System",
+        title: "CRM project management system",
         account: "Account",
         logout: "Log Out",
         today: "Work Today"
@@ -413,6 +414,7 @@ export default {
         allot: "Assign",
         redistribution: "redistribution",
         invalid: "Cancel",
+        delete: "Delete",
         activation: "The activation",
         transfer: "Transfer",
         intoSea: " Move to Public",
@@ -502,7 +504,7 @@ export default {
             dialogTitle:"Add project members"
         },
         commonality: {
-            tableHeader: ["Target", "Responsible Person", "Importance", "Update date", "status", "Creat Time", "Completeness", "Operate"]
+            tableHeader: ["Target", "Responsible Person", "Importance", "Update date", "status", "Creat Time", "Completeness", "Operate", "Area"]
         },
         importTarget: {
             add: "Add new Target",
@@ -571,7 +573,8 @@ export default {
             importance: "Importance",
             introduce: "Introduction",
             remark: "Remark",
-            btn: "Done"
+            btn: "Done",
+            area: "Area"
         },
         info: {
             companyTitle: "Target profile",

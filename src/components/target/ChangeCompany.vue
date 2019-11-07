@@ -16,6 +16,9 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item :label="$t('target.form.area')">
+        <el-input v-model="form.area"></el-input>
+      </el-form-item>
       <el-form-item :label="$t('target.form.site')">
         <el-input v-model="form.targetCompanyAddress"></el-input>
       </el-form-item>
@@ -81,7 +84,8 @@ export default {
             targetCompanyCountry: this.form.targetCompanyCountry,
             targetCompanyAddress: this.form.targetCompanyAddress,
             targetCompanyWebsite: this.form.targetCompanyWebsite,
-            targetCompanyTel: this.form.targetCompanyTel
+            targetCompanyTel: this.form.targetCompanyTel,
+            area: this.form.area
           };
           this.$http.post("/target/company/update",params).then(res=>{
              if(res.iworkuCode==200){

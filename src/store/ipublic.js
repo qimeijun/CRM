@@ -29,7 +29,11 @@ export default {
         targetStatus: [],
         regionId: null,
         // 区域列表
-        regionList: []
+        regionList: [],
+        // 订单金额的单位
+        orderPriceUnitList: [],
+        // 订单数量的单位：
+        orderNumUnitList: []
     },
     // 提交
     mutations: {
@@ -83,6 +87,12 @@ export default {
         },
         $_clear_regionList(state) {
             state.regionList = []
+        },
+        $_set_orderPriceUnitList(state, value) {
+            state.orderPriceUnitList = value;
+        },
+        $_set_orderNumUnitList(state, value) {
+            state.orderNumUnitList = value;
         }
     },
     // 提交到 mutations 中
@@ -133,6 +143,12 @@ export default {
         },
         regionList: state => {
             return state.regionList;
+        },
+        orderPriceUnitList: state => {
+            return state.orderPriceUnitList;
+        },
+        orderNumUnitList: state => {
+            return state.orderNumUnitList;
         }
     }
 };

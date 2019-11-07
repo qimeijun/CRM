@@ -67,9 +67,11 @@
             </div>
             <div class="diary-content">
                 <div style="font-size: 16px; color: black; line-height: 35px;">{{ item.followTitle }}</div>
-                <div style="display: flex; align-items: center; cursor: pointer;" @click="$router.push({ path: `/member/detail/info/${item.followAddUser}` })">
-                    <el-avatar style="margin-right: .2rem;" :size="40" :src="`${$global.avatarURI}${item.followAddUserProfileImage}`"></el-avatar>
-                    <span style="font-size: 12px;">{{ item.followAddUserNameZh || item.followAddUserNameEn }}</span>
+                <div style="display: flex; align-items: center;">
+                    <div style="margin-right: .2rem; cursor: pointer;" @click="$router.push({ path: `/member/detail/info/${item.followAddUser}` })">
+                        <el-avatar  :size="40" :src="`${$global.avatarURI}${item.followAddUserProfileImage}`"></el-avatar>
+                    </div>
+                    <span style="font-size: 12px; cursor: pointer;" @click="$router.push({ path: `/member/detail/info/${item.followAddUser}` })">{{ item.followAddUserNameZh || item.followAddUserNameEn }}</span>
                 </div>
                 <!-- 订单 -->
                 <div class="order" v-if="item.followNodeType == '4'">
@@ -80,11 +82,11 @@
                     </div>
                     <div>
                         <span>{{ $t('workDiary.form.orderPrice') }}：</span>
-                        {{ item.orderAmount }}{{ $t("public.dollar") }}
+                        {{ item.orderAmount }}&nbsp;{{ item.amountName }}
                     </div>
                     <div>
                         <span>{{ $t('workDiary.form.orderNum') }}：</span>
-                        {{ item.orderNumber }}件
+                        {{ item.orderNumber }}&nbsp;{{ item.numberName }}
                     </div>
                     <div>
                         <span>{{ $t('workDiary.form.orderType') }}:</span>

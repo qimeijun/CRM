@@ -76,20 +76,23 @@
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
-        :row-style="{'cursor': 'pointer'}"
-        @row-click="onClick"
+        :cell-class-name="onClickClass"
+        @cell-click="onClick"
+        @sort-change="onSortChange"
       >
+      <!-- :row-style="{'cursor': 'pointer'}" @row-click="onClick"-->
         <el-table-column type="selection" width="35"></el-table-column>
         <el-table-column
           prop="targetCompanyName"
           :label="$t('projectInfo.commonality.tableHeader[0]')"
           show-overflow-tooltip
         ></el-table-column>
+        <el-table-column :label="$t('target.form.area')" prop="area" width="120"></el-table-column>
         <el-table-column
           prop="grade"
-          :label="$t('projectInfo.commonality.tableHeader[1]')"
+          :label="$t('projectInfo.commonality.tableHeader[2]')"
           width="200"
-          sortable
+          sortable="custom"
         >
           <template slot-scope="scope">
             <el-rate :value="scope.row.grade-0" disabled :colors="['#E50054','#E50054','#E50054']"></el-rate>
@@ -98,9 +101,9 @@
         </el-table-column>
         <el-table-column
           prop="updateTimeStr"
-          :label="$t('projectInfo.commonality.tableHeader[2]')"
+          :label="$t('projectInfo.commonality.tableHeader[3]')"
           width="140"
-          sortable
+          sortable="custom"
         >
           <template slot-scope="scope">
             <p>{{$global.localTime({time:scope.row.updateTimeStr,hour:false})}}</p>
@@ -108,9 +111,9 @@
         </el-table-column>
         <el-table-column
           prop="status"
-          :label="$t('projectInfo.commonality.tableHeader[3]')"
+          :label="$t('projectInfo.commonality.tableHeader[4]')"
           width="150"
-          sortable
+          sortable="custom"
         >
           <template slot-scope="scope">
             <p>{{scope.row.statusName}}</p>
@@ -118,9 +121,9 @@
         </el-table-column>
         <el-table-column
           prop="addTimeStr"
-          :label="$t('projectInfo.commonality.tableHeader[4]')"
+          :label="$t('projectInfo.commonality.tableHeader[5]')"
           width="140"
-          sortable
+          sortable="custom"
         >
           <template slot-scope="scope">
             <p>{{$global.localTime({time:scope.row.addTimeStr,hour:false})}}</p>
@@ -128,11 +131,11 @@
         </el-table-column>
         <el-table-column
           prop="division"
-          :label="$t('projectInfo.commonality.tableHeader[5]')"
+          :label="$t('projectInfo.commonality.tableHeader[6]')"
           width="150"
-          sortable
+          sortable="custom"
         ></el-table-column>
-        <el-table-column :label="$t('projectInfo.commonality.tableHeader[6]')" width="80">
+        <el-table-column :label="$t('projectInfo.commonality.tableHeader[7]')" width="80">
           <template slot-scope="scope">
             <Operate>
               <ul>
@@ -161,6 +164,12 @@
                   class="table_operation"
                   @click="onCancel(scope.row.id,1)"
                 >{{$t("project.activation")}}</li>
+                <!-- 删除目标公司 -->
+                <!-- <li
+                  v-show="itemStatus!=2"
+                  class="table_operation"
+                  @click="onDelete(scope.row.id)"
+                >{{$t("project.delete")}}</li> -->
               </ul>
             </Operate>
           </template>
@@ -307,7 +316,9 @@ export default {
       allocationShow: false,
       addShow: false,
       importShow: false,
-      currentTarget: []
+      currentTarget: [],
+      sortname: undefined,
+      sortorder: "desc"
     };
   },
   computed: {
@@ -378,7 +389,9 @@ export default {
           pageSize: this.size,
           clientType: this.targetType,
           labelId: this.tag[1],
-          keyWord: `${this.seek}`
+          keyWord: `${this.seek}`,
+          sortname: this.sortname,
+          sortorder: this.sortorder
         })
         .then(res => {
           if (res.iworkuCode == 200) {
@@ -520,9 +533,24 @@ export default {
       session.set("historyPath",`/project/detail/commonality/${this.itemid}/${this.adminId}`);
       this.$router.push({path});
     },
-    onClick(row) {
-      let path = `/target/detail/info/${row.id}/${row.itemId}`
-      this.SetHistoryPath(path);
+    onClick(row, column, cell, event) {
+      if (column.property == 'targetCompanyName') {
+        let path = `/target/detail/info/${row.id}/${row.itemId}`
+        this.SetHistoryPath(path);
+      }
+    },
+    onClickClass({row, column, rowIndex, columnIndex}) {
+      if (column.property == 'targetCompanyName') {
+        return 'table-name';
+      }
+    },
+    // 点击排序
+    onSortChange({ column, prop, order }) {
+      order == 'ascending' ? this.sortorder='asc' : this.sortorder='desc';
+      if (prop == 'grade' || prop == 'updateTimeStr' || prop == 'status' || prop == 'addTimeStr' || prop == 'division')  {
+        this.sortname = prop;
+        this.getCommonality(this.itemid, 1);
+      }
     }
   }
 };
@@ -553,4 +581,10 @@ export default {
 .table_operation {
   cursor: pointer;
 }
+</style>
+<style lang="scss">
+  .table-name {
+    cursor: pointer;
+    // color: $--default-color;
+  }
 </style>

@@ -80,10 +80,16 @@
             <p>{{companyForm.targetCompanyName}}</p>
             <h5>{{$t("target.info.country")}}</h5>
             <p>{{ companyForm.targetCompanyCountryName }}</p>
+            <h5>{{ $t("target.form.area") }}</h5>
+            <p>{{ companyForm.area }}</p>
             <h5>{{$t("target.info.site")}}</h5>
             <p>{{companyForm.targetCompanyAddress}}</p>
             <h5>{{$t("target.info.url")}}</h5>
-            <p>{{companyForm.targetCompanyWebsite}}</p>
+            <p>
+              <a style="color: blue; text-decoration: underline;" v-if="companyForm.targetCompanyWebsite && companyForm.targetCompanyWebsite.toLocaleLowerCase().includes('http')" :href="companyForm.targetCompanyWebsite" target="_blank">{{companyForm.targetCompanyWebsite}}</a>
+              <a style="color: blue; text-decoration: underline;" v-else-if="companyForm.targetCompanyWebsite && companyForm.targetCompanyWebsite.toLocaleLowerCase().includes('https')" :href="companyForm.targetCompanyWebsite" target="_blank">{{companyForm.targetCompanyWebsite}}</a>
+              <a style="color: blue; text-decoration: underline;" v-else :href="`http://${companyForm.targetCompanyWebsite}`" target="_blank">{{ companyForm.targetCompanyWebsite }}</a>
+            </p>
             <h5>{{$t("target.info.phone")}}</h5>
             <p>{{companyForm.targetCompanyTel}}</p>
           </div>

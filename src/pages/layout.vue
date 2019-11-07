@@ -190,7 +190,7 @@ export default {
   },
   async created() {
     // 获取区域，只有超级管理员才有区域区分
-    if (this.userInfo.userRole == this.$global.userRole.superAdministrator) {
+    // if (this.userInfo.userRole == this.$global.userRole.superAdministrator) {
       this.$http.post('/user/region/withoutpaginglist').then(res => {
         if (res.iworkuCode == 200 && res.datas) {
           // this.$store.commit("ipublic/$_set_regionId", res.datas[0].id);
@@ -198,8 +198,7 @@ export default {
           this.$store.commit("ipublic/$_set_regionList", res.datas);
         }
       });
-    }
-
+    // }
     await automaticLogin(this);
     if (this.userInfo.userRole == this.$global.userRole.customer) {
       this.getProject();

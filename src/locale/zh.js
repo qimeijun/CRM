@@ -1,6 +1,7 @@
 export default {
     head: {
-        title: "全球本地化营销管理系统",
+        // title: "全球本地化营销管理系统",
+        title: "CRM项目管理系统",
         account: "账号管理",
         logout: "退出",
         today: "今日工作"
@@ -414,6 +415,7 @@ export default {
         allot: "分配",
         redistribution: "再分配",
         invalid: "作废",
+        delete: "删除",
         activation: "激活",
         transfer: "移交",
         intoSea: "移入公海",
@@ -503,7 +505,7 @@ export default {
             dialogTitle:"添加项目成员"
         },
         commonality: {
-            tableHeader: ["目标公司", "负责人", "重要程度", "更新时间", "状态", "创建时间", "资料完整度", "操作"]
+            tableHeader: ["目标公司", "负责人", "重要程度", "更新时间", "状态", "创建时间", "资料完整度", "操作", "区域"]
         },
         importTarget: {
             add: "新增目标公司",
@@ -572,7 +574,8 @@ export default {
             importance: "重要程度",
             introduce: "介绍",
             remark: "备注",
-            btn: "完成"
+            btn: "完成",
+            area: "地区"
         },
         info: {
             companyTitle: "目标公司资料",

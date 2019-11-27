@@ -46,6 +46,9 @@
         class="top_button"
         @click="onCancel(1)"
       >{{$t("project.activation")}}</el-button>
+      <el-button v-if="itemStatus!=2&&companyForm.status!=4&&itemRole" type="primary" 
+        @click="addRemindDialogVisible=true;"
+        class="top_button" >{{ $t("workBench.remind.add") }}</el-button>
     </div>
     <!--     
         功能：三个资料的编辑功能 及标签编辑功能
@@ -274,6 +277,17 @@
       </el-scrollbar>
     </el-dialog>
     <!-- 分配 end -->
+
+    <!-- 添加提醒 start -->
+      <el-dialog
+        :title="$t('workBench.remind.dialogTitle')"
+        :visible.sync="addRemindDialogVisible"
+        :close-on-click-modal="false"
+        :width="$global.dialogWidth"
+      >
+        <AddRemind :itemid="companyForm.itemId" :targetId="targetid" @onSuccess="onAddSuccess"></AddRemind>
+      </el-dialog>
+        <!-- 添加提醒 end -->
   </div>
 </template>
 <script>
@@ -290,7 +304,8 @@ export default {
     ChangeOther: () => import("@/components/target/ChangeOther.vue"),
     // 移交组件
     ChangeAdministrator: () =>
-      import("@/components/member/ChangeAdministrator.vue")
+      import("@/components/member/ChangeAdministrator.vue"),
+    AddRemind: () => import("@/components/workbench/AddRemind.vue")
   },
   data() {
     return {
@@ -305,6 +320,7 @@ export default {
       itemRole: false, //用户是否为项目成员或超管
       showType: "",
       itemStatus:2,
+      addRemindDialogVisible: false
     };
   },
   computed: {
@@ -521,6 +537,10 @@ export default {
         }
       });
     },
+    // 添加提醒成功
+    onAddSuccess() {
+        this.addRemindDialogVisible = false;
+    }
   }
 };
 </script>

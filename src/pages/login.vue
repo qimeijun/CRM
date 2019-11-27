@@ -130,11 +130,16 @@ export default {
               this.submitBtnLoading = false;
               if (res.iworkuCode == 200) {
                 this.$store.commit("ipublic/$_set_userInfo", res.datas);
+                if (res.datas.regionId) {
+                  this.$store.commit("ipublic/$_set_regionId", res.datas.regionId);
+                  console.log(res.datas.regionId);
+                }
                 if (
                   res.datas.userRole == this.$global.userRole.customer
                 ) {
                   this.$router.push({ path: "/customer" });
                 } else {
+                   
                   this.$router.push({ path: "/" });
                 }
               }

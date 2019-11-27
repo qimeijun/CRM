@@ -77,7 +77,7 @@
         </el-form-item>
         <!-- 订单名称 end -->
         <!-- 订单数量 start-->
-        <el-form-item style="width: 50%;" :label="`${$t('workDiary.form.orderNum')}`" prop="orderNum">
+        <el-form-item style="width: 80%;" :label="`${$t('workDiary.form.orderNum')}`" prop="orderNum">
           <el-input v-model="diaryForm.orderNum">
             <el-select v-model="diaryForm.orderNumUnit" slot="append" style="width: 80px">
               <template v-if="orderNumUnitList && orderNumUnitList.length > 0">
@@ -88,7 +88,7 @@
         </el-form-item>
         <!-- 订单数量 end -->
         <!-- 订单金额 start -->
-        <el-form-item style="width: 50%;" :label="`${$t('workDiary.form.orderPrice')}`" prop="orderPrice">
+        <el-form-item style="width: 80%;" :label="`${$t('workDiary.form.orderPrice')}`" prop="orderPrice">
           <el-input v-model="diaryForm.orderPrice">
             <el-select v-model="diaryForm.orderPriceUnit" slot="append" style="width: 100px">
               <template v-if="orderPriceUnitList && orderPriceUnitList.length > 0">

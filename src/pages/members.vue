@@ -10,6 +10,7 @@
             type="text"
             v-model="searchMember"
             :placeholder="$t('memberManagement.searchInput')"
+            @keyup.enter.native="getRegionData"
           >
           <i slot="suffix" style="cursor: pointer;" @click="getRegionData" class="el-input__icon el-icon-search"></i></el-input>
           <!-- 

@@ -326,6 +326,7 @@ export default {
               targetRes && ((targetRes) => {
                   this.dateForm.targetOwnerId = targetRes.targetCompanyUserInfo.id;
                   targetRes.targetCompanyUserInfo && this.dateForm.selectUsers.push(targetRes.targetCompanyUserInfo);
+                  // console.log(new Set(this.dateForm.selectUsers));
               })(targetRes);
             } else {
               // 设置默认值
@@ -334,7 +335,14 @@ export default {
               // 设置默认选中的工作成员
               this.targetList[0].targetCompanyUserInfo && this.dateForm.selectUsers.push(this.targetList[0].targetCompanyUserInfo);
             }
-            
+            // 数组去重
+            if (this.dateForm && this.dateForm.selectUsers && this.dateForm.selectUsers.length > 1) {
+              let userMap = new Map();
+              this.dateForm.selectUsers.map(val => {
+                userMap.set(val.id, val);
+              });
+              this.dateForm.selectUsers = [...userMap.values()];
+            }
           }
         });
     },

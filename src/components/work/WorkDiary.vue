@@ -32,7 +32,9 @@
             <el-scrollbar style="height: calc(100vh - 3.08rem);" >
             <div style="margin-top: 20px;" v-infinite-scroll="load" :infinite-scroll-immediate="false" :infinite-scroll-distance="100">
                 <template v-if="workDiarList && workDiarList.length > 0">
-                    <DiaryModule v-for="(item, index) in workDiarList" :key="index" :diary="item" :isAllow="isAllow" :id="id" :type="type"></DiaryModule>
+                    <template  v-for="(item, index) in workDiarList">
+                        <DiaryModule v-if="item.followNodeType != '7'" :key="index" :diary="item" :isAllow="isAllow" :id="id" :type="type"></DiaryModule>
+                    </template>
                 </template>
                 <template v-else>
                     <div style="height: calc(100vh - 3.3rem); background-color: white; border-radius: 8px; line-height: 200px; text-align: center;">
@@ -74,7 +76,6 @@
         <!-- 添加工作日志 dialog end -->
 
         <!-- 添加提醒 start -->
-        <!-- 添加表单 -->
       <el-dialog
         :title="$t('workBench.remind.dialogTitle')"
         :visible.sync="addRemindDialogVisible"
@@ -204,6 +205,8 @@ export default {
                 } else if (this.type == 'project') {
                     params.followItemId = this.id;
                 }
+                params.pageSize = this.page.pageSize;
+                params.pageNum = this.page.pageNum;
                 this.$http.post('/customer/followup/info/withoutpaginglist', params).then(res => {
                     if (res.iworkuCode == 200) {
                         this.page.pageNum > 1 ? this.workDiarList.push(...res.datas) : this.workDiarList = res.datas || [];

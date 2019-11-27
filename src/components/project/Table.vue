@@ -92,21 +92,19 @@
                   >{{$t("project.view")}}</router-link>
                 </li>
                 <!-- 结束项目 -->
-                <li
-                  v-show="scope.row.itemStatus!=2&&userInfo.userRole!=$global.userRole.member"
-                  class="table_delete"
+                <li v-if="scope.row.itemStatus!=2&&userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.projectManager" 
+                    class="table_delete"
                   @click="onDeleteMember(scope.row.itemId)"
                 >{{$t("projectInfo.endProject")}}</li>
                 <!-- 重启项目 -->
-                <li
-                  v-show="scope.row.itemStatus==2&&userInfo.userRole!=$global.userRole.member"
+                <li v-if="scope.row.itemStatus==2&&userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.projectManager" 
                   class="table_delete"
                   @click="onRestartMember(scope.row.itemId)"
                 >{{$t("projectInfo.restartProject")}}</li>
                 <li
                   v-show="scope.row.itemStatus!=2&&(userInfo.userRole==$global.userRole.regionalManager||userInfo.userRole==$global.userRole.superAdministrator)"
                   class="table_delete"
-                  @click="allocationShow=true; allotProject=scope.row"
+                  @click="onReAssgin(scope.row)"
                 >{{scope.row.probjectManager==null? $t("project.allot"):$t("project.redistribution")}}</li>
               </ul>
             </Operate>
@@ -140,6 +138,7 @@
         <ChangeAdministrator
           operate="add"
           :params="{type: 'addProjectManager'}"
+          :oldAdminstrator="oldAdminstrator"
           @getManager="getManager"
         ></ChangeAdministrator>
       </el-scrollbar>
@@ -167,7 +166,8 @@ export default {
       currentPage: 1,
       itemStatusList: [],
       allocationShow: false,
-      allotProject: {}
+      allotProject: {},
+      oldAdminstrator: {}
     };
   },
   computed: {
@@ -348,6 +348,18 @@ export default {
               });
           }
         }
+    },
+    onReAssgin(data) {
+      this.allocationShow = true; 
+      this.allotProject = data;
+      if (data.probjectManager) {
+        this.oldAdminstrator = {
+          id: data.probjectManager,
+          userProfileImage:data.probjectManagerProfileImage,
+          userNameEn: data.userNameEn,
+          userNameZh: data.userNameZh
+        }
+      }
     }
   },
   watch: {

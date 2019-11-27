@@ -33,7 +33,9 @@ export default {
         // 订单金额的单位
         orderPriceUnitList: [],
         // 订单数量的单位：
-        orderNumUnitList: []
+        orderNumUnitList: [],
+        // 公海检索字段
+        highSeasWord: ""
     },
     // 提交
     mutations: {
@@ -64,7 +66,9 @@ export default {
         },
         $_remove_userInfo(state) {
             session.remove('user');
+            session.remove('regionId');
             state.userInfo = {};
+            state.regionId = null;
         },
         $_set_targetStatus(state, value) {
             state.targetStatus = value;
@@ -93,6 +97,9 @@ export default {
         },
         $_set_orderNumUnitList(state, value) {
             state.orderNumUnitList = value;
+        },
+        $_set_highSeasWord(state, value) {
+            state.highSeasWord = value;
         }
     },
     // 提交到 mutations 中
@@ -149,6 +156,9 @@ export default {
         },
         orderNumUnitList: state => {
             return state.orderNumUnitList;
+        },
+        highSeasWord: state => {
+            return state.highSeasWord;
         }
     }
 };

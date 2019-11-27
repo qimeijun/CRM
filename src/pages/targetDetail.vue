@@ -55,7 +55,8 @@ export default {
           value: "target_diary",
           route: "diary"
         },
-      ]
+      ],
+      addRemindDialogVisible: false
     };
   },
   created() {

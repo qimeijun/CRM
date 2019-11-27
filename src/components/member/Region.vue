@@ -63,9 +63,9 @@
       <template v-if="teamList && teamList.length > 0">
         <template v-for="(item, index) in teamList">
           <!-- 一定是先有项目经理才有团队，最后才能在团队里添加成员 -->
-          <template v-if="item && item.projectManager">
+          <template v-if="item">
             <!-- 管理员 start -->
-            <TableList  :key="index + 1" :item="{...item.projectManager, ...{team: item.teamName, teamId: item.id, userList: item.userInfoList}}"></TableList>
+            <TableList  v-if="item.projectManager" :key="index + 1" :item="{...item.projectManager, ...{team: item.teamName, teamId: item.id, userList: item.userInfoList}}"></TableList>
             <!-- 管理员 end -->
             <!-- 成员 list start-->
             <template v-if="item.userInfoList && item.userInfoList.length > 0">

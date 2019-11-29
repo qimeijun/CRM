@@ -106,6 +106,11 @@ const router = new VueRouter({
                             component: () => import('./../components/target/Probe.vue')
                         },
                         {
+                            path: 'quotation/:targetid/:itemid',
+                            name: 'target_quotation',
+                            component: () => import('./../components/target/Quotation.vue')
+                        },
+                        {
                             path: 'diary/:targetid/:itemid',
                             name: 'target_diary',
                             component: () => import('./../components/target/WorkDiary.vue')

@@ -78,7 +78,10 @@ export default {
             country: "Country",
             city: "City",
             region: "Regional Manager",
-            regional: "Region"
+            regional: "Region",
+            address: "Address",
+            companyName: "Company Name",
+            webSite: "WebSite"
         },
         rules: {
             avatar: "Please upload the work photo",
@@ -91,19 +94,26 @@ export default {
             gender: "Please select a member gender",
             country: "Please select a country",
             region: "Please select a regional manager",
-            regional: "Please select a region"
+            regional: "Please select a region",
+            address: "Please input a Address",
+            companyName: "Please input a Company Name",
+            webSite: "Please input a WebSite",
+            telphone: "Please enter a mobile number",
         },
         placeholder: {
             account: "Please input a email",
             username: "Please input a member name",
             usernameEn: "Please input a member English name",
             gender: "Please select a member gender",
-            email: "Please input a member email",
-            telphone: "Please enter the member's mobile number",
+            email: "Please input a email",
+            telphone: "Please enter a mobile number",
             role: "Please select the level of the member",
             search: "Search target company name, ID, address, key person",
             country: "Please select a country",
-            regional: "Please select a region"
+            regional: "Please select a region",
+            address: "Please input a Address",
+            companyName: "Please input a Company Name",
+            webSite: "Please input a WebSite"
         },
         gender: {
             male: "Male",
@@ -371,7 +381,7 @@ export default {
         addTagPlaceholder: "Add New Tag"
     },
     setting: {
-        title: ["Information", "Change Password"],
+        title: ["Information", "Change Password", "Information"],
         form: {
             companyName: "Company Name",
             companyShortName: "Short Name",
@@ -551,7 +561,7 @@ export default {
     },
     target: {
         title: "Details of Target",
-        menu: ["Info", "Research Report", "Work Log", "Project"],
+        menu: ["Info", "Research Report", "Work Log", "Project", "Quotation"],
         form: {
             companyTitle: "Company",
             keymenTitle: "Key Person",
@@ -623,6 +633,18 @@ export default {
             update: "Edit the Report",
             delete: "Delete",
             title: "Research Report",
+            textTip: ["Fill in Form according to Template", "Size not exceeding 5M", "Importing, please Wait···"],
+            uploadBtn: ["Click to Upload", "Upload Again", "Upload Now"],
+            dialogTitle: "Prompt",
+            updateContent:"Modified to complete",
+            addContent:"The import is complete",
+            ok:"OK"
+        },
+        probe: {
+            upload: "Upload a Quotation",
+            update: "Edit the Quotation",
+            delete: "Delete",
+            title: "Quotation",
             textTip: ["Fill in Form according to Template", "Size not exceeding 5M", "Importing, please Wait···"],
             uploadBtn: ["Click to Upload", "Upload Again", "Upload Now"],
             dialogTitle: "Prompt",

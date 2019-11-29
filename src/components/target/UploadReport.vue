@@ -92,14 +92,15 @@ export default {
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
         this.$message.error(this.$t("target.probe.textTip[1]"));
+        return Promise.reject(false);
+      } else {
+         // 获取七牛token
+        this.uploadData.token = await getQiniuToken(this);
+        this.uploadData.key = rename(file.name);
+        this.fileName = this.uploadData.key;
+        this.btnShow = false;
+        this.progressShow = true;
       }
-      // 获取七牛token
-      this.uploadData.token = await getQiniuToken(this);
-      this.uploadData.key = rename(file.name);
-      this.fileName = this.uploadData.key;
-      this.btnShow = false;
-      this.progressShow = true;
-      return isLt5M;
     },
     // 获取上传进度
     getfileProgress(event, file, fileList) {

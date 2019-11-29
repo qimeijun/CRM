@@ -78,7 +78,10 @@ export default {
             country: "Quốc gia",
             city: "Thành phố",
             region: "Giám đốc khu vực",
-            regional: "Please select a region"
+            regional: "Khu vực",
+            address: "Địa chỉ",
+            companyName: "Tên công ty",
+            webSite: "Site ”"
         },
         rules: {
             avatar: "Đăng tải ảnh công việc", 
@@ -91,7 +94,11 @@ export default {
             gender: "Lựa chọn vai trò của thành viên",
             country: "Vui lòng chọn quốc gia",
             region: "Lựa chọn giám đốc khu vực",
-            regional: "Please select a region"
+            regional: "Hãy chọn một khu vực",
+            address: "Hãy nhập một địa chỉ",
+            companyName: "Hãy nhập tên công ty",
+            webSite: "Xin vui lòng nhập vào trang web",
+            telphone: "Nhập số điện thoại của thành viên"
         },
         placeholder: {
             account: "Nhập Email", 
@@ -103,7 +110,11 @@ export default {
             role: "Lựa chọn cấp bậc của thành viên",
             search: "Tìm kiếm tên, ID, địa chỉ, người chủ chốt của công ty mục tiêu",
             country: "Vui lòng chọn quốc gia",
-            regional: "Please select a region"
+            region: "Lựa chọn giám đốc khu vực",
+            regional: "Hãy chọn một khu vực",
+            address: "Hãy nhập một địa chỉ",
+            companyName: "Hãy nhập tên công ty",
+            webSite: "Xin vui lòng nhập vào trang web"
         },
         gender: {
             male: "Nam", 
@@ -370,7 +381,7 @@ export default {
         addTagPlaceholder: "Thêm nhãn mới" 
     },
     setting: {
-        title: ["Thông tin cá nhân", "Chỉnh sửa mật khẩu"], 
+        title: ["Thông tin cá nhân", "Chỉnh sửa mật khẩu", "Thông tin công ty"], 
         form: {
             companyName: "Tên công ty", 
             companyShortName: "Tên viết tắt của công ty", 
@@ -548,7 +559,7 @@ export default {
     },
     target: {
         title:"Chi tiết công ty mục tiêu",
-        menu:["Tài liệu","Báo cáo khảo sát","Nhật ký công việc","Dự án"],
+        menu:["Tài liệu","Báo cáo khảo sát","Nhật ký công việc","Dự án", "Báo giá"],
         form:{
             companyTitle:"Thông tin công ty", 
             keymenTitle:"Người chủ chốt", 
@@ -617,6 +628,18 @@ export default {
         probe: {
             upload: "Đăng tải báo cáo", 
             update: "Chỉnh sửa báo cáo", 
+            delete:"Xóa", 
+            title:"Báo cáo khảo sát", 
+            textTip:[" Nhấn đăng tải mẫu, Điền bảng biểu","Dung lượng bảng biểu dưới 5M","Công ty mục tiêu đang nhập khẩu, xin hãy kiên nhẫn ..."],
+            uploadBtn:["Nhấp vào để đăng tải","Đăng tải lại","Bắt đầu đăng tải"],
+            dialogTitle:"Chú ý",
+            updateContent:"Sửa đổi",
+            addContent:"Nhập xong",
+            ok:"Hoàn thành"
+        },
+        probe: {
+            upload: "Tải lên Quote", 
+            update: "Sửa đổi báo giá", 
             delete:"Xóa", 
             title:"Báo cáo khảo sát", 
             textTip:[" Nhấn đăng tải mẫu, Điền bảng biểu","Dung lượng bảng biểu dưới 5M","Công ty mục tiêu đang nhập khẩu, xin hãy kiên nhẫn ..."],

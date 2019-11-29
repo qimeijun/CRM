@@ -117,6 +117,7 @@ export default {
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
         this.$message.error(this.$t("projectInfo.importTarget.textTip[1]"));
+        return Promise.reject("false");
       } else {
         this.fileName = file.name;
         this.btnDisabled = false;

@@ -51,6 +51,11 @@ export default {
           route: "probe"
         },
         {
+          name: this.$t("target.menu[4]"),
+          value: "target_quotation",
+          route: "quotation"
+        },
+        {
           name: this.$t("target.menu[2]"),
           value: "target_diary",
           route: "diary"

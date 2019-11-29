@@ -4,7 +4,7 @@
       <div class="login__iworku">
         <div class="content">
           <img src="./../assets/img/Logo.svg" style="display:block; width: auto;" />
-          <div class="subtitle">Global Local Marking CRM System</div>
+          <div class="subtitle">Global Local Marketing CRM System</div>
         </div>
       </div>
       <div class="login__form">

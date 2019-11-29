@@ -471,23 +471,23 @@ export default {
             trigger: "blur"
           }
         ],
-        url: [
-          {
-            required: true,
-            // message: this.$t("project.rules.url"),
-            validator: (rule, value, callback) => {
-              if (!value) {
-                this.isJump && document.querySelector(`#url`).scrollIntoView(true);
-                this.isJump = false;
-                callback(new Error(this.$t("project.rules.url")));
-              } else {
-                this.isJump = true;
-                callback();
-              }
-            },
-            trigger: "blur"
-          }
-        ],
+        // url: [
+        //   {
+        //     required: true,
+        //     // message: this.$t("project.rules.url"),
+        //     validator: (rule, value, callback) => {
+        //       if (!value) {
+        //         this.isJump && document.querySelector(`#url`).scrollIntoView(true);
+        //         this.isJump = false;
+        //         callback(new Error(this.$t("project.rules.url")));
+        //       } else {
+        //         this.isJump = true;
+        //         callback();
+        //       }
+        //     },
+        //     trigger: "blur"
+        //   }
+        // ],
         email: [
           {
             required: true,

@@ -312,11 +312,12 @@ export default {
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
         this.$message.error(this.$t("project.rules.accessory"));
+        return Promise.reject(false);
+      } else {
+        // 获取七牛token
+        this.uploadData.token = await getQiniuToken(this);
+        this.uploadData.key = rename(file.name);
       }
-      // 获取七牛token
-      this.uploadData.token = await getQiniuToken(this);
-      this.uploadData.key = rename(file.name);
-      return isLt5M;
     },
     // 获取视频上传进度
     getVideoProgress(event, file, fileList) {

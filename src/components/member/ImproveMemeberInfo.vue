@@ -10,7 +10,9 @@
           :label-position="referenceSource == 'setting' ? 'left' : 'top'"
           label-width="80px"
         >
-          <!-- 头像 start -->
+          <!-- 头像 start 
+            权限：客户登录不显示
+          -->
           <el-form-item
             label=""
             class="add-new-member__avatar-item"

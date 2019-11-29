@@ -29,7 +29,7 @@
             限制：成员不可添加 
       -->
       <AddProject
-        v-show="userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.projectManager"
+        v-show="userInfo.userRole!=$global.userRole.member&&userInfo.userRole!=$global.userRole.superAdministrator"
       ></AddProject>
       <!-- 添加新项目按钮 end -->
     </div>

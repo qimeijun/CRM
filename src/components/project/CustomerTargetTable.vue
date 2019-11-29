@@ -38,6 +38,14 @@
       >
         <i slot="suffix" class="el-input__icon el-icon-search" @click="getTargetList(1)"></i>
       </el-input>
+       <el-button
+        type="primary"
+        @click="addShow=true"
+      >{{$t("projectInfo.importTarget.add")}}</el-button>
+      <el-button
+        type="primary"
+        @click="importShow=true"
+      >{{$t("projectInfo.importTarget.import")}}</el-button>
     </div>
     <div id="customer-table">
       <el-table ref="multipleTable" @cell-click="onClickName" :cell-class-name="onTableClass" :data="tableData" tooltip-effect="dark" style="width: 100%">
@@ -48,7 +56,7 @@
         ></el-table-column>
         <el-table-column
           prop="grade"
-          :label="$t('projectInfo.commonality.tableHeader[1]')"
+          :label="$t('projectInfo.commonality.tableHeader[2]')" 
           width="200"
            sortable
         >
@@ -59,7 +67,7 @@
         </el-table-column>
         <el-table-column
           prop="updateTimeStr"
-          :label="$t('projectInfo.commonality.tableHeader[2]')"
+          :label="$t('projectInfo.commonality.tableHeader[3]')"
           width="120"
           sortable
         >
@@ -69,7 +77,7 @@
         </el-table-column>
         <el-table-column
           prop="status"
-          :label="$t('projectInfo.commonality.tableHeader[3]')"
+          :label="$t('projectInfo.commonality.tableHeader[4]')"
           width="150"
           sortable
         >
@@ -78,7 +86,7 @@
         </template></el-table-column>
         <el-table-column
           prop="addTimeStr"
-          :label="$t('projectInfo.commonality.tableHeader[4]')"
+          :label="$t('projectInfo.commonality.tableHeader[5]')"
           width="120"
           sortable
         >
@@ -88,11 +96,11 @@
         </el-table-column>
         <el-table-column
           prop="division"
-          :label="$t('projectInfo.commonality.tableHeader[5]')"
+          :label="$t('projectInfo.commonality.tableHeader[6]')"
           width="140"
           sortable
         ></el-table-column>
-        <el-table-column :label="$t('projectInfo.commonality.tableHeader[6]')" width="60">
+        <el-table-column :label="$t('projectInfo.commonality.tableHeader[7]')" width="60">
           <template slot-scope="scope">
             <Operate>
               <ul>
@@ -118,6 +126,43 @@
         @current-change="getTargetList(currentPage)"
       ></el-pagination>
     </div>
+
+    <!-- 新增目标公司 start -->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('projectInfo.importTarget.add')"
+      :visible.sync="addShow"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      :width="$global.dialogWidth"
+    >
+      <el-scrollbar class="scrollbar">
+        <AddTarget @close="addShow=false;getTargetList(1);"></AddTarget>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 新增目标公司 end -->
+    <!-- 导入目标公司 start-->
+    <el-dialog
+      class="el-dialog__scroll"
+      :title="$t('projectInfo.importTarget.import')"
+      :visible.sync="importShow"
+      top="5vh"
+      :append-to-body="true"
+      :modal="false"
+      :lock-scroll="true"
+      :width="$global.dialogWidth"
+    >
+      <el-scrollbar class="scrollbar">
+        <ImportTarget
+          :itemid="itemid"
+          @close="importShow=false"
+          @getList="getTargetList(1)"
+        ></ImportTarget>
+      </el-scrollbar>
+    </el-dialog>
+    <!-- 导入目标公司 end-->
   </section>
 </template>
 <script>
@@ -125,7 +170,9 @@ import { mapGetters } from "vuex";
 import { getTargetType } from "@/plugins/configuration.js";
 export default {
   components: {
-    Operate: () => import("@/components/lib/Operate.vue")
+    Operate: () => import("@/components/lib/Operate.vue"),
+    AddTarget: () => import("@/components/project/AddTarget.vue"),
+    ImportTarget: () => import("@/components/project/ImportTarget.vue")
   },
   data() {
     return {
@@ -179,7 +226,9 @@ export default {
               });
           }
         }
-      }
+      },
+      addShow: false,
+      importShow: false
     };
   },
   computed: {

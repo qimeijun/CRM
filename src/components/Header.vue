@@ -99,7 +99,7 @@
               </ul>
             </div>
           </div>
-          <el-avatar :size="50" class="head__avatar__img" slot="reference">
+          <el-avatar v-if="userInfo.userRole !== $global.userRole.customer" :size="50" class="head__avatar__img" slot="reference">
             <img
               v-if="userInfo.userProfileImage!=null"
               style="object-fit: cover;"
@@ -108,6 +108,7 @@
             />
             <span v-else style="font-size:24px; font-weight: bold;">{{userInfo.userNameZh?userInfo.userNameZh.slice("")[0]:''}}</span>
           </el-avatar>
+          <span v-else style="cursor: pointer;" slot="reference">{{ userInfo.userNameZh }}</span>
         </el-popover>
       </li>
     </ul>

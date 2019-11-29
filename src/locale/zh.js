@@ -69,7 +69,7 @@ export default {
             username: "姓名",
             usernameEn: "英文名",
             gender: "性别",
-            telphone: "手机",
+            telphone: "电话",
             email: "邮箱",
             role: "角色",
             team: "团队",
@@ -78,7 +78,10 @@ export default {
             country: "国家",
             city: "城市",
             region: "区域经理",
-            regional: "区域"
+            regional: "区域",
+            address: "地址",
+            companyName: "公司名",
+            companyWebSite: "网址"
         },
         rules: {
             avatar: "请上传工作照",
@@ -91,19 +94,26 @@ export default {
             gender: "请选择成员性别",
             country: "请选择国家",
             region: "请选择区域经理",
-            regional: "请选择区域"
+            regional: "请选择区域",
+            address: "请输入地址",
+            companyName: "请输入公司名",
+            companyWebSite: "请输入网址",
+            telphone: "请输入电话"
         },
         placeholder: {
             account: "请输入邮箱",
-            username: "请输入成员的姓名",
-            usernameEn: "请输入成员的英文名",
-            gender: "请选择成员的性别",
-            email: "请输入成员的电子邮箱",
-            telphone: "请输入成员的手机号码",
+            username: "请输入姓名",
+            usernameEn: "请输入英文名",
+            gender: "请选择性别",
+            email: "请输入电子邮箱",
+            telphone: "请输入电话",
             role: "请选择成员的级别",
             search: "搜索目标公司名称、ID、地址、关键人",
             country: "请选择国家",
-            regional: "请选择区域"
+            regional: "请选择区域",
+            address: "请输入地址",
+            companyName: "请输入公司名",
+            companyWebSite: "请输入网址"
         },
         gender: {
             male: "男",
@@ -372,7 +382,7 @@ export default {
         addTagPlaceholder: "添加新标签"
     },
     setting: {
-        title: ["个人资料", "修改密码"],
+        title: ["个人资料", "修改密码", "公司资料"],
         form: {
             companyName: "公司名称",
             companyShortName: "公司简称",
@@ -552,7 +562,7 @@ export default {
     },
     target: {
         title: "目标公司详情",
-        menu: ["资料", "调研报告", "工作日志", "所在项目"],
+        menu: ["资料", "调研报告", "工作日志", "所在项目", "报价单"],
         form: {
             companyTitle: "公司信息",
             keymenTitle: "关键人",
@@ -625,6 +635,18 @@ export default {
             delete: "删除",
             title: "调研报告",
             textTip: ["按上传模板，填写表格", "表格大小控制在 5M 以内", "目标公司正在导入中，请耐心等待···"],
+            uploadBtn: ["点击上传", "重新上传", "开始上传"],
+            dialogTitle: "提示",
+            updateContent:"修改完成",
+            addContent:"导入完成",
+            ok:"完成"
+        },
+        quotation: {
+            upload: "上传报价单",
+            update: "修改报价单",
+            delete: "删除",
+            title: "报价单",
+            textTip: ["按上传模板，填写表格", "表格大小控制在 5M 以内", "报价单正在导入中，请耐心等待···"],
             uploadBtn: ["点击上传", "重新上传", "开始上传"],
             dialogTitle: "提示",
             updateContent:"修改完成",

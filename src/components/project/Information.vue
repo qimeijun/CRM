@@ -153,7 +153,7 @@
       </el-dialog>
       <!-- 编辑资料弹窗 end -->
       <el-dialog :title="$t('password.modify')" :visible.sync="passwordshow" :width="$global.dialogWidth" :close-on-click-modal="false">
-        <UpdatePassword :user="adminUser"></UpdatePassword>
+        <UpdatePassword :user="adminUser" referenceSource="setting"></UpdatePassword>
       </el-dialog>
     </div>
   </section>
@@ -213,13 +213,13 @@ export default {
             trigger: "blur"
           }
         ],
-        companyWebsite: [
-          {
-            required: true,
-            message: this.$t("project.rules.url"),
-            trigger: "blur"
-          }
-        ],
+        // companyWebsite: [
+        //   {
+        //     required: true,
+        //     message: this.$t("project.rules.url"),
+        //     trigger: "blur"
+        //   }
+        // ],
         companyEmail: [
           {
             required: true,
@@ -291,7 +291,8 @@ export default {
           // 客户账号
           this.adminUser = {
             id: res.additionalParameters.id,
-            userAccount: res.additionalParameters.userAccount
+            userAccount: res.additionalParameters.userAccount,
+            userEmail: res.additionalParameters.userAccount
           };
         }
       });

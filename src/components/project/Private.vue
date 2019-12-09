@@ -334,7 +334,12 @@ export default {
   },
   async created() {
     // this.member = this.userInfo.userRole==this.$global.userRole.superAdministrator ? "" : this.userInfo.id;
-
+    let search = this.$store.getters['projects/privateSearch'];
+    this.seek = search && search.seek;
+    this.tag = search && search.tag;
+    this.member = search && search.member;
+    this.targetType = search && search.type;
+    
     this.targetTypeList = [
       { nameEn: "ALL", nameZh: "全部", value: "" },
       ...(await getTargetType(this))
@@ -456,6 +461,14 @@ export default {
     },
     // 获取私海列表
     getPrivate(id, page) {
+      if (this.seek || this.tag || this.member || this.targetType) {
+        this.$store.commit("projects/$_set_privateSearch", {
+          seek: this.seek,
+          tag: this.tag,
+          member: this.member,
+          type: this.targetType
+        });
+      }
       let params = {
         id: id,
         type: 2,

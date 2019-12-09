@@ -34,8 +34,13 @@ export default {
         orderPriceUnitList: [],
         // 订单数量的单位：
         orderNumUnitList: [],
-        // 公海检索字段
-        highSeasWord: ""
+        // 公海管理
+        publicSearch: {
+            seek: "",
+            country: "",
+            type: "",
+            tag: ""
+        }
     },
     // 提交
     mutations: {
@@ -98,8 +103,10 @@ export default {
         $_set_orderNumUnitList(state, value) {
             state.orderNumUnitList = value;
         },
-        $_set_highSeasWord(state, value) {
-            state.highSeasWord = value;
+        $_set_publicSearch(state, value) {
+            if (value && Object.prototype.toString.call(value) == '[object Object]') {
+                state.publicSearch = value;
+            }
         }
     },
     // 提交到 mutations 中
@@ -157,8 +164,8 @@ export default {
         orderNumUnitList: state => {
             return state.orderNumUnitList;
         },
-        highSeasWord: state => {
-            return state.highSeasWord;
+        publicSearch: state => {
+            return state.publicSearch;
         }
     }
 };

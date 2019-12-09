@@ -13,7 +13,9 @@ export default {
         // 当前查看信息的用户
         memberInfo: {},
         // 工作日志中的未读消息
-        unReadDiary: 0
+        unReadDiary: 0,
+        // 检索条件
+        search: ""
     },
     // 提交
     mutations: {
@@ -29,6 +31,9 @@ export default {
         },
         $_set_unReadDiary(state, value) {
             state.unReadDiary = value;
+        },
+        $_set_search(state, value) {
+            state.search = value;
         }
     },
     // 提交到 mutations 中
@@ -54,6 +59,9 @@ export default {
         },
         unReadDiary: state => {
             return state.unReadDiary;
+        },
+        search: state => {
+            return state.search;
         }
     }
 };

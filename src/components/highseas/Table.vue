@@ -150,8 +150,13 @@ export default {
         keyWord: this.seek,
         regionId: this.$route.params.id
       };
-      if (this.seek) {
-        this.$store.commit("ipublic/$_set_highSeasWord", this.seek);
+      if (this.seek || this.tag || this.targetType || this.country) {
+        this.$store.commit("ipublic/$_set_publicSearch", {
+          seek: this.seek,
+          tag: this.tag,
+          type: this.targetType,
+          country: this.country
+        });
       }
       if (this.tag) {
         params.labelId = this.tag[1];
@@ -221,7 +226,11 @@ export default {
   watch: {
     "$route.params.id": {
       handler(newVal, oldVal) {
-          this.seek = this.keyword;
+          let search = this.$store.getters['ipublic/publicSearch'];
+          this.seek = search && search.seek;
+          this.targetType = search && search.type;
+          this.country = search && search.country;
+          this.tag = search && search.tag;
           this.getHighseas(1);
           if (this && this.$refs && Object.keys(this.$refs).length > 0) {
             let dom = this.$refs['selectTag'].$refs['panel'];

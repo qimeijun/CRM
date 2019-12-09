@@ -190,6 +190,13 @@ export default {
   methods: {
     // 获取项目列表
     getProject(page) {
+      // 如果检索条件中有数据就存储在vuex中
+      if (this.seek) {
+        this.$store.commit('projects/$_set_search', {seek: this.seek, tag: this.tag});
+      } else if (this.tag) {
+        this.$store.commit('projects/$_set_search', {tag: this.tag, seek: this.seek});
+      }
+      
       this.$http
         .post("/customer/item/withpaginglist", {
           keyWord: this.seek,
@@ -366,6 +373,9 @@ export default {
     "$route.params.id": {
       handler(newVal, oldVal) {
         newVal && this.$store.commit("ipublic/$_set_regionId", newVal);
+        let search = this.$store.getters['projects/search'];
+        this.seek = search && search.seek;
+        this.tag = search && search.tag;
         this.getProject(1);
         if (this && this.$refs && Object.keys(this.$refs).length > 0) {
           let dom = this.$refs['selectTag'].$refs['panel'];

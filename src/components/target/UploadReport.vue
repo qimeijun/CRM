@@ -133,11 +133,14 @@ export default {
           })
           .then(res => {
             if (res.iworkuCode == 200) {
+              this.$emit("close");
               this.$imessage({
                 content: this.$t("target.probe.updateContent"),
                 type: "success" // 错误提示 error
               });
-              this.$emit("close");
+              setTimeout(() => {
+                this.progressShow = false;
+              }, 10);
             }
           });
       } else {
@@ -149,19 +152,20 @@ export default {
           })
           .then(res => {
             if (res.iworkuCode == 200) {
+              this.$emit("close");
               this.$imessage({
                 content: this.$t("target.probe.addContent"),
                 type: "success" // 错误提示 error
               });
-              // 重置数据
-              this.btnShow = true;
-              this.btnDisabled = false;
-              this.progressShow = false;
-              this.fileProgress = 0;
-              this.fileName = "";
-              this.researchFile = "";
-              this.uploadData = {};
-              this.$emit("close");
+              setTimeout(() => {
+                // 重置数据
+                this.btnShow = true;
+                this.btnDisabled = false;
+                this.progressShow = false;
+                this.fileName = "";
+                this.researchFile = "";
+                this.uploadData = {};
+              }, 100);
             }
           });
       }

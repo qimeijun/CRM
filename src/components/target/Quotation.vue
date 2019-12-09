@@ -30,7 +30,7 @@
               <i class="el-icon-location">&nbsp;{{ item.addUserCountryName}}</i>
             </p>
           </div>
-          <Operate v-show="companyForm.status!=4&&companyForm.ownUser==2&&itemRole">
+          <Operate v-show="companyForm.status!=4&&itemStatus!=2&&itemRole">
             <ul>
               <li
                 class="Quotation_btn"

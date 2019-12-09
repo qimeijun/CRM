@@ -144,6 +144,9 @@ export default {
      *  超级管理员查看人员，根据区域分类
      */
     getRegionData() {
+      if (this.searchMember) {
+        this.$store.commit("members/$_set_search", this.searchMember);
+      }
       this.$http.post("/user/region/withpaginglist", {
         keyWord: this.searchMember,
         pageNum: this.pagination.pageNum,
@@ -179,6 +182,7 @@ export default {
   watch: {
     "$route.params.id": {
       handler(newVal, oldVal) {
+        this.searchMember = this.$store.getters['members/search'];
         newVal && this.$store.commit("ipublic/$_set_regionId", newVal);
         this.getRegionData();
       },

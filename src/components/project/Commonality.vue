@@ -331,10 +331,15 @@ export default {
     ...mapGetters("ipublic", ["userInfo"])
   },
   async created() {
+    let search = this.$store.getters['projects/publicSearch'];
+    this.seek = search && search.seek;
+    this.tag = search && search.tag;
+    this.targetType = search && search.type;
     // 获取公司类型
     this.targetTypeList =[ {nameEn: "ALL",nameZh: "全部",value: ""},...await getTargetType(this)];
     this.getCommonality(this.itemid, 1);
     this.getItemStatus(this.itemid);
+    
   },
   methods: {
     // 激活作废  type: 4作废  1激活
@@ -381,6 +386,13 @@ export default {
     },
     // 获取项目公海列表
     getCommonality(id, page) {
+      if (this.seek || this.tag || this.targetType) {
+        this.$store.commit("projects/$_set_publicSearch", {
+          seek:this.seek, 
+          tag: this.tag, 
+          type: this.targetType
+        });
+      }
       this.$http
         .post("/target/company/withpaginglist", {
           id: id,

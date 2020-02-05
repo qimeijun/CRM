@@ -1,6 +1,6 @@
 <template>
     <section ref="iworku-message" v-if="isShow" class="iworku-c-message">
-        <div class="message">
+        <div :class="{'message': true, 'message--in': isShow, 'message--out': !isShow}">
             <div class="cont">
                 <img class="img" v-if="type == 'success'" src="./../../assets/img/succeed.gif" alt="">
                 <img class="img" v-else src="./../../assets/img/fault.gif" alt="">
@@ -39,7 +39,8 @@ export default {
         }
     },
     created() {
-        setTimeout(()=>{ this.isShow = false;}, 3*1000)
+        // setTimeout(()=>{ this.isShow = false;}, 3*1000)
+        setTimeout(()=>{ this.isShow = false;}, 3* 1000 * 200);
     },
     methods: {
         // 关闭弹窗
@@ -70,7 +71,8 @@ export default {
 
 .message {
     position: fixed;
-    top: 25%;
+    // top: 25%;
+    top: 10%;
     left: 50%;
     display: flex;
     align-items: center;
@@ -83,7 +85,6 @@ export default {
     transform: translateX(-50%);
     text-align: center;
     z-index: 9999;
-    transition: top 2s ease-in-out 0s;
     .cont {
         width: 100%;
     }
@@ -104,6 +105,24 @@ export default {
         display: inline-block;
         color: #8D43FF;
         cursor: pointer;
+    }
+
+    &--in {
+        animation: moveIn .3s ease-in forwards;
+    }
+    &--out {
+        animation: moveOut .3s forwards;
+    }
+    // 显示的动画
+    @keyframes moveIn {
+        from { top: 10%; display: none; }
+        to { top: 25%; display: flex; }
+    }
+
+    // 显示关闭的动画
+    @keyframes moveOut {
+        from { top: 25%; display: flex };
+        to { top: 0; display: none; }
     }
 }
 </style>

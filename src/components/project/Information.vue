@@ -406,6 +406,7 @@ export default {
     p {
       width: 48%;
       margin-bottom: 20px;
+      word-break: break-all;
       :first-of-type {
         font-size: 12px;
         color: rgba(123, 123, 123, 1);

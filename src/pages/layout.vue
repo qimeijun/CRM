@@ -1,161 +1,166 @@
 <template>
   <section class="layout">
-    <!-- 菜单 -->
-    <el-menu
-      v-if="userInfo.userRole!=$global.userRole.customer"
-      class="iworku-menu"
-      :style="isCollapse?'':'padding-left: 0.23rem;'"
-      active-background-color="#ffffff"
-      text-color="#FFFFFF"
-      :collapse="isCollapse"
-      :router="true"
-      :default-active="path"
-    >
-      <div class="menu-logo" @click="$router.push({ path: '/' })">
-        <img src="@/assets/logo.png" fit="contain" />
-      </div>
-      <el-menu-item index="/" route="/">
-        <i class="iconfont">&#xe627;</i>
-        <span slot="title">{{ $t("layout.workBench") }}</span>
-      </el-menu-item>
-      <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
-      <el-submenu index="/projectmanage">
-          <template slot="title">
-            <i class="iconfont">&#xe604;</i>
-            <span slot="title">{{ $t("layout.project") }}</span>
-          </template>
-          <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/projectmanage/${item.id}`" :route="`/projectmanage/${item.id}`">
-            {{ item.regionName }}
-          </el-menu-item>
-      </el-submenu>
-      </template>
-      <template v-else>
-      <el-menu-item index="/projectmanage" route="/projectmanage">
-        <i class="iconfont">&#xe604;</i>
-        <span slot="title">{{ $t("layout.project") }}</span>
-      </el-menu-item>
-      </template>
-      <!-- 
-        功能：公海管理
-        权限：
-          1、超级管理员和区域经理可见
-      -->
-      <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
-        <el-submenu index="/highseas">
+     <el-scrollbar style="height: calc(100vh);">
+      <!-- 菜单 -->
+      <el-menu
+        v-if="userInfo.userRole!=$global.userRole.customer"
+        class="iworku-menu"
+        :style="isCollapse?'':'padding-left: 0.23rem;'"
+        active-background-color="#ffffff"
+        text-color="#FFFFFF"
+        :collapse="isCollapse"
+        :router="true"
+        :default-active="path"
+      >
+        <div class="menu-logo" @click="$router.push({ path: '/' })">
+          <img src="@/assets/logo.png" fit="contain" />
+        </div>
+        <el-menu-item index="/" route="/">
+          <i class="iconfont">&#xe627;</i>
+          <span slot="title">{{ $t("layout.workBench") }}</span>
+        </el-menu-item>
+        <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
+        <el-submenu index="/projectmanage">
             <template slot="title">
-              <i class="iconfont">&#xe600;</i>
-              <span slot="title">{{ $t("layout.public") }}</span>
+              <i class="iconfont">&#xe604;</i>
+              <span slot="title">{{ $t("layout.project") }}</span>
             </template>
-            <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/highseas/${item.id}`" :route="`/highseas/${item.id}`">
+            <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/projectmanage/${item.id}`" :route="`/projectmanage/${item.id}`">
               {{ item.regionName }}
             </el-menu-item>
         </el-submenu>
-      </template>
-      <template v-else-if="userInfo.userRole == $global.userRole.regionalManager">
-        <el-menu-item
-          index="/highseas"
-          route="/highseas"
-        >
-          <i class="iconfont">&#xe600;</i>
-          <span slot="title">{{ $t("layout.public") }}</span>
+        </template>
+        <template v-else>
+        <el-menu-item index="/projectmanage" route="/projectmanage">
+          <i class="iconfont">&#xe604;</i>
+          <span slot="title">{{ $t("layout.project") }}</span>
         </el-menu-item>
-      </template>
-      <!-- 
-        功能：成员管理
-        权限：
-          1、只有客户不可见
-      -->
-      <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
-        <el-submenu index="/member">
-          <template slot="title">
+        </template>
+        <!-- 
+          功能：公海管理
+          权限：
+            1、超级管理员和区域经理可见
+        -->
+        <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
+          <el-submenu index="/highseas">
+              <template slot="title">
+                <i class="iconfont">&#xe600;</i>
+                <span slot="title">{{ $t("layout.public") }}</span>
+              </template>
+              <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/highseas/${item.id}`" :route="`/highseas/${item.id}`">
+                {{ item.regionName }}
+              </el-menu-item>
+          </el-submenu>
+        </template>
+        <template v-else-if="userInfo.userRole == $global.userRole.regionalManager">
+          <el-menu-item
+            index="/highseas"
+            route="/highseas"
+          >
+            <i class="iconfont">&#xe600;</i>
+            <span slot="title">{{ $t("layout.public") }}</span>
+          </el-menu-item>
+        </template>
+        <!-- 
+          功能：成员管理
+          权限：
+            1、只有客户不可见
+        -->
+        <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
+          <el-submenu index="/member">
+            <template slot="title">
+              <i class="iconfont">&#xe63f;</i>
+              <span slot="title">{{ $t("layout.member") }}</span>
+            </template>
+            <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/member/${item.id}`" :route="`/member/${item.id}`">
+              {{ item.regionName }}
+            </el-menu-item>
+        </el-submenu>
+        </template>
+        <template v-else>
+          <el-menu-item
+            index="/member"
+            route="/member"
+          >
             <i class="iconfont">&#xe63f;</i>
             <span slot="title">{{ $t("layout.member") }}</span>
-          </template>
-          <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/member/${item.id}`" :route="`/member/${item.id}`">
-            {{ item.regionName }}
           </el-menu-item>
-      </el-submenu>
-      </template>
-      <template v-else>
-        <el-menu-item
-          index="/member"
-          route="/member"
-        >
-          <i class="iconfont">&#xe63f;</i>
-          <span slot="title">{{ $t("layout.member") }}</span>
-        </el-menu-item>
-      </template>
-      
-      <!-- 
-        功能：标签管理
-        权限：
-          1、只有客户不可见
-      -->
-      <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
-      <el-submenu index="/tag">
-          <template slot="title">
+        </template>
+        
+        <!-- 
+          功能：标签管理
+          权限：
+            1、只有客户不可见
+        -->
+        <template v-if="userInfo.userRole == $global.userRole.superAdministrator">
+        <el-submenu index="/tag">
+            <template slot="title">
+              <i class="iconfont">&#xe61e;</i>
+              <span slot="title">{{ $t("layout.tag") }}</span>
+            </template>
+            <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/tag/project/${item.id}`" :route="`/tag/project/${item.id}`">
+              {{ item.regionName }}
+            </el-menu-item>
+        </el-submenu>
+        </template>
+        <template v-else>
+          <el-menu-item
+            index="/tag/project"
+            route="/tag/project"
+          >
             <i class="iconfont">&#xe61e;</i>
             <span slot="title">{{ $t("layout.tag") }}</span>
-          </template>
-          <el-menu-item v-for="(item, index) in regionList" :key="index" :index="`/tag/project/${item.id}`" :route="`/tag/project/${item.id}`">
-            {{ item.regionName }}
           </el-menu-item>
-      </el-submenu>
-      </template>
-      <template v-else>
-        <el-menu-item
-          index="/tag/project"
-          route="/tag/project"
-        >
-          <i class="iconfont">&#xe61e;</i>
-          <span slot="title">{{ $t("layout.tag") }}</span>
+        </template>
+        <el-button
+          type="text"
+          class="menu-button"
+          :style="isCollapse ? 'transform: translateX(40px);' : 'transform: translateX(2rem);'"
+          :icon="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'"
+          @click="isCollapse=!isCollapse"
+        ></el-button>
+      </el-menu>
+      <!-- 客户页面菜单 -->
+      <el-menu
+        v-else
+        class="iworku-menu"
+        :style="isCollapse?'':'padding-left: 0.23rem;'"
+        active-background-color="#ffffff"
+        text-color="#FFFFFF"
+        :collapse="isCollapse"
+        :router="true"
+        :default-active="pathName"
+      >
+        <div class="menu-logo" @click="$router.push({ path: `/customer/info/${itemid}/${adminId}` })">
+          <img src="@/assets/logo.png" fit="contain" />
+        </div>
+        <el-menu-item index="customer_information" :route="`/customer/info/${itemid}/${adminId}`">
+          <i class="iconfont">&#xe627;</i>
+          <span slot="title">{{ $t("layout.comapnyInfo") }}</span>
         </el-menu-item>
-      </template>
-      <el-button
-        type="text"
-        class="menu-button"
-        :icon="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'"
-        @click="isCollapse=!isCollapse"
-      ></el-button>
-    </el-menu>
-    <!-- 客户页面菜单 -->
-    <el-menu
-      v-else
-      class="iworku-menu"
-      :style="isCollapse?'':'padding-left: 0.23rem;'"
-      active-background-color="#ffffff"
-      text-color="#FFFFFF"
-      :collapse="isCollapse"
-      :router="true"
-      :default-active="pathName"
-    >
-      <div class="menu-logo" @click="$router.push({ path: `/customer/info/${itemid}/${adminId}` })">
-        <img src="@/assets/logo.png" fit="contain" />
-      </div>
-      <el-menu-item index="customer_information" :route="`/customer/info/${itemid}/${adminId}`">
-        <i class="iconfont">&#xe627;</i>
-        <span slot="title">{{ $t("layout.comapnyInfo") }}</span>
-      </el-menu-item>
-      <el-menu-item index="customer_product" :route="`/customer/product/${itemid}/${adminId}`">
-        <i class="iconfont">&#xe641;</i>
-        <span slot="title">{{ $t("layout.companyProduct") }}</span>
-      </el-menu-item>
-      <el-menu-item index="customer_target" :route="`/customer/target/${itemid}/${adminId}`">
-        <i class="iconfont">&#xe620;</i>
-        <span slot="title">{{ $t("layout.target") }}</span>
-      </el-menu-item>
-      <el-menu-item index="customer_diary" :route="`/customer/diary/${itemid}/${adminId}`">
-        <i class="iconfont">&#xe610;</i>
-        <span slot="title">{{ $t("layout.workDiary") }}</span>
-      </el-menu-item>
-      <el-button
-        type="text"
-        class="menu-button"
-        :icon="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'"
-        @click="isCollapse=!isCollapse"
-      ></el-button>
-    </el-menu>
-    <div style="width:calc(100%);">
+        <el-menu-item index="customer_product" :route="`/customer/product/${itemid}/${adminId}`">
+          <i class="iconfont">&#xe641;</i>
+          <span slot="title">{{ $t("layout.companyProduct") }}</span>
+        </el-menu-item>
+        <el-menu-item index="customer_target" :route="`/customer/target/${itemid}/${adminId}`">
+          <i class="iconfont">&#xe620;</i>
+          <span slot="title">{{ $t("layout.target") }}</span>
+        </el-menu-item>
+        <el-menu-item index="customer_diary" :route="`/customer/diary/${itemid}/${adminId}`">
+          <i class="iconfont">&#xe610;</i>
+          <span slot="title">{{ $t("layout.workDiary") }}</span>
+        </el-menu-item>
+         <el-button
+          type="text"
+          class="menu-button"
+          :style="isCollapse ? 'transform: translateX(40px);' : 'transform: translateX(2rem);'"
+          :icon="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'"
+          @click="isCollapse=!isCollapse"
+        ></el-button>
+      </el-menu>
+    </el-scrollbar>
+    <!-- style="width:calc(100% - 2.23rem);" -->
+    <div class="right-ly" :style="isCollapse ? 'width: 100%' : 'width: calc(100% - 2.23rem)'">
       <Header></Header>
       <router-view></router-view>
     </div>
@@ -226,12 +231,15 @@ export default {
   display: flex;
   width: 100%;
 }
+.right-ly {
+  transition: width .5s;
+}
 .iworku-menu:not(.el-menu--collapse) {
   width: 2rem;
-  min-height: 4rem;
+  // min-height: 4rem;
 }
 .iworku-menu {
-  height: calc(100vh);
+  min-height: 100vh;
   background: linear-gradient(0deg, #48296c 20%, #3c447f 80%);
   .menu-logo {
     text-align: center;
@@ -254,7 +262,8 @@ export default {
     width: 0.4rem;
     height: 0.4rem;
     color: white;
-    position: absolute;
+    position: fixed;
+    left: 0px;
     border-radius: 0.2rem;
     line-height: 0.2rem;
     padding: 0;

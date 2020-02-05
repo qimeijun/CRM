@@ -21,6 +21,7 @@
             <el-button
               v-show="index===productFrom.imgList.length-1"
               type="text"
+              style="margin-right: 15px;"
               @click="imgShow=true"
             >{{$t("project.btn.continueUpload")}}</el-button>
           </el-col>
@@ -290,6 +291,7 @@ export default {
       const isLt3M = file.size / 1024 / 1024 < 3;
       if (!isLt3M) {
         this.$message.error(this.$t("project.rules.img"));
+        return Promise.reject(false);
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);
@@ -301,6 +303,7 @@ export default {
       const isLt20M = file.size / 1024 / 1024 < 20;
       if (!isLt20M) {
         this.$message.error(this.$t("project.rules.video"));
+        return Promise.reject(false);
       }
       // 获取七牛token
       this.uploadData.token = await getQiniuToken(this);

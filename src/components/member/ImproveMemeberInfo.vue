@@ -95,7 +95,7 @@
           <el-form-item v-if="!memberForm.id && userInfo.userRole == $global.userRole.superAdministrator" :label="`${$t('member.form.regional')}`" prop="regional">
             <el-select filterable v-model="memberForm.regional">
               <template v-if="regionList.length > 0">
-                <el-option v-for="(item, index) in regionList" :key="index" :label="item.regionName" :value="item.regionId"></el-option>
+                <el-option v-for="(item, index) in regionList" :key="index" :label="item.regionName" :value="item.regionId || item.id"></el-option>
               </template>
             </el-select>
           </el-form-item>
@@ -303,12 +303,20 @@ export default {
       this.memberForm.regional = this.regionId;
       this.getTeam();
     }
-    // 获取区域
-    this.$http.post('/user/region/withpaginglist').then(res => {
-      if (res.iworkuCode == 200 && res.datas) {
-        this.regionList = res.datas;
+    // 获取区域, 如果是超级管理员
+    if (this.$global.userRole.superAdministrator == this.userInfo.userRole) {
+      // 先从缓存中获取，如果缓存中没有，再从接口获取
+      this.regionList = this.$store.getters["ipublic/regionList"];
+      if (!this.regionList || this.regionList.length == 0) {
+        this.$http.post('/user/region/withpaginglist').then(res => {
+          if (res.iworkuCode == 200 && res.datas) {
+            this.regionList = res.datas;
+          }
+        });
       }
-    });
+      console.log(this.regionList);
+    }
+    
     // 获取所有的国家
     this.countryList = await getCountry(this);
   },

@@ -9,7 +9,7 @@
         <Table></Table>
         <!-- 表格 end -->
       </div>
-    </div>
+    </div> 
   </el-scrollbar>
 </template>
 <script>

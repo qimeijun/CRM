@@ -1,6 +1,6 @@
 <template>
   <section class="customer-table">
-    <div style="position:fixed; top: 1rem; right: .2rem; display:flex;">
+    <div class="customer-top" style="">
       <!-- 分类 start -->
       <el-select
         filterable
@@ -279,8 +279,22 @@ export default {
 <style lang="scss" scoped>
 .customer-table {
   .table-seek {
-    width: 313px;
+    width: 2.4rem;
     margin-right: 0.1rem;
+  }
+}
+.customer-top {
+  display:flex;
+  position:fixed; 
+  top: 1rem; 
+  right: .2rem; 
+  width: 65%;
+  @media screen and (max-width: 800px) {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-bottom: 15px;
+    width: 100%;
   }
 }
 </style>

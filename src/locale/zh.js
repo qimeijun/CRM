@@ -423,7 +423,7 @@ export default {
         title: "项目管理",
         add: "添加新项目",
         allot: "分配",
-        redistribution: "再分配",
+        redistribution: "移交",
         invalid: "作废",
         delete: "删除",
         activation: "激活",
@@ -727,8 +727,14 @@ export default {
         btn: {
             add: "确认添加",
             modify: "确认修改",
-            delete: "删除",
+            delete: "停用",
             modify2: "修改"
         }
+    },
+    userRole: {
+        member: "成员",
+        project: "项目经理",
+        region: "区域管理员",
+        admin: "超级管理员"
     }
 }

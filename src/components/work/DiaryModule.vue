@@ -113,7 +113,8 @@
                     <p style="margin-bottom: 10px;">{{ $t("workDiary.chatLog") }}</p>
                     <template v-for="(cItem, cIndex) in item.followLog.split(';')">
                         <a :href="`${$global.avatarURI}${cItem}`" target="_blank" :key="cIndex">
-                            <el-image  class="img" :src="`${$global.avatarURI}${cItem}`"></el-image>
+                            <!-- <el-image  class="img" :src="`${$global.avatarURI}${cItem}`"></el-image> -->
+                            <img class="img" :src="`${$global.avatarURI}${cItem}`" :alt="cItem">
                         </a>
                     </template>
                 </div>

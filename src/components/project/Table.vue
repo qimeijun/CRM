@@ -76,6 +76,7 @@
           :label="$t('project.tableHeader[6]')"
           width="120"
           sortable
+          sort-by="addTimeStr"
         >
           <template slot-scope="scope">
             <p>{{$global.localTime({time:scope.row.addTimeStr,hour:false})}}</p>

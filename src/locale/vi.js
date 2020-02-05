@@ -724,9 +724,15 @@ export default {
         btn: {
             add: "Xác nhận thêm",
             modify: "Xác nhận sửa đổi",
-            delete: "Xóa",
+            delete: "Quy hoạch",
             modify2: "Sửa đổi"
         }
+    },
+    userRole: {
+        member: "Thành viên",
+        project: "Quản lý dự án",
+        region: "Quản lý khu vực",
+        admin: "Siêu quản lý"
     }
 }
 

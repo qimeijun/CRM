@@ -422,7 +422,7 @@ export default {
         title: "Project Management",
         add: "Add New Projects",
         allot: "Assign",
-        redistribution: "redistribution",
+        redistribution: "Hand Over",
         invalid: "Cancel",
         delete: "Delete",
         activation: "The activation",
@@ -726,8 +726,14 @@ export default {
         btn: {
             add: "Confirm & Add",
             modify: "Config & Modify",
-            delete: "Delete",
+            delete: "Stop",
             modify2: "Modify"
         }
+    },
+    userRole: {
+        member: "Member",
+        project: "Project Manager",
+        region: "Regional Manager",
+        admin: "Super Administrator"
     }
 }

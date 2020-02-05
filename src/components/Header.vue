@@ -72,7 +72,13 @@
               <div class="right">
                 <div class>
                   <span style="font-size: 16px; padding-right: .05rem;">{{ userInfo.userNameZh }}</span>
-                  <span v-show="userInfo.userRole!=$global.userRole.customer">{{ userInfo.roleName }}</span>
+                  <span v-show="userInfo.userRole!=$global.userRole.customer">
+                    <!-- 根据语言显示角色名称 -->
+                    <template v-if="userInfo.userRole == $global.userRole.superAdministrator">{{ $t("userRole.admin") }}</template>
+                    <template v-else-if="userInfo.userRole == $global.userRole.regionalManager">{{ $t("userRole.region") }}</template>
+                    <template v-else-if="userInfo.userRole == $global.userRole.projectManager">{{ $t("userRole.project") }}</template>
+                    <template v-else>{{ $t("userRole.member") }}</template>
+                  </span>
                 </div>
                 <div>{{ userInfo.userEmail }}</div>
               </div>

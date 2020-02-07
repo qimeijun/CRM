@@ -599,7 +599,7 @@ export default {
               itemRegionId: this.$store.getters['ipublic/regionId']
             };
             // 去掉空元素
-            params.productNodeList=params.productNodeList.filter(o=>{if(o.nodeFiles){return o}})
+            params.productNodeList=params.productNodeList.filter(o=>{if(o.nodeFiles&&o.nodeFiles.length > 3){return o}});
             this.$http.post("/customer/company/save", params).then(res => {
               if (res.iworkuCode == 200) {
                 this.activeName = 1;

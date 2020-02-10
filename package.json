@@ -11,10 +11,13 @@
     "serveP": "vue-cli-service serve --mode production"
   },
   "dependencies": {
+    "crypto-js": "^3.1.9-1",
     "css-loader": "^3.0.0",
     "element-ui": "^2.10.0",
-    "websocket-heartbeat-js": "^1.0.8",
-    "crypto-js": "^3.1.9-1"
+    "mini-css-extract-plugin": "^0.9.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "terser-webpack-plugin": "^2.3.4",
+    "websocket-heartbeat-js": "^1.0.8"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
@@ -24,7 +27,6 @@
     "compression-webpack-plugin": "^3.0.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.9.2",
     "sass-loader": "^7.0.3",
     "style-loader": "^0.23.1",

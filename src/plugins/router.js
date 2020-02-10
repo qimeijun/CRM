@@ -172,7 +172,10 @@ const router = new VueRouter({
         {
             path: '*',
             name: '4-0-4',
-            component: () => import('./../pages/404.vue')
+            component: () => import('./../pages/404.vue'),
+            meta: {
+                keepAlive: true // 静态页面，使用缓存
+            }
         }
     ]
 });
